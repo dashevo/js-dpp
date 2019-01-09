@@ -26,3 +26,11 @@ before_script:
 script:
   - npm run lint
   - npm run test
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: npm publish
+    on:
+      repo: dashevo/js-dpp
+      branch: master
