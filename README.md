@@ -1,6 +1,7 @@
 # Dash Platform Protocol JS
 
 [![Build Status](https://travis-ci.com/dashevo/js-dpp.svg?branch=master)](https://travis-ci.com/dashevo/js-dpp)
+[![NPM version](https://img.shields.io/npm/v/@dashevo/dpp.svg)](https://npmjs.org/package/@dashevo/dpp)
 
 > The JavaScript implementation of the [Dash Platform Protocol](http://github.com/dashevo/dpp-spec)
 
