@@ -24,15 +24,14 @@ before_script:
   - sleep 3 # give xvfb some time to start
 
 script:
+  - npm run check-package
   - npm run lint
   - npm run test
 
 deploy:
   - provider: script
     skip_cleanup: true
-    script: test "$TRAVIS_NODE_VERSION" = "10" && \
-            test v"$(jq -r .version package.json)" = "$TRAVIS_TAG" && \
-            npm publish
+    script: bash scripts/travis-deploy.sh
     on:
       repo: dashevo/js-dpp
       tags: true
