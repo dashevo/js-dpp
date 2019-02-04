@@ -142,7 +142,7 @@ describe('STPacketFactory', () => {
       expect(validateSTPacketMock).not.to.be.called();
     });
 
-    it('should throw error if DP Contract with specified ST Packet contract ID is not found', async () => {
+    it('should throw error if DP Contract is not present with contract ID specified in ST Packet', async () => {
       let error;
       try {
         await factory.createFromObject(rawSTPacket);
