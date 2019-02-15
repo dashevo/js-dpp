@@ -10,6 +10,7 @@ const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFi
 const getDPObjectsFixture = require('../../../lib/test/fixtures/getDPObjectsFixture');
 
 const MissingDPObjectTypeError = require('../../../lib/errors/MissingDPObjectTypeError');
+const MissingDPObjectActionError = require('../../../lib/errors/MissingDPObjectActionError');
 const InvalidDPObjectTypeError = require('../../../lib/errors/InvalidDPObjectTypeError');
 const InvalidDPObjectScopeIdError = require('../../../lib/errors/InvalidDPObjectScopeIdError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
@@ -97,13 +98,14 @@ describe('validateDPObjectFactory', () => {
 
         const result = validateDPObject(rawDPObject, dpContract);
 
-        expectJsonSchemaError(result);
+        expectValidationError(
+          result,
+          MissingDPObjectActionError,
+        );
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('');
-        expect(error.keyword).to.be.equal('required');
-        expect(error.params.missingProperty).to.be.equal('$action');
+        expect(error.getRawDPObject()).to.be.equal(rawDPObject);
       });
 
       it('should be a number', () => {
