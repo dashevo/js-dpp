@@ -1,5 +1,7 @@
 const rewiremock = require('rewiremock/node');
 
+const InvalidDPObjectStateError = require('../../../lib/object/errors/InvalidDPObjectStateError');
+
 describe('DPObject', () => {
   let lodashGetMock;
   let lodashSetMock;
@@ -160,6 +162,20 @@ describe('DPObject', () => {
 
       expect(dpObject.action).to.be.equal(DPObject.ACTIONS.DELETE);
     });
+
+    it('should throw an error if data is set and the $action is DELETE', () => {
+      dpObject.data = {
+        test: 1,
+      };
+
+      try {
+        dpObject.setAction(DPObject.ACTIONS.DELETE);
+      } catch (e) {
+        expect(e).to.be.instanceOf(InvalidDPObjectStateError);
+        expect(e.getErrorCode()).to.be.equal(InvalidDPObjectStateError.CODES.DATA_IS_SET);
+        expect(e.getDPObject()).to.be.deep.equal(dpObject);
+      }
+    });
   });
 
   describe('#getAction', () => {
@@ -237,6 +253,21 @@ describe('DPObject', () => {
       expect(result).to.be.equal(dpObject);
 
       expect(lodashSetMock).to.be.calledOnceWith(dpObject.data, path, value);
+    });
+
+    it('should throw an error if $action is already set to DELETE', () => {
+      dpObject.setAction(DPObject.ACTIONS.DELETE);
+
+      const path = 'test[0].$my';
+      const value = 2;
+
+      try {
+        dpObject.set(path, value);
+      } catch (e) {
+        expect(e).to.be.instanceOf(InvalidDPObjectStateError);
+        expect(e.getErrorCode()).to.be.equal(InvalidDPObjectStateError.CODES.ACTION_IS_DELETE);
+        expect(e.getDPObject()).to.be.deep.equal(dpObject);
+      }
     });
   });
 

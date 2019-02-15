@@ -3,6 +3,7 @@ const Ajv = require('ajv');
 const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
+const DPObject = require('../../../lib/object/DPObject');
 const validateDPObjectFactory = require('../../../lib/object/validateDPObjectFactory');
 const enrichDPContractWithBaseDPObject = require('../../../lib/object/enrichDPContractWithBaseDPObject');
 
@@ -16,6 +17,8 @@ const InvalidDPObjectScopeIdError = require('../../../lib/errors/InvalidDPObject
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 const JsonSchemaError = require('../../../lib/errors/JsonSchemaError');
 
+const originalDPObjectBaseSchema = require('../../../schema/base/dp-object');
+
 const {
   expectValidationError,
   expectJsonSchemaError,
@@ -26,10 +29,14 @@ describe('validateDPObjectFactory', () => {
   let rawDPObjects;
   let rawDPObject;
   let validateDPObject;
+  let validator;
+  let dpObjectBaseSchema;
 
-  beforeEach(() => {
+  beforeEach(function beforeEach() {
     const ajv = new Ajv();
-    const validator = new JsonSchemaValidator(ajv);
+
+    validator = new JsonSchemaValidator(ajv);
+    this.sinonSandbox.spy(validator, 'validate');
 
     dpContract = getDPContractFixture();
 
@@ -40,6 +47,10 @@ describe('validateDPObjectFactory', () => {
 
     rawDPObjects = getDPObjectsFixture().map(o => o.toJSON());
     [rawDPObject] = rawDPObjects;
+
+    dpObjectBaseSchema = JSON.parse(
+      JSON.stringify(originalDPObjectBaseSchema),
+    );
   });
 
   describe('Base schema', () => {
@@ -350,6 +361,33 @@ describe('validateDPObjectFactory', () => {
       const result = validateDPObject(rawDPObjects[1], dpContract);
 
       expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.be.equal('');
+      expect(error.keyword).to.be.equal('additionalProperties');
+    });
+  });
+
+  describe('$action is DELETE', () => {
+    it('should validate against base DP object schema', () => {
+      dpObjectBaseSchema.additionalProperties = false;
+
+      delete rawDPObject.name;
+      rawDPObject.$action = DPObject.ACTIONS.DELETE;
+
+      const result = validateDPObject(rawDPObject, dpContract);
+
+      expect(validator.validate).to.be.calledOnceWith(dpObjectBaseSchema, rawDPObject);
+      expect(result.getErrors().length).to.be.equal(0);
+    });
+
+    it('should throw validation error if additional fields are defined', () => {
+      dpObjectBaseSchema.additionalProperties = false;
+
+      rawDPObject.$action = DPObject.ACTIONS.DELETE;
+
+      const result = validateDPObject(rawDPObject, dpContract);
 
       const [error] = result.getErrors();
 
