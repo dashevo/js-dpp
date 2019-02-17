@@ -1,6 +1,6 @@
 const rewiremock = require('rewiremock/node');
 
-const InvalidDPObjectStateError = require('../../../lib/object/errors/InvalidDPObjectStateError');
+const DataIsNotAllowedWithActionDeleteError = require('../../../lib/object/errors/DataIsNotAllowedWithActionDeleteError');
 
 describe('DPObject', () => {
   let lodashGetMock;
@@ -171,8 +171,7 @@ describe('DPObject', () => {
       try {
         dpObject.setAction(DPObject.ACTIONS.DELETE);
       } catch (e) {
-        expect(e).to.be.instanceOf(InvalidDPObjectStateError);
-        expect(e.getErrorCode()).to.be.equal(InvalidDPObjectStateError.CODES.DATA_IS_SET);
+        expect(e).to.be.instanceOf(DataIsNotAllowedWithActionDeleteError);
         expect(e.getDPObject()).to.be.deep.equal(dpObject);
       }
     });
@@ -264,8 +263,7 @@ describe('DPObject', () => {
       try {
         dpObject.set(path, value);
       } catch (e) {
-        expect(e).to.be.instanceOf(InvalidDPObjectStateError);
-        expect(e.getErrorCode()).to.be.equal(InvalidDPObjectStateError.CODES.ACTION_IS_DELETE);
+        expect(e).to.be.instanceOf(DataIsNotAllowedWithActionDeleteError);
         expect(e.getDPObject()).to.be.deep.equal(dpObject);
       }
     });
