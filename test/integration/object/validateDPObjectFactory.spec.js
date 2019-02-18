@@ -369,31 +369,25 @@ describe('validateDPObjectFactory', () => {
     });
   });
 
-  describe('$action is DELETE', () => {
-    it('should validate against base DP object schema', () => {
-      dpObjectBaseSchema.additionalProperties = false;
+  it('should validate against base DP object schema if $action is DELETE', () => {
+    delete rawDPObject.name;
+    rawDPObject.$action = DPObject.ACTIONS.DELETE;
 
-      delete rawDPObject.name;
-      rawDPObject.$action = DPObject.ACTIONS.DELETE;
+    const result = validateDPObject(rawDPObject, dpContract);
 
-      const result = validateDPObject(rawDPObject, dpContract);
+    expect(validator.validate).to.be.calledOnceWith(dpObjectBaseSchema, rawDPObject);
+    expect(result.getErrors().length).to.be.equal(0);
+  });
 
-      expect(validator.validate).to.be.calledOnceWith(dpObjectBaseSchema, rawDPObject);
-      expect(result.getErrors().length).to.be.equal(0);
-    });
+  it('should throw validation error if additional fields are defined and $action is DELETE', () => {
+    rawDPObject.$action = DPObject.ACTIONS.DELETE;
 
-    it('should throw validation error if additional fields are defined', () => {
-      dpObjectBaseSchema.additionalProperties = false;
+    const result = validateDPObject(rawDPObject, dpContract);
 
-      rawDPObject.$action = DPObject.ACTIONS.DELETE;
+    const [error] = result.getErrors();
 
-      const result = validateDPObject(rawDPObject, dpContract);
-
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.be.equal('');
-      expect(error.keyword).to.be.equal('additionalProperties');
-    });
+    expect(error.dataPath).to.be.equal('');
+    expect(error.keyword).to.be.equal('additionalProperties');
   });
 
   it('should return valid response is an object is valid', () => {
