@@ -51,7 +51,7 @@ describe('validateDPContractFactory', () => {
       expect(error.keyword).to.equal('type');
     });
 
-    it('should be particular url', () => {
+    it('should be a particular url', () => {
       rawDPContract.$schema = 'wrong';
 
       const result = validateDPContract(rawDPContract);
@@ -224,7 +224,7 @@ describe('validateDPContractFactory', () => {
       expect(error.keyword).to.equal('minProperties');
     });
 
-    it('should have no a non-alphanumeric properties', () => {
+    it('should have no non-alphanumeric properties', () => {
       rawDPContract.definitions = {
         $subSchema: {},
       };
@@ -301,7 +301,7 @@ describe('validateDPContractFactory', () => {
       expect(error.keyword).to.equal('minProperties');
     });
 
-    it('should have no a non-alphanumeric properties', () => {
+    it('should have no non-alphanumeric properties', () => {
       rawDPContract.dpObjectsDefinition['(*&^'] = rawDPContract.dpObjectsDefinition.niceObject;
 
       const result = validateDPContract(rawDPContract);

@@ -85,7 +85,7 @@ describe('validateDPObjectFactory', () => {
         expect(error.getType()).to.equal('undefinedObject');
       });
 
-      it('should throw error if getDPObjectSchemaRef throws error', function it() {
+      it('should throw an error if getDPObjectSchemaRef throws error', function it() {
         const someError = new Error();
 
         this.sinonSandbox.stub(dpContract, 'getDPObjectSchemaRef').throws(someError);
@@ -147,7 +147,7 @@ describe('validateDPObjectFactory', () => {
     });
 
     describe('$rev', () => {
-      it('should return error if $rev is not present', () => {
+      it('should return an error if $rev is not present', () => {
         delete rawDPObject.$rev;
 
         const result = validateDPObject(rawDPObject, dpContract);
@@ -229,7 +229,7 @@ describe('validateDPObjectFactory', () => {
         expect(error.keyword).to.equal('type');
       });
 
-      it('should not be less than 64 chars', () => {
+      it('should be no less than 64 chars', () => {
         rawDPObject.$scope = '86b273ff';
 
         const result = validateDPObject(rawDPObject, dpContract);
@@ -242,7 +242,7 @@ describe('validateDPObjectFactory', () => {
         expect(error.keyword).to.equal('minLength');
       });
 
-      it('should not be longer than 64 chars', () => {
+      it('should be no longer than 64 chars', () => {
         rawDPObject.$scope = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
 
         const result = validateDPObject(rawDPObject, dpContract);
@@ -292,7 +292,7 @@ describe('validateDPObjectFactory', () => {
         expect(scopeError.getRawDPObject()).to.equal(rawDPObject);
       });
 
-      it('should not be less than 34 chars', () => {
+      it('should be no less than 34 chars', () => {
         rawDPObject.$scopeId = '86b273ff';
 
         const result = validateDPObject(rawDPObject, dpContract);
@@ -309,7 +309,7 @@ describe('validateDPObjectFactory', () => {
         expect(scopeError.getRawDPObject()).to.equal(rawDPObject);
       });
 
-      it('should not be longer than 34 chars', () => {
+      it('should be no longer than 34 chars', () => {
         rawDPObject.$scopeId = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
 
         const result = validateDPObject(rawDPObject, dpContract);
@@ -342,7 +342,7 @@ describe('validateDPObjectFactory', () => {
   });
 
   describe('DP Contract schema', () => {
-    it('should return error if the first object is not valid against DP Contract', () => {
+    it('should return an error if the first object is not valid against DP Contract', () => {
       rawDPObjects[0].name = 1;
 
       const result = validateDPObject(rawDPObjects[0], dpContract);
@@ -355,7 +355,7 @@ describe('validateDPObjectFactory', () => {
       expect(error.keyword).to.equal('type');
     });
 
-    it('should return error if the second object is not valid against DP Contract', () => {
+    it('should return an error if the second object is not valid against DP Contract', () => {
       rawDPObjects[1].undefined = 1;
 
       const result = validateDPObject(rawDPObjects[1], dpContract);

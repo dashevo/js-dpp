@@ -80,7 +80,7 @@ describe('validateSTPacketFactory', () => {
       expect(validateSTPacketDPObjectsMock).to.have.not.been.called();
     });
 
-    it('should not be less than 64 chars', () => {
+    it('should be no less than 64 chars', () => {
       rawSTPacket.contractId = '86b273ff';
 
       const result = validateSTPacket(rawSTPacket, dpContract);
@@ -96,7 +96,7 @@ describe('validateSTPacketFactory', () => {
       expect(validateSTPacketDPObjectsMock).to.have.not.been.called();
     });
 
-    it('should not be longer than 64 chars', () => {
+    it('should be no longer than 64 chars', () => {
       rawSTPacket.contractId = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
 
       const result = validateSTPacket(rawSTPacket, dpContract);
@@ -147,7 +147,7 @@ describe('validateSTPacketFactory', () => {
       expect(validateSTPacketDPObjectsMock).to.have.not.been.called();
     });
 
-    it('should not be less than 64 chars', () => {
+    it('should be no less than 64 chars', () => {
       rawSTPacket.itemsMerkleRoot = '86b273ff';
 
       const result = validateSTPacket(rawSTPacket, dpContract);
@@ -163,7 +163,7 @@ describe('validateSTPacketFactory', () => {
       expect(validateSTPacketDPObjectsMock).to.have.not.been.called();
     });
 
-    it('should not be longer than 64 chars', () => {
+    it('should be no longer than 64 chars', () => {
       rawSTPacket.itemsMerkleRoot = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
 
       const result = validateSTPacket(rawSTPacket, dpContract);
@@ -226,7 +226,7 @@ describe('validateSTPacketFactory', () => {
       expect(validateSTPacketDPObjectsMock).to.have.not.been.called();
     });
 
-    it('should not be less than 64 chars', () => {
+    it('should be no less than 64 chars', () => {
       rawSTPacket.itemsHash = '86b273ff';
 
       const result = validateSTPacket(rawSTPacket, dpContract);
@@ -242,7 +242,7 @@ describe('validateSTPacketFactory', () => {
       expect(validateSTPacketDPObjectsMock).to.have.not.been.called();
     });
 
-    it('should not be longer than 64 chars', () => {
+    it('should be no longer than 64 chars', () => {
       rawSTPacket.itemsHash = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
 
       const result = validateSTPacket(rawSTPacket, dpContract);
@@ -305,7 +305,7 @@ describe('validateSTPacketFactory', () => {
       expect(validateSTPacketDPObjectsMock).to.have.not.been.called();
     });
 
-    it('should not contain more than 1000 items', () => {
+    it('should contain no more than 1000 items', () => {
       const thousandDPObjects = (new Array(1001)).fill(rawSTPacket.objects[0]);
       rawSTPacket.objects.push(...thousandDPObjects);
 
@@ -366,7 +366,7 @@ describe('validateSTPacketFactory', () => {
       expect(validateSTPacketDPObjectsMock).to.have.not.been.called();
     });
 
-    it('should not contain more than one contract', () => {
+    it('should contain no more than one contract', () => {
       rawSTPacket.contracts.push(rawDPContract, rawDPContract);
 
       const result = validateSTPacket(rawSTPacket, dpContract);
