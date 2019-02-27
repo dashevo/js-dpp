@@ -80,7 +80,7 @@ describe('DPObjectFactory', () => {
       expect(newDPObject.getRevision()).to.equal(DPObject.DEFAULTS.REVISION);
     });
 
-    it('should throw error if type is not defined', () => {
+    it('should throw an error if type is not defined', () => {
       const type = 'wrong';
 
       let error;
@@ -119,7 +119,7 @@ describe('DPObjectFactory', () => {
       expect(validateDPObjectMock).to.have.not.been.called();
     });
 
-    it('should throw error if passed object is not valid', () => {
+    it('should throw an error if passed object is not valid', () => {
       const validationError = new ConsensusError('test');
 
       validateDPObjectMock.returns(new ValidationResult([validationError]));

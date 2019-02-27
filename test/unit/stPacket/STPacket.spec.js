@@ -129,7 +129,7 @@ describe('STPacket', () => {
       expect(stPacket.contracts[0]).to.equal(dpContract);
     });
 
-    it('should throw error if DPObjects are present', () => {
+    it('should throw an error if DPObjects are present', () => {
       stPacket.setDPObjects(dpObjects);
 
       let error;
@@ -172,7 +172,7 @@ describe('STPacket', () => {
       expect(stPacket.objects).to.equal(dpObjects);
     });
 
-    it('should throw error if DP Contract is present', () => {
+    it('should throw an error if DP Contract is present', () => {
       stPacket.setDPContract(dpContract);
 
       let error;

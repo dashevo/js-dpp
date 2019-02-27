@@ -142,7 +142,7 @@ describe('STPacketFactory', () => {
       expect(validateSTPacketMock).to.have.not.been.called();
     });
 
-    it('should throw error if DP Contract is not present with contract ID specified in ST Packet', async () => {
+    it('should throw an error if DP Contract is not present with contract ID specified in ST Packet', async () => {
       let error;
       try {
         await factory.createFromObject(rawSTPacket);
@@ -184,7 +184,7 @@ describe('STPacketFactory', () => {
       expect(validateSTPacketMock).to.have.been.calledOnceWith(rawSTPacket);
     });
 
-    it('should throw error if passed object is not valid', async () => {
+    it('should throw an error if passed object is not valid', async () => {
       dataProviderMock.fetchDPContract.resolves(dpContract);
 
       const validationError = new ConsensusError('test');

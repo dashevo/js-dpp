@@ -77,7 +77,7 @@ describe('DPContractFactory', () => {
       expect(createDPContractMock).to.have.been.calledOnceWith(rawDPContract);
     });
 
-    it('should throw error if passed object is not valid', () => {
+    it('should throw an error if object passed was not valid', () => {
       const validationError = new ConsensusError('test');
 
       validateDPContractMock.returns(new ValidationResult([validationError]));

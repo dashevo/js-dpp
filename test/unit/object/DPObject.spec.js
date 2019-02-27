@@ -57,7 +57,7 @@ describe('DPObject', () => {
       expect(DPObject.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
-    it('should create DP Object with $scopeId and data  if present', () => {
+    it('should create DP Object with $scopeId and data if present', () => {
       const data = {
         test: 1,
       };

@@ -71,7 +71,7 @@ describe('STPacketHeaderFactory', () => {
       expect(validateSTPacketHeaderMock).to.have.been.calledOnceWith(rawSTPacketHeader);
     });
 
-    it('should throw error if passed object is not valid', () => {
+    it('should throw an error if passed object is not valid', () => {
       const validationError = new ConsensusError('test');
 
       validateSTPacketHeaderMock.returns(new ValidationResult([validationError]));
