@@ -35,9 +35,9 @@ describe('validateSTPacketHeaderStructure', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('');
-      expect(error.keyword).to.be.equal('required');
-      expect(error.params.missingProperty).to.be.equal('contractId');
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('contractId');
     });
 
     it('should be a string', () => {
@@ -49,8 +49,8 @@ describe('validateSTPacketHeaderStructure', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.contractId');
-      expect(error.keyword).to.be.equal('type');
+      expect(error.dataPath).to.equal('.contractId');
+      expect(error.keyword).to.equal('type');
     });
 
     it('should not be less than 64 chars', () => {
@@ -62,8 +62,8 @@ describe('validateSTPacketHeaderStructure', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.contractId');
-      expect(error.keyword).to.be.equal('minLength');
+      expect(error.dataPath).to.equal('.contractId');
+      expect(error.keyword).to.equal('minLength');
     });
 
     it('should not be longer than 64 chars', () => {
@@ -75,8 +75,8 @@ describe('validateSTPacketHeaderStructure', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.contractId');
-      expect(error.keyword).to.be.equal('maxLength');
+      expect(error.dataPath).to.equal('.contractId');
+      expect(error.keyword).to.equal('maxLength');
     });
   });
 
@@ -90,9 +90,9 @@ describe('validateSTPacketHeaderStructure', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('');
-      expect(error.keyword).to.be.equal('required');
-      expect(error.params.missingProperty).to.be.equal('itemsMerkleRoot');
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('itemsMerkleRoot');
     });
 
     it('should be a string', () => {
@@ -104,8 +104,8 @@ describe('validateSTPacketHeaderStructure', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.itemsMerkleRoot');
-      expect(error.keyword).to.be.equal('type');
+      expect(error.dataPath).to.equal('.itemsMerkleRoot');
+      expect(error.keyword).to.equal('type');
     });
 
     it('should not be less than 64 chars', () => {
@@ -117,8 +117,8 @@ describe('validateSTPacketHeaderStructure', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.itemsMerkleRoot');
-      expect(error.keyword).to.be.equal('minLength');
+      expect(error.dataPath).to.equal('.itemsMerkleRoot');
+      expect(error.keyword).to.equal('minLength');
     });
 
     it('should not be longer than 64 chars', () => {
@@ -130,8 +130,8 @@ describe('validateSTPacketHeaderStructure', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.itemsMerkleRoot');
-      expect(error.keyword).to.be.equal('maxLength');
+      expect(error.dataPath).to.equal('.itemsMerkleRoot');
+      expect(error.keyword).to.equal('maxLength');
     });
   });
 
@@ -145,9 +145,9 @@ describe('validateSTPacketHeaderStructure', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('');
-      expect(error.keyword).to.be.equal('required');
-      expect(error.params.missingProperty).to.be.equal('itemsHash');
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('itemsHash');
     });
 
     it('should be a string', () => {
@@ -159,8 +159,8 @@ describe('validateSTPacketHeaderStructure', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.itemsHash');
-      expect(error.keyword).to.be.equal('type');
+      expect(error.dataPath).to.equal('.itemsHash');
+      expect(error.keyword).to.equal('type');
     });
 
     it('should not be less than 64 chars', () => {
@@ -172,8 +172,8 @@ describe('validateSTPacketHeaderStructure', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.itemsHash');
-      expect(error.keyword).to.be.equal('minLength');
+      expect(error.dataPath).to.equal('.itemsHash');
+      expect(error.keyword).to.equal('minLength');
     });
 
     it('should not be longer than 64 chars', () => {
@@ -185,15 +185,15 @@ describe('validateSTPacketHeaderStructure', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.itemsHash');
-      expect(error.keyword).to.be.equal('maxLength');
+      expect(error.dataPath).to.equal('.itemsHash');
+      expect(error.keyword).to.equal('maxLength');
     });
   });
 
   it('should return valid result if packet structure is correct', () => {
     const result = validateSTPacketHeader(rawStPacketHeader);
 
-    expect(result).to.be.instanceOf(ValidationResult);
+    expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
   });
 });

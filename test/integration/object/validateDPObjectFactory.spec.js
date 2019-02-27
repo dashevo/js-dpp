@@ -67,7 +67,7 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.getRawDPObject()).to.be.equal(rawDPObject);
+        expect(error.getRawDPObject()).to.equal(rawDPObject);
       });
 
       it('should be defined in DP Contract', () => {
@@ -82,7 +82,7 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.getType()).to.be.equal('undefinedObject');
+        expect(error.getType()).to.equal('undefinedObject');
       });
 
       it('should throw error if getDPObjectSchemaRef throws error', function it() {
@@ -97,9 +97,9 @@ describe('validateDPObjectFactory', () => {
           error = e;
         }
 
-        expect(error).to.be.equal(someError);
+        expect(error).to.equal(someError);
 
-        expect(dpContract.getDPObjectSchemaRef).to.be.calledOnce();
+        expect(dpContract.getDPObjectSchemaRef).to.have.been.calledOnce();
       });
     });
 
@@ -116,7 +116,7 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.getRawDPObject()).to.be.equal(rawDPObject);
+        expect(error.getRawDPObject()).to.equal(rawDPObject);
       });
 
       it('should be a number', () => {
@@ -128,8 +128,8 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.$action');
-        expect(error.keyword).to.be.equal('type');
+        expect(error.dataPath).to.equal('.$action');
+        expect(error.keyword).to.equal('type');
       });
 
       it('should be defined enum', () => {
@@ -141,8 +141,8 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.$action');
-        expect(error.keyword).to.be.equal('enum');
+        expect(error.dataPath).to.equal('.$action');
+        expect(error.keyword).to.equal('enum');
       });
     });
 
@@ -156,9 +156,9 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('');
-        expect(error.keyword).to.be.equal('required');
-        expect(error.params.missingProperty).to.be.equal('$rev');
+        expect(error.dataPath).to.equal('');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('$rev');
       });
 
       it('should be a number', () => {
@@ -170,8 +170,8 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.$rev');
-        expect(error.keyword).to.be.equal('type');
+        expect(error.dataPath).to.equal('.$rev');
+        expect(error.keyword).to.equal('type');
       });
 
       it('should be an integer', () => {
@@ -183,8 +183,8 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.$rev');
-        expect(error.keyword).to.be.equal('multipleOf');
+        expect(error.dataPath).to.equal('.$rev');
+        expect(error.keyword).to.equal('multipleOf');
       });
 
       it('should be greater or equal to zero', () => {
@@ -196,8 +196,8 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.$rev');
-        expect(error.keyword).to.be.equal('minimum');
+        expect(error.dataPath).to.equal('.$rev');
+        expect(error.keyword).to.equal('minimum');
       });
     });
 
@@ -211,9 +211,9 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('');
-        expect(error.keyword).to.be.equal('required');
-        expect(error.params.missingProperty).to.be.equal('$scope');
+        expect(error.dataPath).to.equal('');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('$scope');
       });
 
       it('should be a string', () => {
@@ -225,8 +225,8 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.$scope');
-        expect(error.keyword).to.be.equal('type');
+        expect(error.dataPath).to.equal('.$scope');
+        expect(error.keyword).to.equal('type');
       });
 
       it('should not be less than 64 chars', () => {
@@ -238,8 +238,8 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.$scope');
-        expect(error.keyword).to.be.equal('minLength');
+        expect(error.dataPath).to.equal('.$scope');
+        expect(error.keyword).to.equal('minLength');
       });
 
       it('should not be longer than 64 chars', () => {
@@ -251,8 +251,8 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.$scope');
-        expect(error.keyword).to.be.equal('maxLength');
+        expect(error.dataPath).to.equal('.$scope');
+        expect(error.keyword).to.equal('maxLength');
       });
     });
 
@@ -266,13 +266,13 @@ describe('validateDPObjectFactory', () => {
 
         const [jsonError, scopeError] = result.getErrors();
 
-        expect(jsonError).to.be.instanceOf(JsonSchemaError);
-        expect(jsonError.dataPath).to.be.equal('');
-        expect(jsonError.keyword).to.be.equal('required');
-        expect(jsonError.params.missingProperty).to.be.equal('$scopeId');
+        expect(jsonError).to.be.an.instanceOf(JsonSchemaError);
+        expect(jsonError.dataPath).to.equal('');
+        expect(jsonError.keyword).to.equal('required');
+        expect(jsonError.params.missingProperty).to.equal('$scopeId');
 
-        expect(scopeError).to.be.instanceOf(InvalidDPObjectScopeIdError);
-        expect(scopeError.getRawDPObject()).to.be.equal(rawDPObject);
+        expect(scopeError).to.be.an.instanceOf(InvalidDPObjectScopeIdError);
+        expect(scopeError.getRawDPObject()).to.equal(rawDPObject);
       });
 
       it('should be a string', () => {
@@ -284,12 +284,12 @@ describe('validateDPObjectFactory', () => {
 
         const [jsonError, scopeError] = result.getErrors();
 
-        expect(jsonError).to.be.instanceOf(JsonSchemaError);
-        expect(jsonError.dataPath).to.be.equal('.$scopeId');
-        expect(jsonError.keyword).to.be.equal('type');
+        expect(jsonError).to.be.an.instanceOf(JsonSchemaError);
+        expect(jsonError.dataPath).to.equal('.$scopeId');
+        expect(jsonError.keyword).to.equal('type');
 
-        expect(scopeError).to.be.instanceOf(InvalidDPObjectScopeIdError);
-        expect(scopeError.getRawDPObject()).to.be.equal(rawDPObject);
+        expect(scopeError).to.be.an.instanceOf(InvalidDPObjectScopeIdError);
+        expect(scopeError.getRawDPObject()).to.equal(rawDPObject);
       });
 
       it('should not be less than 34 chars', () => {
@@ -301,12 +301,12 @@ describe('validateDPObjectFactory', () => {
 
         const [jsonError, scopeError] = result.getErrors();
 
-        expect(jsonError).to.be.instanceOf(JsonSchemaError);
-        expect(jsonError.dataPath).to.be.equal('.$scopeId');
-        expect(jsonError.keyword).to.be.equal('minLength');
+        expect(jsonError).to.be.an.instanceOf(JsonSchemaError);
+        expect(jsonError.dataPath).to.equal('.$scopeId');
+        expect(jsonError.keyword).to.equal('minLength');
 
-        expect(scopeError).to.be.instanceOf(InvalidDPObjectScopeIdError);
-        expect(scopeError.getRawDPObject()).to.be.equal(rawDPObject);
+        expect(scopeError).to.be.an.instanceOf(InvalidDPObjectScopeIdError);
+        expect(scopeError.getRawDPObject()).to.equal(rawDPObject);
       });
 
       it('should not be longer than 34 chars', () => {
@@ -318,12 +318,12 @@ describe('validateDPObjectFactory', () => {
 
         const [jsonError, scopeError] = result.getErrors();
 
-        expect(jsonError).to.be.instanceOf(JsonSchemaError);
-        expect(jsonError.dataPath).to.be.equal('.$scopeId');
-        expect(jsonError.keyword).to.be.equal('maxLength');
+        expect(jsonError).to.be.an.instanceOf(JsonSchemaError);
+        expect(jsonError.dataPath).to.equal('.$scopeId');
+        expect(jsonError.keyword).to.equal('maxLength');
 
-        expect(scopeError).to.be.instanceOf(InvalidDPObjectScopeIdError);
-        expect(scopeError.getRawDPObject()).to.be.equal(rawDPObject);
+        expect(scopeError).to.be.an.instanceOf(InvalidDPObjectScopeIdError);
+        expect(scopeError.getRawDPObject()).to.equal(rawDPObject);
       });
 
       it('should be valid entropy', () => {
@@ -335,8 +335,8 @@ describe('validateDPObjectFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error).to.be.instanceOf(InvalidDPObjectScopeIdError);
-        expect(error.getRawDPObject()).to.be.equal(rawDPObject);
+        expect(error).to.be.an.instanceOf(InvalidDPObjectScopeIdError);
+        expect(error.getRawDPObject()).to.equal(rawDPObject);
       });
     });
   });
@@ -351,8 +351,8 @@ describe('validateDPObjectFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.name');
-      expect(error.keyword).to.be.equal('type');
+      expect(error.dataPath).to.equal('.name');
+      expect(error.keyword).to.equal('type');
     });
 
     it('should return error if the second object is not valid against DP Contract', () => {
@@ -364,8 +364,8 @@ describe('validateDPObjectFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('');
-      expect(error.keyword).to.be.equal('additionalProperties');
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('additionalProperties');
     });
   });
 
@@ -375,8 +375,8 @@ describe('validateDPObjectFactory', () => {
 
     const result = validateDPObject(rawDPObject, dpContract);
 
-    expect(validator.validate).to.be.calledOnceWith(dpObjectBaseSchema, rawDPObject);
-    expect(result.getErrors().length).to.be.equal(0);
+    expect(validator.validate).to.have.been.calledOnceWith(dpObjectBaseSchema, rawDPObject);
+    expect(result.getErrors().length).to.equal(0);
   });
 
   it('should throw validation error if additional fields are defined and $action is DELETE', () => {
@@ -386,14 +386,14 @@ describe('validateDPObjectFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.dataPath).to.be.equal('');
-    expect(error.keyword).to.be.equal('additionalProperties');
+    expect(error.dataPath).to.equal('');
+    expect(error.keyword).to.equal('additionalProperties');
   });
 
   it('should return valid response is an object is valid', () => {
     const result = validateDPObject(rawDPObject, dpContract);
 
-    expect(result).to.be.instanceOf(ValidationResult);
+    expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
   });
 });
