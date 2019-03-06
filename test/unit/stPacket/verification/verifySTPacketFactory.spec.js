@@ -131,6 +131,8 @@ describe('verifySTPacketFactory', () => {
     expect(error.getRegistrationTransaction()).to.be.equal(transaction);
   });
 
+  it('should return invalid result if DP Contract specified in ST Packet is not found');
+
   it('should return invalid result if DP Contract is not valid', async () => {
     stPacket.setDPObjects([]);
     stPacket.setDPContract(dpContract);

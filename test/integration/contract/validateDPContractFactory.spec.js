@@ -438,6 +438,30 @@ describe('validateDPContractFactory', () => {
     });
   });
 
+  describe('indices', () => {
+    it('should be an array');
+
+    it('should have at least one item');
+
+    describe('index', () => {
+      it('should be an object');
+
+      it('should have property definitions');
+
+      describe('property definition', () => {
+        it('should have at least one property');
+
+        it('should have only alphanumeric property names');
+
+        it('should have property values only "asc" or "desc"');
+      });
+
+      it('should have "unique" flag');
+
+      it('should have "unqiue" flag equal "true"');
+    });
+  });
+
   it('should return invalid result if there are additional properties', () => {
     rawDPContract.additionalProperty = { };
 
@@ -450,6 +474,12 @@ describe('validateDPContractFactory', () => {
     expect(error.dataPath).to.be.equal('');
     expect(error.keyword).to.be.equal('additionalProperties');
   });
+
+  it('should return invalid result if there are duplicated indices');
+
+  it('should return invalid result if indices don\'t have $userId prefix');
+
+  it('should return invalid result if indices has undefined property');
 
   it('should return valid result if contract is valid', () => {
     const result = validateDPContract(rawDPContract);

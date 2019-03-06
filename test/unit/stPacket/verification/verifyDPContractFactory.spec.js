@@ -1,4 +1,4 @@
-const verifyDPContractFactory = require('../../../../lib/stPacket/verification/verifyDPContractFactory');
+const verifyDPContractFactory = require('../../../../lib/stPacket/verification/verifyDPContract');
 
 const STPacket = require('../../../../lib/stPacket/STPacket');
 
