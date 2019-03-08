@@ -37,9 +37,9 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('');
-      expect(error.keyword).to.be.equal('required');
-      expect(error.params.missingProperty).to.be.equal('$schema');
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('$schema');
     });
 
     it('should be a string', () => {
@@ -51,11 +51,11 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.$schema');
-      expect(error.keyword).to.be.equal('type');
+      expect(error.dataPath).to.equal('.$schema');
+      expect(error.keyword).to.equal('type');
     });
 
-    it('should be particular url', () => {
+    it('should be a particular url', () => {
       rawDPContract.$schema = 'wrong';
 
       const result = validateDPContract(rawDPContract);
@@ -64,8 +64,8 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.keyword).to.be.equal('const');
-      expect(error.dataPath).to.be.equal('.$schema');
+      expect(error.keyword).to.equal('const');
+      expect(error.dataPath).to.equal('.$schema');
     });
   });
 
@@ -79,9 +79,9 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('');
-      expect(error.keyword).to.be.equal('required');
-      expect(error.params.missingProperty).to.be.equal('name');
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('name');
     });
 
     it('should be a string', () => {
@@ -93,8 +93,8 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.name');
-      expect(error.keyword).to.be.equal('type');
+      expect(error.dataPath).to.equal('.name');
+      expect(error.keyword).to.equal('type');
     });
 
     it('should be greater or equal to 3', () => {
@@ -106,8 +106,8 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.name');
-      expect(error.keyword).to.be.equal('minLength');
+      expect(error.dataPath).to.equal('.name');
+      expect(error.keyword).to.equal('minLength');
     });
 
     it('should be less or equal to 24', () => {
@@ -119,8 +119,8 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.name');
-      expect(error.keyword).to.be.equal('maxLength');
+      expect(error.dataPath).to.equal('.name');
+      expect(error.keyword).to.equal('maxLength');
     });
 
     it('should be an alphanumeric string', () => {
@@ -132,8 +132,8 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.name');
-      expect(error.keyword).to.be.equal('pattern');
+      expect(error.dataPath).to.equal('.name');
+      expect(error.keyword).to.equal('pattern');
     });
   });
 
@@ -147,9 +147,9 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('');
-      expect(error.keyword).to.be.equal('required');
-      expect(error.params.missingProperty).to.be.equal('version');
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('version');
     });
 
     it('should be a number', () => {
@@ -161,8 +161,8 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.version');
-      expect(error.keyword).to.be.equal('type');
+      expect(error.dataPath).to.equal('.version');
+      expect(error.keyword).to.equal('type');
     });
 
     it('should be an integer', () => {
@@ -174,8 +174,8 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.version');
-      expect(error.keyword).to.be.equal('multipleOf');
+      expect(error.dataPath).to.equal('.version');
+      expect(error.keyword).to.equal('multipleOf');
     });
 
     it('should be greater or equal to one', () => {
@@ -187,8 +187,8 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.version');
-      expect(error.keyword).to.be.equal('minimum');
+      expect(error.dataPath).to.equal('.version');
+      expect(error.keyword).to.equal('minimum');
     });
   });
 
@@ -198,7 +198,7 @@ describe('validateDPContractFactory', () => {
 
       const result = validateDPContract(rawDPContract);
 
-      expect(result).to.be.instanceOf(ValidationResult);
+      expect(result).to.be.an.instanceOf(ValidationResult);
       expect(result.isValid()).to.be.true();
     });
 
@@ -211,8 +211,8 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.definitions');
-      expect(error.keyword).to.be.equal('type');
+      expect(error.dataPath).to.equal('.definitions');
+      expect(error.keyword).to.equal('type');
     });
 
     it('should not be empty', () => {
@@ -224,11 +224,11 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.definitions');
-      expect(error.keyword).to.be.equal('minProperties');
+      expect(error.dataPath).to.equal('.definitions');
+      expect(error.keyword).to.equal('minProperties');
     });
 
-    it('should have no a non-alphanumeric properties', () => {
+    it('should have no non-alphanumeric properties', () => {
       rawDPContract.definitions = {
         $subSchema: {},
       };
@@ -239,11 +239,11 @@ describe('validateDPContractFactory', () => {
 
       const [patternError, propertyNamesError] = result.getErrors();
 
-      expect(patternError.dataPath).to.be.equal('.definitions');
-      expect(patternError.keyword).to.be.equal('pattern');
+      expect(patternError.dataPath).to.equal('.definitions');
+      expect(patternError.keyword).to.equal('pattern');
 
-      expect(propertyNamesError.dataPath).to.be.equal('.definitions');
-      expect(propertyNamesError.keyword).to.be.equal('propertyNames');
+      expect(propertyNamesError.dataPath).to.equal('.definitions');
+      expect(propertyNamesError.keyword).to.equal('propertyNames');
     });
 
     it('should have no more than 100 properties', () => {
@@ -259,8 +259,8 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.definitions');
-      expect(error.keyword).to.be.equal('maxProperties');
+      expect(error.dataPath).to.equal('.definitions');
+      expect(error.keyword).to.equal('maxProperties');
     });
   });
 
@@ -274,9 +274,9 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('');
-      expect(error.keyword).to.be.equal('required');
-      expect(error.params.missingProperty).to.be.equal('dpObjectsDefinition');
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('dpObjectsDefinition');
     });
 
     it('should be an object', () => {
@@ -288,8 +288,8 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.dpObjectsDefinition');
-      expect(error.keyword).to.be.equal('type');
+      expect(error.dataPath).to.equal('.dpObjectsDefinition');
+      expect(error.keyword).to.equal('type');
     });
 
     it('should not be empty', () => {
@@ -301,11 +301,11 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.dpObjectsDefinition');
-      expect(error.keyword).to.be.equal('minProperties');
+      expect(error.dataPath).to.equal('.dpObjectsDefinition');
+      expect(error.keyword).to.equal('minProperties');
     });
 
-    it('should have no a non-alphanumeric properties', () => {
+    it('should have no non-alphanumeric properties', () => {
       rawDPContract.dpObjectsDefinition['(*&^'] = rawDPContract.dpObjectsDefinition.niceObject;
 
       const result = validateDPContract(rawDPContract);
@@ -314,8 +314,8 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.dpObjectsDefinition');
-      expect(error.keyword).to.be.equal('additionalProperties');
+      expect(error.dataPath).to.equal('.dpObjectsDefinition');
+      expect(error.keyword).to.equal('additionalProperties');
     });
 
     it('should have no more than 100 properties', () => {
@@ -333,8 +333,8 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.be.equal('.dpObjectsDefinition');
-      expect(error.keyword).to.be.equal('maxProperties');
+      expect(error.dataPath).to.equal('.dpObjectsDefinition');
+      expect(error.keyword).to.equal('maxProperties');
     });
 
     describe('DPObject schema', () => {
@@ -347,8 +347,8 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.dpObjectsDefinition[\'niceObject\'].properties');
-        expect(error.keyword).to.be.equal('minProperties');
+        expect(error.dataPath).to.equal('.dpObjectsDefinition[\'niceObject\'].properties');
+        expect(error.keyword).to.equal('minProperties');
       });
 
       it('should have type "object" if defined', () => {
@@ -360,9 +360,9 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.dpObjectsDefinition[\'niceObject\']');
-        expect(error.keyword).to.be.equal('required');
-        expect(error.params.missingProperty).to.be.equal('properties');
+        expect(error.dataPath).to.equal('.dpObjectsDefinition[\'niceObject\']');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('properties');
       });
 
       it('should have "properties"', () => {
@@ -374,9 +374,9 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.dpObjectsDefinition[\'niceObject\']');
-        expect(error.keyword).to.be.equal('required');
-        expect(error.params.missingProperty).to.be.equal('properties');
+        expect(error.dataPath).to.equal('.dpObjectsDefinition[\'niceObject\']');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('properties');
       });
 
       it('should have no non-alphanumeric properties', () => {
@@ -388,10 +388,10 @@ describe('validateDPContractFactory', () => {
 
         const errors = result.getErrors();
 
-        expect(errors[0].dataPath).to.be.equal('.dpObjectsDefinition[\'niceObject\'].properties');
-        expect(errors[0].keyword).to.be.equal('pattern');
-        expect(errors[1].dataPath).to.be.equal('.dpObjectsDefinition[\'niceObject\'].properties');
-        expect(errors[1].keyword).to.be.equal('propertyNames');
+        expect(errors[0].dataPath).to.equal('.dpObjectsDefinition[\'niceObject\'].properties');
+        expect(errors[0].keyword).to.equal('pattern');
+        expect(errors[1].dataPath).to.equal('.dpObjectsDefinition[\'niceObject\'].properties');
+        expect(errors[1].keyword).to.equal('propertyNames');
       });
 
       it('should have "additionalProperties" defined', () => {
@@ -403,9 +403,9 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.dpObjectsDefinition[\'niceObject\']');
-        expect(error.keyword).to.be.equal('required');
-        expect(error.params.missingProperty).to.be.equal('additionalProperties');
+        expect(error.dataPath).to.equal('.dpObjectsDefinition[\'niceObject\']');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('additionalProperties');
       });
 
       it('should have "additionalProperties" defined to false', () => {
@@ -417,8 +417,8 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.dpObjectsDefinition[\'niceObject\'].additionalProperties');
-        expect(error.keyword).to.be.equal('const');
+        expect(error.dataPath).to.equal('.dpObjectsDefinition[\'niceObject\'].additionalProperties');
+        expect(error.keyword).to.equal('const');
       });
 
       it('should have no more than 100 properties', () => {
@@ -436,8 +436,8 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.be.equal('.dpObjectsDefinition[\'niceObject\'].properties');
-        expect(error.keyword).to.be.equal('maxProperties');
+        expect(error.dataPath).to.equal('.dpObjectsDefinition[\'niceObject\'].properties');
+        expect(error.keyword).to.equal('maxProperties');
       });
     });
   });
@@ -565,8 +565,8 @@ describe('validateDPContractFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.dataPath).to.be.equal('');
-    expect(error.keyword).to.be.equal('additionalProperties');
+    expect(error.dataPath).to.equal('');
+    expect(error.keyword).to.equal('additionalProperties');
   });
 
   it('should return invalid result if there are duplicated indices', () => {
@@ -620,7 +620,7 @@ describe('validateDPContractFactory', () => {
   it('should return valid result if contract is valid', () => {
     const result = validateDPContract(rawDPContract);
 
-    expect(result).to.be.instanceOf(ValidationResult);
+    expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
   });
 });
