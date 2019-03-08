@@ -66,6 +66,8 @@ describe('verifySTPacketFactory', () => {
         hashPrevSubTx: userId,
       },
     });
+
+    dataProviderMock.fetchDPContract.resolves(dpContract);
   });
 
   it('should return invalid result if Transaction is not State Transition', async () => {

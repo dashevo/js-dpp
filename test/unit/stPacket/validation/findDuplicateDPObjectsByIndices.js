@@ -13,24 +13,19 @@ describe('findDuplicateDPObjectsByIndices', () => {
   });
 
   it('should return duplicate objects if they are present', () => {
-    const [, , , william, annette, shakespeare] = rawDPObjects;
+    const [, , , william, leon] = rawDPObjects;
+    leon.lastName = 'Birkin';
     const duplicates = findDuplicateDPObjectsByIndices(rawDPObjects, dpContract);
     expect(duplicates).to.deep.equal(
       [
-        annette,
-        shakespeare,
-        william,
+        leon,
         william,
       ],
     );
   });
 
   it('should return an empty array of there are no duplicates', () => {
-    const [firstObject, secondObject, thirdObject, william] = rawDPObjects;
-    const duplicates = findDuplicateDPObjectsByIndices(
-      [firstObject, secondObject, thirdObject, william],
-      dpContract,
-    );
+    const duplicates = findDuplicateDPObjectsByIndices(rawDPObjects, dpContract);
     expect(duplicates.length).to.equal(0);
   });
 });

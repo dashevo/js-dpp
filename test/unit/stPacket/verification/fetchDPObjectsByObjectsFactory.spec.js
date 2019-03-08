@@ -31,9 +31,14 @@ describe('fetchDPObjectsByObjects', () => {
       dpObjects[1].getType(),
     ).resolves([dpObjects[1], dpObjects[2]]);
 
+    dataProviderMock.fetchDPObjects.withArgs(
+      dpContract.getId(),
+      dpObjects[3].getType(),
+    ).resolves([dpObjects[3], dpObjects[4]]);
+
     const fetchedDPObjects = await fetchDPObjectsByObjects(dpContract.getId(), dpObjects);
 
-    expect(dataProviderMock.fetchDPObjects).to.have.been.calledTwice();
+    expect(dataProviderMock.fetchDPObjects).to.have.been.calledThrice();
 
     let where = { id: { $in: [dpObjects[0].getId()] } };
 
@@ -48,6 +53,14 @@ describe('fetchDPObjectsByObjects', () => {
     expect(dataProviderMock.fetchDPObjects).to.have.been.calledWith(
       dpContract.getId(),
       dpObjects[1].getType(),
+      { where },
+    );
+
+    where = { id: { $in: [dpObjects[3].getId(), dpObjects[4].getId()] } };
+
+    expect(dataProviderMock.fetchDPObjects).to.have.been.calledWith(
+      dpContract.getId(),
+      dpObjects[3].getType(),
       { where },
     );
 
