@@ -185,8 +185,6 @@ describe('verifyDPObjects', () => {
     expect(error.getDPObject()).to.equal(dpObjects[0]);
   });
 
-  it('should return invalid result if DP Object has unique indices and there are duplicates');
-
   it('should return valid result if DPObjects are valid', async () => {
     const fetchedDPObjects = [
       new DPObject(dpObjects[1].toJSON()),
