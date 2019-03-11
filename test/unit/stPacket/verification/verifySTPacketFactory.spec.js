@@ -17,6 +17,7 @@ const UserNotFoundError = require('../../../../lib/errors/UserNotFoundError');
 const UnconfirmedUserError = require('../../../../lib/errors/UnconfirmedUserError');
 const InvalidSTPacketHashError = require('../../../../lib/errors/InvalidSTPacketHashError');
 const InvalidTransactionTypeError = require('../../../../lib/errors/InvalidTransactionTypeError');
+const DPContractNotPresentError = require('../../../../lib/errors/DPContractNotPresentError');
 const ConsensusError = require('../../../../lib/errors/ConsensusError');
 
 describe('verifySTPacketFactory', () => {
@@ -133,7 +134,21 @@ describe('verifySTPacketFactory', () => {
     expect(error.getRegistrationTransaction()).to.equal(transaction);
   });
 
-  it('should return invalid result if DP Contract specified in ST Packet is not found');
+  it('should return invalid result if DP Contract specified in ST Packet is not found', async () => {
+    dataProviderMock.fetchDPContract.resolves(undefined);
+
+    const result = await verifySTPacket(stPacket, stateTransition);
+
+    expectValidationError(result, DPContractNotPresentError);
+
+    expect(dataProviderMock.fetchDPContract).to.have.been.calledOnceWith(
+      stPacket.getDPContractId(),
+    );
+
+    const [error] = result.getErrors();
+
+    expect(error.getDPContractId()).to.equal(stPacket.getDPContractId());
+  });
 
   it('should return invalid result if DP Contract is not valid', async () => {
     stPacket.setDPObjects([]);
