@@ -1,4 +1,5 @@
 const verifyDPObjectsFactory = require('../../../../lib/stPacket/verification/verifyDPObjectsFactory');
+const verifyDPObjectsUniquenessByIndicesFactory = require('../../../../lib/stPacket/verification/verifyDPObjectsUniquenessByIndicesFactory');
 
 const STPacket = require('../../../../lib/stPacket/STPacket');
 const DPObject = require('../../../../lib/object/DPObject');
@@ -25,6 +26,7 @@ describe('verifyDPObjects', () => {
   let dpContract;
   let userId;
   let dataProviderMock;
+  let verifyDPObjectsUniquenessByIndices;
 
   beforeEach(function beforeEach() {
     ({ userId } = getDPObjectsFixture);
@@ -40,7 +42,15 @@ describe('verifyDPObjects', () => {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchDPObjects.resolves([]);
 
-    verifyDPObjects = verifyDPObjectsFactory(fetchDPObjectsByObjectsMock, dataProviderMock);
+    verifyDPObjectsUniquenessByIndices = verifyDPObjectsUniquenessByIndicesFactory(
+      fetchDPObjectsByObjectsMock,
+      dataProviderMock,
+    );
+
+    verifyDPObjects = verifyDPObjectsFactory(
+      fetchDPObjectsByObjectsMock,
+      verifyDPObjectsUniquenessByIndices,
+    );
   });
 
   it('should return invalid result if DPObject has wrong scope', async () => {
