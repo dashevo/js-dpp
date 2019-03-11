@@ -493,6 +493,7 @@ describe('validateDPContractFactory', () => {
         const [error] = result.getErrors();
 
         expect(error.dataPath).to.equal('.dpObjectsDefinition[\'indexedObject\'].indices[0]');
+        expect(error.params.missingProperty).to.equal('properties');
         expect(error.keyword).to.equal('required');
       });
 
@@ -538,6 +539,7 @@ describe('validateDPContractFactory', () => {
         const [error] = result.getErrors();
 
         expect(error.dataPath).to.equal('.dpObjectsDefinition[\'indexedObject\'].indices[0]');
+        expect(error.params.missingProperty).to.equal('unique');
         expect(error.keyword).to.equal('required');
       });
 
@@ -570,13 +572,8 @@ describe('validateDPContractFactory', () => {
   });
 
   it('should return invalid result if there are duplicated indices', () => {
-    const indexDefinition = {
-      properties: {
-        $userId: 'asc',
-        firstName: 'desc',
-      },
-      unique: true,
-    };
+    const indexDefinition = Object.assign({},
+      rawDPContract.dpObjectsDefinition.indexedObject.indices[0]);
 
     rawDPContract.dpObjectsDefinition.indexedObject.indices.push(indexDefinition);
 
