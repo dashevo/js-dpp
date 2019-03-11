@@ -600,6 +600,22 @@ describe('validateDPContractFactory', () => {
     expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
   });
 
+  it('should return invalid result if indices don\'t have $userId prefix as a first field', () => {
+    const indexDefinition = rawDPContract.dpObjectsDefinition.indexedObject.indices[0];
+
+    delete indexDefinition.properties.$userId;
+
+    indexDefinition.properties['$userId'] = 'asc';
+
+    const result = validateDPContract(rawDPContract);
+
+    expectValidationError(result, UniqueIndexMustHaveUserIdPrefixError);
+
+    const [error] = result.getErrors();
+
+    expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
+  });
+
   it('should return invalid result if indices has undefined property', () => {
     const indexDefinition = rawDPContract.dpObjectsDefinition.indexedObject.indices[0];
 
