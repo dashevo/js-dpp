@@ -9,12 +9,67 @@ describe('findDuplicateDPObjectsByIndices', () => {
 
   beforeEach(() => {
     rawDPObjects = getDPObjectsFixture().map(o => o.toJSON());
+
     dpContract = getDPContractFixture();
+    dpContract.setDPObjectSchema('nonUniqueIndexObject', {
+      indices: [
+        {
+          properties: {
+            $userId: 'asc',
+            lastName: 'asc',
+          },
+          unique: false,
+        },
+      ],
+      properties: {
+        firstName: {
+          type: 'string',
+        },
+        lastName: {
+          type: 'string',
+        },
+      },
+      required: ['lastName'],
+      additionalProperties: false,
+    });
+
+    dpContract.setDPObjectSchema('singleObject', {
+      indices: [
+        {
+          properties: {
+            $userId: 'asc',
+            lastName: 'asc',
+          },
+          unique: true,
+        },
+      ],
+      properties: {
+        firstName: {
+          type: 'string',
+        },
+        lastName: {
+          type: 'string',
+        },
+      },
+      required: ['lastName'],
+      additionalProperties: false,
+    });
+
+    const [, , , william] = rawDPObjects;
+
+    rawDPObjects.push(Object.assign({}, william, {
+      $type: 'nonUniqueIndexObject',
+    }));
+
+    rawDPObjects.push(Object.assign({}, william, {
+      $type: 'singleObject',
+    }));
   });
 
   it('should return duplicate objects if they are present', () => {
     const [, , , william, leon] = rawDPObjects;
     leon.lastName = 'Birkin';
+
     const duplicates = findDuplicateDPObjectsByIndices(rawDPObjects, dpContract);
     expect(duplicates).to.deep.equal(
       [
