@@ -605,7 +605,7 @@ describe('validateDPContractFactory', () => {
 
     delete indexDefinition.properties.$userId;
 
-    indexDefinition.properties['$userId'] = 'asc';
+    indexDefinition.properties.$userId = 'asc';
 
     const result = validateDPContract(rawDPContract);
 
