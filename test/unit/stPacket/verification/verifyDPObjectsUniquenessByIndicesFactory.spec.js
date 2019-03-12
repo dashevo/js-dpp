@@ -46,7 +46,7 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
     );
   });
 
-  it('should return invalid result if DP Object has unique indices and there are duplicates', async function it() {
+  it('should return invalid result if DP Object has unique indices and there are duplicates', async () => {
     const [, , , william, leon] = dpObjects;
 
     const indicesDefinition = dpContract.getDPObjectSchema(william.getType()).indices;
