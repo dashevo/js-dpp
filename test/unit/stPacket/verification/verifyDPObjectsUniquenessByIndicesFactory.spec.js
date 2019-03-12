@@ -1,3 +1,5 @@
+const bs58 = require('bs58');
+
 const verifyDPObjectsUniquenessByIndicesFactory = require('../../../../lib/stPacket/verification/verifyDPObjectsUniquenessByIndicesFactory');
 
 const STPacket = require('../../../../lib/stPacket/STPacket');
@@ -9,6 +11,11 @@ const { expectValidationError } = require('../../../../lib/test/expect/expectErr
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 
 const DuplicateDPObjectError = require('../../../../lib/errors/DuplicateDPObjectError');
+
+function encodeToBase58(id) {
+  const idBuffer = Buffer.from(id, 'hex');
+  return bs58.encode(idBuffer);
+}
 
 describe('verifyDPObjectsUniquenessByIndices', () => {
   let fetchDPObjectsByObjectsMock;
@@ -54,7 +61,7 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
           where: {
             'dpObject.$userId': william.get('$userId'),
             'dpObject.firstName': william.get('firstName'),
-            _id: { $ne: this.sinonSandbox.match.any },
+            _id: { $ne: encodeToBase58(william.getId()) },
           },
         },
       )
@@ -68,7 +75,7 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
           where: {
             'dpObject.$userId': william.get('$userId'),
             'dpObject.lastName': william.get('lastName'),
-            _id: { $ne: this.sinonSandbox.match.any },
+            _id: { $ne: encodeToBase58(william.getId()) },
           },
         },
       )
@@ -82,7 +89,7 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
           where: {
             'dpObject.$userId': leon.get('$userId'),
             'dpObject.firstName': leon.get('firstName'),
-            _id: { $ne: this.sinonSandbox.match.any },
+            _id: { $ne: encodeToBase58(leon.getId()) },
           },
         },
       )
@@ -96,7 +103,7 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
           where: {
             'dpObject.$userId': leon.get('$userId'),
             'dpObject.lastName': leon.get('lastName'),
-            _id: { $ne: this.sinonSandbox.match.any },
+            _id: { $ne: encodeToBase58(leon.getId()) },
           },
         },
       )
