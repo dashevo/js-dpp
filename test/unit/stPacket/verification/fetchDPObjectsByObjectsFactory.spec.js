@@ -40,29 +40,41 @@ describe('fetchDPObjectsByObjects', () => {
 
     expect(dataProviderMock.fetchDPObjects).to.have.been.calledThrice();
 
-    let where = { id: { $in: [dpObjects[0].getId()] } };
-
-    expect(dataProviderMock.fetchDPObjects).to.have.been.calledWith(
+    const callArgsOne = [
       dpContract.getId(),
       dpObjects[0].getType(),
-      { where },
-    );
+      {
+        where: { id: { $in: [dpObjects[0].getId()] } },
+      },
+    ];
 
-    where = { id: { $in: [dpObjects[1].getId(), dpObjects[2].getId()] } };
-
-    expect(dataProviderMock.fetchDPObjects).to.have.been.calledWith(
+    const callArgsTwo = [
       dpContract.getId(),
       dpObjects[1].getType(),
-      { where },
-    );
+      {
+        where: { id: { $in: [dpObjects[1].getId(), dpObjects[2].getId()] } },
+      },
+    ];
 
-    where = { id: { $in: [dpObjects[3].getId(), dpObjects[4].getId()] } };
-
-    expect(dataProviderMock.fetchDPObjects).to.have.been.calledWith(
+    const callArgsThree = [
       dpContract.getId(),
       dpObjects[3].getType(),
-      { where },
-    );
+      {
+        where: { id: { $in: [dpObjects[3].getId(), dpObjects[4].getId()] } },
+      },
+    ];
+
+    const callsArgs = [];
+    for (let i = 0; i < dataProviderMock.fetchDPObjects.callCount; i++) {
+      const call = dataProviderMock.fetchDPObjects.getCall(i);
+      callsArgs.push(call.args);
+    }
+
+    expect(callsArgs).to.have.deep.members([
+      callArgsOne,
+      callArgsTwo,
+      callArgsThree,
+    ]);
 
     expect(fetchedDPObjects).to.deep.equal(dpObjects);
   });

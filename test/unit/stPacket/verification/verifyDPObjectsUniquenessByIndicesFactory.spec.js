@@ -108,14 +108,14 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
 
     const errors = result.getErrors();
 
-    expect(errors.map(e => e.getDPObject())).to.deep.equal([
+    expect(errors.map(e => e.getDPObject())).to.have.deep.members([
       william,
       william,
       leon,
       leon,
     ]);
 
-    expect(errors.map(e => e.getIndexDefinition())).to.deep.equal([
+    expect(errors.map(e => e.getIndexDefinition())).to.have.deep.members([
       indicesDefinition[0],
       indicesDefinition[1],
       indicesDefinition[0],
