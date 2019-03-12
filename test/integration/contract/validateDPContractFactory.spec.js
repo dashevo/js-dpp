@@ -584,6 +584,8 @@ describe('validateDPContractFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
+    expect(error.getRawDPContract()).to.deep.equal(rawDPContract);
+    expect(error.getDPObjectType()).to.deep.equal('indexedObject');
   });
 
   it('should return invalid result if indices don\'t have $userId prefix', () => {
@@ -598,6 +600,8 @@ describe('validateDPContractFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
+    expect(error.getRawDPContract()).to.deep.equal(rawDPContract);
+    expect(error.getDPObjectType()).to.deep.equal('indexedObject');
   });
 
   it('should return invalid result if indices don\'t have $userId prefix as a first field', () => {
@@ -628,6 +632,9 @@ describe('validateDPContractFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.getPropertyName()).to.equal('missingProperty');
+    expect(error.getRawDPContract()).to.deep.equal(rawDPContract);
+    expect(error.getDPObjectType()).to.deep.equal('indexedObject');
+    expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
   });
 
   it('should return valid result if contract is valid', () => {
