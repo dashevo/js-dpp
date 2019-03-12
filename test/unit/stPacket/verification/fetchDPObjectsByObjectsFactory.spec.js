@@ -1,9 +1,16 @@
+const bs58 = require('bs58');
+
 const getDPObjectsFixture = require('../../../../lib/test/fixtures/getDPObjectsFixture');
 const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
 
 const fetchDPObjectsByObjectsFactory = require('../../../../lib/stPacket/verification/fetchDPObjectsByObjectsFactory');
 
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
+
+function encodeToBase58(id) {
+  const idBuffer = Buffer.from(id, 'hex');
+  return bs58.encode(idBuffer);
+}
 
 describe('fetchDPObjectsByObjects', () => {
   let fetchDPObjectsByObjects;
