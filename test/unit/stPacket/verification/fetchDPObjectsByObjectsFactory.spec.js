@@ -51,7 +51,11 @@ describe('fetchDPObjectsByObjects', () => {
       dpContract.getId(),
       dpObjects[0].getType(),
       {
-        where: { id: { $in: [dpObjects[0].getId()] } },
+        where: {
+          _id: {
+            $in: [encodeToBase58(dpObjects[0].getId())],
+          },
+        },
       },
     ];
 
@@ -59,7 +63,14 @@ describe('fetchDPObjectsByObjects', () => {
       dpContract.getId(),
       dpObjects[1].getType(),
       {
-        where: { id: { $in: [dpObjects[1].getId(), dpObjects[2].getId()] } },
+        where: {
+          _id: {
+            $in: [
+              encodeToBase58(dpObjects[1].getId()),
+              encodeToBase58(dpObjects[2].getId()),
+            ],
+          },
+        },
       },
     ];
 
@@ -67,7 +78,14 @@ describe('fetchDPObjectsByObjects', () => {
       dpContract.getId(),
       dpObjects[3].getType(),
       {
-        where: { id: { $in: [dpObjects[3].getId(), dpObjects[4].getId()] } },
+        where: {
+          _id: {
+            $in: [
+              encodeToBase58(dpObjects[3].getId()),
+              encodeToBase58(dpObjects[4].getId()),
+            ],
+          },
+        },
       },
     ];
 
