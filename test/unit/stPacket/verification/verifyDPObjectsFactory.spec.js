@@ -1,5 +1,4 @@
 const verifyDPObjectsFactory = require('../../../../lib/stPacket/verification/verifyDPObjectsFactory');
-const verifyDPObjectsUniquenessByIndicesFactory = require('../../../../lib/stPacket/verification/verifyDPObjectsUniquenessByIndicesFactory');
 
 const STPacket = require('../../../../lib/stPacket/STPacket');
 const DPObject = require('../../../../lib/object/DPObject');
@@ -10,7 +9,6 @@ const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContrac
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
-const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 
 const InvalidDPObjectScopeError = require('../../../../lib/errors/InvalidDPObjectScopeError');
 const DPObjectAlreadyPresentError = require('../../../../lib/errors/DPObjectAlreadyPresentError');
@@ -25,7 +23,6 @@ describe('verifyDPObjects', () => {
   let dpObjects;
   let dpContract;
   let userId;
-  let dataProviderMock;
   let verifyDPObjectsUniquenessByIndices;
 
   beforeEach(function beforeEach() {
@@ -39,13 +36,8 @@ describe('verifyDPObjects', () => {
 
     fetchDPObjectsByObjectsMock = this.sinonSandbox.stub();
 
-    dataProviderMock = createDataProviderMock(this.sinonSandbox);
-    dataProviderMock.fetchDPObjects.resolves([]);
-
-    verifyDPObjectsUniquenessByIndices = verifyDPObjectsUniquenessByIndicesFactory(
-      fetchDPObjectsByObjectsMock,
-      dataProviderMock,
-    );
+    verifyDPObjectsUniquenessByIndices = this.sinonSandbox.stub();
+    verifyDPObjectsUniquenessByIndices.resolves(new ValidationResult());
 
     verifyDPObjects = verifyDPObjectsFactory(
       fetchDPObjectsByObjectsMock,
