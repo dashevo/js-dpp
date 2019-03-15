@@ -2,6 +2,8 @@ const { startDrive } = require('@dashevo/dp-services-ctl');
 
 const DashPlatformProtocol = require('../../lib/DashPlatformProtocol');
 
+const DriveRPCError = require('../../lib/test/errors/DriveRPCError');
+
 const registerUser = require('../../lib/test/utils/registerUser');
 const sendSTPacket = require('../../lib/test/utils/sendSTPacket');
 const createStateTransition = require('../../lib/test/utils/createStateTransition');
@@ -159,7 +161,18 @@ describe('drive', function main() {
         drive.dashCore.getApi(),
       );
     } catch (e) {
-      //
+      expect(e).to.be.an.instanceOf(DriveRPCError);
+
+      const error = e.getOriginalError();
+      expect(error.data[0].name).to.equal('DuplicateDPObjectError');
+      expect(error.data[0].dpObject).to.deep.equal(thirdUserObject.toJSON());
+      expect(error.data[0].indexDefinition).to.deep.equal({
+        unique: true,
+        properties: [
+          { $userId: 'asc' },
+          { email: 'asc' },
+        ],
+      });
     }
   });
 
