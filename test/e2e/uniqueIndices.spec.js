@@ -16,7 +16,7 @@ function delay(t, val) {
   });
 }
 
-describe('drive', function main() {
+describe('DPP', function main() {
   this.timeout(90000);
 
   let dpp;
@@ -31,7 +31,7 @@ describe('drive', function main() {
     await drive.dashCore.getApi().generate(1000);
   });
 
-  it('should verify DP objects by correctly retrieving data from Drive', async () => {
+  it('should verify DP object uniqueness by indices by submitting correct queries to Drive', async () => {
     // Register a user
     const username = 'simpleBlockchainUser';
 
