@@ -7,14 +7,7 @@ const DriveRPCError = require('../../lib/test/errors/DriveRPCError');
 const registerUser = require('../../lib/test/utils/registerUser');
 const sendSTPacket = require('../../lib/test/utils/sendSTPacket');
 const createStateTransition = require('../../lib/test/utils/createStateTransition');
-
-function delay(t, val) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(val);
-    }, t);
-  });
-}
+const isDriveSynced = require('../../lib/test/utils/isDriveSynced');
 
 describe('DPP', function main() {
   this.timeout(90000);
@@ -89,7 +82,7 @@ describe('DPP', function main() {
       drive.dashCore.getApi(),
     );
 
-    await delay(15000);
+    await isDriveSynced(drive.driveApi.getApi());
 
     // Create first user object
     dpp.setUserId(userId);
@@ -114,7 +107,7 @@ describe('DPP', function main() {
       drive.dashCore.getApi(),
     );
 
-    await delay(15000);
+    await isDriveSynced(drive.driveApi.getApi());
 
     // Create second user object
     const secondUserObject = dpp.object.create('user', {
@@ -137,7 +130,7 @@ describe('DPP', function main() {
       drive.dashCore.getApi(),
     );
 
-    await delay(15000);
+    await isDriveSynced(drive.driveApi.getApi());
 
     // Create third user object violating unique indices
     const thirdUserObject = dpp.object.create('user', {
