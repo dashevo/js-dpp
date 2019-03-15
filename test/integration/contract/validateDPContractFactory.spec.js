@@ -498,18 +498,78 @@ describe('validateDPContractFactory', () => {
       });
 
       describe('properties definition', () => {
-        it('should be an array');
+        it('should be an array', () => {
+          rawDPContract.dpObjectsDefinition.indexedObject.indices[0]
+            .properties = 'something else';
 
-        it('should have at least one property defined');
+          const result = validateDPContract(rawDPContract);
 
-        it('should have no more than 100 property definitions');
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal(
+            '.dpObjectsDefinition[\'indexedObject\'].indices[0].properties',
+          );
+          expect(error.keyword).to.equal('type');
+        });
+
+        it('should have at least one property defined', () => {
+          rawDPContract.dpObjectsDefinition.indexedObject.indices[0]
+            .properties = [];
+
+          const result = validateDPContract(rawDPContract);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal(
+            '.dpObjectsDefinition[\'indexedObject\'].indices[0].properties',
+          );
+          expect(error.keyword).to.equal('minItems');
+        });
+
+        it('should have no more than 100 property definitions', () => {
+          for (let i = 0; i < 100; i++) {
+            rawDPContract.dpObjectsDefinition.indexedObject.indices[0]
+              .properties.push({
+                [`field${i}`]: 'asc',
+              });
+          }
+
+          const result = validateDPContract(rawDPContract);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal(
+            '.dpObjectsDefinition[\'indexedObject\'].indices[0].properties',
+          );
+          expect(error.keyword).to.equal('maxItems');
+        });
 
         describe('property definition', () => {
-          it('should be an object');
+          it('should be an object', () => {
+            rawDPContract.dpObjectsDefinition.indexedObject.indices[0]
+              .properties[0] = 'something else';
+
+            const result = validateDPContract(rawDPContract);
+
+            expectJsonSchemaError(result);
+
+            const [error] = result.getErrors();
+
+            expect(error.dataPath).to.equal(
+              '.dpObjectsDefinition[\'indexedObject\'].indices[0].properties[0]',
+            );
+            expect(error.keyword).to.equal('type');
+          });
 
           it('should have at least one property', () => {
             rawDPContract.dpObjectsDefinition.indexedObject.indices[0]
-              .properties = {};
+              .properties = [];
 
             const result = validateDPContract(rawDPContract);
 
@@ -520,14 +580,14 @@ describe('validateDPContractFactory', () => {
             expect(error.dataPath).to.equal(
               '.dpObjectsDefinition[\'indexedObject\'].indices[0].properties',
             );
-            expect(error.keyword).to.equal('minProperties');
+            expect(error.keyword).to.equal('minItems');
           });
 
-          it('should have no more than one property');
+          it('should have no more than one property', () => {
+            const property = rawDPContract.dpObjectsDefinition.indexedObject.indices[0]
+              .properties[0];
 
-          it('should have property values only "asc" or "desc"', () => {
-            rawDPContract.dpObjectsDefinition.indexedObject.indices[0]
-              .properties.firstName = 'wrong';
+            property.anotherField = 'something';
 
             const result = validateDPContract(rawDPContract);
 
@@ -535,7 +595,25 @@ describe('validateDPContractFactory', () => {
 
             const [error] = result.getErrors();
 
-            expect(error.dataPath).to.equal('.dpObjectsDefinition[\'indexedObject\'].indices[0].properties[\'firstName\']');
+            expect(error.dataPath).to.equal(
+              '.dpObjectsDefinition[\'indexedObject\'].indices[0].properties[0]',
+            );
+            expect(error.keyword).to.equal('maxProperties');
+          });
+
+          it('should have property values only "asc" or "desc"', () => {
+            rawDPContract.dpObjectsDefinition.indexedObject.indices[0]
+              .properties[0].$userId = 'wrong';
+
+            const result = validateDPContract(rawDPContract);
+
+            expectJsonSchemaError(result);
+
+            const [error] = result.getErrors();
+
+            expect(error.dataPath).to.equal(
+              '.dpObjectsDefinition[\'indexedObject\'].indices[0].properties[0][\'$userId\']',
+            );
             expect(error.keyword).to.equal('enum');
           });
         });
@@ -603,7 +681,8 @@ describe('validateDPContractFactory', () => {
   it('should return invalid result if indices don\'t have $userId prefix', () => {
     const indexDefinition = rawDPContract.dpObjectsDefinition.indexedObject.indices[0];
 
-    delete indexDefinition.properties.$userId;
+    const firstIndex = indexDefinition.properties.shift();
+    indexDefinition.properties.push(firstIndex);
 
     const result = validateDPContract(rawDPContract);
 
@@ -619,9 +698,7 @@ describe('validateDPContractFactory', () => {
   it('should return invalid result if indices don\'t have $userId prefix as a first field', () => {
     const indexDefinition = rawDPContract.dpObjectsDefinition.indexedObject.indices[0];
 
-    delete indexDefinition.properties.$userId;
-
-    indexDefinition.properties.$userId = 'asc';
+    indexDefinition.properties.shift();
 
     const result = validateDPContract(rawDPContract);
 
@@ -635,7 +712,9 @@ describe('validateDPContractFactory', () => {
   it('should return invalid result if indices has undefined property', () => {
     const indexDefinition = rawDPContract.dpObjectsDefinition.indexedObject.indices[0];
 
-    indexDefinition.properties.missingProperty = 'asc';
+    indexDefinition.properties.push({
+      missingProperty: 'asc',
+    });
 
     const result = validateDPContract(rawDPContract);
 
