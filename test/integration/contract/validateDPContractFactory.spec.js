@@ -483,7 +483,7 @@ describe('validateDPContractFactory', () => {
         expect(error.keyword).to.equal('type');
       });
 
-      it('should have property definitions', () => {
+      it('should have properties definition', () => {
         rawDPContract.dpObjectsDefinition.indexedObject.indices = [{}];
 
         const result = validateDPContract(rawDPContract);
@@ -497,35 +497,47 @@ describe('validateDPContractFactory', () => {
         expect(error.keyword).to.equal('required');
       });
 
-      describe('property definition', () => {
-        it('should have at least one property', () => {
-          rawDPContract.dpObjectsDefinition.indexedObject.indices[0]
-            .properties = {};
+      describe('properties definition', () => {
+        it('should be an array');
 
-          const result = validateDPContract(rawDPContract);
+        it('should have at least one property defined');
 
-          expectJsonSchemaError(result);
+        it('should have no more than 100 property definitions');
 
-          const [error] = result.getErrors();
+        describe('property definition', () => {
+          it('should be an object');
 
-          expect(error.dataPath).to.equal(
-            '.dpObjectsDefinition[\'indexedObject\'].indices[0].properties',
-          );
-          expect(error.keyword).to.equal('minProperties');
-        });
+          it('should have at least one property', () => {
+            rawDPContract.dpObjectsDefinition.indexedObject.indices[0]
+              .properties = {};
 
-        it('should have property values only "asc" or "desc"', () => {
-          rawDPContract.dpObjectsDefinition.indexedObject.indices[0]
-            .properties.firstName = 'wrong';
+            const result = validateDPContract(rawDPContract);
 
-          const result = validateDPContract(rawDPContract);
+            expectJsonSchemaError(result);
 
-          expectJsonSchemaError(result);
+            const [error] = result.getErrors();
 
-          const [error] = result.getErrors();
+            expect(error.dataPath).to.equal(
+              '.dpObjectsDefinition[\'indexedObject\'].indices[0].properties',
+            );
+            expect(error.keyword).to.equal('minProperties');
+          });
 
-          expect(error.dataPath).to.equal('.dpObjectsDefinition[\'indexedObject\'].indices[0].properties[\'firstName\']');
-          expect(error.keyword).to.equal('enum');
+          it('should have no more than one property');
+
+          it('should have property values only "asc" or "desc"', () => {
+            rawDPContract.dpObjectsDefinition.indexedObject.indices[0]
+              .properties.firstName = 'wrong';
+
+            const result = validateDPContract(rawDPContract);
+
+            expectJsonSchemaError(result);
+
+            const [error] = result.getErrors();
+
+            expect(error.dataPath).to.equal('.dpObjectsDefinition[\'indexedObject\'].indices[0].properties[\'firstName\']');
+            expect(error.keyword).to.equal('enum');
+          });
         });
       });
 
