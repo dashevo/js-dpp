@@ -72,7 +72,7 @@ describe('validateSTPacketDPObjectsFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getDuplicatedDPObjects()).to.deep.equal([rawDocuments[0]]);
+    expect(error.getDuplicatedDocuments()).to.deep.equal([rawDocuments[0]]);
 
     expect(validateDPObjectMock.callCount).to.equal(5);
 
