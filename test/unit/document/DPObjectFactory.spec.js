@@ -16,7 +16,7 @@ describe('DPObjectFactory', () => {
   let decodeMock;
   let generateMock;
   let validateDPObjectMock;
-  let DPObjectFactory;
+  let DocumentFactory;
   let userId;
   let dpContract;
   let document;
@@ -29,7 +29,7 @@ describe('DPObjectFactory', () => {
     generateMock = this.sinonSandbox.stub();
     validateDPObjectMock = this.sinonSandbox.stub();
 
-    DPObjectFactory = rewiremock.proxy('../../../lib/document/DPObjectFactory', {
+    DocumentFactory = rewiremock.proxy('../../../lib/document/DocumentFactory', {
       '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': { decode: decodeMock },
       '../../../lib/util/entropy': { generate: generateMock },
@@ -42,7 +42,7 @@ describe('DPObjectFactory', () => {
     [document] = getDPObjectsFixture();
     rawDocument = document.toJSON();
 
-    factory = new DPObjectFactory(
+    factory = new DocumentFactory(
       userId,
       dpContract,
       validateDPObjectMock,
