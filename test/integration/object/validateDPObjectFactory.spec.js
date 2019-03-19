@@ -3,9 +3,9 @@ const Ajv = require('ajv');
 const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const DPObject = require('../../../lib/object/DPObject');
-const validateDPObjectFactory = require('../../../lib/object/validateDPObjectFactory');
-const enrichDPContractWithBaseDPObject = require('../../../lib/object/enrichDPContractWithBaseDPObject');
+const DPObject = require('../../../lib/document/DPObject');
+const validateDPObjectFactory = require('../../../lib/document/validateDPObjectFactory');
+const enrichDPContractWithBaseDPObject = require('../../../lib/document/enrichDPContractWithBaseDPObject');
 
 const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
 const getDPObjectsFixture = require('../../../lib/test/fixtures/getDPObjectsFixture');

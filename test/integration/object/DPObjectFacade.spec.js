@@ -1,6 +1,6 @@
 const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
-const DPObject = require('../../../lib/object/DPObject');
+const DPObject = require('../../../lib/document/DPObject');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 

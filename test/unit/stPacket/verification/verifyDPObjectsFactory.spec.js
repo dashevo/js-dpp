@@ -1,7 +1,7 @@
 const verifyDPObjectsFactory = require('../../../../lib/stPacket/verification/verifyDPObjectsFactory');
 
 const STPacket = require('../../../../lib/stPacket/STPacket');
-const DPObject = require('../../../../lib/object/DPObject');
+const DPObject = require('../../../../lib/document/DPObject');
 
 const getDPObjectsFixture = require('../../../../lib/test/fixtures/getDPObjectsFixture');
 const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');

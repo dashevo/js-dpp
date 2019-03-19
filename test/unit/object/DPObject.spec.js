@@ -1,6 +1,6 @@
 const rewiremock = require('rewiremock/node');
 
-const DataIsNotAllowedWithActionDeleteError = require('../../../lib/object/errors/DataIsNotAllowedWithActionDeleteError');
+const DataIsNotAllowedWithActionDeleteError = require('../../../lib/document/errors/DataIsNotAllowedWithActionDeleteError');
 
 describe('DPObject', () => {
   let lodashGetMock;
@@ -18,7 +18,7 @@ describe('DPObject', () => {
     const serializerMock = { encode: this.sinonSandbox.stub() };
     encodeMock = serializerMock.encode;
 
-    DPObject = rewiremock.proxy('../../../lib/object/DPObject', {
+    DPObject = rewiremock.proxy('../../../lib/document/DPObject', {
       '../../../node_modules/lodash.get': lodashGetMock,
       '../../../node_modules/lodash.set': lodashSetMock,
       '../../../lib/util/hash': hashMock,

@@ -1,6 +1,6 @@
 const rewiremock = require('rewiremock/node');
 
-const DPObject = require('../../../lib/object/DPObject');
+const DPObject = require('../../../lib/document/DPObject');
 
 const getDPObjectsFixture = require('../../../lib/test/fixtures/getDPObjectsFixture');
 const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
@@ -8,7 +8,7 @@ const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFi
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const InvalidDPObjectTypeError = require('../../../lib/errors/InvalidDPObjectTypeError');
-const InvalidDPObjectError = require('../../../lib/object/errors/InvalidDPObjectError');
+const InvalidDPObjectError = require('../../../lib/document/errors/InvalidDPObjectError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 
 describe('DPObjectFactory', () => {
@@ -29,7 +29,7 @@ describe('DPObjectFactory', () => {
     generateMock = this.sinonSandbox.stub();
     validateDPObjectMock = this.sinonSandbox.stub();
 
-    DPObjectFactory = rewiremock.proxy('../../../lib/object/DPObjectFactory', {
+    DPObjectFactory = rewiremock.proxy('../../../lib/document/DPObjectFactory', {
       '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': { decode: decodeMock },
       '../../../lib/util/entropy': { generate: generateMock },

@@ -4,7 +4,7 @@ const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFi
 const getDPObjectsFixture = require('../../../lib/test/fixtures/getDPObjectsFixture');
 
 const DPContract = require('../../../lib/contract/DPContract');
-const DPObject = require('../../../lib/object/DPObject');
+const DPObject = require('../../../lib/document/DPObject');
 
 const ContractAndObjectsNotAllowedSamePacketError = require('../../../lib/stPacket/errors/ContractAndObjectsNotAllowedSamePacketError');
 
