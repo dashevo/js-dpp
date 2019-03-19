@@ -15,6 +15,7 @@ const DPObjectAlreadyPresentError = require('../../../../lib/errors/DPObjectAlre
 const DPObjectNotFoundError = require('../../../../lib/errors/DPObjectNotFoundError');
 const InvalidDPObjectRevisionError = require('../../../../lib/errors/InvalidDPObjectRevisionError');
 const InvalidDPObjectActionError = require('../../../../lib/stPacket/errors/InvalidDPObjectActionError');
+const DPContractNotPresentError = require('../../../../lib/errors/DPContractNotPresentError');
 
 describe('verifyDPObjects', () => {
   let verifyDPObjects;
@@ -43,6 +44,20 @@ describe('verifyDPObjects', () => {
       fetchDPObjectsByObjectsMock,
       verifyDPObjectsUniquenessByIndices,
     );
+  });
+
+  it('should return invalid result if DP Contract is not present', async () => {
+    dpContract = undefined;
+
+    const result = await verifyDPObjects(stPacket, userId, dpContract);
+
+    expectValidationError(result, DPContractNotPresentError);
+
+    const [error] = result.getErrors();
+
+    expect(error.getDPContractId()).to.equal(stPacket.getDPContractId());
+
+    expect(fetchDPObjectsByObjectsMock).to.have.not.been.called();
   });
 
   it('should return invalid result if DPObject has wrong scope', async () => {
