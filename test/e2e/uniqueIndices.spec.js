@@ -26,10 +26,8 @@ describe('DPP', function main() {
 
   it('should verify DP object uniqueness by indices by submitting correct queries to Drive', async () => {
     // Register a user
-    const username = 'simpleBlockchainUser';
-
-    const { userId, privateKeyString } = await registerUser(
-      username,
+    const user = await registerUser(
+      'simpleBlockchainUser',
       drive.dashCore.getApi(),
     );
 
@@ -70,8 +68,7 @@ describe('DPP', function main() {
     const dpContractPacket = dpp.packet.create(dpContract);
 
     const dpContractTransaction = createStateTransition(
-      userId,
-      privateKeyString,
+      user,
       dpContractPacket,
     );
 
@@ -85,7 +82,7 @@ describe('DPP', function main() {
     await isDriveSynced(drive.driveApi.getApi());
 
     // Create first user object
-    dpp.setUserId(userId);
+    dpp.setUserId(user.getId());
 
     const firstUserObject = dpp.object.create('user', {
       firstName: 'William',
@@ -94,8 +91,7 @@ describe('DPP', function main() {
 
     const firstUserPacket = dpp.packet.create([firstUserObject]);
     const firstUserTransaction = createStateTransition(
-      userId,
-      privateKeyString,
+      user,
       firstUserPacket,
       dpContractTsId,
     );
@@ -117,8 +113,7 @@ describe('DPP', function main() {
 
     const secondUserPacket = dpp.packet.create([secondUserObject]);
     const secondUserTransaction = createStateTransition(
-      userId,
-      privateKeyString,
+      user,
       secondUserPacket,
       firstUserTsId,
     );
@@ -140,8 +135,7 @@ describe('DPP', function main() {
 
     const thirdUserPacket = dpp.packet.create([thirdUserObject]);
     const thirdUserTransaction = createStateTransition(
-      userId,
-      privateKeyString,
+      user,
       thirdUserPacket,
       secondUserTsId,
     );
