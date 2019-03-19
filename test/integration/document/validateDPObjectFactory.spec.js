@@ -5,7 +5,7 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const Document = require('../../../lib/document/Document');
 const validateDPObjectFactory = require('../../../lib/document/validateDPObjectFactory');
-const enrichDPContractWithBaseDPObject = require('../../../lib/document/enrichDPContractWithBaseDPObject');
+const enrichDPContractWithBaseDocument = require('../../../lib/document/enrichDPContractWithBaseDocument');
 
 const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
 const getDPObjectsFixture = require('../../../lib/test/fixtures/getDPObjectsFixture');
@@ -17,7 +17,7 @@ const InvalidDocumentScopeIdError = require('../../../lib/errors/InvalidDocument
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 const JsonSchemaError = require('../../../lib/errors/JsonSchemaError');
 
-const originalDPObjectBaseSchema = require('../../../schema/base/dp-object');
+const originalDocumentBaseSchema = require('../../../schema/base/document');
 
 const {
   expectValidationError,
@@ -30,7 +30,7 @@ describe('validateDPObjectFactory', () => {
   let rawDocument;
   let validateDPObject;
   let validator;
-  let dpObjectBaseSchema;
+  let documentBaseSchema;
 
   beforeEach(function beforeEach() {
     const ajv = new Ajv();
@@ -42,14 +42,14 @@ describe('validateDPObjectFactory', () => {
 
     validateDPObject = validateDPObjectFactory(
       validator,
-      enrichDPContractWithBaseDPObject,
+      enrichDPContractWithBaseDocument,
     );
 
     rawDocuments = getDPObjectsFixture().map(o => o.toJSON());
     [rawDocument] = rawDocuments;
 
-    dpObjectBaseSchema = JSON.parse(
-      JSON.stringify(originalDPObjectBaseSchema),
+    documentBaseSchema = JSON.parse(
+      JSON.stringify(originalDocumentBaseSchema),
     );
   });
 
@@ -375,7 +375,7 @@ describe('validateDPObjectFactory', () => {
 
     const result = validateDPObject(rawDocument, dpContract);
 
-    expect(validator.validate).to.have.been.calledOnceWith(dpObjectBaseSchema, rawDocument);
+    expect(validator.validate).to.have.been.calledOnceWith(documentBaseSchema, rawDocument);
     expect(result.getErrors().length).to.equal(0);
   });
 
