@@ -1,6 +1,6 @@
 const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
-const DPObject = require('../../../lib/document/DPObject');
+const Document = require('../../../lib/document/Document');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
@@ -32,7 +32,7 @@ describe('DPObjectFacade', () => {
         dpObject.getData(),
       );
 
-      expect(result).to.be.an.instanceOf(DPObject);
+      expect(result).to.be.an.instanceOf(Document);
 
       expect(result.getType()).to.equal(dpObject.getType());
       expect(result.getData()).to.deep.equal(dpObject.getData());
@@ -81,7 +81,7 @@ describe('DPObjectFacade', () => {
     it('should create DP Object from plain object', () => {
       const result = dpp.object.createFromObject(dpObject.toJSON());
 
-      expect(result).to.be.an.instanceOf(DPObject);
+      expect(result).to.be.an.instanceOf(Document);
 
       expect(result.toJSON()).to.deep.equal(dpObject.toJSON());
     });
@@ -123,7 +123,7 @@ describe('DPObjectFacade', () => {
     it('should create DP Object from string', () => {
       const result = dpp.object.createFromSerialized(dpObject.serialize());
 
-      expect(result).to.be.an.instanceOf(DPObject);
+      expect(result).to.be.an.instanceOf(Document);
 
       expect(result.toJSON()).to.deep.equal(dpObject.toJSON());
     });

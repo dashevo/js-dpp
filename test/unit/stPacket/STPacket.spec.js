@@ -4,7 +4,7 @@ const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFi
 const getDPObjectsFixture = require('../../../lib/test/fixtures/getDPObjectsFixture');
 
 const DPContract = require('../../../lib/contract/DPContract');
-const DPObject = require('../../../lib/document/DPObject');
+const Document = require('../../../lib/document/Document');
 
 const ContractAndObjectsNotAllowedSamePacketError = require('../../../lib/stPacket/errors/ContractAndObjectsNotAllowedSamePacketError');
 
@@ -39,7 +39,7 @@ describe('STPacket', () => {
       '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': serializerMock,
       '../../../lib/contract/DPContract': DPContract,
-      '../../../lib/document/DPObject': DPObject,
+      '../../../lib/document/Document': Document,
       '../../../lib/stPacket/calculateItemsMerkleRoot': calculateItemsMerkleRootMock,
       '../../../lib/stPacket/calculateItemsHash': calculateItemsHashMock,
     });

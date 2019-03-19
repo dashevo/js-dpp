@@ -1,7 +1,7 @@
 const verifyDPObjectsFactory = require('../../../../lib/stPacket/verification/verifyDPObjectsFactory');
 
 const STPacket = require('../../../../lib/stPacket/STPacket');
-const DPObject = require('../../../../lib/document/DPObject');
+const Document = require('../../../../lib/document/Document');
 
 const getDPObjectsFixture = require('../../../../lib/test/fixtures/getDPObjectsFixture');
 const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
@@ -83,7 +83,7 @@ describe('verifyDPObjects', () => {
   });
 
   it('should return invalid result if DPObject with action "update" is not present', async () => {
-    dpObjects[0].setAction(DPObject.ACTIONS.UPDATE);
+    dpObjects[0].setAction(Document.ACTIONS.UPDATE);
 
     fetchDPObjectsByObjectsMock.resolves([]);
 
@@ -103,7 +103,7 @@ describe('verifyDPObjects', () => {
 
   it('should return invalid result if DPObject with action "delete" is not present', async () => {
     dpObjects[0].setData({});
-    dpObjects[0].setAction(DPObject.ACTIONS.DELETE);
+    dpObjects[0].setAction(Document.ACTIONS.DELETE);
 
     fetchDPObjectsByObjectsMock.resolves([]);
 
@@ -122,7 +122,7 @@ describe('verifyDPObjects', () => {
   });
 
   it('should return invalid result if DPObject with action "update" has wrong revision', async () => {
-    dpObjects[0].setAction(DPObject.ACTIONS.UPDATE);
+    dpObjects[0].setAction(Document.ACTIONS.UPDATE);
 
     fetchDPObjectsByObjectsMock.resolves([dpObjects[0]]);
 
@@ -143,7 +143,7 @@ describe('verifyDPObjects', () => {
 
   it('should return invalid result if DPObject with action "delete" has wrong revision', async () => {
     dpObjects[0].setData({});
-    dpObjects[0].setAction(DPObject.ACTIONS.DELETE);
+    dpObjects[0].setAction(Document.ACTIONS.DELETE);
 
     fetchDPObjectsByObjectsMock.resolves([dpObjects[0]]);
 
@@ -179,17 +179,17 @@ describe('verifyDPObjects', () => {
 
   it('should return valid result if DPObjects are valid', async () => {
     const fetchedDPObjects = [
-      new DPObject(dpObjects[1].toJSON()),
-      new DPObject(dpObjects[2].toJSON()),
+      new Document(dpObjects[1].toJSON()),
+      new Document(dpObjects[2].toJSON()),
     ];
 
     fetchDPObjectsByObjectsMock.resolves(fetchedDPObjects);
 
-    dpObjects[1].setAction(DPObject.ACTIONS.UPDATE);
+    dpObjects[1].setAction(Document.ACTIONS.UPDATE);
     dpObjects[1].setRevision(1);
 
     dpObjects[2].setData({});
-    dpObjects[2].setAction(DPObject.ACTIONS.DELETE);
+    dpObjects[2].setAction(Document.ACTIONS.DELETE);
     dpObjects[2].setRevision(1);
 
     const result = await verifyDPObjects(stPacket, userId, dpContract);

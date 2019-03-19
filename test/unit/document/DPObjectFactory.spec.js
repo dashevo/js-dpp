@@ -1,6 +1,6 @@
 const rewiremock = require('rewiremock/node');
 
-const DPObject = require('../../../lib/document/DPObject');
+const Document = require('../../../lib/document/Document');
 
 const getDPObjectsFixture = require('../../../lib/test/fixtures/getDPObjectsFixture');
 const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
@@ -33,7 +33,7 @@ describe('DPObjectFactory', () => {
       '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': { decode: decodeMock },
       '../../../lib/util/entropy': { generate: generateMock },
-      '../../../lib/document/DPObject': DPObject,
+      '../../../lib/document/Document': Document,
     });
 
     ({ userId } = getDPObjectsFixture);
@@ -63,7 +63,7 @@ describe('DPObjectFactory', () => {
         { name },
       );
 
-      expect(newDPObject).to.be.an.instanceOf(DPObject);
+      expect(newDPObject).to.be.an.instanceOf(Document);
 
       expect(newDPObject.getType()).to.equal(rawDPObject.$type);
 
@@ -75,9 +75,9 @@ describe('DPObjectFactory', () => {
       expect(generateMock).to.have.been.calledOnce();
       expect(newDPObject.scopeId).to.equal(scopeId);
 
-      expect(newDPObject.getAction()).to.equal(DPObject.DEFAULTS.ACTION);
+      expect(newDPObject.getAction()).to.equal(Document.DEFAULTS.ACTION);
 
-      expect(newDPObject.getRevision()).to.equal(DPObject.DEFAULTS.REVISION);
+      expect(newDPObject.getRevision()).to.equal(Document.DEFAULTS.REVISION);
     });
 
     it('should throw an error if type is not defined', () => {
@@ -104,7 +104,7 @@ describe('DPObjectFactory', () => {
 
       const result = factory.createFromObject(rawDPObject);
 
-      expect(result).to.be.an.instanceOf(DPObject);
+      expect(result).to.be.an.instanceOf(Document);
       expect(result.toJSON()).to.deep.equal(rawDPObject);
 
       expect(validateDPObjectMock).to.have.been.calledOnceWith(rawDPObject, dpContract);
@@ -113,7 +113,7 @@ describe('DPObjectFactory', () => {
     it('should return new DPObject without validation if "skipValidation" option is passed', () => {
       const result = factory.createFromObject(rawDPObject, { skipValidation: true });
 
-      expect(result).to.be.an.instanceOf(DPObject);
+      expect(result).to.be.an.instanceOf(Document);
       expect(result.toJSON()).to.deep.equal(rawDPObject);
 
       expect(validateDPObjectMock).to.have.not.been.called();

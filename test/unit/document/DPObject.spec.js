@@ -18,7 +18,7 @@ describe('DPObject', () => {
     const serializerMock = { encode: this.sinonSandbox.stub() };
     encodeMock = serializerMock.encode;
 
-    DPObject = rewiremock.proxy('../../../lib/document/DPObject', {
+    DPObject = rewiremock.proxy('../../../lib/document/Document', {
       '../../../node_modules/lodash.get': lodashGetMock,
       '../../../node_modules/lodash.set': lodashSetMock,
       '../../../lib/util/hash': hashMock,

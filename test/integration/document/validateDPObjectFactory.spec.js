@@ -3,7 +3,7 @@ const Ajv = require('ajv');
 const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const DPObject = require('../../../lib/document/DPObject');
+const Document = require('../../../lib/document/Document');
 const validateDPObjectFactory = require('../../../lib/document/validateDPObjectFactory');
 const enrichDPContractWithBaseDPObject = require('../../../lib/document/enrichDPContractWithBaseDPObject');
 
@@ -371,7 +371,7 @@ describe('validateDPObjectFactory', () => {
 
   it('should validate against base DP object schema if $action is DELETE', () => {
     delete rawDPObject.name;
-    rawDPObject.$action = DPObject.ACTIONS.DELETE;
+    rawDPObject.$action = Document.ACTIONS.DELETE;
 
     const result = validateDPObject(rawDPObject, dpContract);
 
@@ -380,7 +380,7 @@ describe('validateDPObjectFactory', () => {
   });
 
   it('should throw validation error if additional fields are defined and $action is DELETE', () => {
-    rawDPObject.$action = DPObject.ACTIONS.DELETE;
+    rawDPObject.$action = Document.ACTIONS.DELETE;
 
     const result = validateDPObject(rawDPObject, dpContract);
 
