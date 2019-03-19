@@ -4,10 +4,10 @@ const DashPlatformProtocol = require('../../lib/DashPlatformProtocol');
 
 const DriveRPCError = require('../../lib/test/errors/DriveRPCError');
 
-const registerUser = require('../../lib/test/utils/registerUser');
-const sendSTPacket = require('../../lib/test/utils/sendSTPacket');
-const createStateTransition = require('../../lib/test/utils/createStateTransition');
-const isDriveSynced = require('../../lib/test/utils/isDriveSynced');
+const registerUser = require('../../lib/test/e2e/registerUser');
+const sendSTPacket = require('../../lib/test/e2e/sendSTPacket');
+const createStateTransition = require('../../lib/test/e2e/createStateTransition');
+const isDriveSynced = require('../../lib/test/e2e/isDriveSynced');
 
 describe('DPP', function main() {
   this.timeout(90000);
