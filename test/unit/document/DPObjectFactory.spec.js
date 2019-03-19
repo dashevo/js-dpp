@@ -15,7 +15,7 @@ describe('DPObjectFactory', () => {
   let hashMock;
   let decodeMock;
   let generateMock;
-  let validateDPObjectMock;
+  let validateDocumentMock;
   let DocumentFactory;
   let userId;
   let dpContract;
@@ -27,7 +27,7 @@ describe('DPObjectFactory', () => {
     hashMock = this.sinonSandbox.stub();
     decodeMock = this.sinonSandbox.stub();
     generateMock = this.sinonSandbox.stub();
-    validateDPObjectMock = this.sinonSandbox.stub();
+    validateDocumentMock = this.sinonSandbox.stub();
 
     DocumentFactory = rewiremock.proxy('../../../lib/document/DocumentFactory', {
       '../../../lib/util/hash': hashMock,
@@ -45,7 +45,7 @@ describe('DPObjectFactory', () => {
     factory = new DocumentFactory(
       userId,
       dpContract,
-      validateDPObjectMock,
+      validateDocumentMock,
     );
   });
 
@@ -100,14 +100,14 @@ describe('DPObjectFactory', () => {
 
   describe('createFromObject', () => {
     it('should return new DPContract with data from passed object', () => {
-      validateDPObjectMock.returns(new ValidationResult());
+      validateDocumentMock.returns(new ValidationResult());
 
       const result = factory.createFromObject(rawDocument);
 
       expect(result).to.be.an.instanceOf(Document);
       expect(result.toJSON()).to.deep.equal(rawDocument);
 
-      expect(validateDPObjectMock).to.have.been.calledOnceWith(rawDocument, dpContract);
+      expect(validateDocumentMock).to.have.been.calledOnceWith(rawDocument, dpContract);
     });
 
     it('should return new Document without validation if "skipValidation" option is passed', () => {
@@ -116,13 +116,13 @@ describe('DPObjectFactory', () => {
       expect(result).to.be.an.instanceOf(Document);
       expect(result.toJSON()).to.deep.equal(rawDocument);
 
-      expect(validateDPObjectMock).to.have.not.been.called();
+      expect(validateDocumentMock).to.have.not.been.called();
     });
 
     it('should throw an error if passed object is not valid', () => {
       const validationError = new ConsensusError('test');
 
-      validateDPObjectMock.returns(new ValidationResult([validationError]));
+      validateDocumentMock.returns(new ValidationResult([validationError]));
 
       let error;
       try {
@@ -139,7 +139,7 @@ describe('DPObjectFactory', () => {
       const [consensusError] = error.getErrors();
       expect(consensusError).to.equal(validationError);
 
-      expect(validateDPObjectMock).to.have.been.calledOnceWith(rawDocument, dpContract);
+      expect(validateDocumentMock).to.have.been.calledOnceWith(rawDocument, dpContract);
     });
   });
 
