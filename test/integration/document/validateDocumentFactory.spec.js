@@ -369,7 +369,7 @@ describe('validateDocumentFactory', () => {
     });
   });
 
-  it('should validate against base DP object schema if $action is DELETE', () => {
+  it('should validate against base Document schema if $action is DELETE', () => {
     delete rawDocument.name;
     rawDocument.$action = Document.ACTIONS.DELETE;
 
