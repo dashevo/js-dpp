@@ -39,7 +39,7 @@ describe('STPacket', () => {
       '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': serializerMock,
       '../../../lib/contract/DPContract': DPContract,
-      '../../../lib/object/DPObject': DPObject,
+      '../../../lib/document/DPObject': DPObject,
       '../../../lib/stPacket/calculateItemsMerkleRoot': calculateItemsMerkleRootMock,
       '../../../lib/stPacket/calculateItemsHash': calculateItemsHashMock,
     });

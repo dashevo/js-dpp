@@ -33,7 +33,7 @@ describe('DPObjectFactory', () => {
       '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': { decode: decodeMock },
       '../../../lib/util/entropy': { generate: generateMock },
-      '../../../lib/object/DPObject': DPObject,
+      '../../../lib/document/DPObject': DPObject,
     });
 
     ({ userId } = getDPObjectsFixture);
