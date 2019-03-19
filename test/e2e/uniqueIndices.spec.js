@@ -33,7 +33,7 @@ describe('DPP', function main() {
 
     // Create the data contract
     const dpContract = dpp.contract.create('IndexedContract', {
-      user: {
+      profile: {
         indices: [
           {
             properties: [
@@ -84,7 +84,7 @@ describe('DPP', function main() {
     // Create first user object
     dpp.setUserId(user.getId());
 
-    const firstUserObject = dpp.object.create('user', {
+    const firstUserObject = dpp.object.create('profile', {
       firstName: 'William',
       email: 'w.birkin@umbrella.co',
     });
@@ -106,7 +106,7 @@ describe('DPP', function main() {
     await isDriveSynced(drive.driveApi.getApi());
 
     // Create second user object
-    const secondUserObject = dpp.object.create('user', {
+    const secondUserObject = dpp.object.create('profile', {
       firstName: 'Annette',
       email: 'a.birkin@umbrella.co',
     });
@@ -128,7 +128,7 @@ describe('DPP', function main() {
     await isDriveSynced(drive.driveApi.getApi());
 
     // Create third user object violating unique indices
-    const thirdUserObject = dpp.object.create('user', {
+    const thirdUserObject = dpp.object.create('profile', {
       firstName: 'Leon',
       email: 'a.birkin@umbrella.co',
     });
@@ -147,6 +147,8 @@ describe('DPP', function main() {
         drive.driveApi.getApi(),
         drive.dashCore.getApi(),
       );
+
+      expect.fail('Duplicate object was successfully sent');
     } catch (e) {
       expect(e).to.be.an.instanceOf(DriveRPCError);
 
