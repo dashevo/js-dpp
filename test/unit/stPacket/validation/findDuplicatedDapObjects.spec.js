@@ -1,12 +1,12 @@
 const findDuplicateDocuments = require('../../../../lib/stPacket/validation/findDuplicateDocuments');
 
-const getDPObjectsFixture = require('../../../../lib/test/fixtures/getDPObjectsFixture');
+const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 
 describe('findDuplicateDocuments', () => {
   let rawDocuments;
 
   beforeEach(() => {
-    rawDocuments = getDPObjectsFixture().map(o => o.toJSON());
+    rawDocuments = getDocumentsFixture().map(o => o.toJSON());
   });
 
   it('should return empty array if there are no duplicated Documents', () => {

@@ -8,7 +8,7 @@ const validateDocumentFactory = require('../../../lib/document/validateDocumentF
 const enrichDPContractWithBaseDocument = require('../../../lib/document/enrichDPContractWithBaseDocument');
 
 const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
-const getDPObjectsFixture = require('../../../lib/test/fixtures/getDPObjectsFixture');
+const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
 const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTypeError');
 const MissingDocumentActionError = require('../../../lib/errors/MissingDocumentActionError');
@@ -45,7 +45,7 @@ describe('validateDPObjectFactory', () => {
       enrichDPContractWithBaseDocument,
     );
 
-    rawDocuments = getDPObjectsFixture().map(o => o.toJSON());
+    rawDocuments = getDocumentsFixture().map(o => o.toJSON());
     [rawDocument] = rawDocuments;
 
     documentBaseSchema = JSON.parse(

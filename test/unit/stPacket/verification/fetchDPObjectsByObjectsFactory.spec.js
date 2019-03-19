@@ -1,6 +1,6 @@
 const bs58 = require('bs58');
 
-const getDPObjectsFixture = require('../../../../lib/test/fixtures/getDPObjectsFixture');
+const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
 
 const fetchDocumentsByDocumentsFactory = require('../../../../lib/stPacket/verification/fetchDocumentsByDocumentsFactory');
@@ -23,7 +23,7 @@ describe('fetchDocumentsByDocuments', () => {
 
     fetchDocumentsByDocuments = fetchDocumentsByDocumentsFactory(dataProviderMock);
 
-    documents = getDPObjectsFixture();
+    documents = getDocumentsFixture();
     dpContract = getDPContractFixture();
   });
 

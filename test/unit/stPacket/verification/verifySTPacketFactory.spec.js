@@ -2,7 +2,7 @@ const { Transaction, PrivateKey } = require('@dashevo/dashcore-lib');
 
 const STPacket = require('../../../../lib/stPacket/STPacket');
 
-const getDPObjectsFixture = require('../../../../lib/test/fixtures/getDPObjectsFixture');
+const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
 
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
@@ -49,9 +49,9 @@ describe('verifySTPacketFactory', () => {
       dataProviderMock,
     );
 
-    ({ userId } = getDPObjectsFixture);
+    ({ userId } = getDocumentsFixture);
 
-    documents = getDPObjectsFixture();
+    documents = getDocumentsFixture();
     dpContract = getDPContractFixture();
 
     stPacket = new STPacket(dpContract.getId());

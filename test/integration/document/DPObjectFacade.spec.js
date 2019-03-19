@@ -4,7 +4,7 @@ const Document = require('../../../lib/document/Document');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const getDPObjectsFixture = require('../../../lib/test/fixtures/getDPObjectsFixture');
+const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
 
 const MissingOptionError = require('../../../lib/errors/MissingOptionError');
@@ -22,7 +22,7 @@ describe('DPObjectFacade', () => {
       dpContract,
     });
 
-    ([document] = getDPObjectsFixture());
+    ([document] = getDocumentsFixture());
   });
 
   describe('create', () => {

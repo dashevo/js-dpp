@@ -4,7 +4,7 @@ const verifyDocumentsUniquenessByIndicesFactory = require('../../../../lib/stPac
 
 const STPacket = require('../../../../lib/stPacket/STPacket');
 
-const getDPObjectsFixture = require('../../../../lib/test/fixtures/getDPObjectsFixture');
+const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
@@ -27,9 +27,9 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
   let userId;
 
   beforeEach(function beforeEach() {
-    ({ userId } = getDPObjectsFixture);
+    ({ userId } = getDocumentsFixture);
 
-    documents = getDPObjectsFixture();
+    documents = getDocumentsFixture();
     dpContract = getDPContractFixture();
 
     stPacket = new STPacket(dpContract.getId());

@@ -3,7 +3,7 @@ const verifyDocumentsFactory = require('../../../../lib/stPacket/verification/ve
 const STPacket = require('../../../../lib/stPacket/STPacket');
 const Document = require('../../../../lib/document/Document');
 
-const getDPObjectsFixture = require('../../../../lib/test/fixtures/getDPObjectsFixture');
+const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
 
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
@@ -26,9 +26,9 @@ describe('verifyDocuments', () => {
   let verifyDocumentsUniquenessByIndices;
 
   beforeEach(function beforeEach() {
-    ({ userId } = getDPObjectsFixture);
+    ({ userId } = getDocumentsFixture);
 
-    documents = getDPObjectsFixture();
+    documents = getDocumentsFixture();
     dpContract = getDPContractFixture();
 
     stPacket = new STPacket(dpContract.getId());

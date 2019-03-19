@@ -1,7 +1,7 @@
 const rewiremock = require('rewiremock/node');
 
 const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
-const getDPObjectsFixture = require('../../../lib/test/fixtures/getDPObjectsFixture');
+const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
 const DPContract = require('../../../lib/contract/DPContract');
 const Document = require('../../../lib/document/Document');
@@ -23,7 +23,7 @@ describe('STPacket', () => {
 
   beforeEach(function beforeEach() {
     dpContract = getDPContractFixture();
-    documents = getDPObjectsFixture();
+    documents = getDocumentsFixture();
 
     dpContractId = dpContract.getId();
     itemsHash = '14207b92f112bc674f32a8d04008d5c62f18d5b6c846acb0edfaf9f0b32fc293';

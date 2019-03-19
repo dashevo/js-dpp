@@ -2,7 +2,7 @@ const rewiremock = require('rewiremock/node');
 
 const Document = require('../../../lib/document/Document');
 
-const getDPObjectsFixture = require('../../../lib/test/fixtures/getDPObjectsFixture');
+const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
@@ -36,10 +36,10 @@ describe('DPObjectFactory', () => {
       '../../../lib/document/Document': Document,
     });
 
-    ({ userId } = getDPObjectsFixture);
+    ({ userId } = getDocumentsFixture);
     dpContract = getDPContractFixture();
 
-    [document] = getDPObjectsFixture();
+    [document] = getDocumentsFixture();
     rawDocument = document.toJSON();
 
     factory = new DocumentFactory(
