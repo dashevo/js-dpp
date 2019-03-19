@@ -306,7 +306,7 @@ describe('validateDPContractFactory', () => {
     });
 
     it('should have no non-alphanumeric properties', () => {
-      rawDPContract.documents['(*&^'] = rawDPContract.documents.niceObject;
+      rawDPContract.documents['(*&^'] = rawDPContract.documents.niceDocument;
 
       const result = validateDPContract(rawDPContract);
 
@@ -319,11 +319,11 @@ describe('validateDPContractFactory', () => {
     });
 
     it('should have no more than 100 properties', () => {
-      const niceObjectDefinition = rawDPContract.documents.niceObject;
+      const niceDocumentDefinition = rawDPContract.documents.niceDocument;
 
       rawDPContract.documents = {};
 
-      Array(101).fill(niceObjectDefinition).forEach((item, i) => {
+      Array(101).fill(niceDocumentDefinition).forEach((item, i) => {
         rawDPContract.documents[i] = item;
       });
 
@@ -339,7 +339,7 @@ describe('validateDPContractFactory', () => {
 
     describe('Document schema', () => {
       it('should not be empty', () => {
-        rawDPContract.documents.niceObject.properties = {};
+        rawDPContract.documents.niceDocument.properties = {};
 
         const result = validateDPContract(rawDPContract);
 
@@ -347,12 +347,12 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.documents[\'niceObject\'].properties');
+        expect(error.dataPath).to.equal('.documents[\'niceDocument\'].properties');
         expect(error.keyword).to.equal('minProperties');
       });
 
       it('should have type "object" if defined', () => {
-        delete rawDPContract.documents.niceObject.properties;
+        delete rawDPContract.documents.niceDocument.properties;
 
         const result = validateDPContract(rawDPContract);
 
@@ -360,13 +360,13 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.documents[\'niceObject\']');
+        expect(error.dataPath).to.equal('.documents[\'niceDocument\']');
         expect(error.keyword).to.equal('required');
         expect(error.params.missingProperty).to.equal('properties');
       });
 
       it('should have "properties"', () => {
-        delete rawDPContract.documents.niceObject.properties;
+        delete rawDPContract.documents.niceDocument.properties;
 
         const result = validateDPContract(rawDPContract);
 
@@ -374,13 +374,13 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.documents[\'niceObject\']');
+        expect(error.dataPath).to.equal('.documents[\'niceDocument\']');
         expect(error.keyword).to.equal('required');
         expect(error.params.missingProperty).to.equal('properties');
       });
 
       it('should have no non-alphanumeric properties', () => {
-        rawDPContract.documents.niceObject.properties['(*&^'] = {};
+        rawDPContract.documents.niceDocument.properties['(*&^'] = {};
 
         const result = validateDPContract(rawDPContract);
 
@@ -388,14 +388,14 @@ describe('validateDPContractFactory', () => {
 
         const errors = result.getErrors();
 
-        expect(errors[0].dataPath).to.equal('.documents[\'niceObject\'].properties');
+        expect(errors[0].dataPath).to.equal('.documents[\'niceDocument\'].properties');
         expect(errors[0].keyword).to.equal('pattern');
-        expect(errors[1].dataPath).to.equal('.documents[\'niceObject\'].properties');
+        expect(errors[1].dataPath).to.equal('.documents[\'niceDocument\'].properties');
         expect(errors[1].keyword).to.equal('propertyNames');
       });
 
       it('should have "additionalProperties" defined', () => {
-        delete rawDPContract.documents.niceObject.additionalProperties;
+        delete rawDPContract.documents.niceDocument.additionalProperties;
 
         const result = validateDPContract(rawDPContract);
 
@@ -403,13 +403,13 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.documents[\'niceObject\']');
+        expect(error.dataPath).to.equal('.documents[\'niceDocument\']');
         expect(error.keyword).to.equal('required');
         expect(error.params.missingProperty).to.equal('additionalProperties');
       });
 
       it('should have "additionalProperties" defined to false', () => {
-        rawDPContract.documents.niceObject.additionalProperties = true;
+        rawDPContract.documents.niceDocument.additionalProperties = true;
 
         const result = validateDPContract(rawDPContract);
 
@@ -417,17 +417,17 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.documents[\'niceObject\'].additionalProperties');
+        expect(error.dataPath).to.equal('.documents[\'niceDocument\'].additionalProperties');
         expect(error.keyword).to.equal('const');
       });
 
       it('should have no more than 100 properties', () => {
         const propertyDefinition = { };
 
-        rawDPContract.documents.niceObject.properties = {};
+        rawDPContract.documents.niceDocument.properties = {};
 
         Array(101).fill(propertyDefinition).forEach((item, i) => {
-          rawDPContract.documents.niceObject.properties[i] = item;
+          rawDPContract.documents.niceDocument.properties[i] = item;
         });
 
         const result = validateDPContract(rawDPContract);
@@ -436,7 +436,7 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.documents[\'niceObject\'].properties');
+        expect(error.dataPath).to.equal('.documents[\'niceDocument\'].properties');
         expect(error.keyword).to.equal('maxProperties');
       });
     });
@@ -444,7 +444,7 @@ describe('validateDPContractFactory', () => {
 
   describe('indices', () => {
     it('should be an array', () => {
-      rawDPContract.documents.indexedObject.indices = 'definetely not an array';
+      rawDPContract.documents.indexedDocument.indices = 'definetely not an array';
 
       const result = validateDPContract(rawDPContract);
 
@@ -452,12 +452,12 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.documents[\'indexedObject\'].indices');
+      expect(error.dataPath).to.equal('.documents[\'indexedDocument\'].indices');
       expect(error.keyword).to.equal('type');
     });
 
     it('should have at least one item', () => {
-      rawDPContract.documents.indexedObject.indices = [];
+      rawDPContract.documents.indexedDocument.indices = [];
 
       const result = validateDPContract(rawDPContract);
 
@@ -465,13 +465,13 @@ describe('validateDPContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.documents[\'indexedObject\'].indices');
+      expect(error.dataPath).to.equal('.documents[\'indexedDocument\'].indices');
       expect(error.keyword).to.equal('minItems');
     });
 
     describe('index', () => {
       it('should be an object', () => {
-        rawDPContract.documents.indexedObject.indices = ['something else'];
+        rawDPContract.documents.indexedDocument.indices = ['something else'];
 
         const result = validateDPContract(rawDPContract);
 
@@ -479,12 +479,12 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.documents[\'indexedObject\'].indices[0]');
+        expect(error.dataPath).to.equal('.documents[\'indexedDocument\'].indices[0]');
         expect(error.keyword).to.equal('type');
       });
 
       it('should have properties definition', () => {
-        rawDPContract.documents.indexedObject.indices = [{}];
+        rawDPContract.documents.indexedDocument.indices = [{}];
 
         const result = validateDPContract(rawDPContract);
 
@@ -492,14 +492,14 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.documents[\'indexedObject\'].indices[0]');
+        expect(error.dataPath).to.equal('.documents[\'indexedDocument\'].indices[0]');
         expect(error.params.missingProperty).to.equal('properties');
         expect(error.keyword).to.equal('required');
       });
 
       describe('properties definition', () => {
         it('should be an array', () => {
-          rawDPContract.documents.indexedObject.indices[0]
+          rawDPContract.documents.indexedDocument.indices[0]
             .properties = 'something else';
 
           const result = validateDPContract(rawDPContract);
@@ -509,13 +509,13 @@ describe('validateDPContractFactory', () => {
           const [error] = result.getErrors();
 
           expect(error.dataPath).to.equal(
-            '.documents[\'indexedObject\'].indices[0].properties',
+            '.documents[\'indexedDocument\'].indices[0].properties',
           );
           expect(error.keyword).to.equal('type');
         });
 
         it('should have at least one property defined', () => {
-          rawDPContract.documents.indexedObject.indices[0]
+          rawDPContract.documents.indexedDocument.indices[0]
             .properties = [];
 
           const result = validateDPContract(rawDPContract);
@@ -525,14 +525,14 @@ describe('validateDPContractFactory', () => {
           const [error] = result.getErrors();
 
           expect(error.dataPath).to.equal(
-            '.documents[\'indexedObject\'].indices[0].properties',
+            '.documents[\'indexedDocument\'].indices[0].properties',
           );
           expect(error.keyword).to.equal('minItems');
         });
 
         it('should have no more than 100 property definitions', () => {
           for (let i = 0; i < 100; i++) {
-            rawDPContract.documents.indexedObject.indices[0]
+            rawDPContract.documents.indexedDocument.indices[0]
               .properties.push({
                 [`field${i}`]: 'asc',
               });
@@ -545,14 +545,14 @@ describe('validateDPContractFactory', () => {
           const [error] = result.getErrors();
 
           expect(error.dataPath).to.equal(
-            '.documents[\'indexedObject\'].indices[0].properties',
+            '.documents[\'indexedDocument\'].indices[0].properties',
           );
           expect(error.keyword).to.equal('maxItems');
         });
 
         describe('property definition', () => {
           it('should be an object', () => {
-            rawDPContract.documents.indexedObject.indices[0]
+            rawDPContract.documents.indexedDocument.indices[0]
               .properties[0] = 'something else';
 
             const result = validateDPContract(rawDPContract);
@@ -562,13 +562,13 @@ describe('validateDPContractFactory', () => {
             const [error] = result.getErrors();
 
             expect(error.dataPath).to.equal(
-              '.documents[\'indexedObject\'].indices[0].properties[0]',
+              '.documents[\'indexedDocument\'].indices[0].properties[0]',
             );
             expect(error.keyword).to.equal('type');
           });
 
           it('should have at least one property', () => {
-            rawDPContract.documents.indexedObject.indices[0]
+            rawDPContract.documents.indexedDocument.indices[0]
               .properties = [];
 
             const result = validateDPContract(rawDPContract);
@@ -578,13 +578,13 @@ describe('validateDPContractFactory', () => {
             const [error] = result.getErrors();
 
             expect(error.dataPath).to.equal(
-              '.documents[\'indexedObject\'].indices[0].properties',
+              '.documents[\'indexedDocument\'].indices[0].properties',
             );
             expect(error.keyword).to.equal('minItems');
           });
 
           it('should have no more than one property', () => {
-            const property = rawDPContract.documents.indexedObject.indices[0]
+            const property = rawDPContract.documents.indexedDocument.indices[0]
               .properties[0];
 
             property.anotherField = 'something';
@@ -596,13 +596,13 @@ describe('validateDPContractFactory', () => {
             const [error] = result.getErrors();
 
             expect(error.dataPath).to.equal(
-              '.documents[\'indexedObject\'].indices[0].properties[0]',
+              '.documents[\'indexedDocument\'].indices[0].properties[0]',
             );
             expect(error.keyword).to.equal('maxProperties');
           });
 
           it('should have property values only "asc" or "desc"', () => {
-            rawDPContract.documents.indexedObject.indices[0]
+            rawDPContract.documents.indexedDocument.indices[0]
               .properties[0].$userId = 'wrong';
 
             const result = validateDPContract(rawDPContract);
@@ -612,7 +612,7 @@ describe('validateDPContractFactory', () => {
             const [error] = result.getErrors();
 
             expect(error.dataPath).to.equal(
-              '.documents[\'indexedObject\'].indices[0].properties[0][\'$userId\']',
+              '.documents[\'indexedDocument\'].indices[0].properties[0][\'$userId\']',
             );
             expect(error.keyword).to.equal('enum');
           });
@@ -620,7 +620,7 @@ describe('validateDPContractFactory', () => {
       });
 
       it('should have "unique" flag', () => {
-        rawDPContract.documents.indexedObject.indices[0].unique = undefined;
+        rawDPContract.documents.indexedDocument.indices[0].unique = undefined;
 
         const result = validateDPContract(rawDPContract);
 
@@ -628,13 +628,13 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.documents[\'indexedObject\'].indices[0]');
+        expect(error.dataPath).to.equal('.documents[\'indexedDocument\'].indices[0]');
         expect(error.params.missingProperty).to.equal('unique');
         expect(error.keyword).to.equal('required');
       });
 
       it('should have "unqiue" flag equal "true"', () => {
-        rawDPContract.documents.indexedObject.indices[0].unique = false;
+        rawDPContract.documents.indexedDocument.indices[0].unique = false;
 
         const result = validateDPContract(rawDPContract);
 
@@ -642,7 +642,7 @@ describe('validateDPContractFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.documents[\'indexedObject\'].indices[0].unique');
+        expect(error.dataPath).to.equal('.documents[\'indexedDocument\'].indices[0].unique');
         expect(error.keyword).to.equal('const');
       });
     });
@@ -663,9 +663,9 @@ describe('validateDPContractFactory', () => {
 
   it('should return invalid result if there are duplicated indices', () => {
     const indexDefinition = Object.assign({},
-      rawDPContract.documents.indexedObject.indices[0]);
+      rawDPContract.documents.indexedDocument.indices[0]);
 
-    rawDPContract.documents.indexedObject.indices.push(indexDefinition);
+    rawDPContract.documents.indexedDocument.indices.push(indexDefinition);
 
     const result = validateDPContract(rawDPContract);
 
@@ -675,11 +675,11 @@ describe('validateDPContractFactory', () => {
 
     expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
     expect(error.getRawDPContract()).to.deep.equal(rawDPContract);
-    expect(error.getDocumentType()).to.deep.equal('indexedObject');
+    expect(error.getDocumentType()).to.deep.equal('indexedDocument');
   });
 
   it('should return invalid result if indices don\'t have $userId prefix', () => {
-    const indexDefinition = rawDPContract.documents.indexedObject.indices[0];
+    const indexDefinition = rawDPContract.documents.indexedDocument.indices[0];
 
     const firstIndex = indexDefinition.properties.shift();
     indexDefinition.properties.push(firstIndex);
@@ -692,11 +692,11 @@ describe('validateDPContractFactory', () => {
 
     expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
     expect(error.getRawDPContract()).to.deep.equal(rawDPContract);
-    expect(error.getDocumentType()).to.deep.equal('indexedObject');
+    expect(error.getDocumentType()).to.deep.equal('indexedDocument');
   });
 
   it('should return invalid result if indices don\'t have $userId prefix as a first field', () => {
-    const indexDefinition = rawDPContract.documents.indexedObject.indices[0];
+    const indexDefinition = rawDPContract.documents.indexedDocument.indices[0];
 
     indexDefinition.properties.shift();
 
@@ -710,7 +710,7 @@ describe('validateDPContractFactory', () => {
   });
 
   it('should return invalid result if indices has undefined property', () => {
-    const indexDefinition = rawDPContract.documents.indexedObject.indices[0];
+    const indexDefinition = rawDPContract.documents.indexedDocument.indices[0];
 
     indexDefinition.properties.push({
       missingProperty: 'asc',
@@ -724,7 +724,7 @@ describe('validateDPContractFactory', () => {
 
     expect(error.getPropertyName()).to.equal('missingProperty');
     expect(error.getRawDPContract()).to.deep.equal(rawDPContract);
-    expect(error.getDocumentType()).to.deep.equal('indexedObject');
+    expect(error.getDocumentType()).to.deep.equal('indexedDocument');
     expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
   });
 

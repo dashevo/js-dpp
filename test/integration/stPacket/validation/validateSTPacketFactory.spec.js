@@ -407,7 +407,7 @@ describe('validateSTPacketFactory', () => {
     expect(validateSTPacketDocumentsMock).to.have.not.been.called();
   });
 
-  it('should return invalid result if packet contains the both objects and contracts', () => {
+  it('should return invalid result if packet contains the both documents and contracts', () => {
     rawSTPacket.contracts.push(rawDPContract);
 
     const result = validateSTPacket(rawSTPacket, dpContract);

@@ -23,7 +23,7 @@ describe('DPContract', () => {
     });
 
     dpContractName = 'LovelyContract';
-    documentType = 'niceObject';
+    documentType = 'niceDocument';
     documentSchema = {
       properties: {
         nice: {
@@ -127,7 +127,7 @@ describe('DPContract', () => {
   describe('#setDocuments', () => {
     it('should set Documents definition', () => {
       const anotherDocuments = {
-        anotherObject: {
+        anotherDocument: {
           properties: {
             name: { type: 'string' },
           },
@@ -151,13 +151,13 @@ describe('DPContract', () => {
 
   describe('#isDocumentDefined', () => {
     it('should return true if Document schema is defined', () => {
-      const result = dpContract.isDocumentDefined('niceObject');
+      const result = dpContract.isDocumentDefined('niceDocument');
 
       expect(result).to.equal(true);
     });
 
     it('should return false if Document schema is not defined', () => {
-      const result = dpContract.isDocumentDefined('undefinedObject');
+      const result = dpContract.isDocumentDefined('undefinedDocument');
 
       expect(result).to.equal(false);
     });
@@ -165,7 +165,7 @@ describe('DPContract', () => {
 
   describe('#setDocumentSchema', () => {
     it('should set Document schema', () => {
-      const anotherType = 'prettyObject';
+      const anotherType = 'prettyDocument';
       const anotherDefinition = {
         properties: {
           name: { type: 'string' },
@@ -216,7 +216,7 @@ describe('DPContract', () => {
       const result = dpContract.getDocumentSchemaRef(documentType);
 
       expect(result).to.deep.equal({
-        $ref: 'dp-contract#/documents/niceObject',
+        $ref: 'dp-contract#/documents/niceDocument',
       });
     });
   });

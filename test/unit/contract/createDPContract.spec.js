@@ -7,7 +7,7 @@ describe('createDPContract', () => {
     rawDPContract = {
       name: 'LovelyContract',
       documents: {
-        niceObject: {
+        niceDocument: {
           name: { type: 'string' },
         },
       },

@@ -11,7 +11,7 @@ describe('findDuplicateDocumentsByIndices', () => {
     rawDocuments = getDocumentsFixture().map(o => o.toJSON());
 
     dpContract = getDPContractFixture();
-    dpContract.setDocumentSchema('nonUniqueIndexObject', {
+    dpContract.setDocumentSchema('nonUniqueIndexDocument', {
       indices: [
         {
           properties: {
@@ -33,7 +33,7 @@ describe('findDuplicateDocumentsByIndices', () => {
       additionalProperties: false,
     });
 
-    dpContract.setDocumentSchema('singleObject', {
+    dpContract.setDocumentSchema('singleDocument', {
       indices: [
         {
           properties: {
@@ -58,15 +58,15 @@ describe('findDuplicateDocumentsByIndices', () => {
     const [, , , william] = rawDocuments;
 
     rawDocuments.push(Object.assign({}, william, {
-      $type: 'nonUniqueIndexObject',
+      $type: 'nonUniqueIndexDocument',
     }));
 
     rawDocuments.push(Object.assign({}, william, {
-      $type: 'singleObject',
+      $type: 'singleDocument',
     }));
   });
 
-  it('should return duplicate objects if they are present', () => {
+  it('should return duplicate documents if they are present', () => {
     const [, , , william, leon] = rawDocuments;
     leon.lastName = 'Birkin';
 

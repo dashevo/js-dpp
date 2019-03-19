@@ -212,7 +212,7 @@ describe('Document', () => {
       Document.prototype.set = this.sinonSandbox.stub();
     });
 
-    it('should call set for each object property', () => {
+    it('should call set for each document property', () => {
       const data = {
         test1: 1,
         test2: 2,
@@ -292,13 +292,13 @@ describe('Document', () => {
 
   describe('#serialize', () => {
     it('should return serialized Document', () => {
-      const serializedObject = '123';
+      const serializedDocument = '123';
 
-      encodeMock.returns(serializedObject);
+      encodeMock.returns(serializedDocument);
 
       const result = document.serialize();
 
-      expect(result).to.equal(serializedObject);
+      expect(result).to.equal(serializedDocument);
 
       expect(encodeMock).to.have.been.calledOnceWith(rawDocument);
     });
@@ -310,20 +310,20 @@ describe('Document', () => {
     });
 
     it('should return Document hash', () => {
-      const serializedObject = '123';
-      const hashedObject = '456';
+      const serializedDocument = '123';
+      const hashedDocument = '456';
 
-      Document.prototype.serialize.returns(serializedObject);
+      Document.prototype.serialize.returns(serializedDocument);
 
-      hashMock.returns(hashedObject);
+      hashMock.returns(hashedDocument);
 
       const result = document.hash();
 
-      expect(result).to.equal(hashedObject);
+      expect(result).to.equal(hashedDocument);
 
       expect(Document.prototype.serialize).to.have.been.calledOnce();
 
-      expect(hashMock).to.have.been.calledOnceWith(serializedObject);
+      expect(hashMock).to.have.been.calledOnceWith(serializedDocument);
     });
   });
 });

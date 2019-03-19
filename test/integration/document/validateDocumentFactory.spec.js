@@ -71,7 +71,7 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be defined in DP Contract', () => {
-        rawDocument.$type = 'undefinedObject';
+        rawDocument.$type = 'undefinedDocument';
 
         const result = validateDocument(rawDocument, dpContract);
 
@@ -82,7 +82,7 @@ describe('validateDocumentFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.getType()).to.equal('undefinedObject');
+        expect(error.getType()).to.equal('undefinedDocument');
       });
 
       it('should throw an error if getDocumentSchemaRef throws error', function it() {
@@ -342,7 +342,7 @@ describe('validateDocumentFactory', () => {
   });
 
   describe('DP Contract schema', () => {
-    it('should return an error if the first object is not valid against DP Contract', () => {
+    it('should return an error if the first document is not valid against DP Contract', () => {
       rawDocuments[0].name = 1;
 
       const result = validateDocument(rawDocuments[0], dpContract);
@@ -355,7 +355,7 @@ describe('validateDocumentFactory', () => {
       expect(error.keyword).to.equal('type');
     });
 
-    it('should return an error if the second object is not valid against DP Contract', () => {
+    it('should return an error if the second document is not valid against DP Contract', () => {
       rawDocuments[1].undefined = 1;
 
       const result = validateDocument(rawDocuments[1], dpContract);
@@ -390,7 +390,7 @@ describe('validateDocumentFactory', () => {
     expect(error.keyword).to.equal('additionalProperties');
   });
 
-  it('should return valid response is an object is valid', () => {
+  it('should return valid response is a document is valid', () => {
     const result = validateDocument(rawDocument, dpContract);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
