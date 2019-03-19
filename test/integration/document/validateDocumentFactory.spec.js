@@ -24,7 +24,7 @@ const {
   expectJsonSchemaError,
 } = require('../../../lib/test/expect/expectError');
 
-describe('validateDPObjectFactory', () => {
+describe('validateDocumentFactory', () => {
   let dpContract;
   let rawDocuments;
   let rawDocument;

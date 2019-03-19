@@ -11,7 +11,7 @@ const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTyp
 const InvalidDocumentError = require('../../../lib/document/errors/InvalidDocumentError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 
-describe('DPObjectFactory', () => {
+describe('DocumentFactory', () => {
   let hashMock;
   let decodeMock;
   let generateMock;

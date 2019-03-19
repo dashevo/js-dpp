@@ -17,7 +17,7 @@ function encodeToBase58(id) {
   return bs58.encode(idBuffer);
 }
 
-describe('verifyDPObjectsUniquenessByIndices', () => {
+describe('verifyDocumentsUniquenessByIndices', () => {
   let fetchDocumentsByDocumentsMock;
   let dataProviderMock;
   let verifyDocumentsUniquenessByIndices;

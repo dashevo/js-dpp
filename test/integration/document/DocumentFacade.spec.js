@@ -9,7 +9,7 @@ const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFi
 
 const MissingOptionError = require('../../../lib/errors/MissingOptionError');
 
-describe('DPObjectFacade', () => {
+describe('DocumentFacade', () => {
   let dpp;
   let document;
   let dpContract;
