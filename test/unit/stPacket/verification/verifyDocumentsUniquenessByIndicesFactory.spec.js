@@ -38,7 +38,7 @@ describe('verifyDocumentsUniquenessByIndices', () => {
     fetchDocumentsByDocumentsMock = this.sinonSandbox.stub();
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
-    dataProviderMock.fetchDPObjects.resolves([]);
+    dataProviderMock.fetchDocuments.resolves([]);
 
     verifyDocumentsUniquenessByIndices = verifyDocumentsUniquenessByIndicesFactory(
       fetchDocumentsByDocumentsMock,
@@ -51,9 +51,9 @@ describe('verifyDocumentsUniquenessByIndices', () => {
 
     const indicesDefinition = dpContract.getDocumentSchema(william.getType()).indices;
 
-    dataProviderMock.fetchDPObjects.resolves([]);
+    dataProviderMock.fetchDocuments.resolves([]);
 
-    dataProviderMock.fetchDPObjects
+    dataProviderMock.fetchDocuments
       .withArgs(
         stPacket.getDPContractId(),
         william.getType(),
@@ -67,7 +67,7 @@ describe('verifyDocumentsUniquenessByIndices', () => {
       )
       .resolves([leon.toJSON()]);
 
-    dataProviderMock.fetchDPObjects
+    dataProviderMock.fetchDocuments
       .withArgs(
         stPacket.getDPContractId(),
         william.getType(),
@@ -81,7 +81,7 @@ describe('verifyDocumentsUniquenessByIndices', () => {
       )
       .resolves([leon.toJSON()]);
 
-    dataProviderMock.fetchDPObjects
+    dataProviderMock.fetchDocuments
       .withArgs(
         stPacket.getDPContractId(),
         leon.getType(),
@@ -95,7 +95,7 @@ describe('verifyDocumentsUniquenessByIndices', () => {
       )
       .resolves([william.toJSON()]);
 
-    dataProviderMock.fetchDPObjects
+    dataProviderMock.fetchDocuments
       .withArgs(
         stPacket.getDPContractId(),
         leon.getType(),

@@ -28,24 +28,24 @@ describe('fetchDocumentsByDocuments', () => {
   });
 
   it('should fetch specified Documents using DataProvider', async () => {
-    dataProviderMock.fetchDPObjects.withArgs(
+    dataProviderMock.fetchDocuments.withArgs(
       dpContract.getId(),
       documents[0].getType(),
     ).resolves([documents[0]]);
 
-    dataProviderMock.fetchDPObjects.withArgs(
+    dataProviderMock.fetchDocuments.withArgs(
       dpContract.getId(),
       documents[1].getType(),
     ).resolves([documents[1], documents[2]]);
 
-    dataProviderMock.fetchDPObjects.withArgs(
+    dataProviderMock.fetchDocuments.withArgs(
       dpContract.getId(),
       documents[3].getType(),
     ).resolves([documents[3], documents[4]]);
 
     const fetchedDocuments = await fetchDocumentsByDocuments(dpContract.getId(), documents);
 
-    expect(dataProviderMock.fetchDPObjects).to.have.been.calledThrice();
+    expect(dataProviderMock.fetchDocuments).to.have.been.calledThrice();
 
     const callArgsOne = [
       dpContract.getId(),
@@ -90,8 +90,8 @@ describe('fetchDocumentsByDocuments', () => {
     ];
 
     const callsArgs = [];
-    for (let i = 0; i < dataProviderMock.fetchDPObjects.callCount; i++) {
-      const call = dataProviderMock.fetchDPObjects.getCall(i);
+    for (let i = 0; i < dataProviderMock.fetchDocuments.callCount; i++) {
+      const call = dataProviderMock.fetchDocuments.getCall(i);
       callsArgs.push(call.args);
     }
 

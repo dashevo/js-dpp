@@ -26,7 +26,7 @@ describe('STPacketFacade', () => {
 
     dataProviderMock.fetchDPContract.resolves(dpContract);
     dataProviderMock.fetchTransaction.resolves(null);
-    dataProviderMock.fetchDPObjects.resolves([]);
+    dataProviderMock.fetchDocuments.resolves([]);
 
     stPacket = getSTPacketFixture();
 
