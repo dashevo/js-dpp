@@ -11,7 +11,7 @@ const MissingOptionError = require('../../../lib/errors/MissingOptionError');
 
 describe('DPObjectFacade', () => {
   let dpp;
-  let dpObject;
+  let document;
   let dpContract;
 
   beforeEach(() => {
@@ -22,20 +22,20 @@ describe('DPObjectFacade', () => {
       dpContract,
     });
 
-    ([dpObject] = getDPObjectsFixture());
+    ([document] = getDPObjectsFixture());
   });
 
   describe('create', () => {
-    it('should create DP Object', () => {
+    it('should create Document', () => {
       const result = dpp.object.create(
-        dpObject.getType(),
-        dpObject.getData(),
+        document.getType(),
+        document.getData(),
       );
 
       expect(result).to.be.an.instanceOf(Document);
 
-      expect(result.getType()).to.equal(dpObject.getType());
-      expect(result.getData()).to.deep.equal(dpObject.getData());
+      expect(result.getType()).to.equal(document.getType());
+      expect(result.getData()).to.deep.equal(document.getData());
     });
 
     it('should throw an error if User ID is not defined', () => {
@@ -46,8 +46,8 @@ describe('DPObjectFacade', () => {
       let error;
       try {
         dpp.object.create(
-          dpObject.getType(),
-          dpObject.getData(),
+          document.getType(),
+          document.getData(),
         );
       } catch (e) {
         error = e;
@@ -65,8 +65,8 @@ describe('DPObjectFacade', () => {
       let error;
       try {
         dpp.object.create(
-          dpObject.getType(),
-          dpObject.getData(),
+          document.getType(),
+          document.getData(),
         );
       } catch (e) {
         error = e;
@@ -78,12 +78,12 @@ describe('DPObjectFacade', () => {
   });
 
   describe('createFromObject', () => {
-    it('should create DP Object from plain object', () => {
-      const result = dpp.object.createFromObject(dpObject.toJSON());
+    it('should create Document from plain object', () => {
+      const result = dpp.object.createFromObject(document.toJSON());
 
       expect(result).to.be.an.instanceOf(Document);
 
-      expect(result.toJSON()).to.deep.equal(dpObject.toJSON());
+      expect(result.toJSON()).to.deep.equal(document.toJSON());
     });
 
     it('should throw an error if User ID is not defined', () => {
@@ -93,7 +93,7 @@ describe('DPObjectFacade', () => {
 
       let error;
       try {
-        dpp.object.createFromObject(dpObject.toJSON());
+        dpp.object.createFromObject(document.toJSON());
       } catch (e) {
         error = e;
       }
@@ -109,7 +109,7 @@ describe('DPObjectFacade', () => {
 
       let error;
       try {
-        dpp.object.createFromObject(dpObject.toJSON());
+        dpp.object.createFromObject(document.toJSON());
       } catch (e) {
         error = e;
       }
@@ -120,12 +120,12 @@ describe('DPObjectFacade', () => {
   });
 
   describe('createFromSerialized', () => {
-    it('should create DP Object from string', () => {
-      const result = dpp.object.createFromSerialized(dpObject.serialize());
+    it('should create Document from string', () => {
+      const result = dpp.object.createFromSerialized(document.serialize());
 
       expect(result).to.be.an.instanceOf(Document);
 
-      expect(result.toJSON()).to.deep.equal(dpObject.toJSON());
+      expect(result.toJSON()).to.deep.equal(document.toJSON());
     });
 
     it('should throw an error if User ID is not defined', () => {
@@ -135,7 +135,7 @@ describe('DPObjectFacade', () => {
 
       let error;
       try {
-        dpp.object.createFromSerialized(dpObject.serialize());
+        dpp.object.createFromSerialized(document.serialize());
       } catch (e) {
         error = e;
       }
@@ -151,7 +151,7 @@ describe('DPObjectFacade', () => {
 
       let error;
       try {
-        dpp.object.createFromSerialized(dpObject.serialize());
+        dpp.object.createFromSerialized(document.serialize());
       } catch (e) {
         error = e;
       }
@@ -162,8 +162,8 @@ describe('DPObjectFacade', () => {
   });
 
   describe('validate', () => {
-    it('should validate DP Object', () => {
-      const result = dpp.object.validate(dpObject.toJSON());
+    it('should validate Document', () => {
+      const result = dpp.object.validate(document.toJSON());
 
       expect(result).to.be.an.instanceOf(ValidationResult);
     });

@@ -273,7 +273,7 @@ describe('validateSTPacketFactory', () => {
 
   describe('objects', () => {
     it('should be present', () => {
-      delete rawSTPacket.objects;
+      delete rawSTPacket.documents;
 
       const result = validateSTPacket(rawSTPacket, dpContract);
 
@@ -283,14 +283,14 @@ describe('validateSTPacketFactory', () => {
 
       expect(error.dataPath).to.equal('');
       expect(error.keyword).to.equal('required');
-      expect(error.params.missingProperty).to.equal('objects');
+      expect(error.params.missingProperty).to.equal('documents');
 
       expect(validateSTPacketDPContractsMock).to.have.not.been.called();
       expect(validateSTPacketDPObjectsMock).to.have.not.been.called();
     });
 
     it('should be an array', () => {
-      rawSTPacket.objects = 1;
+      rawSTPacket.documents = 1;
 
       const result = validateSTPacket(rawSTPacket, dpContract);
 
@@ -298,7 +298,7 @@ describe('validateSTPacketFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.objects');
+      expect(error.dataPath).to.equal('.documents');
       expect(error.keyword).to.equal('type');
 
       expect(validateSTPacketDPContractsMock).to.have.not.been.called();
@@ -306,8 +306,8 @@ describe('validateSTPacketFactory', () => {
     });
 
     it('should contain no more than 1000 items', () => {
-      const thousandDPObjects = (new Array(1001)).fill(rawSTPacket.objects[0]);
-      rawSTPacket.objects.push(...thousandDPObjects);
+      const thousandDPObjects = (new Array(1001)).fill(rawSTPacket.documents[0]);
+      rawSTPacket.documents.push(...thousandDPObjects);
 
       const result = validateSTPacket(rawSTPacket, dpContract);
 
@@ -317,10 +317,10 @@ describe('validateSTPacketFactory', () => {
 
       expect(errors).to.be.an('array').with.lengthOf(3);
 
-      expect(errors[0].dataPath).to.equal('.objects');
+      expect(errors[0].dataPath).to.equal('.documents');
       expect(errors[0].keyword).to.equal('maxItems');
 
-      expect(errors[1].dataPath).to.equal('.objects');
+      expect(errors[1].dataPath).to.equal('.documents');
       expect(errors[1].keyword).to.equal('maxItems');
 
       expect(errors[2].dataPath).to.equal('');
@@ -375,7 +375,7 @@ describe('validateSTPacketFactory', () => {
 
       const errors = result.getErrors();
 
-      expect(errors[0].dataPath).to.equal('.objects');
+      expect(errors[0].dataPath).to.equal('.documents');
       expect(errors[0].keyword).to.equal('maxItems');
 
       expect(errors[1].dataPath).to.equal('.contracts');
@@ -392,7 +392,7 @@ describe('validateSTPacketFactory', () => {
 
   it('should return invalid result if packet is empty', () => {
     rawSTPacket.contracts = [];
-    rawSTPacket.objects = [];
+    rawSTPacket.documents = [];
 
     const result = validateSTPacket(rawSTPacket, dpContract);
 
@@ -416,7 +416,7 @@ describe('validateSTPacketFactory', () => {
 
     const errors = result.getErrors();
 
-    expect(errors[0].dataPath).to.equal('.objects');
+    expect(errors[0].dataPath).to.equal('.documents');
     expect(errors[0].keyword).to.equal('maxItems');
 
     expect(errors[1].dataPath).to.equal('.contracts');
@@ -450,7 +450,7 @@ describe('validateSTPacketFactory', () => {
   });
 
   it('should validate DP Contract if present', () => {
-    stPacket.setDPObjects([]);
+    stPacket.setDocuments([]);
     stPacket.setDPContract(dpContract);
 
     rawSTPacket = stPacket.toJSON();
@@ -472,7 +472,7 @@ describe('validateSTPacketFactory', () => {
     expect(error).to.equal(dpContractError);
   });
 
-  it('should validate DP Objects if present', () => {
+  it('should validate Documents if present', () => {
     const dpContractError = new ConsensusError('test');
 
     validateSTPacketDPObjectsMock.returns(

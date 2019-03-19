@@ -15,7 +15,7 @@ function encodeToBase58(id) {
 describe('fetchDPObjectsByObjects', () => {
   let fetchDPObjectsByObjects;
   let dataProviderMock;
-  let dpObjects;
+  let documents;
   let dpContract;
 
   beforeEach(function beforeEach() {
@@ -23,37 +23,37 @@ describe('fetchDPObjectsByObjects', () => {
 
     fetchDPObjectsByObjects = fetchDPObjectsByObjectsFactory(dataProviderMock);
 
-    dpObjects = getDPObjectsFixture();
+    documents = getDPObjectsFixture();
     dpContract = getDPContractFixture();
   });
 
-  it('should fetch specified DP Objects using DataProvider', async () => {
+  it('should fetch specified Documents using DataProvider', async () => {
     dataProviderMock.fetchDPObjects.withArgs(
       dpContract.getId(),
-      dpObjects[0].getType(),
-    ).resolves([dpObjects[0]]);
+      documents[0].getType(),
+    ).resolves([documents[0]]);
 
     dataProviderMock.fetchDPObjects.withArgs(
       dpContract.getId(),
-      dpObjects[1].getType(),
-    ).resolves([dpObjects[1], dpObjects[2]]);
+      documents[1].getType(),
+    ).resolves([documents[1], documents[2]]);
 
     dataProviderMock.fetchDPObjects.withArgs(
       dpContract.getId(),
-      dpObjects[3].getType(),
-    ).resolves([dpObjects[3], dpObjects[4]]);
+      documents[3].getType(),
+    ).resolves([documents[3], documents[4]]);
 
-    const fetchedDPObjects = await fetchDPObjectsByObjects(dpContract.getId(), dpObjects);
+    const fetchedDPObjects = await fetchDPObjectsByObjects(dpContract.getId(), documents);
 
     expect(dataProviderMock.fetchDPObjects).to.have.been.calledThrice();
 
     const callArgsOne = [
       dpContract.getId(),
-      dpObjects[0].getType(),
+      documents[0].getType(),
       {
         where: {
           _id: {
-            $in: [encodeToBase58(dpObjects[0].getId())],
+            $in: [encodeToBase58(documents[0].getId())],
           },
         },
       },
@@ -61,13 +61,13 @@ describe('fetchDPObjectsByObjects', () => {
 
     const callArgsTwo = [
       dpContract.getId(),
-      dpObjects[1].getType(),
+      documents[1].getType(),
       {
         where: {
           _id: {
             $in: [
-              encodeToBase58(dpObjects[1].getId()),
-              encodeToBase58(dpObjects[2].getId()),
+              encodeToBase58(documents[1].getId()),
+              encodeToBase58(documents[2].getId()),
             ],
           },
         },
@@ -76,13 +76,13 @@ describe('fetchDPObjectsByObjects', () => {
 
     const callArgsThree = [
       dpContract.getId(),
-      dpObjects[3].getType(),
+      documents[3].getType(),
       {
         where: {
           _id: {
             $in: [
-              encodeToBase58(dpObjects[3].getId()),
-              encodeToBase58(dpObjects[4].getId()),
+              encodeToBase58(documents[3].getId()),
+              encodeToBase58(documents[4].getId()),
             ],
           },
         },
@@ -101,6 +101,6 @@ describe('fetchDPObjectsByObjects', () => {
       callArgsThree,
     ]);
 
-    expect(fetchedDPObjects).to.deep.equal(dpObjects);
+    expect(fetchedDPObjects).to.deep.equal(documents);
   });
 });

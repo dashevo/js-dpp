@@ -28,7 +28,7 @@ describe('validateSTPacketDPObjectsFactory', () => {
       itemsMerkleRoot: '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
       itemsHash: '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
       contracts: [],
-      objects: rawDPObjects,
+      documents: rawDPObjects,
     };
 
     findDuplicatedDPObjectsMock = this.sinonSandbox.stub().returns([]);
@@ -56,12 +56,12 @@ describe('validateSTPacketDPObjectsFactory', () => {
 
     expect(validateDPObjectMock.callCount).to.equal(5);
 
-    rawSTPacket.objects.forEach((rawDPObject) => {
+    rawSTPacket.documents.forEach((rawDPObject) => {
       expect(validateDPObjectMock).to.have.been.calledWith(rawDPObject, dpContract);
     });
   });
 
-  it('should return invalid result if there are duplicates DP Objects', () => {
+  it('should return invalid result if there are duplicates Documents', () => {
     findDuplicatedDPObjectsMock.returns([rawDPObjects[0]]);
 
     const result = validateSTPacketDPObjects(rawSTPacket, dpContract);
@@ -76,12 +76,12 @@ describe('validateSTPacketDPObjectsFactory', () => {
 
     expect(validateDPObjectMock.callCount).to.equal(5);
 
-    rawSTPacket.objects.forEach((rawDPObject) => {
+    rawSTPacket.documents.forEach((rawDPObject) => {
       expect(validateDPObjectMock).to.have.been.calledWith(rawDPObject, dpContract);
     });
   });
 
-  it('should return invalid result if DP Objects are invalid', () => {
+  it('should return invalid result if Documents are invalid', () => {
     const dpObjectError = new ConsensusError('test');
 
     validateDPObjectMock.onCall(0).returns(
@@ -101,7 +101,7 @@ describe('validateSTPacketDPObjectsFactory', () => {
     expect(error).to.equal(dpObjectError);
   });
 
-  it('should return valid result if there are no duplicate DP Objects and they are valid', () => {
+  it('should return valid result if there are no duplicate Documents and they are valid', () => {
     const result = validateSTPacketDPObjects(rawSTPacket, dpContract);
 
     expect(result).to.be.an.instanceOf(ValidationResult);

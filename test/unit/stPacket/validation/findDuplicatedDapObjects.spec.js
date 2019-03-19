@@ -9,14 +9,14 @@ describe('findDuplicatedDPObjects', () => {
     rawDPObjects = getDPObjectsFixture().map(o => o.toJSON());
   });
 
-  it('should return empty array if there are no duplicated DP Objects', () => {
+  it('should return empty array if there are no duplicated Documents', () => {
     const result = findDuplicatedDPObjects(rawDPObjects);
 
     expect(result).to.be.an('array');
     expect(result).to.have.lengthOf(0);
   });
 
-  it('should return duplicated DP Objects', () => {
+  it('should return duplicated Documents', () => {
     rawDPObjects.push(rawDPObjects[0]);
 
     const result = findDuplicatedDPObjects(rawDPObjects);

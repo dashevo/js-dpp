@@ -7,7 +7,7 @@ describe('DPContract', () => {
   let encodeMock;
   let DPContract;
   let dpContractName;
-  let dpObjectType;
+  let documentType;
   let dpObjectSchema;
   let dpObjectsDefinition;
   let dpContract;
@@ -23,7 +23,7 @@ describe('DPContract', () => {
     });
 
     dpContractName = 'LovelyContract';
-    dpObjectType = 'niceObject';
+    documentType = 'niceObject';
     dpObjectSchema = {
       properties: {
         nice: {
@@ -32,7 +32,7 @@ describe('DPContract', () => {
       },
     };
     dpObjectsDefinition = {
-      [dpObjectType]: dpObjectSchema,
+      [documentType]: dpObjectSchema,
     };
 
     dpContract = new DPContract(dpContractName, dpObjectsDefinition);
@@ -150,13 +150,13 @@ describe('DPContract', () => {
   });
 
   describe('#isDPObjectDefined', () => {
-    it('should return true if DPObject schema is defined', () => {
+    it('should return true if Document schema is defined', () => {
       const result = dpContract.isDPObjectDefined('niceObject');
 
       expect(result).to.equal(true);
     });
 
-    it('should return false if DPObject schema is not defined', () => {
+    it('should return false if Document schema is not defined', () => {
       const result = dpContract.isDPObjectDefined('undefinedObject');
 
       expect(result).to.equal(false);
@@ -164,7 +164,7 @@ describe('DPContract', () => {
   });
 
   describe('#setDPObjectSchema', () => {
-    it('should set DPObject schema', () => {
+    it('should set Document schema', () => {
       const anotherType = 'prettyObject';
       const anotherDefinition = {
         properties: {
@@ -182,7 +182,7 @@ describe('DPContract', () => {
   });
 
   describe('#getDPObjectSchema', () => {
-    it('should throw error if DPObject is not defined', () => {
+    it('should throw error if Document is not defined', () => {
       let error;
       try {
         dpContract.getDPObjectSchema('undefinedObject');
@@ -193,15 +193,15 @@ describe('DPContract', () => {
       expect(error).to.be.an.instanceOf(InvalidDPObjectTypeError);
     });
 
-    it('should return DPObject Schema', () => {
-      const result = dpContract.getDPObjectSchema(dpObjectType);
+    it('should return Document Schema', () => {
+      const result = dpContract.getDPObjectSchema(documentType);
 
       expect(result).to.equal(dpObjectSchema);
     });
   });
 
   describe('#getDPObjectSchemaRef', () => {
-    it('should throw error if DPObject is not defined', () => {
+    it('should throw error if Document is not defined', () => {
       let error;
       try {
         dpContract.getDPObjectSchemaRef('undefinedObject');
@@ -212,8 +212,8 @@ describe('DPContract', () => {
       expect(error).to.be.an.instanceOf(InvalidDPObjectTypeError);
     });
 
-    it('should return schema with $ref to DPObject schema', () => {
-      const result = dpContract.getDPObjectSchemaRef(dpObjectType);
+    it('should return schema with $ref to Document schema', () => {
+      const result = dpContract.getDPObjectSchemaRef(documentType);
 
       expect(result).to.deep.equal({
         $ref: 'dp-contract#/dpObjectsDefinition/niceObject',

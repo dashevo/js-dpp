@@ -4,7 +4,7 @@ describe('calculateItemsHash', () => {
   it('should return null if contracts and objects are empty', () => {
     const result = calculateItemsHash({
       contracts: [],
-      objects: [],
+      documents: [],
     });
 
     expect(result).to.be.null();

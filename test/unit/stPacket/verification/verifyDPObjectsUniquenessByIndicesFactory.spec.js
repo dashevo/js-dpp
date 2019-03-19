@@ -22,18 +22,18 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
   let dataProviderMock;
   let verifyDPObjectsUniquenessByIndices;
   let stPacket;
-  let dpObjects;
+  let documents;
   let dpContract;
   let userId;
 
   beforeEach(function beforeEach() {
     ({ userId } = getDPObjectsFixture);
 
-    dpObjects = getDPObjectsFixture();
+    documents = getDPObjectsFixture();
     dpContract = getDPContractFixture();
 
     stPacket = new STPacket(dpContract.getId());
-    stPacket.setDPObjects(dpObjects);
+    stPacket.setDocuments(documents);
 
     fetchDPObjectsByObjectsMock = this.sinonSandbox.stub();
 
@@ -46,8 +46,8 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
     );
   });
 
-  it('should return invalid result if DP Object has unique indices and there are duplicates', async () => {
-    const [, , , william, leon] = dpObjects;
+  it('should return invalid result if Document has unique indices and there are duplicates', async () => {
+    const [, , , william, leon] = documents;
 
     const indicesDefinition = dpContract.getDPObjectSchema(william.getType()).indices;
 
@@ -59,8 +59,8 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
         william.getType(),
         {
           where: {
-            'dpObject.$userId': william.get('$userId'),
-            'dpObject.firstName': william.get('firstName'),
+            'document.$userId': william.get('$userId'),
+            'document.firstName': william.get('firstName'),
             _id: { $ne: encodeToBase58(william.getId()) },
           },
         },
@@ -73,8 +73,8 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
         william.getType(),
         {
           where: {
-            'dpObject.$userId': william.get('$userId'),
-            'dpObject.lastName': william.get('lastName'),
+            'document.$userId': william.get('$userId'),
+            'document.lastName': william.get('lastName'),
             _id: { $ne: encodeToBase58(william.getId()) },
           },
         },
@@ -87,8 +87,8 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
         leon.getType(),
         {
           where: {
-            'dpObject.$userId': leon.get('$userId'),
-            'dpObject.firstName': leon.get('firstName'),
+            'document.$userId': leon.get('$userId'),
+            'document.firstName': leon.get('firstName'),
             _id: { $ne: encodeToBase58(leon.getId()) },
           },
         },
@@ -101,8 +101,8 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
         leon.getType(),
         {
           where: {
-            'dpObject.$userId': leon.get('$userId'),
-            'dpObject.lastName': leon.get('lastName'),
+            'document.$userId': leon.get('$userId'),
+            'document.lastName': leon.get('lastName'),
             _id: { $ne: encodeToBase58(leon.getId()) },
           },
         },
@@ -115,7 +115,7 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
 
     const errors = result.getErrors();
 
-    expect(errors.map(e => e.getDPObject())).to.have.deep.members([
+    expect(errors.map(e => e.getDocument())).to.have.deep.members([
       william,
       william,
       leon,

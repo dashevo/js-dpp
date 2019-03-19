@@ -19,7 +19,7 @@ describe('DPObjectFactory', () => {
   let DPObjectFactory;
   let userId;
   let dpContract;
-  let dpObject;
+  let document;
   let rawDPObject;
   let factory;
 
@@ -39,8 +39,8 @@ describe('DPObjectFactory', () => {
     ({ userId } = getDPObjectsFixture);
     dpContract = getDPContractFixture();
 
-    [dpObject] = getDPObjectsFixture();
-    rawDPObject = dpObject.toJSON();
+    [document] = getDPObjectsFixture();
+    rawDPObject = document.toJSON();
 
     factory = new DPObjectFactory(
       userId,
@@ -50,7 +50,7 @@ describe('DPObjectFactory', () => {
   });
 
   describe('create', () => {
-    it('should return new DPObject with specified type and data', () => {
+    it('should return new Document with specified type and data', () => {
       const scope = '123';
       const scopeId = '456';
       const name = 'Cutie';
@@ -110,7 +110,7 @@ describe('DPObjectFactory', () => {
       expect(validateDPObjectMock).to.have.been.calledOnceWith(rawDPObject, dpContract);
     });
 
-    it('should return new DPObject without validation if "skipValidation" option is passed', () => {
+    it('should return new Document without validation if "skipValidation" option is passed', () => {
       const result = factory.createFromObject(rawDPObject, { skipValidation: true });
 
       expect(result).to.be.an.instanceOf(Document);
@@ -149,15 +149,15 @@ describe('DPObjectFactory', () => {
     });
 
     it('should return new DPContract from serialized DPContract', () => {
-      const serializedDPObject = dpObject.serialize();
+      const serializedDPObject = document.serialize();
 
       decodeMock.returns(rawDPObject);
 
-      factory.createFromObject.returns(dpObject);
+      factory.createFromObject.returns(document);
 
       const result = factory.createFromSerialized(serializedDPObject);
 
-      expect(result).to.equal(dpObject);
+      expect(result).to.equal(document);
 
       expect(factory.createFromObject).to.have.been.calledOnceWith(rawDPObject);
 

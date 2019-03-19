@@ -26,7 +26,7 @@ describe('verifySTPacketFactory', () => {
   let transaction;
   let dataProviderMock;
   let verifySTPacket;
-  let dpObjects;
+  let documents;
   let dpContract;
   let stPacket;
   let stateTransition;
@@ -51,11 +51,11 @@ describe('verifySTPacketFactory', () => {
 
     ({ userId } = getDPObjectsFixture);
 
-    dpObjects = getDPObjectsFixture();
+    documents = getDPObjectsFixture();
     dpContract = getDPContractFixture();
 
     stPacket = new STPacket(dpContract.getId());
-    stPacket.setDPObjects(dpObjects);
+    stPacket.setDocuments(documents);
 
     const payload = new Transaction.Payload.SubTxTransitionPayload()
       .setRegTxId(userId)
@@ -151,7 +151,7 @@ describe('verifySTPacketFactory', () => {
   });
 
   it('should return invalid result if DP Contract is not valid', async () => {
-    stPacket.setDPObjects([]);
+    stPacket.setDocuments([]);
     stPacket.setDPContract(dpContract);
 
     stateTransition.extraPayload.hashSTPacket = stPacket.hash();
