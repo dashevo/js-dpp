@@ -72,7 +72,7 @@ describe('DPP', function main() {
       dpContractPacket,
     );
 
-    const { tsId: dpContractTsId } = await sendSTPacket(
+    const dpContractTsId = await sendSTPacket(
       dpContractPacket,
       dpContractTransaction,
       drive.driveApi.getApi(),
@@ -96,7 +96,7 @@ describe('DPP', function main() {
       dpContractTsId,
     );
 
-    const { tsId: firstUserTsId } = await sendSTPacket(
+    const firstUserTsId = await sendSTPacket(
       firstUserPacket,
       firstUserTransaction,
       drive.driveApi.getApi(),
@@ -118,7 +118,7 @@ describe('DPP', function main() {
       firstUserTsId,
     );
 
-    const { tsId: secondUserTsId } = await sendSTPacket(
+    const secondUserTsId = await sendSTPacket(
       secondUserPacket,
       secondUserTransaction,
       drive.driveApi.getApi(),
