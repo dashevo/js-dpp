@@ -1,4 +1,4 @@
-const findDuplicateDPObjectsByIndices = require('../../../../lib/stPacket/validation/findDuplicateDPObjectsByIndices');
+const findDuplicateDocumentsByIndices = require('../../../../lib/stPacket/validation/findDuplicateDocumentsByIndices');
 
 const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
 const getDPObjectsFixture = require('../../../../lib/test/fixtures/getDPObjectsFixture');
@@ -70,7 +70,7 @@ describe('findDuplicateDPObjectsByIndices', () => {
     const [, , , william, leon] = rawDocuments;
     leon.lastName = 'Birkin';
 
-    const duplicates = findDuplicateDPObjectsByIndices(rawDocuments, dpContract);
+    const duplicates = findDuplicateDocumentsByIndices(rawDocuments, dpContract);
     expect(duplicates).to.deep.equal(
       [
         leon,
@@ -80,7 +80,7 @@ describe('findDuplicateDPObjectsByIndices', () => {
   });
 
   it('should return an empty array of there are no duplicates', () => {
-    const duplicates = findDuplicateDPObjectsByIndices(rawDocuments, dpContract);
+    const duplicates = findDuplicateDocumentsByIndices(rawDocuments, dpContract);
     expect(duplicates.length).to.equal(0);
   });
 });

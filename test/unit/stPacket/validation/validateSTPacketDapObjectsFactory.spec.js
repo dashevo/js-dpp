@@ -3,7 +3,7 @@ const getDPObjectsFixture = require('../../../../lib/test/fixtures/getDPObjectsF
 
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
 
-const validateSTPacketDPObjectsFactory = require('../../../../lib/stPacket/validation/validateSTPacketDPObjectsFactory');
+const validateSTPacketDocumentsFactory = require('../../../../lib/stPacket/validation/validateSTPacketDocumentsFactory');
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 
@@ -11,14 +11,14 @@ const DuplicateDocumentsError = require('../../../../lib/errors/DuplicateDocumen
 const InvalidDPContractError = require('../../../../lib/errors/InvalidDPContractError');
 const ConsensusError = require('../../../../lib/errors/ConsensusError');
 
-describe('validateSTPacketDPObjectsFactory', () => {
+describe('validateSTPacketDocumentsFactory', () => {
   let rawSTPacket;
   let dpContract;
   let rawDocuments;
-  let findDuplicatedDPObjectsMock;
-  let findDuplicateDPObjectsByIndicesMock;
+  let findDuplicateDocumentsMock;
+  let findDuplicateDocumentsByIndicesMock;
   let validateDocumentMock;
-  let validateSTPacketDPObjects;
+  let validateSTPacketDocuments;
 
   beforeEach(function beforeEach() {
     dpContract = getDPContractFixture();
@@ -31,21 +31,21 @@ describe('validateSTPacketDPObjectsFactory', () => {
       documents: rawDocuments,
     };
 
-    findDuplicatedDPObjectsMock = this.sinonSandbox.stub().returns([]);
-    findDuplicateDPObjectsByIndicesMock = this.sinonSandbox.stub().returns([]);
+    findDuplicateDocumentsMock = this.sinonSandbox.stub().returns([]);
+    findDuplicateDocumentsByIndicesMock = this.sinonSandbox.stub().returns([]);
     validateDocumentMock = this.sinonSandbox.stub().returns(new ValidationResult());
 
-    validateSTPacketDPObjects = validateSTPacketDPObjectsFactory(
+    validateSTPacketDocuments = validateSTPacketDocumentsFactory(
       validateDocumentMock,
-      findDuplicatedDPObjectsMock,
-      findDuplicateDPObjectsByIndicesMock,
+      findDuplicateDocumentsMock,
+      findDuplicateDocumentsByIndicesMock,
     );
   });
 
   it('should return invalid result if ST Packet has different ID than DPContract', () => {
     rawSTPacket.contractId = '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b';
 
-    const result = validateSTPacketDPObjects(rawSTPacket, dpContract);
+    const result = validateSTPacketDocuments(rawSTPacket, dpContract);
 
     expectValidationError(result, InvalidDPContractError);
 
@@ -62,13 +62,13 @@ describe('validateSTPacketDPObjectsFactory', () => {
   });
 
   it('should return invalid result if there are duplicates Documents', () => {
-    findDuplicatedDPObjectsMock.returns([rawDocuments[0]]);
+    findDuplicateDocumentsMock.returns([rawDocuments[0]]);
 
-    const result = validateSTPacketDPObjects(rawSTPacket, dpContract);
+    const result = validateSTPacketDocuments(rawSTPacket, dpContract);
 
     expectValidationError(result, DuplicateDocumentsError);
 
-    expect(findDuplicatedDPObjectsMock).to.have.been.calledOnceWith(rawDocuments);
+    expect(findDuplicateDocumentsMock).to.have.been.calledOnceWith(rawDocuments);
 
     const [error] = result.getErrors();
 
@@ -88,11 +88,11 @@ describe('validateSTPacketDPObjectsFactory', () => {
       new ValidationResult([dpObjectError]),
     );
 
-    const result = validateSTPacketDPObjects(rawSTPacket, dpContract);
+    const result = validateSTPacketDocuments(rawSTPacket, dpContract);
 
     expectValidationError(result, ConsensusError, 1);
 
-    expect(findDuplicatedDPObjectsMock).to.have.been.calledOnceWith(rawDocuments);
+    expect(findDuplicateDocumentsMock).to.have.been.calledOnceWith(rawDocuments);
 
     expect(validateDocumentMock.callCount).to.equal(5);
 
@@ -102,12 +102,12 @@ describe('validateSTPacketDPObjectsFactory', () => {
   });
 
   it('should return valid result if there are no duplicate Documents and they are valid', () => {
-    const result = validateSTPacketDPObjects(rawSTPacket, dpContract);
+    const result = validateSTPacketDocuments(rawSTPacket, dpContract);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
 
-    expect(findDuplicatedDPObjectsMock).to.have.been.calledOnceWith(rawDocuments);
+    expect(findDuplicateDocumentsMock).to.have.been.calledOnceWith(rawDocuments);
 
     expect(validateDocumentMock.callCount).to.equal(5);
   });

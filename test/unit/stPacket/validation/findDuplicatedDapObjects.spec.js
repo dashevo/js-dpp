@@ -1,8 +1,8 @@
-const findDuplicatedDPObjects = require('../../../../lib/stPacket/validation/findDuplicatedDPObjects');
+const findDuplicateDocuments = require('../../../../lib/stPacket/validation/findDuplicateDocuments');
 
 const getDPObjectsFixture = require('../../../../lib/test/fixtures/getDPObjectsFixture');
 
-describe('findDuplicatedDPObjects', () => {
+describe('findDuplicateDocuments', () => {
   let rawDocuments;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('findDuplicatedDPObjects', () => {
   });
 
   it('should return empty array if there are no duplicated Documents', () => {
-    const result = findDuplicatedDPObjects(rawDocuments);
+    const result = findDuplicateDocuments(rawDocuments);
 
     expect(result).to.be.an('array');
     expect(result).to.have.lengthOf(0);
@@ -19,7 +19,7 @@ describe('findDuplicatedDPObjects', () => {
   it('should return duplicated Documents', () => {
     rawDocuments.push(rawDocuments[0]);
 
-    const result = findDuplicatedDPObjects(rawDocuments);
+    const result = findDuplicateDocuments(rawDocuments);
 
     expect(result).to.be.an('array');
     expect(result).to.have.lengthOf(2);
