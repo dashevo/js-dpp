@@ -8,7 +8,7 @@ describe('Document', () => {
   let hashMock;
   let encodeMock;
   let Document;
-  let rawDPObject;
+  let rawDocument;
   let document;
 
   beforeEach(function beforeEach() {
@@ -25,7 +25,7 @@ describe('Document', () => {
       '../../../lib/util/serializer': serializerMock,
     });
 
-    rawDPObject = {
+    rawDocument = {
       $type: 'test',
       $scope: 'a832e4145650bfe8462e768e9c4a9a0d3a0bb7dcd9b3e50c61c73ac9d2e14068',
       $scopeId: 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh',
@@ -33,7 +33,7 @@ describe('Document', () => {
       $rev: Document.DEFAULTS.REVISION,
     };
 
-    document = new Document(rawDPObject);
+    document = new Document(rawDocument);
   });
 
   describe('constructor', () => {
@@ -46,14 +46,14 @@ describe('Document', () => {
         test: 1,
       };
 
-      rawDPObject = {
+      rawDocument = {
         $type: 'test',
         ...data,
       };
 
-      document = new Document(rawDPObject);
+      document = new Document(rawDocument);
 
-      expect(document.type).to.equal(rawDPObject.$type);
+      expect(document.type).to.equal(rawDocument.$type);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
@@ -62,14 +62,14 @@ describe('Document', () => {
         test: 1,
       };
 
-      rawDPObject = {
+      rawDocument = {
         $scopeId: 'test',
         ...data,
       };
 
-      document = new Document(rawDPObject);
+      document = new Document(rawDocument);
 
-      expect(document.scopeId).to.equal(rawDPObject.$scopeId);
+      expect(document.scopeId).to.equal(rawDocument.$scopeId);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
@@ -78,14 +78,14 @@ describe('Document', () => {
         test: 1,
       };
 
-      rawDPObject = {
+      rawDocument = {
         $scope: 'test',
         ...data,
       };
 
-      document = new Document(rawDPObject);
+      document = new Document(rawDocument);
 
-      expect(document.scope).to.equal(rawDPObject.$scope);
+      expect(document.scope).to.equal(rawDocument.$scope);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
@@ -94,14 +94,14 @@ describe('Document', () => {
         test: 1,
       };
 
-      rawDPObject = {
+      rawDocument = {
         $action: 'test',
         ...data,
       };
 
-      document = new Document(rawDPObject);
+      document = new Document(rawDocument);
 
-      expect(document.action).to.equal(rawDPObject.$action);
+      expect(document.action).to.equal(rawDocument.$action);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
@@ -110,14 +110,14 @@ describe('Document', () => {
         test: 1,
       };
 
-      rawDPObject = {
+      rawDocument = {
         $rev: 'test',
         ...data,
       };
 
-      document = new Document(rawDPObject);
+      document = new Document(rawDocument);
 
-      expect(document.revision).to.equal(rawDPObject.$rev);
+      expect(document.revision).to.equal(rawDocument.$rev);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
   });
@@ -130,7 +130,7 @@ describe('Document', () => {
 
       const actualId = document.getId();
 
-      expect(hashMock).to.have.been.calledOnceWith(rawDPObject.$scope + rawDPObject.$scopeId);
+      expect(hashMock).to.have.been.calledOnceWith(rawDocument.$scope + rawDocument.$scopeId);
 
       expect(id).to.equal(actualId);
     });
@@ -150,7 +150,7 @@ describe('Document', () => {
 
   describe('#getType', () => {
     it('should return $type', () => {
-      expect(document.getType()).to.equal(rawDPObject.$type);
+      expect(document.getType()).to.equal(rawDocument.$type);
     });
   });
 
@@ -286,7 +286,7 @@ describe('Document', () => {
 
   describe('#toJSON', () => {
     it('should return Document as plain JS object', () => {
-      expect(document.toJSON()).to.deep.equal(rawDPObject);
+      expect(document.toJSON()).to.deep.equal(rawDocument);
     });
   });
 
@@ -300,7 +300,7 @@ describe('Document', () => {
 
       expect(result).to.equal(serializedObject);
 
-      expect(encodeMock).to.have.been.calledOnceWith(rawDPObject);
+      expect(encodeMock).to.have.been.calledOnceWith(rawDocument);
     });
   });
 

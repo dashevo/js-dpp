@@ -4,11 +4,11 @@ const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContrac
 const getDPObjectsFixture = require('../../../../lib/test/fixtures/getDPObjectsFixture');
 
 describe('findDuplicateDPObjectsByIndices', () => {
-  let rawDPObjects;
+  let rawDocuments;
   let dpContract;
 
   beforeEach(() => {
-    rawDPObjects = getDPObjectsFixture().map(o => o.toJSON());
+    rawDocuments = getDPObjectsFixture().map(o => o.toJSON());
 
     dpContract = getDPContractFixture();
     dpContract.setDPObjectSchema('nonUniqueIndexObject', {
@@ -55,22 +55,22 @@ describe('findDuplicateDPObjectsByIndices', () => {
       additionalProperties: false,
     });
 
-    const [, , , william] = rawDPObjects;
+    const [, , , william] = rawDocuments;
 
-    rawDPObjects.push(Object.assign({}, william, {
+    rawDocuments.push(Object.assign({}, william, {
       $type: 'nonUniqueIndexObject',
     }));
 
-    rawDPObjects.push(Object.assign({}, william, {
+    rawDocuments.push(Object.assign({}, william, {
       $type: 'singleObject',
     }));
   });
 
   it('should return duplicate objects if they are present', () => {
-    const [, , , william, leon] = rawDPObjects;
+    const [, , , william, leon] = rawDocuments;
     leon.lastName = 'Birkin';
 
-    const duplicates = findDuplicateDPObjectsByIndices(rawDPObjects, dpContract);
+    const duplicates = findDuplicateDPObjectsByIndices(rawDocuments, dpContract);
     expect(duplicates).to.deep.equal(
       [
         leon,
@@ -80,7 +80,7 @@ describe('findDuplicateDPObjectsByIndices', () => {
   });
 
   it('should return an empty array of there are no duplicates', () => {
-    const duplicates = findDuplicateDPObjectsByIndices(rawDPObjects, dpContract);
+    const duplicates = findDuplicateDPObjectsByIndices(rawDocuments, dpContract);
     expect(duplicates.length).to.equal(0);
   });
 });

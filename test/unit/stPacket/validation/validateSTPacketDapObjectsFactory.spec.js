@@ -14,7 +14,7 @@ const ConsensusError = require('../../../../lib/errors/ConsensusError');
 describe('validateSTPacketDPObjectsFactory', () => {
   let rawSTPacket;
   let dpContract;
-  let rawDPObjects;
+  let rawDocuments;
   let findDuplicatedDPObjectsMock;
   let findDuplicateDPObjectsByIndicesMock;
   let validateDPObjectMock;
@@ -22,13 +22,13 @@ describe('validateSTPacketDPObjectsFactory', () => {
 
   beforeEach(function beforeEach() {
     dpContract = getDPContractFixture();
-    rawDPObjects = getDPObjectsFixture().map(o => o.toJSON());
+    rawDocuments = getDPObjectsFixture().map(o => o.toJSON());
     rawSTPacket = {
       contractId: dpContract.getId(),
       itemsMerkleRoot: '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
       itemsHash: '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
       contracts: [],
-      documents: rawDPObjects,
+      documents: rawDocuments,
     };
 
     findDuplicatedDPObjectsMock = this.sinonSandbox.stub().returns([]);
@@ -56,28 +56,28 @@ describe('validateSTPacketDPObjectsFactory', () => {
 
     expect(validateDPObjectMock.callCount).to.equal(5);
 
-    rawSTPacket.documents.forEach((rawDPObject) => {
-      expect(validateDPObjectMock).to.have.been.calledWith(rawDPObject, dpContract);
+    rawSTPacket.documents.forEach((rawDocument) => {
+      expect(validateDPObjectMock).to.have.been.calledWith(rawDocument, dpContract);
     });
   });
 
   it('should return invalid result if there are duplicates Documents', () => {
-    findDuplicatedDPObjectsMock.returns([rawDPObjects[0]]);
+    findDuplicatedDPObjectsMock.returns([rawDocuments[0]]);
 
     const result = validateSTPacketDPObjects(rawSTPacket, dpContract);
 
     expectValidationError(result, DuplicatedDPObjectsError);
 
-    expect(findDuplicatedDPObjectsMock).to.have.been.calledOnceWith(rawDPObjects);
+    expect(findDuplicatedDPObjectsMock).to.have.been.calledOnceWith(rawDocuments);
 
     const [error] = result.getErrors();
 
-    expect(error.getDuplicatedDPObjects()).to.deep.equal([rawDPObjects[0]]);
+    expect(error.getDuplicatedDPObjects()).to.deep.equal([rawDocuments[0]]);
 
     expect(validateDPObjectMock.callCount).to.equal(5);
 
-    rawSTPacket.documents.forEach((rawDPObject) => {
-      expect(validateDPObjectMock).to.have.been.calledWith(rawDPObject, dpContract);
+    rawSTPacket.documents.forEach((rawDocument) => {
+      expect(validateDPObjectMock).to.have.been.calledWith(rawDocument, dpContract);
     });
   });
 
@@ -92,7 +92,7 @@ describe('validateSTPacketDPObjectsFactory', () => {
 
     expectValidationError(result, ConsensusError, 1);
 
-    expect(findDuplicatedDPObjectsMock).to.have.been.calledOnceWith(rawDPObjects);
+    expect(findDuplicatedDPObjectsMock).to.have.been.calledOnceWith(rawDocuments);
 
     expect(validateDPObjectMock.callCount).to.equal(5);
 
@@ -107,7 +107,7 @@ describe('validateSTPacketDPObjectsFactory', () => {
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
 
-    expect(findDuplicatedDPObjectsMock).to.have.been.calledOnceWith(rawDPObjects);
+    expect(findDuplicatedDPObjectsMock).to.have.been.calledOnceWith(rawDocuments);
 
     expect(validateDPObjectMock.callCount).to.equal(5);
   });

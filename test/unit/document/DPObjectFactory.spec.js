@@ -20,7 +20,7 @@ describe('DPObjectFactory', () => {
   let userId;
   let dpContract;
   let document;
-  let rawDPObject;
+  let rawDocument;
   let factory;
 
   beforeEach(function beforeEach() {
@@ -40,7 +40,7 @@ describe('DPObjectFactory', () => {
     dpContract = getDPContractFixture();
 
     [document] = getDPObjectsFixture();
-    rawDPObject = document.toJSON();
+    rawDocument = document.toJSON();
 
     factory = new DPObjectFactory(
       userId,
@@ -59,13 +59,13 @@ describe('DPObjectFactory', () => {
       generateMock.returns(scopeId);
 
       const newDPObject = factory.create(
-        rawDPObject.$type,
+        rawDocument.$type,
         { name },
       );
 
       expect(newDPObject).to.be.an.instanceOf(Document);
 
-      expect(newDPObject.getType()).to.equal(rawDPObject.$type);
+      expect(newDPObject.getType()).to.equal(rawDocument.$type);
 
       expect(newDPObject.get('name')).to.equal(name);
 
@@ -102,19 +102,19 @@ describe('DPObjectFactory', () => {
     it('should return new DPContract with data from passed object', () => {
       validateDPObjectMock.returns(new ValidationResult());
 
-      const result = factory.createFromObject(rawDPObject);
+      const result = factory.createFromObject(rawDocument);
 
       expect(result).to.be.an.instanceOf(Document);
-      expect(result.toJSON()).to.deep.equal(rawDPObject);
+      expect(result.toJSON()).to.deep.equal(rawDocument);
 
-      expect(validateDPObjectMock).to.have.been.calledOnceWith(rawDPObject, dpContract);
+      expect(validateDPObjectMock).to.have.been.calledOnceWith(rawDocument, dpContract);
     });
 
     it('should return new Document without validation if "skipValidation" option is passed', () => {
-      const result = factory.createFromObject(rawDPObject, { skipValidation: true });
+      const result = factory.createFromObject(rawDocument, { skipValidation: true });
 
       expect(result).to.be.an.instanceOf(Document);
-      expect(result.toJSON()).to.deep.equal(rawDPObject);
+      expect(result.toJSON()).to.deep.equal(rawDocument);
 
       expect(validateDPObjectMock).to.have.not.been.called();
     });
@@ -126,7 +126,7 @@ describe('DPObjectFactory', () => {
 
       let error;
       try {
-        factory.createFromObject(rawDPObject);
+        factory.createFromObject(rawDocument);
       } catch (e) {
         error = e;
       }
@@ -134,12 +134,12 @@ describe('DPObjectFactory', () => {
       expect(error).to.be.an.instanceOf(InvalidDPObjectError);
 
       expect(error.getErrors()).to.have.length(1);
-      expect(error.getRawDPObject()).to.equal(rawDPObject);
+      expect(error.getRawDocument()).to.equal(rawDocument);
 
       const [consensusError] = error.getErrors();
       expect(consensusError).to.equal(validationError);
 
-      expect(validateDPObjectMock).to.have.been.calledOnceWith(rawDPObject, dpContract);
+      expect(validateDPObjectMock).to.have.been.calledOnceWith(rawDocument, dpContract);
     });
   });
 
@@ -151,7 +151,7 @@ describe('DPObjectFactory', () => {
     it('should return new DPContract from serialized DPContract', () => {
       const serializedDPObject = document.serialize();
 
-      decodeMock.returns(rawDPObject);
+      decodeMock.returns(rawDocument);
 
       factory.createFromObject.returns(document);
 
@@ -159,7 +159,7 @@ describe('DPObjectFactory', () => {
 
       expect(result).to.equal(document);
 
-      expect(factory.createFromObject).to.have.been.calledOnceWith(rawDPObject);
+      expect(factory.createFromObject).to.have.been.calledOnceWith(rawDocument);
 
       expect(decodeMock).to.have.been.calledOnceWith(serializedDPObject);
     });
