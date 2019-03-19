@@ -3,7 +3,7 @@ const bs58 = require('bs58');
 const getDPObjectsFixture = require('../../../../lib/test/fixtures/getDPObjectsFixture');
 const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
 
-const fetchDPObjectsByObjectsFactory = require('../../../../lib/stPacket/verification/fetchDPObjectsByObjectsFactory');
+const fetchDocumentsByDocumentsFactory = require('../../../../lib/stPacket/verification/fetchDocumentsByDocumentsFactory');
 
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 
@@ -12,8 +12,8 @@ function encodeToBase58(id) {
   return bs58.encode(idBuffer);
 }
 
-describe('fetchDPObjectsByObjects', () => {
-  let fetchDPObjectsByObjects;
+describe('fetchDocumentsByDocuments', () => {
+  let fetchDocumentsByDocuments;
   let dataProviderMock;
   let documents;
   let dpContract;
@@ -21,7 +21,7 @@ describe('fetchDPObjectsByObjects', () => {
   beforeEach(function beforeEach() {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
-    fetchDPObjectsByObjects = fetchDPObjectsByObjectsFactory(dataProviderMock);
+    fetchDocumentsByDocuments = fetchDocumentsByDocumentsFactory(dataProviderMock);
 
     documents = getDPObjectsFixture();
     dpContract = getDPContractFixture();
@@ -43,7 +43,7 @@ describe('fetchDPObjectsByObjects', () => {
       documents[3].getType(),
     ).resolves([documents[3], documents[4]]);
 
-    const fetchedDPObjects = await fetchDPObjectsByObjects(dpContract.getId(), documents);
+    const fetchedDocuments = await fetchDocumentsByDocuments(dpContract.getId(), documents);
 
     expect(dataProviderMock.fetchDPObjects).to.have.been.calledThrice();
 
@@ -101,6 +101,6 @@ describe('fetchDPObjectsByObjects', () => {
       callArgsThree,
     ]);
 
-    expect(fetchedDPObjects).to.deep.equal(documents);
+    expect(fetchedDocuments).to.deep.equal(documents);
   });
 });

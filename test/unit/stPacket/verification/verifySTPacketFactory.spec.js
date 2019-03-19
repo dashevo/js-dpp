@@ -22,7 +22,7 @@ const ConsensusError = require('../../../../lib/errors/ConsensusError');
 
 describe('verifySTPacketFactory', () => {
   let verifyDPContractMock;
-  let verifyDPObjectsMock;
+  let verifyDocumentsMock;
   let transaction;
   let dataProviderMock;
   let verifySTPacket;
@@ -34,7 +34,7 @@ describe('verifySTPacketFactory', () => {
 
   beforeEach(function beforeEach() {
     verifyDPContractMock = this.sinonSandbox.stub().resolves(new ValidationResult());
-    verifyDPObjectsMock = this.sinonSandbox.stub().resolves(new ValidationResult());
+    verifyDocumentsMock = this.sinonSandbox.stub().resolves(new ValidationResult());
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
@@ -45,7 +45,7 @@ describe('verifySTPacketFactory', () => {
 
     verifySTPacket = verifySTPacketFactory(
       verifyDPContractMock,
-      verifyDPObjectsMock,
+      verifyDocumentsMock,
       dataProviderMock,
     );
 
@@ -168,7 +168,7 @@ describe('verifySTPacketFactory', () => {
     expect(dataProviderMock.fetchTransaction).to.have.been.calledOnceWith(userId);
 
     expect(verifyDPContractMock).to.have.been.calledOnceWith(stPacket);
-    expect(verifyDPObjectsMock).to.have.not.been.called();
+    expect(verifyDocumentsMock).to.have.not.been.called();
 
     const [actualError] = result.getErrors();
 
@@ -177,7 +177,7 @@ describe('verifySTPacketFactory', () => {
 
   it('should return invalid result if DPObjects are not valid', async () => {
     const expectedError = new ConsensusError('someError');
-    verifyDPObjectsMock.resolves(
+    verifyDocumentsMock.resolves(
       new ValidationResult([expectedError]),
     );
 
@@ -188,7 +188,7 @@ describe('verifySTPacketFactory', () => {
     expect(dataProviderMock.fetchTransaction).to.have.been.calledOnceWith(userId);
 
     expect(verifyDPContractMock).to.have.not.been.called();
-    expect(verifyDPObjectsMock).to.have.been.calledOnceWith(stPacket, userId);
+    expect(verifyDocumentsMock).to.have.been.calledOnceWith(stPacket, userId);
 
     const [actualError] = result.getErrors();
 
@@ -204,6 +204,6 @@ describe('verifySTPacketFactory', () => {
     expect(dataProviderMock.fetchTransaction).to.have.been.calledOnceWith(userId);
 
     expect(verifyDPContractMock).to.have.not.been.called();
-    expect(verifyDPObjectsMock).to.have.been.calledOnceWith(stPacket, userId);
+    expect(verifyDocumentsMock).to.have.been.calledOnceWith(stPacket, userId);
   });
 });

@@ -1,6 +1,6 @@
 const bs58 = require('bs58');
 
-const verifyDPObjectsUniquenessByIndicesFactory = require('../../../../lib/stPacket/verification/verifyDPObjectsUniquenessByIndicesFactory');
+const verifyDocumentsUniquenessByIndicesFactory = require('../../../../lib/stPacket/verification/verifyDocumentsUniquenessByIndicesFactory');
 
 const STPacket = require('../../../../lib/stPacket/STPacket');
 
@@ -18,9 +18,9 @@ function encodeToBase58(id) {
 }
 
 describe('verifyDPObjectsUniquenessByIndices', () => {
-  let fetchDPObjectsByObjectsMock;
+  let fetchDocumentsByDocumentsMock;
   let dataProviderMock;
-  let verifyDPObjectsUniquenessByIndices;
+  let verifyDocumentsUniquenessByIndices;
   let stPacket;
   let documents;
   let dpContract;
@@ -35,13 +35,13 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
     stPacket = new STPacket(dpContract.getId());
     stPacket.setDocuments(documents);
 
-    fetchDPObjectsByObjectsMock = this.sinonSandbox.stub();
+    fetchDocumentsByDocumentsMock = this.sinonSandbox.stub();
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchDPObjects.resolves([]);
 
-    verifyDPObjectsUniquenessByIndices = verifyDPObjectsUniquenessByIndicesFactory(
-      fetchDPObjectsByObjectsMock,
+    verifyDocumentsUniquenessByIndices = verifyDocumentsUniquenessByIndicesFactory(
+      fetchDocumentsByDocumentsMock,
       dataProviderMock,
     );
   });
@@ -109,7 +109,7 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
       )
       .resolves([william.toJSON()]);
 
-    const result = await verifyDPObjectsUniquenessByIndices(stPacket, userId, dpContract);
+    const result = await verifyDocumentsUniquenessByIndices(stPacket, userId, dpContract);
 
     expectValidationError(result, DuplicateDocumentError, 4);
 

@@ -1,4 +1,4 @@
-const verifyDPObjectsFactory = require('../../../../lib/stPacket/verification/verifyDPObjectsFactory');
+const verifyDocumentsFactory = require('../../../../lib/stPacket/verification/verifyDocumentsFactory');
 
 const STPacket = require('../../../../lib/stPacket/STPacket');
 const Document = require('../../../../lib/document/Document');
@@ -16,14 +16,14 @@ const DocumentNotFoundError = require('../../../../lib/errors/DocumentNotFoundEr
 const InvalidDocumentRevisionError = require('../../../../lib/errors/InvalidDocumentRevisionError');
 const InvalidDocumentActionError = require('../../../../lib/stPacket/errors/InvalidDocumentActionError');
 
-describe('verifyDPObjects', () => {
-  let verifyDPObjects;
-  let fetchDPObjectsByObjectsMock;
+describe('verifyDocuments', () => {
+  let verifyDocuments;
+  let fetchDocumentsByDocumentsMock;
   let stPacket;
   let documents;
   let dpContract;
   let userId;
-  let verifyDPObjectsUniquenessByIndices;
+  let verifyDocumentsUniquenessByIndices;
 
   beforeEach(function beforeEach() {
     ({ userId } = getDPObjectsFixture);
@@ -34,27 +34,27 @@ describe('verifyDPObjects', () => {
     stPacket = new STPacket(dpContract.getId());
     stPacket.setDocuments(documents);
 
-    fetchDPObjectsByObjectsMock = this.sinonSandbox.stub();
+    fetchDocumentsByDocumentsMock = this.sinonSandbox.stub();
 
-    verifyDPObjectsUniquenessByIndices = this.sinonSandbox.stub();
-    verifyDPObjectsUniquenessByIndices.resolves(new ValidationResult());
+    verifyDocumentsUniquenessByIndices = this.sinonSandbox.stub();
+    verifyDocumentsUniquenessByIndices.resolves(new ValidationResult());
 
-    verifyDPObjects = verifyDPObjectsFactory(
-      fetchDPObjectsByObjectsMock,
-      verifyDPObjectsUniquenessByIndices,
+    verifyDocuments = verifyDocumentsFactory(
+      fetchDocumentsByDocumentsMock,
+      verifyDocumentsUniquenessByIndices,
     );
   });
 
   it('should return invalid result if Document has wrong scope', async () => {
     documents[0].scope = 'wrong';
 
-    fetchDPObjectsByObjectsMock.resolves([]);
+    fetchDocumentsByDocumentsMock.resolves([]);
 
-    const result = await verifyDPObjects(stPacket, userId, dpContract);
+    const result = await verifyDocuments(stPacket, userId, dpContract);
 
     expectValidationError(result, InvalidDocumentScopeError);
 
-    expect(fetchDPObjectsByObjectsMock).to.have.been.calledOnceWith(
+    expect(fetchDocumentsByDocumentsMock).to.have.been.calledOnceWith(
       stPacket.getDPContractId(),
       documents,
     );
@@ -65,13 +65,13 @@ describe('verifyDPObjects', () => {
   });
 
   it('should return invalid result if Document with action "create" is already present', async () => {
-    fetchDPObjectsByObjectsMock.resolves([documents[0]]);
+    fetchDocumentsByDocumentsMock.resolves([documents[0]]);
 
-    const result = await verifyDPObjects(stPacket, userId, dpContract);
+    const result = await verifyDocuments(stPacket, userId, dpContract);
 
     expectValidationError(result, DocumentAlreadyPresentError);
 
-    expect(fetchDPObjectsByObjectsMock).to.have.been.calledOnceWith(
+    expect(fetchDocumentsByDocumentsMock).to.have.been.calledOnceWith(
       stPacket.getDPContractId(),
       documents,
     );
@@ -85,13 +85,13 @@ describe('verifyDPObjects', () => {
   it('should return invalid result if Document with action "update" is not present', async () => {
     documents[0].setAction(Document.ACTIONS.UPDATE);
 
-    fetchDPObjectsByObjectsMock.resolves([]);
+    fetchDocumentsByDocumentsMock.resolves([]);
 
-    const result = await verifyDPObjects(stPacket, userId, dpContract);
+    const result = await verifyDocuments(stPacket, userId, dpContract);
 
     expectValidationError(result, DocumentNotFoundError);
 
-    expect(fetchDPObjectsByObjectsMock).to.have.been.calledOnceWith(
+    expect(fetchDocumentsByDocumentsMock).to.have.been.calledOnceWith(
       stPacket.getDPContractId(),
       documents,
     );
@@ -105,13 +105,13 @@ describe('verifyDPObjects', () => {
     documents[0].setData({});
     documents[0].setAction(Document.ACTIONS.DELETE);
 
-    fetchDPObjectsByObjectsMock.resolves([]);
+    fetchDocumentsByDocumentsMock.resolves([]);
 
-    const result = await verifyDPObjects(stPacket, userId, dpContract);
+    const result = await verifyDocuments(stPacket, userId, dpContract);
 
     expectValidationError(result, DocumentNotFoundError);
 
-    expect(fetchDPObjectsByObjectsMock).to.have.been.calledOnceWith(
+    expect(fetchDocumentsByDocumentsMock).to.have.been.calledOnceWith(
       stPacket.getDPContractId(),
       documents,
     );
@@ -124,13 +124,13 @@ describe('verifyDPObjects', () => {
   it('should return invalid result if Document with action "update" has wrong revision', async () => {
     documents[0].setAction(Document.ACTIONS.UPDATE);
 
-    fetchDPObjectsByObjectsMock.resolves([documents[0]]);
+    fetchDocumentsByDocumentsMock.resolves([documents[0]]);
 
-    const result = await verifyDPObjects(stPacket, userId, dpContract);
+    const result = await verifyDocuments(stPacket, userId, dpContract);
 
     expectValidationError(result, InvalidDocumentRevisionError);
 
-    expect(fetchDPObjectsByObjectsMock).to.have.been.calledOnceWith(
+    expect(fetchDocumentsByDocumentsMock).to.have.been.calledOnceWith(
       stPacket.getDPContractId(),
       documents,
     );
@@ -145,13 +145,13 @@ describe('verifyDPObjects', () => {
     documents[0].setData({});
     documents[0].setAction(Document.ACTIONS.DELETE);
 
-    fetchDPObjectsByObjectsMock.resolves([documents[0]]);
+    fetchDocumentsByDocumentsMock.resolves([documents[0]]);
 
-    const result = await verifyDPObjects(stPacket, userId, dpContract);
+    const result = await verifyDocuments(stPacket, userId, dpContract);
 
     expectValidationError(result, InvalidDocumentRevisionError);
 
-    expect(fetchDPObjectsByObjectsMock).to.have.been.calledOnceWith(
+    expect(fetchDocumentsByDocumentsMock).to.have.been.calledOnceWith(
       stPacket.getDPContractId(),
       documents,
     );
@@ -164,11 +164,11 @@ describe('verifyDPObjects', () => {
   it('should throw an error if Document has invalid action', async () => {
     documents[0].setAction(5);
 
-    fetchDPObjectsByObjectsMock.resolves([documents[0]]);
+    fetchDocumentsByDocumentsMock.resolves([documents[0]]);
 
     let error;
     try {
-      await verifyDPObjects(stPacket, userId, dpContract);
+      await verifyDocuments(stPacket, userId, dpContract);
     } catch (e) {
       error = e;
     }
@@ -178,12 +178,12 @@ describe('verifyDPObjects', () => {
   });
 
   it('should return valid result if DPObjects are valid', async () => {
-    const fetchedDPObjects = [
+    const fetchedDocuments = [
       new Document(documents[1].toJSON()),
       new Document(documents[2].toJSON()),
     ];
 
-    fetchDPObjectsByObjectsMock.resolves(fetchedDPObjects);
+    fetchDocumentsByDocumentsMock.resolves(fetchedDocuments);
 
     documents[1].setAction(Document.ACTIONS.UPDATE);
     documents[1].setRevision(1);
@@ -192,7 +192,7 @@ describe('verifyDPObjects', () => {
     documents[2].setAction(Document.ACTIONS.DELETE);
     documents[2].setRevision(1);
 
-    const result = await verifyDPObjects(stPacket, userId, dpContract);
+    const result = await verifyDocuments(stPacket, userId, dpContract);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
