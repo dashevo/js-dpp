@@ -2,8 +2,6 @@ const { startDrive } = require('@dashevo/dp-services-ctl');
 
 const DashPlatformProtocol = require('../../lib/DashPlatformProtocol');
 
-const DriveRPCError = require('../../lib/test/errors/DriveRPCError');
-
 const registerUser = require('../../lib/test/e2e/registerUser');
 const sendSTPacket = require('../../lib/test/e2e/sendSTPacket');
 const createStateTransition = require('../../lib/test/e2e/createStateTransition');
@@ -150,9 +148,7 @@ describe('verifySTPacket', function main() {
 
       expect.fail('Duplicate object was successfully sent');
     } catch (e) {
-      expect(e).to.be.an.instanceOf(DriveRPCError);
-
-      const error = e.getOriginalError();
+      const error = e.originalError;
       expect(error.data[0].name).to.equal('DuplicateDPObjectError');
       expect(error.data[0].dpObject).to.deep.equal(thirdUserObject.toJSON());
       expect(error.data[0].indexDefinition).to.deep.equal({
