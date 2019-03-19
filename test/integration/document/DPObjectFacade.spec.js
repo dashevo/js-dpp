@@ -27,7 +27,7 @@ describe('DPObjectFacade', () => {
 
   describe('create', () => {
     it('should create Document', () => {
-      const result = dpp.object.create(
+      const result = dpp.document.create(
         document.getType(),
         document.getData(),
       );
@@ -45,7 +45,7 @@ describe('DPObjectFacade', () => {
 
       let error;
       try {
-        dpp.object.create(
+        dpp.document.create(
           document.getType(),
           document.getData(),
         );
@@ -64,7 +64,7 @@ describe('DPObjectFacade', () => {
 
       let error;
       try {
-        dpp.object.create(
+        dpp.document.create(
           document.getType(),
           document.getData(),
         );
@@ -79,7 +79,7 @@ describe('DPObjectFacade', () => {
 
   describe('createFromObject', () => {
     it('should create Document from plain object', () => {
-      const result = dpp.object.createFromObject(document.toJSON());
+      const result = dpp.document.createFromObject(document.toJSON());
 
       expect(result).to.be.an.instanceOf(Document);
 
@@ -93,7 +93,7 @@ describe('DPObjectFacade', () => {
 
       let error;
       try {
-        dpp.object.createFromObject(document.toJSON());
+        dpp.document.createFromObject(document.toJSON());
       } catch (e) {
         error = e;
       }
@@ -109,7 +109,7 @@ describe('DPObjectFacade', () => {
 
       let error;
       try {
-        dpp.object.createFromObject(document.toJSON());
+        dpp.document.createFromObject(document.toJSON());
       } catch (e) {
         error = e;
       }
@@ -121,7 +121,7 @@ describe('DPObjectFacade', () => {
 
   describe('createFromSerialized', () => {
     it('should create Document from string', () => {
-      const result = dpp.object.createFromSerialized(document.serialize());
+      const result = dpp.document.createFromSerialized(document.serialize());
 
       expect(result).to.be.an.instanceOf(Document);
 
@@ -135,7 +135,7 @@ describe('DPObjectFacade', () => {
 
       let error;
       try {
-        dpp.object.createFromSerialized(document.serialize());
+        dpp.document.createFromSerialized(document.serialize());
       } catch (e) {
         error = e;
       }
@@ -151,7 +151,7 @@ describe('DPObjectFacade', () => {
 
       let error;
       try {
-        dpp.object.createFromSerialized(document.serialize());
+        dpp.document.createFromSerialized(document.serialize());
       } catch (e) {
         error = e;
       }
@@ -163,7 +163,7 @@ describe('DPObjectFacade', () => {
 
   describe('validate', () => {
     it('should validate Document', () => {
-      const result = dpp.object.validate(document.toJSON());
+      const result = dpp.document.validate(document.toJSON());
 
       expect(result).to.be.an.instanceOf(ValidationResult);
     });
