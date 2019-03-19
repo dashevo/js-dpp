@@ -8,7 +8,7 @@ describe('DPContract', () => {
   let DPContract;
   let dpContractName;
   let documentType;
-  let dpObjectSchema;
+  let documentSchema;
   let documents;
   let dpContract;
 
@@ -24,7 +24,7 @@ describe('DPContract', () => {
 
     dpContractName = 'LovelyContract';
     documentType = 'niceObject';
-    dpObjectSchema = {
+    documentSchema = {
       properties: {
         nice: {
           type: 'boolean',
@@ -32,7 +32,7 @@ describe('DPContract', () => {
       },
     };
     documents = {
-      [documentType]: dpObjectSchema,
+      [documentType]: documentSchema,
     };
 
     dpContract = new DPContract(dpContractName, documents);
@@ -125,7 +125,7 @@ describe('DPContract', () => {
   });
 
   describe('#setDocuments', () => {
-    it('should set DPObjects definition', () => {
+    it('should set Documents definition', () => {
       const anotherDocuments = {
         anotherObject: {
           properties: {
@@ -142,7 +142,7 @@ describe('DPContract', () => {
   });
 
   describe('#getDocuments', () => {
-    it('should return DPObjects definition', () => {
+    it('should return Documents definition', () => {
       const result = dpContract.getDocuments();
 
       expect(result).to.equal(dpContract.documents);
@@ -196,7 +196,7 @@ describe('DPContract', () => {
     it('should return Document Schema', () => {
       const result = dpContract.getDocumentSchema(documentType);
 
-      expect(result).to.equal(dpObjectSchema);
+      expect(result).to.equal(documentSchema);
     });
   });
 
@@ -273,13 +273,13 @@ describe('DPContract', () => {
 
   describe('#serialize', () => {
     it('should return serialized DP Contract', () => {
-      const serializedDPObject = '123';
+      const serializedDocument = '123';
 
-      encodeMock.returns(serializedDPObject);
+      encodeMock.returns(serializedDocument);
 
       const result = dpContract.serialize();
 
-      expect(result).to.equal(serializedDPObject);
+      expect(result).to.equal(serializedDocument);
 
       expect(encodeMock).to.have.been.calledOnceWith(dpContract.toJSON());
     });
@@ -292,15 +292,15 @@ describe('DPContract', () => {
 
     it('should return DP Contract hash', () => {
       const serializedDPContract = '123';
-      const hashedDPObject = '456';
+      const hashedDocument = '456';
 
       DPContract.prototype.serialize.returns(serializedDPContract);
 
-      hashMock.returns(hashedDPObject);
+      hashMock.returns(hashedDocument);
 
       const result = dpContract.hash();
 
-      expect(result).to.equal(hashedDPObject);
+      expect(result).to.equal(hashedDocument);
 
       expect(DPContract.prototype.serialize).to.have.been.calledOnce();
 

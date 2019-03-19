@@ -129,7 +129,7 @@ describe('STPacket', () => {
       expect(stPacket.contracts[0]).to.equal(dpContract);
     });
 
-    it('should throw an error if DPObjects are present', () => {
+    it('should throw an error if Documents are present', () => {
       stPacket.setDocuments(documents);
 
       let error;
@@ -161,7 +161,7 @@ describe('STPacket', () => {
     });
   });
 
-  describe('#setDPObjects', () => {
+  describe('#setDocuments', () => {
     it('should set Documents and replace previous', () => {
       stPacket.setDocuments([documents[0]]);
 
@@ -188,7 +188,7 @@ describe('STPacket', () => {
     });
   });
 
-  describe('#getDPObjects', () => {
+  describe('#getDocuments', () => {
     it('should return Documents', () => {
       stPacket.documents = documents;
 

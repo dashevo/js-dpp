@@ -175,7 +175,7 @@ describe('verifySTPacketFactory', () => {
     expect(actualError).to.equal(expectedError);
   });
 
-  it('should return invalid result if DPObjects are not valid', async () => {
+  it('should return invalid result if Documents are not valid', async () => {
     const expectedError = new ConsensusError('someError');
     verifyDocumentsMock.resolves(
       new ValidationResult([expectedError]),

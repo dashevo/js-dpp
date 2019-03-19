@@ -82,10 +82,10 @@ describe('validateSTPacketDocumentsFactory', () => {
   });
 
   it('should return invalid result if Documents are invalid', () => {
-    const dpObjectError = new ConsensusError('test');
+    const documentError = new ConsensusError('test');
 
     validateDocumentMock.onCall(0).returns(
-      new ValidationResult([dpObjectError]),
+      new ValidationResult([documentError]),
     );
 
     const result = validateSTPacketDocuments(rawSTPacket, dpContract);
@@ -98,7 +98,7 @@ describe('validateSTPacketDocumentsFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error).to.equal(dpObjectError);
+    expect(error).to.equal(documentError);
   });
 
   it('should return valid result if there are no duplicate Documents and they are valid', () => {

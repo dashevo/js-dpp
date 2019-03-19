@@ -337,7 +337,7 @@ describe('validateDPContractFactory', () => {
       expect(error.keyword).to.equal('maxProperties');
     });
 
-    describe('DPObject schema', () => {
+    describe('Document schema', () => {
       it('should not be empty', () => {
         rawDPContract.documents.niceObject.properties = {};
 

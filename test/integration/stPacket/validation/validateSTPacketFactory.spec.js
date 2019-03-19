@@ -306,8 +306,8 @@ describe('validateSTPacketFactory', () => {
     });
 
     it('should contain no more than 1000 items', () => {
-      const thousandDPObjects = (new Array(1001)).fill(rawSTPacket.documents[0]);
-      rawSTPacket.documents.push(...thousandDPObjects);
+      const thousandDocuments = (new Array(1001)).fill(rawSTPacket.documents[0]);
+      rawSTPacket.documents.push(...thousandDocuments);
 
       const result = validateSTPacket(rawSTPacket, dpContract);
 

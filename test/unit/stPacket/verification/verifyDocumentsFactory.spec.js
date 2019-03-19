@@ -177,7 +177,7 @@ describe('verifyDocuments', () => {
     expect(error.getDocument()).to.equal(documents[0]);
   });
 
-  it('should return valid result if DPObjects are valid', async () => {
+  it('should return valid result if Documents are valid', async () => {
     const fetchedDocuments = [
       new Document(documents[1].toJSON()),
       new Document(documents[2].toJSON()),

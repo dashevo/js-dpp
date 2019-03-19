@@ -58,26 +58,26 @@ describe('DocumentFactory', () => {
       hashMock.returns(scope);
       generateMock.returns(scopeId);
 
-      const newDPObject = factory.create(
+      const newDocument = factory.create(
         rawDocument.$type,
         { name },
       );
 
-      expect(newDPObject).to.be.an.instanceOf(Document);
+      expect(newDocument).to.be.an.instanceOf(Document);
 
-      expect(newDPObject.getType()).to.equal(rawDocument.$type);
+      expect(newDocument.getType()).to.equal(rawDocument.$type);
 
-      expect(newDPObject.get('name')).to.equal(name);
+      expect(newDocument.get('name')).to.equal(name);
 
       expect(hashMock).to.have.been.calledOnceWith(dpContract.getId() + userId);
-      expect(newDPObject.scope).to.equal(scope);
+      expect(newDocument.scope).to.equal(scope);
 
       expect(generateMock).to.have.been.calledOnce();
-      expect(newDPObject.scopeId).to.equal(scopeId);
+      expect(newDocument.scopeId).to.equal(scopeId);
 
-      expect(newDPObject.getAction()).to.equal(Document.DEFAULTS.ACTION);
+      expect(newDocument.getAction()).to.equal(Document.DEFAULTS.ACTION);
 
-      expect(newDPObject.getRevision()).to.equal(Document.DEFAULTS.REVISION);
+      expect(newDocument.getRevision()).to.equal(Document.DEFAULTS.REVISION);
     });
 
     it('should throw an error if type is not defined', () => {
@@ -149,19 +149,19 @@ describe('DocumentFactory', () => {
     });
 
     it('should return new DPContract from serialized DPContract', () => {
-      const serializedDPObject = document.serialize();
+      const serializedDocument = document.serialize();
 
       decodeMock.returns(rawDocument);
 
       factory.createFromObject.returns(document);
 
-      const result = factory.createFromSerialized(serializedDPObject);
+      const result = factory.createFromSerialized(serializedDocument);
 
       expect(result).to.equal(document);
 
       expect(factory.createFromObject).to.have.been.calledOnceWith(rawDocument);
 
-      expect(decodeMock).to.have.been.calledOnceWith(serializedDPObject);
+      expect(decodeMock).to.have.been.calledOnceWith(serializedDocument);
     });
   });
 
