@@ -1,6 +1,6 @@
 const rewiremock = require('rewiremock/node');
 
-const InvalidDPObjectTypeError = require('../../../lib/errors/InvalidDPObjectTypeError');
+const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 
 describe('DPContract', () => {
   let hashMock;
@@ -190,7 +190,7 @@ describe('DPContract', () => {
         error = e;
       }
 
-      expect(error).to.be.an.instanceOf(InvalidDPObjectTypeError);
+      expect(error).to.be.an.instanceOf(InvalidDocumentTypeError);
     });
 
     it('should return Document Schema', () => {
@@ -209,7 +209,7 @@ describe('DPContract', () => {
         error = e;
       }
 
-      expect(error).to.be.an.instanceOf(InvalidDPObjectTypeError);
+      expect(error).to.be.an.instanceOf(InvalidDocumentTypeError);
     });
 
     it('should return schema with $ref to Document schema', () => {

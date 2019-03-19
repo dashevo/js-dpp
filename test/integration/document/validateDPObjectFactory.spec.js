@@ -10,10 +10,10 @@ const enrichDPContractWithBaseDPObject = require('../../../lib/document/enrichDP
 const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
 const getDPObjectsFixture = require('../../../lib/test/fixtures/getDPObjectsFixture');
 
-const MissingDPObjectTypeError = require('../../../lib/errors/MissingDPObjectTypeError');
-const MissingDPObjectActionError = require('../../../lib/errors/MissingDPObjectActionError');
-const InvalidDPObjectTypeError = require('../../../lib/errors/InvalidDPObjectTypeError');
-const InvalidDPObjectScopeIdError = require('../../../lib/errors/InvalidDPObjectScopeIdError');
+const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTypeError');
+const MissingDocumentActionError = require('../../../lib/errors/MissingDocumentActionError');
+const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
+const InvalidDocumentScopeIdError = require('../../../lib/errors/InvalidDocumentScopeIdError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 const JsonSchemaError = require('../../../lib/errors/JsonSchemaError');
 
@@ -62,7 +62,7 @@ describe('validateDPObjectFactory', () => {
 
         expectValidationError(
           result,
-          MissingDPObjectTypeError,
+          MissingDocumentTypeError,
         );
 
         const [error] = result.getErrors();
@@ -77,7 +77,7 @@ describe('validateDPObjectFactory', () => {
 
         expectValidationError(
           result,
-          InvalidDPObjectTypeError,
+          InvalidDocumentTypeError,
         );
 
         const [error] = result.getErrors();
@@ -111,7 +111,7 @@ describe('validateDPObjectFactory', () => {
 
         expectValidationError(
           result,
-          MissingDPObjectActionError,
+          MissingDocumentActionError,
         );
 
         const [error] = result.getErrors();
@@ -271,7 +271,7 @@ describe('validateDPObjectFactory', () => {
         expect(jsonError.keyword).to.equal('required');
         expect(jsonError.params.missingProperty).to.equal('$scopeId');
 
-        expect(scopeError).to.be.an.instanceOf(InvalidDPObjectScopeIdError);
+        expect(scopeError).to.be.an.instanceOf(InvalidDocumentScopeIdError);
         expect(scopeError.getRawDocument()).to.equal(rawDocument);
       });
 
@@ -288,7 +288,7 @@ describe('validateDPObjectFactory', () => {
         expect(jsonError.dataPath).to.equal('.$scopeId');
         expect(jsonError.keyword).to.equal('type');
 
-        expect(scopeError).to.be.an.instanceOf(InvalidDPObjectScopeIdError);
+        expect(scopeError).to.be.an.instanceOf(InvalidDocumentScopeIdError);
         expect(scopeError.getRawDocument()).to.equal(rawDocument);
       });
 
@@ -305,7 +305,7 @@ describe('validateDPObjectFactory', () => {
         expect(jsonError.dataPath).to.equal('.$scopeId');
         expect(jsonError.keyword).to.equal('minLength');
 
-        expect(scopeError).to.be.an.instanceOf(InvalidDPObjectScopeIdError);
+        expect(scopeError).to.be.an.instanceOf(InvalidDocumentScopeIdError);
         expect(scopeError.getRawDocument()).to.equal(rawDocument);
       });
 
@@ -322,7 +322,7 @@ describe('validateDPObjectFactory', () => {
         expect(jsonError.dataPath).to.equal('.$scopeId');
         expect(jsonError.keyword).to.equal('maxLength');
 
-        expect(scopeError).to.be.an.instanceOf(InvalidDPObjectScopeIdError);
+        expect(scopeError).to.be.an.instanceOf(InvalidDocumentScopeIdError);
         expect(scopeError.getRawDocument()).to.equal(rawDocument);
       });
 
@@ -331,11 +331,11 @@ describe('validateDPObjectFactory', () => {
 
         const result = validateDPObject(rawDocument, dpContract);
 
-        expectValidationError(result, InvalidDPObjectScopeIdError);
+        expectValidationError(result, InvalidDocumentScopeIdError);
 
         const [error] = result.getErrors();
 
-        expect(error).to.be.an.instanceOf(InvalidDPObjectScopeIdError);
+        expect(error).to.be.an.instanceOf(InvalidDocumentScopeIdError);
         expect(error.getRawDocument()).to.equal(rawDocument);
       });
     });

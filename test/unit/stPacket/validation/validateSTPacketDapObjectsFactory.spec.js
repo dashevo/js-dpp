@@ -7,7 +7,7 @@ const validateSTPacketDPObjectsFactory = require('../../../../lib/stPacket/valid
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 
-const DuplicatedDPObjectsError = require('../../../../lib/errors/DuplicatedDPObjectsError');
+const DuplicateDocumentsError = require('../../../../lib/errors/DuplicateDocumentsError');
 const InvalidDPContractError = require('../../../../lib/errors/InvalidDPContractError');
 const ConsensusError = require('../../../../lib/errors/ConsensusError');
 
@@ -66,7 +66,7 @@ describe('validateSTPacketDPObjectsFactory', () => {
 
     const result = validateSTPacketDPObjects(rawSTPacket, dpContract);
 
-    expectValidationError(result, DuplicatedDPObjectsError);
+    expectValidationError(result, DuplicateDocumentsError);
 
     expect(findDuplicatedDPObjectsMock).to.have.been.calledOnceWith(rawDocuments);
 

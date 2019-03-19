@@ -7,8 +7,8 @@ const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFi
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const InvalidDPObjectTypeError = require('../../../lib/errors/InvalidDPObjectTypeError');
-const InvalidDPObjectError = require('../../../lib/document/errors/InvalidDPObjectError');
+const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
+const InvalidDocumentError = require('../../../lib/document/errors/InvalidDocumentError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 
 describe('DPObjectFactory', () => {
@@ -90,7 +90,7 @@ describe('DPObjectFactory', () => {
         error = e;
       }
 
-      expect(error).to.be.an.instanceOf(InvalidDPObjectTypeError);
+      expect(error).to.be.an.instanceOf(InvalidDocumentTypeError);
       expect(error.getType()).to.equal(type);
       expect(error.getDPContract()).to.equal(dpContract);
 
@@ -131,7 +131,7 @@ describe('DPObjectFactory', () => {
         error = e;
       }
 
-      expect(error).to.be.an.instanceOf(InvalidDPObjectError);
+      expect(error).to.be.an.instanceOf(InvalidDocumentError);
 
       expect(error.getErrors()).to.have.length(1);
       expect(error.getRawDocument()).to.equal(rawDocument);

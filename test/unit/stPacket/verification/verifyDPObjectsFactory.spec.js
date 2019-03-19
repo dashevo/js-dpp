@@ -10,11 +10,11 @@ const ValidationResult = require('../../../../lib/validation/ValidationResult');
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 
-const InvalidDPObjectScopeError = require('../../../../lib/errors/InvalidDPObjectScopeError');
-const DPObjectAlreadyPresentError = require('../../../../lib/errors/DPObjectAlreadyPresentError');
-const DPObjectNotFoundError = require('../../../../lib/errors/DPObjectNotFoundError');
-const InvalidDPObjectRevisionError = require('../../../../lib/errors/InvalidDPObjectRevisionError');
-const InvalidDPObjectActionError = require('../../../../lib/stPacket/errors/InvalidDPObjectActionError');
+const InvalidDocumentScopeError = require('../../../../lib/errors/InvalidDocumentScopeError');
+const DocumentAlreadyPresentError = require('../../../../lib/errors/DocumentAlreadyPresentError');
+const DocumentNotFoundError = require('../../../../lib/errors/DocumentNotFoundError');
+const InvalidDocumentRevisionError = require('../../../../lib/errors/InvalidDocumentRevisionError');
+const InvalidDocumentActionError = require('../../../../lib/stPacket/errors/InvalidDocumentActionError');
 
 describe('verifyDPObjects', () => {
   let verifyDPObjects;
@@ -52,7 +52,7 @@ describe('verifyDPObjects', () => {
 
     const result = await verifyDPObjects(stPacket, userId, dpContract);
 
-    expectValidationError(result, InvalidDPObjectScopeError);
+    expectValidationError(result, InvalidDocumentScopeError);
 
     expect(fetchDPObjectsByObjectsMock).to.have.been.calledOnceWith(
       stPacket.getDPContractId(),
@@ -69,7 +69,7 @@ describe('verifyDPObjects', () => {
 
     const result = await verifyDPObjects(stPacket, userId, dpContract);
 
-    expectValidationError(result, DPObjectAlreadyPresentError);
+    expectValidationError(result, DocumentAlreadyPresentError);
 
     expect(fetchDPObjectsByObjectsMock).to.have.been.calledOnceWith(
       stPacket.getDPContractId(),
@@ -89,7 +89,7 @@ describe('verifyDPObjects', () => {
 
     const result = await verifyDPObjects(stPacket, userId, dpContract);
 
-    expectValidationError(result, DPObjectNotFoundError);
+    expectValidationError(result, DocumentNotFoundError);
 
     expect(fetchDPObjectsByObjectsMock).to.have.been.calledOnceWith(
       stPacket.getDPContractId(),
@@ -109,7 +109,7 @@ describe('verifyDPObjects', () => {
 
     const result = await verifyDPObjects(stPacket, userId, dpContract);
 
-    expectValidationError(result, DPObjectNotFoundError);
+    expectValidationError(result, DocumentNotFoundError);
 
     expect(fetchDPObjectsByObjectsMock).to.have.been.calledOnceWith(
       stPacket.getDPContractId(),
@@ -128,7 +128,7 @@ describe('verifyDPObjects', () => {
 
     const result = await verifyDPObjects(stPacket, userId, dpContract);
 
-    expectValidationError(result, InvalidDPObjectRevisionError);
+    expectValidationError(result, InvalidDocumentRevisionError);
 
     expect(fetchDPObjectsByObjectsMock).to.have.been.calledOnceWith(
       stPacket.getDPContractId(),
@@ -149,7 +149,7 @@ describe('verifyDPObjects', () => {
 
     const result = await verifyDPObjects(stPacket, userId, dpContract);
 
-    expectValidationError(result, InvalidDPObjectRevisionError);
+    expectValidationError(result, InvalidDocumentRevisionError);
 
     expect(fetchDPObjectsByObjectsMock).to.have.been.calledOnceWith(
       stPacket.getDPContractId(),
@@ -173,7 +173,7 @@ describe('verifyDPObjects', () => {
       error = e;
     }
 
-    expect(error).to.be.an.instanceOf(InvalidDPObjectActionError);
+    expect(error).to.be.an.instanceOf(InvalidDocumentActionError);
     expect(error.getDocument()).to.equal(documents[0]);
   });
 

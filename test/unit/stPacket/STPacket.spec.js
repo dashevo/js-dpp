@@ -6,7 +6,7 @@ const getDPObjectsFixture = require('../../../lib/test/fixtures/getDPObjectsFixt
 const DPContract = require('../../../lib/contract/DPContract');
 const Document = require('../../../lib/document/Document');
 
-const ContractAndObjectsNotAllowedSamePacketError = require('../../../lib/stPacket/errors/ContractAndObjectsNotAllowedSamePacketError');
+const ContractAndDocumentsNotAllowedSamePacketError = require('../../../lib/stPacket/errors/ContractAndDocumentsNotAllowedSamePacketError');
 
 describe('STPacket', () => {
   let hashMock;
@@ -139,7 +139,7 @@ describe('STPacket', () => {
         error = e;
       }
 
-      expect(error).to.be.an.instanceOf(ContractAndObjectsNotAllowedSamePacketError);
+      expect(error).to.be.an.instanceOf(ContractAndDocumentsNotAllowedSamePacketError);
 
       expect(error.getSTPacket()).to.equal(stPacket);
     });
@@ -182,7 +182,7 @@ describe('STPacket', () => {
         error = e;
       }
 
-      expect(error).to.be.an.instanceOf(ContractAndObjectsNotAllowedSamePacketError);
+      expect(error).to.be.an.instanceOf(ContractAndDocumentsNotAllowedSamePacketError);
 
       expect(error.getSTPacket()).to.equal(stPacket);
     });

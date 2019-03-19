@@ -10,7 +10,7 @@ const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContrac
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 
-const DuplicateDPObjectError = require('../../../../lib/errors/DuplicateDPObjectError');
+const DuplicateDocumentError = require('../../../../lib/errors/DuplicateDocumentError');
 
 function encodeToBase58(id) {
   const idBuffer = Buffer.from(id, 'hex');
@@ -111,7 +111,7 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
 
     const result = await verifyDPObjectsUniquenessByIndices(stPacket, userId, dpContract);
 
-    expectValidationError(result, DuplicateDPObjectError, 4);
+    expectValidationError(result, DuplicateDocumentError, 4);
 
     const errors = result.getErrors();
 
