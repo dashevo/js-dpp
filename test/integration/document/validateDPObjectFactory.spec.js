@@ -85,10 +85,10 @@ describe('validateDPObjectFactory', () => {
         expect(error.getType()).to.equal('undefinedObject');
       });
 
-      it('should throw an error if getDPObjectSchemaRef throws error', function it() {
+      it('should throw an error if getDocumentSchemaRef throws error', function it() {
         const someError = new Error();
 
-        this.sinonSandbox.stub(dpContract, 'getDPObjectSchemaRef').throws(someError);
+        this.sinonSandbox.stub(dpContract, 'getDocumentSchemaRef').throws(someError);
 
         let error;
         try {
@@ -99,7 +99,7 @@ describe('validateDPObjectFactory', () => {
 
         expect(error).to.equal(someError);
 
-        expect(dpContract.getDPObjectSchemaRef).to.have.been.calledOnce();
+        expect(dpContract.getDocumentSchemaRef).to.have.been.calledOnce();
       });
     });
 

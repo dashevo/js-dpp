@@ -11,7 +11,7 @@ describe('findDuplicateDPObjectsByIndices', () => {
     rawDocuments = getDPObjectsFixture().map(o => o.toJSON());
 
     dpContract = getDPContractFixture();
-    dpContract.setDPObjectSchema('nonUniqueIndexObject', {
+    dpContract.setDocumentSchema('nonUniqueIndexObject', {
       indices: [
         {
           properties: {
@@ -33,7 +33,7 @@ describe('findDuplicateDPObjectsByIndices', () => {
       additionalProperties: false,
     });
 
-    dpContract.setDPObjectSchema('singleObject', {
+    dpContract.setDocumentSchema('singleObject', {
       indices: [
         {
           properties: {

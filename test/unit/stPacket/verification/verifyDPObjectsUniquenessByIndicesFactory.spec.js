@@ -49,7 +49,7 @@ describe('verifyDPObjectsUniquenessByIndices', () => {
   it('should return invalid result if Document has unique indices and there are duplicates', async () => {
     const [, , , william, leon] = documents;
 
-    const indicesDefinition = dpContract.getDPObjectSchema(william.getType()).indices;
+    const indicesDefinition = dpContract.getDocumentSchema(william.getType()).indices;
 
     dataProviderMock.fetchDPObjects.resolves([]);
 
