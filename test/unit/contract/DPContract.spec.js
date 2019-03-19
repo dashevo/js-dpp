@@ -9,7 +9,7 @@ describe('DPContract', () => {
   let dpContractName;
   let documentType;
   let dpObjectSchema;
-  let dpObjectsDefinition;
+  let documents;
   let dpContract;
 
   beforeEach(function beforeEach() {
@@ -31,20 +31,20 @@ describe('DPContract', () => {
         },
       },
     };
-    dpObjectsDefinition = {
+    documents = {
       [documentType]: dpObjectSchema,
     };
 
-    dpContract = new DPContract(dpContractName, dpObjectsDefinition);
+    dpContract = new DPContract(dpContractName, documents);
   });
 
   describe('constructor', () => {
     it('should create new DP Contract', () => {
-      dpContract = new DPContract(dpContractName, dpObjectsDefinition);
+      dpContract = new DPContract(dpContractName, documents);
       expect(dpContract.name).to.equal(dpContractName);
       expect(dpContract.version).to.equal(DPContract.DEFAULTS.VERSION);
       expect(dpContract.schema).to.equal(DPContract.DEFAULTS.SCHEMA);
-      expect(dpContract.dpObjectsDefinition).to.equal(dpObjectsDefinition);
+      expect(dpContract.documents).to.equal(documents);
     });
   });
 
@@ -124,9 +124,9 @@ describe('DPContract', () => {
     });
   });
 
-  describe('#setDPObjectsDefinition', () => {
+  describe('#setDocuments', () => {
     it('should set DPObjects definition', () => {
-      const anotherDPObjectsDefinition = {
+      const anotherDocuments = {
         anotherObject: {
           properties: {
             name: { type: 'string' },
@@ -134,18 +134,18 @@ describe('DPContract', () => {
         },
       };
 
-      const result = dpContract.setDPObjectsDefinition(anotherDPObjectsDefinition);
+      const result = dpContract.setDocuments(anotherDocuments);
 
       expect(result).to.equal(dpContract);
-      expect(dpContract.dpObjectsDefinition).to.equal(anotherDPObjectsDefinition);
+      expect(dpContract.documents).to.equal(anotherDocuments);
     });
   });
 
-  describe('#getDPObjectsDefinition', () => {
+  describe('#getDocuments', () => {
     it('should return DPObjects definition', () => {
-      const result = dpContract.getDPObjectsDefinition();
+      const result = dpContract.getDocuments();
 
-      expect(result).to.equal(dpContract.dpObjectsDefinition);
+      expect(result).to.equal(dpContract.documents);
     });
   });
 
@@ -176,8 +176,8 @@ describe('DPContract', () => {
 
       expect(result).to.equal(dpContract);
 
-      expect(dpContract.dpObjectsDefinition).to.have.property(anotherType);
-      expect(dpContract.dpObjectsDefinition[anotherType]).to.equal(anotherDefinition);
+      expect(dpContract.documents).to.have.property(anotherType);
+      expect(dpContract.documents[anotherType]).to.equal(anotherDefinition);
     });
   });
 
@@ -216,7 +216,7 @@ describe('DPContract', () => {
       const result = dpContract.getDPObjectSchemaRef(documentType);
 
       expect(result).to.deep.equal({
-        $ref: 'dp-contract#/dpObjectsDefinition/niceObject',
+        $ref: 'dp-contract#/documents/niceObject',
       });
     });
   });
@@ -248,7 +248,7 @@ describe('DPContract', () => {
         $schema: DPContract.DEFAULTS.SCHEMA,
         name: dpContractName,
         version: DPContract.DEFAULTS.VERSION,
-        dpObjectsDefinition,
+        documents,
       });
     });
 
@@ -265,7 +265,7 @@ describe('DPContract', () => {
         $schema: DPContract.DEFAULTS.SCHEMA,
         name: dpContractName,
         version: DPContract.DEFAULTS.VERSION,
-        dpObjectsDefinition,
+        documents,
         definitions,
       });
     });
