@@ -3,7 +3,7 @@ const Ajv = require('ajv');
 const JsonSchemaValidator = require('../../../../lib/validation/JsonSchemaValidator');
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
 
-const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../../lib/test/fixtures/getContractFixture');
 const getSTPacketFixture = require('../../../../lib/test/fixtures/getSTPacketFixture');
 
 const validateSTPacketFactory = require('../../../../lib/stPacket/validation/validateSTPacketFactory');
@@ -27,7 +27,7 @@ describe('validateSTPacketFactory', () => {
   let validateSTPacketDocumentsMock;
 
   beforeEach(function beforeEach() {
-    dpContract = getDPContractFixture();
+    dpContract = getContractFixture();
     rawDPContract = dpContract.toJSON();
 
     stPacket = getSTPacketFixture();

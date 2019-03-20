@@ -1,6 +1,6 @@
 const rewiremock = require('rewiremock/node');
 
-const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../lib/test/fixtures/getContractFixture');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
@@ -17,7 +17,7 @@ describe('ContractFactory', () => {
   let rawDPContract;
 
   beforeEach(function beforeEach() {
-    dpContract = getDPContractFixture();
+    dpContract = getContractFixture();
     rawDPContract = dpContract.toJSON();
 
     decodeMock = this.sinonSandbox.stub();

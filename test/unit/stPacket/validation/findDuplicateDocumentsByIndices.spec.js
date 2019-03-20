@@ -1,6 +1,6 @@
 const findDuplicateDocumentsByIndices = require('../../../../lib/stPacket/validation/findDuplicateDocumentsByIndices');
 
-const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../../lib/test/fixtures/getContractFixture');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 
 describe('findDuplicateDocumentsByIndices', () => {
@@ -10,7 +10,7 @@ describe('findDuplicateDocumentsByIndices', () => {
   beforeEach(() => {
     rawDocuments = getDocumentsFixture().map(o => o.toJSON());
 
-    dpContract = getDPContractFixture();
+    dpContract = getContractFixture();
     dpContract.setDocumentSchema('nonUniqueIndexDocument', {
       indices: [
         {

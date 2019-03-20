@@ -5,7 +5,7 @@ const Document = require('../../../lib/document/Document');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
-const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../lib/test/fixtures/getContractFixture');
 
 const MissingOptionError = require('../../../lib/errors/MissingOptionError');
 
@@ -15,7 +15,7 @@ describe('DocumentFacade', () => {
   let dpContract;
 
   beforeEach(() => {
-    dpContract = getDPContractFixture();
+    dpContract = getContractFixture();
 
     dpp = new DashPlatformProtocol({
       userId: '6b74011f5d2ad1a8d45b71b9702f54205ce75253593c3cfbba3fdadeca278288',

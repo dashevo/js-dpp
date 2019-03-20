@@ -1,6 +1,6 @@
 const rewiremock = require('rewiremock/node');
 
-const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../lib/test/fixtures/getContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
 const Contract = require('../../../lib/contract/Contract');
@@ -22,7 +22,7 @@ describe('STPacket', () => {
   let calculateItemsHashMock;
 
   beforeEach(function beforeEach() {
-    dpContract = getDPContractFixture();
+    dpContract = getContractFixture();
     documents = getDocumentsFixture();
 
     dpContractId = dpContract.getId();

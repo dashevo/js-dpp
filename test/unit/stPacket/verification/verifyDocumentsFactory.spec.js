@@ -4,7 +4,7 @@ const STPacket = require('../../../../lib/stPacket/STPacket');
 const Document = require('../../../../lib/document/Document');
 
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
-const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../../lib/test/fixtures/getContractFixture');
 
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
 
@@ -29,7 +29,7 @@ describe('verifyDocuments', () => {
     ({ userId } = getDocumentsFixture);
 
     documents = getDocumentsFixture();
-    dpContract = getDPContractFixture();
+    dpContract = getContractFixture();
 
     stPacket = new STPacket(dpContract.getId());
     stPacket.setDocuments(documents);

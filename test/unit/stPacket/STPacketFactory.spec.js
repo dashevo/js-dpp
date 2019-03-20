@@ -2,7 +2,7 @@ const rewiremock = require('rewiremock/node');
 
 const STPacket = require('../../../lib/stPacket/STPacket');
 
-const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../lib/test/fixtures/getContractFixture');
 const getSTPacketFixture = require('../../../lib/test/fixtures/getSTPacketFixture');
 
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
@@ -58,7 +58,7 @@ describe('STPacketFactory', () => {
       '../../../lib/stPacket/STPacket': STPacket,
     });
 
-    dpContract = getDPContractFixture();
+    dpContract = getContractFixture();
 
     dpContractId = dpContract.getId();
 

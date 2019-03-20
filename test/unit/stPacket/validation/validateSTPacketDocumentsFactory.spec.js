@@ -1,4 +1,4 @@
-const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../../lib/test/fixtures/getContractFixture');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
@@ -21,7 +21,7 @@ describe('validateSTPacketDocumentsFactory', () => {
   let validateSTPacketDocuments;
 
   beforeEach(function beforeEach() {
-    dpContract = getDPContractFixture();
+    dpContract = getContractFixture();
     rawDocuments = getDocumentsFixture().map(o => o.toJSON());
     rawSTPacket = {
       contractId: dpContract.getId(),

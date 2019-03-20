@@ -6,7 +6,7 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const validateContractFactory = require('../../../lib/contract/validateContractFactory');
 
-const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../lib/test/fixtures/getContractFixture');
 
 const { expectJsonSchemaError, expectValidationError } = require('../../../lib/test/expect/expectError');
 
@@ -19,7 +19,7 @@ describe('validateContractFactory', () => {
   let validateContract;
 
   beforeEach(() => {
-    rawDPContract = getDPContractFixture().toJSON();
+    rawDPContract = getContractFixture().toJSON();
 
     const ajv = new Ajv();
     const validator = new JsonSchemaValidator(ajv);

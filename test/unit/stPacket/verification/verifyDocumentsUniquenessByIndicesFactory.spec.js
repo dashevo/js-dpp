@@ -5,7 +5,7 @@ const verifyDocumentsUniquenessByIndicesFactory = require('../../../../lib/stPac
 const STPacket = require('../../../../lib/stPacket/STPacket');
 
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
-const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../../lib/test/fixtures/getContractFixture');
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
@@ -30,7 +30,7 @@ describe('verifyDocumentsUniquenessByIndices', () => {
     ({ userId } = getDocumentsFixture);
 
     documents = getDocumentsFixture();
-    dpContract = getDPContractFixture();
+    dpContract = getContractFixture();
 
     stPacket = new STPacket(dpContract.getId());
     stPacket.setDocuments(documents);

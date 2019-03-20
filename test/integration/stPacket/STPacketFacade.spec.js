@@ -7,7 +7,7 @@ const STPacket = require('../../../lib/stPacket/STPacket');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const getSTPacketFixture = require('../../../lib/test/fixtures/getSTPacketFixture');
-const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../lib/test/fixtures/getContractFixture');
 
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 
@@ -20,7 +20,7 @@ describe('STPacketFacade', () => {
   let dataProviderMock;
 
   beforeEach(function beforeEach() {
-    dpContract = getDPContractFixture();
+    dpContract = getContractFixture();
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 

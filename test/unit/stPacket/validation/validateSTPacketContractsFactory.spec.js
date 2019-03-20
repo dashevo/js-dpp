@@ -4,7 +4,7 @@ const ValidationResult = require('../../../../lib/validation/ValidationResult');
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 
-const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../../lib/test/fixtures/getContractFixture');
 
 const ConsensusError = require('../../../../lib/errors/ConsensusError');
 
@@ -16,7 +16,7 @@ describe('validateSTPacketContractsFactory', () => {
   let validateContractMock;
 
   beforeEach(function beforeEach() {
-    dpContract = getDPContractFixture();
+    dpContract = getContractFixture();
     rawDPContract = dpContract.toJSON();
     rawSTPacket = {
       contractId: dpContract.getId(),

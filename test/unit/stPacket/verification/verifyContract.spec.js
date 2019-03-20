@@ -2,7 +2,7 @@ const verifyContract = require('../../../../lib/stPacket/verification/verifyCont
 
 const STPacket = require('../../../../lib/stPacket/STPacket');
 
-const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../../lib/test/fixtures/getContractFixture');
 
 const ContractAlreadyPresentError = require('../../../../lib/errors/ContractAlreadyPresentError');
 
@@ -13,7 +13,7 @@ describe('verifyContract', () => {
   let stPacket;
 
   beforeEach(() => {
-    dpContract = getDPContractFixture();
+    dpContract = getContractFixture();
 
     stPacket = new STPacket(dpContract.getId());
     stPacket.setDPContract(dpContract);

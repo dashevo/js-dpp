@@ -4,7 +4,7 @@ const Contract = require('../../../lib/contract/Contract');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../lib/test/fixtures/getContractFixture');
 
 describe('ContractFacade', () => {
   let dpp;
@@ -13,7 +13,7 @@ describe('ContractFacade', () => {
   beforeEach(() => {
     dpp = new DashPlatformProtocol();
 
-    dpContract = getDPContractFixture();
+    dpContract = getContractFixture();
   });
 
   describe('create', () => {
