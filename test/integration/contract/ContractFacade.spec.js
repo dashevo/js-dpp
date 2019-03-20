@@ -6,7 +6,7 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
 
-describe('DPContractFacade', () => {
+describe('ContractFacade', () => {
   let dpp;
   let dpContract;
 

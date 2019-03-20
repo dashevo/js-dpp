@@ -7,8 +7,8 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 const InvalidContractError = require('../../../lib/contract/errors/InvalidContractError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 
-describe('DPContractFactory', () => {
-  let DPContractFactory;
+describe('ContractFactory', () => {
+  let ContractFactory;
   let decodeMock;
   let validateContractMock;
   let createContractMock;
@@ -26,13 +26,13 @@ describe('DPContractFactory', () => {
 
     // Require Factory module for webpack
     // eslint-disable-next-line global-require
-    require('../../../lib/contract/DPContractFactory');
+    require('../../../lib/contract/ContractFactory');
 
-    DPContractFactory = rewiremock.proxy('../../../lib/contract/DPContractFactory', {
+    ContractFactory = rewiremock.proxy('../../../lib/contract/ContractFactory', {
       '../../../lib/util/serializer': { decode: decodeMock },
     });
 
-    factory = new DPContractFactory(
+    factory = new ContractFactory(
       createContractMock,
       validateContractMock,
     );
