@@ -35,7 +35,7 @@ describe('STPacketHeader', () => {
     );
 
     rawSTPacketHeader = {
-      contractId: contractId,
+      contractId,
       itemsMerkleRoot,
       itemsHash,
     };

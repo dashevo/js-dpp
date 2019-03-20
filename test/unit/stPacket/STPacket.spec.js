@@ -75,8 +75,6 @@ describe('STPacket', () => {
 
   describe('#setContractId', () => {
     it('should set Contract ID', () => {
-      const contractId = contractId;
-
       const result = stPacket.setContractId(contractId);
 
       expect(result).to.be.an.instanceOf(STPacket);
@@ -219,7 +217,7 @@ describe('STPacket', () => {
       const result = stPacket.toJSON();
 
       expect(result).to.deep.equal({
-        contractId: contractId,
+        contractId,
         itemsMerkleRoot,
         itemsHash,
         documents: [],
@@ -243,7 +241,7 @@ describe('STPacket', () => {
       expect(result).to.equal(serializedSTPacket);
 
       expect(encodeMock).to.have.been.calledOnceWith({
-        contractId: contractId,
+        contractId,
         itemsMerkleRoot,
         itemsHash,
         documents: [],
