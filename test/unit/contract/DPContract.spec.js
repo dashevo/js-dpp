@@ -65,7 +65,7 @@ describe('DPContract', () => {
     it('should return JSON Schema $id', () => {
       const result = dpContract.getJsonSchemaId();
 
-      expect(result).to.equal('dp-contract');
+      expect(result).to.equal('contract');
     });
   });
 
@@ -216,7 +216,7 @@ describe('DPContract', () => {
       const result = dpContract.getDocumentSchemaRef(documentType);
 
       expect(result).to.deep.equal({
-        $ref: 'dp-contract#/documents/niceDocument',
+        $ref: 'contract#/documents/niceDocument',
       });
     });
   });
