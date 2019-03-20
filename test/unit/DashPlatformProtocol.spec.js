@@ -44,13 +44,13 @@ describe('DashPlatformProtocol', () => {
 
       expect(result).to.be.an.instanceOf(DashPlatformProtocol);
 
-      expect(dpp.contract).to.equal(contract);
+      expect(dpp.innerContract).to.equal(contract);
     });
   });
 
   describe('getContract', () => {
     it('should return Contract', () => {
-      dpp.contract = contract;
+      dpp.innerContract = contract;
 
       const result = dpp.getContract();
 
