@@ -1,4 +1,4 @@
-const validateSTPacketDPContractsFactory = require('../../../../lib/stPacket/validation/validateSTPacketDPContractsFactory');
+const validateSTPacketContractsFactory = require('../../../../lib/stPacket/validation/validateSTPacketContractsFactory');
 
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
 
@@ -8,11 +8,11 @@ const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContrac
 
 const ConsensusError = require('../../../../lib/errors/ConsensusError');
 
-describe('validateSTPacketDPContractsFactory', () => {
+describe('validateSTPacketContractsFactory', () => {
   let rawSTPacket;
   let rawDPContract;
   let dpContract;
-  let validateSTPacketDPContracts;
+  let validateSTPacketContracts;
   let validateContractMock;
 
   beforeEach(function beforeEach() {
@@ -28,7 +28,7 @@ describe('validateSTPacketDPContractsFactory', () => {
 
     validateContractMock = this.sinonSandbox.stub().returns(new ValidationResult());
 
-    validateSTPacketDPContracts = validateSTPacketDPContractsFactory(
+    validateSTPacketContracts = validateSTPacketContractsFactory(
       validateContractMock,
     );
   });
@@ -40,7 +40,7 @@ describe('validateSTPacketDPContractsFactory', () => {
       new ValidationResult([dpContractError]),
     );
 
-    const result = validateSTPacketDPContracts(rawSTPacket);
+    const result = validateSTPacketContracts(rawSTPacket);
 
     expectValidationError(result);
 
@@ -50,7 +50,7 @@ describe('validateSTPacketDPContractsFactory', () => {
   });
 
   it('should return valid result if Contract is valid', () => {
-    const result = validateSTPacketDPContracts(rawSTPacket);
+    const result = validateSTPacketContracts(rawSTPacket);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();

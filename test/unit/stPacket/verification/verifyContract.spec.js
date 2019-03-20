@@ -1,4 +1,4 @@
-const verifyDPContract = require('../../../../lib/stPacket/verification/verifyDPContract');
+const verifyContract = require('../../../../lib/stPacket/verification/verifyContract');
 
 const STPacket = require('../../../../lib/stPacket/STPacket');
 
@@ -8,7 +8,7 @@ const DPContractAlreadyPresentError = require('../../../../lib/errors/DPContract
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 
-describe('verifyDPContract', () => {
+describe('verifyContract', () => {
   let dpContract;
   let stPacket;
 
@@ -20,7 +20,7 @@ describe('verifyDPContract', () => {
   });
 
   it('should return invalid result if Contract is already present', async () => {
-    const result = await verifyDPContract(stPacket, dpContract);
+    const result = await verifyContract(stPacket, dpContract);
 
     expectValidationError(result, DPContractAlreadyPresentError);
 
@@ -30,7 +30,7 @@ describe('verifyDPContract', () => {
   });
 
   it('should return valid result if Contract is not present', async () => {
-    const result = await verifyDPContract(stPacket, undefined);
+    const result = await verifyContract(stPacket, undefined);
 
     expectValidationError(result, DPContractAlreadyPresentError, 0);
   });
