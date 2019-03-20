@@ -4,7 +4,7 @@ const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFi
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const InvalidDPContractError = require('../../../lib/contract/errors/InvalidDPContractError');
+const InvalidContractError = require('../../../lib/contract/errors/InvalidContractError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 
 describe('DPContractFactory', () => {
@@ -89,7 +89,7 @@ describe('DPContractFactory', () => {
         error = e;
       }
 
-      expect(error).to.be.an.instanceOf(InvalidDPContractError);
+      expect(error).to.be.an.instanceOf(InvalidContractError);
       expect(error.getRawDPContract()).to.equal(rawDPContract);
 
       expect(error.getErrors()).to.have.length(1);

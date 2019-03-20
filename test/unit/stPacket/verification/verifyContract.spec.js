@@ -4,7 +4,7 @@ const STPacket = require('../../../../lib/stPacket/STPacket');
 
 const getDPContractFixture = require('../../../../lib/test/fixtures/getDPContractFixture');
 
-const DPContractAlreadyPresentError = require('../../../../lib/errors/DPContractAlreadyPresentError');
+const ContractAlreadyPresentError = require('../../../../lib/errors/ContractAlreadyPresentError');
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 
@@ -22,7 +22,7 @@ describe('verifyContract', () => {
   it('should return invalid result if Contract is already present', async () => {
     const result = await verifyContract(stPacket, dpContract);
 
-    expectValidationError(result, DPContractAlreadyPresentError);
+    expectValidationError(result, ContractAlreadyPresentError);
 
     const [error] = result.getErrors();
 
@@ -32,6 +32,6 @@ describe('verifyContract', () => {
   it('should return valid result if Contract is not present', async () => {
     const result = await verifyContract(stPacket, undefined);
 
-    expectValidationError(result, DPContractAlreadyPresentError, 0);
+    expectValidationError(result, ContractAlreadyPresentError, 0);
   });
 });

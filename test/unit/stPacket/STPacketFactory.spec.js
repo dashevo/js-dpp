@@ -10,7 +10,7 @@ const createDataProviderMock = require('../../../lib/test/mocks/createDataProvid
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const InvalidSTPacketError = require('../../../lib/stPacket/errors/InvalidSTPacketError');
-const DPContractNotPresentError = require('../../../lib/errors/DPContractNotPresentError');
+const ContractNotPresentError = require('../../../lib/errors/ContractNotPresentError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 
 describe('STPacketFactory', () => {
@@ -156,7 +156,7 @@ describe('STPacketFactory', () => {
       expect(error.getRawSTPacket()).to.equal(rawSTPacket);
 
       const [consensusError] = error.getErrors();
-      expect(consensusError).to.be.an.instanceOf(DPContractNotPresentError);
+      expect(consensusError).to.be.an.instanceOf(ContractNotPresentError);
       expect(consensusError.getDPContractId()).to.equal(rawSTPacket.contractId);
 
       expect(dataProviderMock.fetchDPContract).to.have.been.calledOnceWith(rawSTPacket.contractId);
