@@ -5,7 +5,7 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const Document = require('../../../lib/document/Document');
 const validateDocumentFactory = require('../../../lib/document/validateDocumentFactory');
-const enrichDPContractWithBaseDocument = require('../../../lib/document/enrichDPContractWithBaseDocument');
+const enrichContractWithBaseDocument = require('../../../lib/document/enrichContractWithBaseDocument');
 
 const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
@@ -42,7 +42,7 @@ describe('validateDocumentFactory', () => {
 
     validateDocument = validateDocumentFactory(
       validator,
-      enrichDPContractWithBaseDocument,
+      enrichContractWithBaseDocument,
     );
 
     rawDocuments = getDocumentsFixture().map(o => o.toJSON());
