@@ -12,14 +12,14 @@ const MissingOptionError = require('../../../lib/errors/MissingOptionError');
 describe('DocumentFacade', () => {
   let dpp;
   let document;
-  let dpContract;
+  let contract;
 
   beforeEach(() => {
-    dpContract = getContractFixture();
+    contract = getContractFixture();
 
     dpp = new DashPlatformProtocol({
       userId: '6b74011f5d2ad1a8d45b71b9702f54205ce75253593c3cfbba3fdadeca278288',
-      dpContract,
+      contract,
     });
 
     ([document] = getDocumentsFixture());
@@ -40,7 +40,7 @@ describe('DocumentFacade', () => {
 
     it('should throw an error if User ID is not defined', () => {
       dpp = new DashPlatformProtocol({
-        dpContract,
+        contract,
       });
 
       let error;
@@ -73,7 +73,7 @@ describe('DocumentFacade', () => {
       }
 
       expect(error).to.be.an.instanceOf(MissingOptionError);
-      expect(error.getOptionName()).to.equal('dpContract');
+      expect(error.getOptionName()).to.equal('contract');
     });
   });
 
@@ -88,7 +88,7 @@ describe('DocumentFacade', () => {
 
     it('should throw an error if User ID is not defined', () => {
       dpp = new DashPlatformProtocol({
-        dpContract,
+        contract,
       });
 
       let error;
@@ -115,7 +115,7 @@ describe('DocumentFacade', () => {
       }
 
       expect(error).to.be.an.instanceOf(MissingOptionError);
-      expect(error.getOptionName()).to.equal('dpContract');
+      expect(error.getOptionName()).to.equal('contract');
     });
   });
 
@@ -130,7 +130,7 @@ describe('DocumentFacade', () => {
 
     it('should throw an error if User ID is not defined', () => {
       dpp = new DashPlatformProtocol({
-        dpContract,
+        contract,
       });
 
       let error;
@@ -157,7 +157,7 @@ describe('DocumentFacade', () => {
       }
 
       expect(error).to.be.an.instanceOf(MissingOptionError);
-      expect(error.getOptionName()).to.equal('dpContract');
+      expect(error.getOptionName()).to.equal('contract');
     });
   });
 

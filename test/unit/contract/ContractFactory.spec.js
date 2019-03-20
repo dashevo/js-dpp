@@ -13,16 +13,16 @@ describe('ContractFactory', () => {
   let validateContractMock;
   let createContractMock;
   let factory;
-  let dpContract;
+  let contract;
   let rawContract;
 
   beforeEach(function beforeEach() {
-    dpContract = getContractFixture();
-    rawContract = dpContract.toJSON();
+    contract = getContractFixture();
+    rawContract = contract.toJSON();
 
     decodeMock = this.sinonSandbox.stub();
     validateContractMock = this.sinonSandbox.stub();
-    createContractMock = this.sinonSandbox.stub().returns(dpContract);
+    createContractMock = this.sinonSandbox.stub().returns(contract);
 
     // Require Factory module for webpack
     // eslint-disable-next-line global-require
@@ -45,7 +45,7 @@ describe('ContractFactory', () => {
         rawContract.documents,
       );
 
-      expect(result).to.equal(dpContract);
+      expect(result).to.equal(contract);
 
       expect(createContractMock).to.have.been.calledOnceWith({
         name: rawContract.name,
@@ -60,7 +60,7 @@ describe('ContractFactory', () => {
 
       const result = factory.createFromObject(rawContract);
 
-      expect(result).to.equal(dpContract);
+      expect(result).to.equal(contract);
 
       expect(validateContractMock).to.have.been.calledOnceWith(rawContract);
 
@@ -70,7 +70,7 @@ describe('ContractFactory', () => {
     it('should return new Contract without validation if "skipValidation" option is passed', () => {
       const result = factory.createFromObject(rawContract, { skipValidation: true });
 
-      expect(result).to.equal(dpContract);
+      expect(result).to.equal(contract);
 
       expect(validateContractMock).to.have.not.been.called();
 
@@ -110,15 +110,15 @@ describe('ContractFactory', () => {
     });
 
     it('should return new Contract from serialized Contract', () => {
-      const serializedContract = dpContract.serialize();
+      const serializedContract = contract.serialize();
 
       decodeMock.returns(rawContract);
 
-      factory.createFromObject.returns(dpContract);
+      factory.createFromObject.returns(contract);
 
       const result = factory.createFromSerialized(serializedContract);
 
-      expect(result).to.equal(dpContract);
+      expect(result).to.equal(contract);
 
       expect(factory.createFromObject).to.have.been.calledOnceWith(rawContract);
 

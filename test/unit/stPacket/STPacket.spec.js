@@ -12,20 +12,20 @@ describe('STPacket', () => {
   let hashMock;
   let encodeMock;
   let STPacket;
-  let dpContract;
+  let contract;
   let documents;
   let stPacket;
   let itemsHash;
   let itemsMerkleRoot;
-  let dpContractId;
+  let contractId;
   let calculateItemsMerkleRootMock;
   let calculateItemsHashMock;
 
   beforeEach(function beforeEach() {
-    dpContract = getContractFixture();
+    contract = getContractFixture();
     documents = getDocumentsFixture();
 
-    dpContractId = dpContract.getId();
+    contractId = contract.getId();
     itemsHash = '14207b92f112bc674f32a8d04008d5c62f18d5b6c846acb0edfaf9f0b32fc293';
     itemsMerkleRoot = '44207b92f112bc674f32a8d04008d5c62f18d5b6c846acb0edfaf9f0b32fc292';
 
@@ -44,38 +44,38 @@ describe('STPacket', () => {
       '../../../lib/stPacket/calculateItemsHash': calculateItemsHashMock,
     });
 
-    stPacket = new STPacket(dpContractId);
+    stPacket = new STPacket(contractId);
   });
 
   describe('constructor', () => {
     it('should return new ST Packet with specified Contract ID', () => {
       expect(stPacket).to.be.an.instanceOf(STPacket);
 
-      expect(stPacket.contractId).to.equal(dpContractId);
+      expect(stPacket.contractId).to.equal(contractId);
     });
 
     it('should return new STPacket with specified Contract ID and Contract', () => {
-      const result = new STPacket(dpContractId, dpContract);
+      const result = new STPacket(contractId, contract);
 
       expect(result).to.be.an.instanceOf(STPacket);
 
-      expect(result.getContractId()).to.equal(dpContractId);
-      expect(result.getContract()).to.equal(dpContract);
+      expect(result.getContractId()).to.equal(contractId);
+      expect(result.getContract()).to.equal(contract);
     });
 
     it('should return new STPacket with specified Contract ID and Documents', () => {
-      const result = new STPacket(dpContractId, documents);
+      const result = new STPacket(contractId, documents);
 
       expect(result).to.be.an.instanceOf(STPacket);
 
-      expect(result.getContractId()).to.equal(dpContractId);
+      expect(result.getContractId()).to.equal(contractId);
       expect(result.getDocuments()).to.equal(documents);
     });
   });
 
   describe('#setContractId', () => {
     it('should set Contract ID', () => {
-      const contractId = dpContractId;
+      const contractId = contractId;
 
       const result = stPacket.setContractId(contractId);
 
@@ -89,7 +89,7 @@ describe('STPacket', () => {
     it('should return Contract ID', () => {
       const result = stPacket.getContractId();
 
-      expect(result).to.equal(dpContractId);
+      expect(result).to.equal(contractId);
     });
   });
 
@@ -121,12 +121,12 @@ describe('STPacket', () => {
 
   describe('#setContract', () => {
     it('should set Contract', () => {
-      const result = stPacket.setContract(dpContract);
+      const result = stPacket.setContract(contract);
 
       expect(result).to.be.an.instanceOf(STPacket);
 
       expect(stPacket.contracts).to.have.lengthOf(1);
-      expect(stPacket.contracts[0]).to.equal(dpContract);
+      expect(stPacket.contracts[0]).to.equal(contract);
     });
 
     it('should throw an error if Documents are present', () => {
@@ -134,7 +134,7 @@ describe('STPacket', () => {
 
       let error;
       try {
-        stPacket.setContract(dpContract);
+        stPacket.setContract(contract);
       } catch (e) {
         error = e;
       }
@@ -147,11 +147,11 @@ describe('STPacket', () => {
 
   describe('#getContract', () => {
     it('should return Contract', () => {
-      stPacket.contracts = [dpContract];
+      stPacket.contracts = [contract];
 
       const result = stPacket.getContract();
 
-      expect(result).to.equal(dpContract);
+      expect(result).to.equal(contract);
     });
 
     it('should return null of Contract is not present', () => {
@@ -173,7 +173,7 @@ describe('STPacket', () => {
     });
 
     it('should throw an error if Contract is present', () => {
-      stPacket.setContract(dpContract);
+      stPacket.setContract(contract);
 
       let error;
       try {
@@ -214,23 +214,23 @@ describe('STPacket', () => {
     it('should return ST Packet as plain object', () => {
       hashMock.returns(itemsHash);
 
-      stPacket.setContract(dpContract);
+      stPacket.setContract(contract);
 
       const result = stPacket.toJSON();
 
       expect(result).to.deep.equal({
-        contractId: dpContractId,
+        contractId: contractId,
         itemsMerkleRoot,
         itemsHash,
         documents: [],
-        contracts: [dpContract.toJSON()],
+        contracts: [contract.toJSON()],
       });
     });
   });
 
   describe('#serialize', () => {
     it('should return serialized ST Packet', () => {
-      stPacket.setContract(dpContract);
+      stPacket.setContract(contract);
 
       const serializedSTPacket = '123';
 
@@ -238,12 +238,12 @@ describe('STPacket', () => {
 
       const result = stPacket.serialize();
 
-      const rawContract = dpContract.toJSON();
+      const rawContract = contract.toJSON();
 
       expect(result).to.equal(serializedSTPacket);
 
       expect(encodeMock).to.have.been.calledOnceWith({
-        contractId: dpContractId,
+        contractId: contractId,
         itemsMerkleRoot,
         itemsHash,
         documents: [],

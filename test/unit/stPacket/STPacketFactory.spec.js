@@ -19,9 +19,9 @@ describe('STPacketFactory', () => {
   let validateSTPacketMock;
   let createContractMock;
   let dataProviderMock;
-  let dpContract;
+  let contract;
   let factory;
-  let dpContractId;
+  let contractId;
   let stPacket;
   let rawSTPacket;
   let encodeMock;
@@ -58,9 +58,9 @@ describe('STPacketFactory', () => {
       '../../../lib/stPacket/STPacket': STPacket,
     });
 
-    dpContract = getContractFixture();
+    contract = getContractFixture();
 
-    dpContractId = dpContract.getId();
+    contractId = contract.getId();
 
     factory = new STPacketFactory(
       dataProviderMock,
@@ -75,11 +75,11 @@ describe('STPacketFactory', () => {
 
   describe('create', () => {
     it('should return new STPacket', () => {
-      const newSTPacket = factory.create(dpContractId, dpContract);
+      const newSTPacket = factory.create(contractId, contract);
 
       expect(newSTPacket).to.be.an.instanceOf(STPacket);
 
-      expect(newSTPacket.getContractId()).to.equal(dpContractId);
+      expect(newSTPacket.getContractId()).to.equal(contractId);
     });
   });
 
@@ -97,7 +97,7 @@ describe('STPacketFactory', () => {
 
       validateSTPacketMock.returns(new ValidationResult());
 
-      dataProviderMock.fetchContract.resolves(dpContract);
+      dataProviderMock.fetchContract.resolves(contract);
 
       const result = await factory.createFromObject(rawSTPacket);
 
@@ -112,7 +112,7 @@ describe('STPacketFactory', () => {
 
       expect(dataProviderMock.fetchContract).to.have.been.calledOnceWith(rawSTPacket.contractId);
 
-      expect(validateSTPacketMock).to.have.been.calledOnceWith(rawSTPacket, dpContract);
+      expect(validateSTPacketMock).to.have.been.calledOnceWith(rawSTPacket, contract);
     });
 
     it('should return new STPacket without validation if "skipValidation" option is passed', async () => {
@@ -166,10 +166,10 @@ describe('STPacketFactory', () => {
     it('should return new STPacket with Contract', async () => {
       validateSTPacketMock.returns(new ValidationResult());
 
-      createContractMock.returns(dpContract);
+      createContractMock.returns(contract);
 
       stPacket.setDocuments([]);
-      stPacket.setContract(dpContract);
+      stPacket.setContract(contract);
 
       rawSTPacket = stPacket.toJSON();
 
@@ -185,7 +185,7 @@ describe('STPacketFactory', () => {
     });
 
     it('should throw an error if passed object is not valid', async () => {
-      dataProviderMock.fetchContract.resolves(dpContract);
+      dataProviderMock.fetchContract.resolves(contract);
 
       const validationError = new ConsensusError('test');
 

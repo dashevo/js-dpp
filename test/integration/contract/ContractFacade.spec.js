@@ -8,51 +8,51 @@ const getContractFixture = require('../../../lib/test/fixtures/getContractFixtur
 
 describe('ContractFacade', () => {
   let dpp;
-  let dpContract;
+  let contract;
 
   beforeEach(() => {
     dpp = new DashPlatformProtocol();
 
-    dpContract = getContractFixture();
+    contract = getContractFixture();
   });
 
   describe('create', () => {
     it('should create Contract', () => {
       const result = dpp.contract.create(
-        dpContract.getName(),
-        dpContract.getDocuments(),
+        contract.getName(),
+        contract.getDocuments(),
       );
 
       expect(result).to.be.an.instanceOf(Contract);
 
-      expect(result.getName()).to.equal(dpContract.getName());
-      expect(result.getDocuments()).to.equal(dpContract.getDocuments());
+      expect(result.getName()).to.equal(contract.getName());
+      expect(result.getDocuments()).to.equal(contract.getDocuments());
     });
   });
 
   describe('createFromObject', () => {
     it('should create Contract from plain object', () => {
-      const result = dpp.contract.createFromObject(dpContract.toJSON());
+      const result = dpp.contract.createFromObject(contract.toJSON());
 
       expect(result).to.be.an.instanceOf(Contract);
 
-      expect(result.toJSON()).to.deep.equal(dpContract.toJSON());
+      expect(result.toJSON()).to.deep.equal(contract.toJSON());
     });
   });
 
   describe('createFromSerialized', () => {
     it('should create Contract from string', () => {
-      const result = dpp.contract.createFromSerialized(dpContract.serialize());
+      const result = dpp.contract.createFromSerialized(contract.serialize());
 
       expect(result).to.be.an.instanceOf(Contract);
 
-      expect(result.toJSON()).to.deep.equal(dpContract.toJSON());
+      expect(result.toJSON()).to.deep.equal(contract.toJSON());
     });
   });
 
   describe('validate', () => {
     it('should validate Contract', () => {
-      const result = dpp.contract.validate(dpContract.toJSON());
+      const result = dpp.contract.validate(contract.toJSON());
 
       expect(result).to.be.an.instanceOf(ValidationResult);
     });

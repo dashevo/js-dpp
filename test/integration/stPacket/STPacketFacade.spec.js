@@ -16,15 +16,15 @@ const MissingOptionError = require('../../../lib/errors/MissingOptionError');
 describe('STPacketFacade', () => {
   let dpp;
   let stPacket;
-  let dpContract;
+  let contract;
   let dataProviderMock;
 
   beforeEach(function beforeEach() {
-    dpContract = getContractFixture();
+    contract = getContractFixture();
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
-    dataProviderMock.fetchContract.resolves(dpContract);
+    dataProviderMock.fetchContract.resolves(contract);
     dataProviderMock.fetchTransaction.resolves(null);
     dataProviderMock.fetchDocuments.resolves([]);
 
@@ -32,7 +32,7 @@ describe('STPacketFacade', () => {
 
     dpp = new DashPlatformProtocol({
       userId: '6b74011f5d2ad1a8d45b71b9702f54205ce75253593c3cfbba3fdadeca278288',
-      dpContract,
+      contract,
       dataProvider: dataProviderMock,
     });
   });
@@ -58,7 +58,7 @@ describe('STPacketFacade', () => {
       }
 
       expect(error).to.be.an.instanceOf(MissingOptionError);
-      expect(error.getOptionName()).to.equal('dpContract');
+      expect(error.getOptionName()).to.equal('contract');
     });
   });
 
@@ -128,7 +128,7 @@ describe('STPacketFacade', () => {
       }
 
       expect(error).to.be.an.instanceOf(MissingOptionError);
-      expect(error.getOptionName()).to.equal('dpContract');
+      expect(error.getOptionName()).to.equal('contract');
     });
   });
 

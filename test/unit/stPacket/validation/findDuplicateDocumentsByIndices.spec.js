@@ -5,13 +5,13 @@ const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsF
 
 describe('findDuplicateDocumentsByIndices', () => {
   let rawDocuments;
-  let dpContract;
+  let contract;
 
   beforeEach(() => {
     rawDocuments = getDocumentsFixture().map(o => o.toJSON());
 
-    dpContract = getContractFixture();
-    dpContract.setDocumentSchema('nonUniqueIndexDocument', {
+    contract = getContractFixture();
+    contract.setDocumentSchema('nonUniqueIndexDocument', {
       indices: [
         {
           properties: {
@@ -33,7 +33,7 @@ describe('findDuplicateDocumentsByIndices', () => {
       additionalProperties: false,
     });
 
-    dpContract.setDocumentSchema('singleDocument', {
+    contract.setDocumentSchema('singleDocument', {
       indices: [
         {
           properties: {
@@ -70,7 +70,7 @@ describe('findDuplicateDocumentsByIndices', () => {
     const [, , , william, leon] = rawDocuments;
     leon.lastName = 'Birkin';
 
-    const duplicates = findDuplicateDocumentsByIndices(rawDocuments, dpContract);
+    const duplicates = findDuplicateDocumentsByIndices(rawDocuments, contract);
     expect(duplicates).to.deep.equal(
       [
         leon,
@@ -80,7 +80,7 @@ describe('findDuplicateDocumentsByIndices', () => {
   });
 
   it('should return an empty array of there are no duplicates', () => {
-    const duplicates = findDuplicateDocumentsByIndices(rawDocuments, dpContract);
+    const duplicates = findDuplicateDocumentsByIndices(rawDocuments, contract);
     expect(duplicates.length).to.equal(0);
   });
 });

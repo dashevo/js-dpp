@@ -23,16 +23,16 @@ describe('verifyDocumentsUniquenessByIndices', () => {
   let verifyDocumentsUniquenessByIndices;
   let stPacket;
   let documents;
-  let dpContract;
+  let contract;
   let userId;
 
   beforeEach(function beforeEach() {
     ({ userId } = getDocumentsFixture);
 
     documents = getDocumentsFixture();
-    dpContract = getContractFixture();
+    contract = getContractFixture();
 
-    stPacket = new STPacket(dpContract.getId());
+    stPacket = new STPacket(contract.getId());
     stPacket.setDocuments(documents);
 
     fetchDocumentsByDocumentsMock = this.sinonSandbox.stub();
@@ -49,7 +49,7 @@ describe('verifyDocumentsUniquenessByIndices', () => {
   it('should return invalid result if Document has unique indices and there are duplicates', async () => {
     const [, , , william, leon] = documents;
 
-    const indicesDefinition = dpContract.getDocumentSchema(william.getType()).indices;
+    const indicesDefinition = contract.getDocumentSchema(william.getType()).indices;
 
     dataProviderMock.fetchDocuments.resolves([]);
 
@@ -109,7 +109,7 @@ describe('verifyDocumentsUniquenessByIndices', () => {
       )
       .resolves([william.toJSON()]);
 
-    const result = await verifyDocumentsUniquenessByIndices(stPacket, userId, dpContract);
+    const result = await verifyDocumentsUniquenessByIndices(stPacket, userId, contract);
 
     expectValidationError(result, DuplicateDocumentError, 4);
 

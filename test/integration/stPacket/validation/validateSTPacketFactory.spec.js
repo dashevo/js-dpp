@@ -21,14 +21,14 @@ describe('validateSTPacketFactory', () => {
   let stPacket;
   let rawSTPacket;
   let rawContract;
-  let dpContract;
+  let contract;
   let validateSTPacket;
   let validateSTPacketContractsMock;
   let validateSTPacketDocumentsMock;
 
   beforeEach(function beforeEach() {
-    dpContract = getContractFixture();
-    rawContract = dpContract.toJSON();
+    contract = getContractFixture();
+    rawContract = contract.toJSON();
 
     stPacket = getSTPacketFixture();
     rawSTPacket = stPacket.toJSON();
@@ -50,7 +50,7 @@ describe('validateSTPacketFactory', () => {
     it('should be present', () => {
       delete rawSTPacket.contractId;
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -67,7 +67,7 @@ describe('validateSTPacketFactory', () => {
     it('should be a string', () => {
       rawSTPacket.contractId = 1;
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -83,7 +83,7 @@ describe('validateSTPacketFactory', () => {
     it('should be no less than 64 chars', () => {
       rawSTPacket.contractId = '86b273ff';
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -99,7 +99,7 @@ describe('validateSTPacketFactory', () => {
     it('should be no longer than 64 chars', () => {
       rawSTPacket.contractId = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -117,7 +117,7 @@ describe('validateSTPacketFactory', () => {
     it('should be present', () => {
       delete rawSTPacket.itemsMerkleRoot;
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -134,7 +134,7 @@ describe('validateSTPacketFactory', () => {
     it('should be a string', () => {
       rawSTPacket.itemsMerkleRoot = 1;
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -150,7 +150,7 @@ describe('validateSTPacketFactory', () => {
     it('should be no less than 64 chars', () => {
       rawSTPacket.itemsMerkleRoot = '86b273ff';
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -166,7 +166,7 @@ describe('validateSTPacketFactory', () => {
     it('should be no longer than 64 chars', () => {
       rawSTPacket.itemsMerkleRoot = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -196,7 +196,7 @@ describe('validateSTPacketFactory', () => {
     it('should be present', () => {
       delete rawSTPacket.itemsHash;
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -213,7 +213,7 @@ describe('validateSTPacketFactory', () => {
     it('should be a string', () => {
       rawSTPacket.itemsHash = 1;
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -229,7 +229,7 @@ describe('validateSTPacketFactory', () => {
     it('should be no less than 64 chars', () => {
       rawSTPacket.itemsHash = '86b273ff';
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -245,7 +245,7 @@ describe('validateSTPacketFactory', () => {
     it('should be no longer than 64 chars', () => {
       rawSTPacket.itemsHash = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -275,7 +275,7 @@ describe('validateSTPacketFactory', () => {
     it('should be present', () => {
       delete rawSTPacket.documents;
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -292,7 +292,7 @@ describe('validateSTPacketFactory', () => {
     it('should be an array', () => {
       rawSTPacket.documents = 1;
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -309,7 +309,7 @@ describe('validateSTPacketFactory', () => {
       const thousandDocuments = (new Array(1001)).fill(rawSTPacket.documents[0]);
       rawSTPacket.documents.push(...thousandDocuments);
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result, 3);
 
@@ -336,7 +336,7 @@ describe('validateSTPacketFactory', () => {
     it('should be present', () => {
       delete rawSTPacket.contracts;
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -353,7 +353,7 @@ describe('validateSTPacketFactory', () => {
     it('should be an array', () => {
       rawSTPacket.contracts = 1;
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result);
 
@@ -369,7 +369,7 @@ describe('validateSTPacketFactory', () => {
     it('should contain no more than one contract', () => {
       rawSTPacket.contracts.push(rawContract, rawContract);
 
-      const result = validateSTPacket(rawSTPacket, dpContract);
+      const result = validateSTPacket(rawSTPacket, contract);
 
       expectJsonSchemaError(result, 3);
 
@@ -394,7 +394,7 @@ describe('validateSTPacketFactory', () => {
     rawSTPacket.contracts = [];
     rawSTPacket.documents = [];
 
-    const result = validateSTPacket(rawSTPacket, dpContract);
+    const result = validateSTPacket(rawSTPacket, contract);
 
     expectJsonSchemaError(result);
 
@@ -410,7 +410,7 @@ describe('validateSTPacketFactory', () => {
   it('should return invalid result if packet contains the both documents and contracts', () => {
     rawSTPacket.contracts.push(rawContract);
 
-    const result = validateSTPacket(rawSTPacket, dpContract);
+    const result = validateSTPacket(rawSTPacket, contract);
 
     expectJsonSchemaError(result, 3);
 
@@ -435,7 +435,7 @@ describe('validateSTPacketFactory', () => {
 
     rawSTPacket[additionalProperty] = {};
 
-    const result = validateSTPacket(rawSTPacket, dpContract);
+    const result = validateSTPacket(rawSTPacket, contract);
 
     expectJsonSchemaError(result);
 
@@ -451,14 +451,14 @@ describe('validateSTPacketFactory', () => {
 
   it('should validate Contract if present', () => {
     stPacket.setDocuments([]);
-    stPacket.setContract(dpContract);
+    stPacket.setContract(contract);
 
     rawSTPacket = stPacket.toJSON();
 
-    const dpContractError = new ConsensusError('test');
+    const contractError = new ConsensusError('test');
 
     validateSTPacketContractsMock.returns(
-      new ValidationResult([dpContractError]),
+      new ValidationResult([contractError]),
     );
 
     const result = validateSTPacket(rawSTPacket);
@@ -469,28 +469,28 @@ describe('validateSTPacketFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error).to.equal(dpContractError);
+    expect(error).to.equal(contractError);
   });
 
   it('should validate Documents if present', () => {
-    const dpContractError = new ConsensusError('test');
+    const contractError = new ConsensusError('test');
 
     validateSTPacketDocumentsMock.returns(
-      new ValidationResult([dpContractError]),
+      new ValidationResult([contractError]),
     );
 
-    const result = validateSTPacket(rawSTPacket, dpContract);
+    const result = validateSTPacket(rawSTPacket, contract);
 
     expectValidationError(result);
 
     expect(validateSTPacketDocumentsMock).to.have.been.calledOnceWith(
       rawSTPacket,
-      dpContract,
+      contract,
     );
 
     const [error] = result.getErrors();
 
-    expect(error).to.equal(dpContractError);
+    expect(error).to.equal(contractError);
   });
 
   it('should return valid result if packet structure is correct', () => {
