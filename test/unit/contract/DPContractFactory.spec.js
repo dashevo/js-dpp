@@ -10,8 +10,8 @@ const ConsensusError = require('../../../lib/errors/ConsensusError');
 describe('DPContractFactory', () => {
   let DPContractFactory;
   let decodeMock;
-  let validateDPContractMock;
-  let createDPContractMock;
+  let validateContractMock;
+  let createContractMock;
   let factory;
   let dpContract;
   let rawDPContract;
@@ -21,8 +21,8 @@ describe('DPContractFactory', () => {
     rawDPContract = dpContract.toJSON();
 
     decodeMock = this.sinonSandbox.stub();
-    validateDPContractMock = this.sinonSandbox.stub();
-    createDPContractMock = this.sinonSandbox.stub().returns(dpContract);
+    validateContractMock = this.sinonSandbox.stub();
+    createContractMock = this.sinonSandbox.stub().returns(dpContract);
 
     // Require Factory module for webpack
     // eslint-disable-next-line global-require
@@ -33,8 +33,8 @@ describe('DPContractFactory', () => {
     });
 
     factory = new DPContractFactory(
-      createDPContractMock,
-      validateDPContractMock,
+      createContractMock,
+      validateContractMock,
     );
   });
 
@@ -47,7 +47,7 @@ describe('DPContractFactory', () => {
 
       expect(result).to.equal(dpContract);
 
-      expect(createDPContractMock).to.have.been.calledOnceWith({
+      expect(createContractMock).to.have.been.calledOnceWith({
         name: rawDPContract.name,
         documents: rawDPContract.documents,
       });
@@ -56,15 +56,15 @@ describe('DPContractFactory', () => {
 
   describe('createFromObject', () => {
     it('should return new DPContract with data from passed object', () => {
-      validateDPContractMock.returns(new ValidationResult());
+      validateContractMock.returns(new ValidationResult());
 
       const result = factory.createFromObject(rawDPContract);
 
       expect(result).to.equal(dpContract);
 
-      expect(validateDPContractMock).to.have.been.calledOnceWith(rawDPContract);
+      expect(validateContractMock).to.have.been.calledOnceWith(rawDPContract);
 
-      expect(createDPContractMock).to.have.been.calledOnceWith(rawDPContract);
+      expect(createContractMock).to.have.been.calledOnceWith(rawDPContract);
     });
 
     it('should return new DPContract without validation if "skipValidation" option is passed', () => {
@@ -72,15 +72,15 @@ describe('DPContractFactory', () => {
 
       expect(result).to.equal(dpContract);
 
-      expect(validateDPContractMock).to.have.not.been.called();
+      expect(validateContractMock).to.have.not.been.called();
 
-      expect(createDPContractMock).to.have.been.calledOnceWith(rawDPContract);
+      expect(createContractMock).to.have.been.calledOnceWith(rawDPContract);
     });
 
     it('should throw an error if passed object is not valid', () => {
       const validationError = new ConsensusError('test');
 
-      validateDPContractMock.returns(new ValidationResult([validationError]));
+      validateContractMock.returns(new ValidationResult([validationError]));
 
       let error;
       try {
@@ -98,9 +98,9 @@ describe('DPContractFactory', () => {
 
       expect(consensusError).to.equal(validationError);
 
-      expect(validateDPContractMock).to.have.been.calledOnceWith(rawDPContract);
+      expect(validateContractMock).to.have.been.calledOnceWith(rawDPContract);
 
-      expect(createDPContractMock).to.have.not.been.called();
+      expect(createContractMock).to.have.not.been.called();
     });
   });
 

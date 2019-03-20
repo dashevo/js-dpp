@@ -17,7 +17,7 @@ describe('STPacketFactory', () => {
   let decodeMock;
   let STPacketFactory;
   let validateSTPacketMock;
-  let createDPContractMock;
+  let createContractMock;
   let dataProviderMock;
   let dpContract;
   let factory;
@@ -35,7 +35,7 @@ describe('STPacketFactory', () => {
     decodeMock = this.sinonSandbox.stub();
     encodeMock = this.sinonSandbox.stub();
     validateSTPacketMock = this.sinonSandbox.stub();
-    createDPContractMock = this.sinonSandbox.stub();
+    createContractMock = this.sinonSandbox.stub();
     serializerMock = { encode: encodeMock, decode: decodeMock };
     hashMock = this.sinonSandbox.stub();
     getMerkleTreeMock = this.sinonSandbox.stub();
@@ -65,7 +65,7 @@ describe('STPacketFactory', () => {
     factory = new STPacketFactory(
       dataProviderMock,
       validateSTPacketMock,
-      createDPContractMock,
+      createContractMock,
     );
 
     stPacket = getSTPacketFixture();
@@ -166,7 +166,7 @@ describe('STPacketFactory', () => {
     it('should return new STPacket with Contract', async () => {
       validateSTPacketMock.returns(new ValidationResult());
 
-      createDPContractMock.returns(dpContract);
+      createContractMock.returns(dpContract);
 
       stPacket.setDocuments([]);
       stPacket.setDPContract(dpContract);

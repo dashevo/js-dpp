@@ -1,7 +1,7 @@
-const createDPContract = require('../../../lib/contract/createDPContract');
+const createContract = require('../../../lib/contract/createContract');
 const Contract = require('../../../lib/contract/Contract');
 
-describe('createDPContract', () => {
+describe('createContract', () => {
   let rawDPContract;
   beforeEach(() => {
     rawDPContract = {
@@ -15,7 +15,7 @@ describe('createDPContract', () => {
   });
 
   it('should return new Contract with "name" and documents', () => {
-    const dpContract = createDPContract(rawDPContract);
+    const dpContract = createContract(rawDPContract);
 
     expect(dpContract).to.be.an.instanceOf(Contract);
 
@@ -26,7 +26,7 @@ describe('createDPContract', () => {
   it('should return new Contract with "$schema" if present', () => {
     rawDPContract.$schema = 'http://test.com/schema';
 
-    const dpContract = createDPContract(rawDPContract);
+    const dpContract = createContract(rawDPContract);
 
     expect(dpContract).to.be.an.instanceOf(Contract);
 
@@ -39,7 +39,7 @@ describe('createDPContract', () => {
   it('should return new Contract with "version" if present', () => {
     rawDPContract.version = 1;
 
-    const dpContract = createDPContract(rawDPContract);
+    const dpContract = createContract(rawDPContract);
 
     expect(dpContract).to.be.an.instanceOf(Contract);
 
@@ -54,7 +54,7 @@ describe('createDPContract', () => {
       subSchema: { type: 'object' },
     };
 
-    const dpContract = createDPContract(rawDPContract);
+    const dpContract = createContract(rawDPContract);
 
     expect(dpContract).to.be.an.instanceOf(Contract);
 

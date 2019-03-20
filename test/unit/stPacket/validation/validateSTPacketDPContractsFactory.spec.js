@@ -13,7 +13,7 @@ describe('validateSTPacketDPContractsFactory', () => {
   let rawDPContract;
   let dpContract;
   let validateSTPacketDPContracts;
-  let validateDPContractMock;
+  let validateContractMock;
 
   beforeEach(function beforeEach() {
     dpContract = getDPContractFixture();
@@ -26,17 +26,17 @@ describe('validateSTPacketDPContractsFactory', () => {
       documents: [],
     };
 
-    validateDPContractMock = this.sinonSandbox.stub().returns(new ValidationResult());
+    validateContractMock = this.sinonSandbox.stub().returns(new ValidationResult());
 
     validateSTPacketDPContracts = validateSTPacketDPContractsFactory(
-      validateDPContractMock,
+      validateContractMock,
     );
   });
 
   it('should return invalid result if Contract is wrong', () => {
     const dpContractError = new ConsensusError('test');
 
-    validateDPContractMock.returns(
+    validateContractMock.returns(
       new ValidationResult([dpContractError]),
     );
 

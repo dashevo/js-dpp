@@ -4,7 +4,7 @@ const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const validateDPContractFactory = require('../../../lib/contract/validateDPContractFactory');
+const validateContractFactory = require('../../../lib/contract/validateContractFactory');
 
 const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
 
@@ -14,9 +14,9 @@ const DuplicateIndexError = require('../../../lib/errors/DuplicateIndexError');
 const UniqueIndexMustHaveUserIdPrefixError = require('../../../lib/errors/UniqueIndexMustHaveUserIdPrefixError');
 const UndefinedIndexPropertyError = require('../../../lib/errors/UndefinedIndexPropertyError');
 
-describe('validateDPContractFactory', () => {
+describe('validateContractFactory', () => {
   let rawDPContract;
-  let validateDPContract;
+  let validateContract;
 
   beforeEach(() => {
     rawDPContract = getDPContractFixture().toJSON();
@@ -24,14 +24,14 @@ describe('validateDPContractFactory', () => {
     const ajv = new Ajv();
     const validator = new JsonSchemaValidator(ajv);
 
-    validateDPContract = validateDPContractFactory(validator);
+    validateContract = validateContractFactory(validator);
   });
 
   describe('$schema', () => {
     it('should be present', () => {
       delete rawDPContract.$schema;
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -45,7 +45,7 @@ describe('validateDPContractFactory', () => {
     it('should be a string', () => {
       rawDPContract.$schema = 1;
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -58,7 +58,7 @@ describe('validateDPContractFactory', () => {
     it('should be a particular url', () => {
       rawDPContract.$schema = 'wrong';
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -73,7 +73,7 @@ describe('validateDPContractFactory', () => {
     it('should be present', () => {
       delete rawDPContract.name;
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -87,7 +87,7 @@ describe('validateDPContractFactory', () => {
     it('should be a string', () => {
       rawDPContract.name = 1;
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -100,7 +100,7 @@ describe('validateDPContractFactory', () => {
     it('should be greater or equal to 3', () => {
       rawDPContract.name = 'a'.repeat(2);
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -113,7 +113,7 @@ describe('validateDPContractFactory', () => {
     it('should be less or equal to 24', () => {
       rawDPContract.name = 'a'.repeat(25);
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -126,7 +126,7 @@ describe('validateDPContractFactory', () => {
     it('should be an alphanumeric string', () => {
       rawDPContract.name = '*(*&^';
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -141,7 +141,7 @@ describe('validateDPContractFactory', () => {
     it('should be present', () => {
       delete rawDPContract.version;
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -155,7 +155,7 @@ describe('validateDPContractFactory', () => {
     it('should be a number', () => {
       rawDPContract.version = 'wrong';
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -168,7 +168,7 @@ describe('validateDPContractFactory', () => {
     it('should be an integer', () => {
       rawDPContract.version = 1.2;
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -181,7 +181,7 @@ describe('validateDPContractFactory', () => {
     it('should be greater or equal to one', () => {
       rawDPContract.version = 0;
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -196,7 +196,7 @@ describe('validateDPContractFactory', () => {
     it('may not be present', () => {
       delete rawDPContract.definitions;
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expect(result).to.be.an.instanceOf(ValidationResult);
       expect(result.isValid()).to.be.true();
@@ -205,7 +205,7 @@ describe('validateDPContractFactory', () => {
     it('should be an object', () => {
       rawDPContract.definitions = 1;
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -218,7 +218,7 @@ describe('validateDPContractFactory', () => {
     it('should not be empty', () => {
       rawDPContract.definitions = {};
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -233,7 +233,7 @@ describe('validateDPContractFactory', () => {
         $subSchema: {},
       };
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result, 2);
 
@@ -253,7 +253,7 @@ describe('validateDPContractFactory', () => {
         rawDPContract.definitions[i] = item;
       });
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -268,7 +268,7 @@ describe('validateDPContractFactory', () => {
     it('should be present', () => {
       delete rawDPContract.documents;
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -282,7 +282,7 @@ describe('validateDPContractFactory', () => {
     it('should be an object', () => {
       rawDPContract.documents = 1;
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -295,7 +295,7 @@ describe('validateDPContractFactory', () => {
     it('should not be empty', () => {
       rawDPContract.documents = {};
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -308,7 +308,7 @@ describe('validateDPContractFactory', () => {
     it('should have no non-alphanumeric properties', () => {
       rawDPContract.documents['(*&^'] = rawDPContract.documents.niceDocument;
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -327,7 +327,7 @@ describe('validateDPContractFactory', () => {
         rawDPContract.documents[i] = item;
       });
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -341,7 +341,7 @@ describe('validateDPContractFactory', () => {
       it('should not be empty', () => {
         rawDPContract.documents.niceDocument.properties = {};
 
-        const result = validateDPContract(rawDPContract);
+        const result = validateContract(rawDPContract);
 
         expectJsonSchemaError(result);
 
@@ -354,7 +354,7 @@ describe('validateDPContractFactory', () => {
       it('should have type "object" if defined', () => {
         delete rawDPContract.documents.niceDocument.properties;
 
-        const result = validateDPContract(rawDPContract);
+        const result = validateContract(rawDPContract);
 
         expectJsonSchemaError(result);
 
@@ -368,7 +368,7 @@ describe('validateDPContractFactory', () => {
       it('should have "properties"', () => {
         delete rawDPContract.documents.niceDocument.properties;
 
-        const result = validateDPContract(rawDPContract);
+        const result = validateContract(rawDPContract);
 
         expectJsonSchemaError(result);
 
@@ -382,7 +382,7 @@ describe('validateDPContractFactory', () => {
       it('should have no non-alphanumeric properties', () => {
         rawDPContract.documents.niceDocument.properties['(*&^'] = {};
 
-        const result = validateDPContract(rawDPContract);
+        const result = validateContract(rawDPContract);
 
         expectJsonSchemaError(result, 2);
 
@@ -397,7 +397,7 @@ describe('validateDPContractFactory', () => {
       it('should have "additionalProperties" defined', () => {
         delete rawDPContract.documents.niceDocument.additionalProperties;
 
-        const result = validateDPContract(rawDPContract);
+        const result = validateContract(rawDPContract);
 
         expectJsonSchemaError(result);
 
@@ -411,7 +411,7 @@ describe('validateDPContractFactory', () => {
       it('should have "additionalProperties" defined to false', () => {
         rawDPContract.documents.niceDocument.additionalProperties = true;
 
-        const result = validateDPContract(rawDPContract);
+        const result = validateContract(rawDPContract);
 
         expectJsonSchemaError(result);
 
@@ -430,7 +430,7 @@ describe('validateDPContractFactory', () => {
           rawDPContract.documents.niceDocument.properties[i] = item;
         });
 
-        const result = validateDPContract(rawDPContract);
+        const result = validateContract(rawDPContract);
 
         expectJsonSchemaError(result);
 
@@ -446,7 +446,7 @@ describe('validateDPContractFactory', () => {
     it('should be an array', () => {
       rawDPContract.documents.indexedDocument.indices = 'definetely not an array';
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -459,7 +459,7 @@ describe('validateDPContractFactory', () => {
     it('should have at least one item', () => {
       rawDPContract.documents.indexedDocument.indices = [];
 
-      const result = validateDPContract(rawDPContract);
+      const result = validateContract(rawDPContract);
 
       expectJsonSchemaError(result);
 
@@ -473,7 +473,7 @@ describe('validateDPContractFactory', () => {
       it('should be an object', () => {
         rawDPContract.documents.indexedDocument.indices = ['something else'];
 
-        const result = validateDPContract(rawDPContract);
+        const result = validateContract(rawDPContract);
 
         expectJsonSchemaError(result);
 
@@ -486,7 +486,7 @@ describe('validateDPContractFactory', () => {
       it('should have properties definition', () => {
         rawDPContract.documents.indexedDocument.indices = [{}];
 
-        const result = validateDPContract(rawDPContract);
+        const result = validateContract(rawDPContract);
 
         expectJsonSchemaError(result);
 
@@ -502,7 +502,7 @@ describe('validateDPContractFactory', () => {
           rawDPContract.documents.indexedDocument.indices[0]
             .properties = 'something else';
 
-          const result = validateDPContract(rawDPContract);
+          const result = validateContract(rawDPContract);
 
           expectJsonSchemaError(result);
 
@@ -518,7 +518,7 @@ describe('validateDPContractFactory', () => {
           rawDPContract.documents.indexedDocument.indices[0]
             .properties = [];
 
-          const result = validateDPContract(rawDPContract);
+          const result = validateContract(rawDPContract);
 
           expectJsonSchemaError(result);
 
@@ -538,7 +538,7 @@ describe('validateDPContractFactory', () => {
               });
           }
 
-          const result = validateDPContract(rawDPContract);
+          const result = validateContract(rawDPContract);
 
           expectJsonSchemaError(result);
 
@@ -555,7 +555,7 @@ describe('validateDPContractFactory', () => {
             rawDPContract.documents.indexedDocument.indices[0]
               .properties[0] = 'something else';
 
-            const result = validateDPContract(rawDPContract);
+            const result = validateContract(rawDPContract);
 
             expectJsonSchemaError(result);
 
@@ -571,7 +571,7 @@ describe('validateDPContractFactory', () => {
             rawDPContract.documents.indexedDocument.indices[0]
               .properties = [];
 
-            const result = validateDPContract(rawDPContract);
+            const result = validateContract(rawDPContract);
 
             expectJsonSchemaError(result);
 
@@ -589,7 +589,7 @@ describe('validateDPContractFactory', () => {
 
             property.anotherField = 'something';
 
-            const result = validateDPContract(rawDPContract);
+            const result = validateContract(rawDPContract);
 
             expectJsonSchemaError(result);
 
@@ -605,7 +605,7 @@ describe('validateDPContractFactory', () => {
             rawDPContract.documents.indexedDocument.indices[0]
               .properties[0].$userId = 'wrong';
 
-            const result = validateDPContract(rawDPContract);
+            const result = validateContract(rawDPContract);
 
             expectJsonSchemaError(result);
 
@@ -622,7 +622,7 @@ describe('validateDPContractFactory', () => {
       it('should have "unique" flag', () => {
         rawDPContract.documents.indexedDocument.indices[0].unique = undefined;
 
-        const result = validateDPContract(rawDPContract);
+        const result = validateContract(rawDPContract);
 
         expectJsonSchemaError(result);
 
@@ -636,7 +636,7 @@ describe('validateDPContractFactory', () => {
       it('should have "unqiue" flag equal "true"', () => {
         rawDPContract.documents.indexedDocument.indices[0].unique = false;
 
-        const result = validateDPContract(rawDPContract);
+        const result = validateContract(rawDPContract);
 
         expectJsonSchemaError(result);
 
@@ -651,7 +651,7 @@ describe('validateDPContractFactory', () => {
   it('should return invalid result if there are additional properties', () => {
     rawDPContract.additionalProperty = { };
 
-    const result = validateDPContract(rawDPContract);
+    const result = validateContract(rawDPContract);
 
     expectJsonSchemaError(result);
 
@@ -667,7 +667,7 @@ describe('validateDPContractFactory', () => {
 
     rawDPContract.documents.indexedDocument.indices.push(indexDefinition);
 
-    const result = validateDPContract(rawDPContract);
+    const result = validateContract(rawDPContract);
 
     expectValidationError(result, DuplicateIndexError);
 
@@ -684,7 +684,7 @@ describe('validateDPContractFactory', () => {
     const firstIndex = indexDefinition.properties.shift();
     indexDefinition.properties.push(firstIndex);
 
-    const result = validateDPContract(rawDPContract);
+    const result = validateContract(rawDPContract);
 
     expectValidationError(result, UniqueIndexMustHaveUserIdPrefixError);
 
@@ -700,7 +700,7 @@ describe('validateDPContractFactory', () => {
 
     indexDefinition.properties.shift();
 
-    const result = validateDPContract(rawDPContract);
+    const result = validateContract(rawDPContract);
 
     expectValidationError(result, UniqueIndexMustHaveUserIdPrefixError);
 
@@ -716,7 +716,7 @@ describe('validateDPContractFactory', () => {
       missingProperty: 'asc',
     });
 
-    const result = validateDPContract(rawDPContract);
+    const result = validateContract(rawDPContract);
 
     expectValidationError(result, UndefinedIndexPropertyError);
 
@@ -729,7 +729,7 @@ describe('validateDPContractFactory', () => {
   });
 
   it('should return valid result if contract is valid', () => {
-    const result = validateDPContract(rawDPContract);
+    const result = validateContract(rawDPContract);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
