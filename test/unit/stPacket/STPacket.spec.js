@@ -3,7 +3,7 @@ const rewiremock = require('rewiremock/node');
 const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
-const DPContract = require('../../../lib/contract/DPContract');
+const Contract = require('../../../lib/contract/Contract');
 const Document = require('../../../lib/document/Document');
 
 const ContractAndDocumentsNotAllowedSamePacketError = require('../../../lib/stPacket/errors/ContractAndDocumentsNotAllowedSamePacketError');
@@ -38,7 +38,7 @@ describe('STPacket', () => {
     STPacket = rewiremock.proxy('../../../lib/stPacket/STPacket', {
       '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': serializerMock,
-      '../../../lib/contract/DPContract': DPContract,
+      '../../../lib/contract/Contract': Contract,
       '../../../lib/document/Document': Document,
       '../../../lib/stPacket/calculateItemsMerkleRoot': calculateItemsMerkleRootMock,
       '../../../lib/stPacket/calculateItemsHash': calculateItemsHashMock,
@@ -48,13 +48,13 @@ describe('STPacket', () => {
   });
 
   describe('constructor', () => {
-    it('should return new ST Packet with specified DP Contract ID', () => {
+    it('should return new ST Packet with specified Contract ID', () => {
       expect(stPacket).to.be.an.instanceOf(STPacket);
 
       expect(stPacket.contractId).to.equal(dpContractId);
     });
 
-    it('should return new STPacket with specified DP Contract ID and DP Contract', () => {
+    it('should return new STPacket with specified Contract ID and Contract', () => {
       const result = new STPacket(dpContractId, dpContract);
 
       expect(result).to.be.an.instanceOf(STPacket);
@@ -63,7 +63,7 @@ describe('STPacket', () => {
       expect(result.getDPContract()).to.equal(dpContract);
     });
 
-    it('should return new STPacket with specified DP Contract ID and Documents', () => {
+    it('should return new STPacket with specified Contract ID and Documents', () => {
       const result = new STPacket(dpContractId, documents);
 
       expect(result).to.be.an.instanceOf(STPacket);
@@ -74,7 +74,7 @@ describe('STPacket', () => {
   });
 
   describe('#setDPContractId', () => {
-    it('should set DP Contract ID', () => {
+    it('should set Contract ID', () => {
       const contractId = dpContractId;
 
       const result = stPacket.setDPContractId(contractId);
@@ -86,7 +86,7 @@ describe('STPacket', () => {
   });
 
   describe('#getDPContractId', () => {
-    it('should return DP Contract ID', () => {
+    it('should return Contract ID', () => {
       const result = stPacket.getDPContractId();
 
       expect(result).to.equal(dpContractId);
@@ -120,7 +120,7 @@ describe('STPacket', () => {
   });
 
   describe('#setDPContract', () => {
-    it('should set DP Contract', () => {
+    it('should set Contract', () => {
       const result = stPacket.setDPContract(dpContract);
 
       expect(result).to.be.an.instanceOf(STPacket);
@@ -146,7 +146,7 @@ describe('STPacket', () => {
   });
 
   describe('#getDPContract', () => {
-    it('should return DP Contract', () => {
+    it('should return Contract', () => {
       stPacket.contracts = [dpContract];
 
       const result = stPacket.getDPContract();
@@ -154,7 +154,7 @@ describe('STPacket', () => {
       expect(result).to.equal(dpContract);
     });
 
-    it('should return null of DP Contract is not present', () => {
+    it('should return null of Contract is not present', () => {
       const result = stPacket.getDPContract();
 
       expect(result).to.be.null();
@@ -172,7 +172,7 @@ describe('STPacket', () => {
       expect(stPacket.documents).to.equal(documents);
     });
 
-    it('should throw an error if DP Contract is present', () => {
+    it('should throw an error if Contract is present', () => {
       stPacket.setDPContract(dpContract);
 
       let error;

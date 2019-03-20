@@ -52,7 +52,7 @@ describe('STPacketHeader', () => {
   });
 
   describe('#setDPContractId', () => {
-    it('should set DP Contract ID', () => {
+    it('should set Contract ID', () => {
       const result = stPacketHeader.setDPContractId(dpContractId);
 
       expect(result).to.be.an.instanceOf(STPacketHeader);
@@ -62,7 +62,7 @@ describe('STPacketHeader', () => {
   });
 
   describe('#getDPContractId', () => {
-    it('should return DP Contract ID', () => {
+    it('should return Contract ID', () => {
       const result = stPacketHeader.getDPContractId();
 
       expect(result).to.equal(dpContractId);

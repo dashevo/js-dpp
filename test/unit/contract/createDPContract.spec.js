@@ -1,5 +1,5 @@
 const createDPContract = require('../../../lib/contract/createDPContract');
-const DPContract = require('../../../lib/contract/DPContract');
+const Contract = require('../../../lib/contract/Contract');
 
 describe('createDPContract', () => {
   let rawDPContract;
@@ -14,21 +14,21 @@ describe('createDPContract', () => {
     };
   });
 
-  it('should return new DP Contract with "name" and documents', () => {
+  it('should return new Contract with "name" and documents', () => {
     const dpContract = createDPContract(rawDPContract);
 
-    expect(dpContract).to.be.an.instanceOf(DPContract);
+    expect(dpContract).to.be.an.instanceOf(Contract);
 
     expect(dpContract.getName()).to.equal(rawDPContract.name);
     expect(dpContract.getDocuments()).to.equal(rawDPContract.documents);
   });
 
-  it('should return new DP Contract with "$schema" if present', () => {
+  it('should return new Contract with "$schema" if present', () => {
     rawDPContract.$schema = 'http://test.com/schema';
 
     const dpContract = createDPContract(rawDPContract);
 
-    expect(dpContract).to.be.an.instanceOf(DPContract);
+    expect(dpContract).to.be.an.instanceOf(Contract);
 
     expect(dpContract.getJsonMetaSchema()).to.equal(rawDPContract.$schema);
 
@@ -36,12 +36,12 @@ describe('createDPContract', () => {
     expect(dpContract.getDocuments()).to.equal(rawDPContract.documents);
   });
 
-  it('should return new DP Contract with "version" if present', () => {
+  it('should return new Contract with "version" if present', () => {
     rawDPContract.version = 1;
 
     const dpContract = createDPContract(rawDPContract);
 
-    expect(dpContract).to.be.an.instanceOf(DPContract);
+    expect(dpContract).to.be.an.instanceOf(Contract);
 
     expect(dpContract.getVersion()).to.equal(rawDPContract.version);
 
@@ -49,14 +49,14 @@ describe('createDPContract', () => {
     expect(dpContract.getDocuments()).to.equal(rawDPContract.documents);
   });
 
-  it('should return new DP Contract with "definitions" if present', () => {
+  it('should return new Contract with "definitions" if present', () => {
     rawDPContract.definitions = {
       subSchema: { type: 'object' },
     };
 
     const dpContract = createDPContract(rawDPContract);
 
-    expect(dpContract).to.be.an.instanceOf(DPContract);
+    expect(dpContract).to.be.an.instanceOf(Contract);
 
     expect(dpContract.getDefinitions()).to.equal(rawDPContract.definitions);
 

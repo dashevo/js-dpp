@@ -49,7 +49,7 @@ describe('DashPlatformProtocol', () => {
   });
 
   describe('getDPContract', () => {
-    it('should return DP Contract', () => {
+    it('should return Contract', () => {
       dpp.dpContract = dpContract;
 
       const result = dpp.getDPContract();

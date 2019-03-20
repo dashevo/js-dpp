@@ -33,7 +33,7 @@ describe('validateSTPacketDPContractsFactory', () => {
     );
   });
 
-  it('should return invalid result if DP Contract is wrong', () => {
+  it('should return invalid result if Contract is wrong', () => {
     const dpContractError = new ConsensusError('test');
 
     validateDPContractMock.returns(
@@ -49,7 +49,7 @@ describe('validateSTPacketDPContractsFactory', () => {
     expect(error).to.equal(dpContractError);
   });
 
-  it('should return valid result if DP Contract is valid', () => {
+  it('should return valid result if Contract is valid', () => {
     const result = validateSTPacketDPContracts(rawSTPacket);
 
     expect(result).to.be.an.instanceOf(ValidationResult);

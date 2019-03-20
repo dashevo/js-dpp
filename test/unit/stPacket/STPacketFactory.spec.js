@@ -142,7 +142,7 @@ describe('STPacketFactory', () => {
       expect(validateSTPacketMock).to.have.not.been.called();
     });
 
-    it('should throw an error if DP Contract is not present with contract ID specified in ST Packet', async () => {
+    it('should throw an error if Contract is not present with contract ID specified in ST Packet', async () => {
       let error;
       try {
         await factory.createFromObject(rawSTPacket);
@@ -163,7 +163,7 @@ describe('STPacketFactory', () => {
       expect(validateSTPacketMock).to.have.not.been.called();
     });
 
-    it('should return new STPacket with DP Contract', async () => {
+    it('should return new STPacket with Contract', async () => {
       validateSTPacketMock.returns(new ValidationResult());
 
       createDPContractMock.returns(dpContract);

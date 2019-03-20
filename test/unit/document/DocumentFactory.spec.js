@@ -185,7 +185,7 @@ describe('DocumentFactory', () => {
   });
 
   describe('setDPContract', () => {
-    it('should set DP Contract', () => {
+    it('should set Contract', () => {
       factory.dpContract = null;
 
       const result = factory.setDPContract(dpContract);
@@ -196,7 +196,7 @@ describe('DocumentFactory', () => {
   });
 
   describe('getDPContract', () => {
-    it('should return DP Contract', () => {
+    it('should return Contract', () => {
       const result = factory.getDPContract();
 
       expect(result).to.equal(dpContract);

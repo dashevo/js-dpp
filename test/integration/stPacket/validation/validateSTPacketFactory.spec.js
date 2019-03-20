@@ -449,7 +449,7 @@ describe('validateSTPacketFactory', () => {
     expect(validateSTPacketDocumentsMock).to.have.not.been.called();
   });
 
-  it('should validate DP Contract if present', () => {
+  it('should validate Contract if present', () => {
     stPacket.setDocuments([]);
     stPacket.setDPContract(dpContract);
 

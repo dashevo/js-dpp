@@ -70,7 +70,7 @@ describe('validateDocumentFactory', () => {
         expect(error.getRawDocument()).to.equal(rawDocument);
       });
 
-      it('should be defined in DP Contract', () => {
+      it('should be defined in Contract', () => {
         rawDocument.$type = 'undefinedDocument';
 
         const result = validateDocument(rawDocument, dpContract);
@@ -341,8 +341,8 @@ describe('validateDocumentFactory', () => {
     });
   });
 
-  describe('DP Contract schema', () => {
-    it('should return an error if the first document is not valid against DP Contract', () => {
+  describe('Contract schema', () => {
+    it('should return an error if the first document is not valid against Contract', () => {
       rawDocuments[0].name = 1;
 
       const result = validateDocument(rawDocuments[0], dpContract);
@@ -355,7 +355,7 @@ describe('validateDocumentFactory', () => {
       expect(error.keyword).to.equal('type');
     });
 
-    it('should return an error if the second document is not valid against DP Contract', () => {
+    it('should return an error if the second document is not valid against Contract', () => {
       rawDocuments[1].undefined = 1;
 
       const result = validateDocument(rawDocuments[1], dpContract);

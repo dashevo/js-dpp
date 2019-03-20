@@ -47,7 +47,7 @@ describe('STPacketFacade', () => {
       expect(result.getDocuments()).to.deep.equal(stPacket.getDocuments());
     });
 
-    it('should throw an error if DP Contract is not defined', () => {
+    it('should throw an error if Contract is not defined', () => {
       dpp = new DashPlatformProtocol();
 
       let error;
@@ -117,7 +117,7 @@ describe('STPacketFacade', () => {
       expect(result).to.be.an.instanceOf(ValidationResult);
     });
 
-    it('should throw an error if DP Contract is not defined', () => {
+    it('should throw an error if Contract is not defined', () => {
       dpp = new DashPlatformProtocol();
 
       let error;

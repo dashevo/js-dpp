@@ -134,7 +134,7 @@ describe('verifySTPacketFactory', () => {
     expect(error.getRegistrationTransaction()).to.equal(transaction);
   });
 
-  it('should return invalid result if DP Contract specified in ST Packet is not found', async () => {
+  it('should return invalid result if Contract specified in ST Packet is not found', async () => {
     dataProviderMock.fetchDPContract.resolves(undefined);
 
     const result = await verifySTPacket(stPacket, stateTransition);
@@ -150,7 +150,7 @@ describe('verifySTPacketFactory', () => {
     expect(error.getDPContractId()).to.equal(stPacket.getDPContractId());
   });
 
-  it('should return invalid result if DP Contract is not valid', async () => {
+  it('should return invalid result if Contract is not valid', async () => {
     stPacket.setDocuments([]);
     stPacket.setDPContract(dpContract);
 

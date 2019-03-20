@@ -19,7 +19,7 @@ describe('verifyDPContract', () => {
     stPacket.setDPContract(dpContract);
   });
 
-  it('should return invalid result if DP Contract is already present', async () => {
+  it('should return invalid result if Contract is already present', async () => {
     const result = await verifyDPContract(stPacket, dpContract);
 
     expectValidationError(result, DPContractAlreadyPresentError);
@@ -29,7 +29,7 @@ describe('verifyDPContract', () => {
     expect(error.getDPContract()).to.equal(dpContract);
   });
 
-  it('should return valid result if DP Contract is not present', async () => {
+  it('should return valid result if Contract is not present', async () => {
     const result = await verifyDPContract(stPacket, undefined);
 
     expectValidationError(result, DPContractAlreadyPresentError, 0);

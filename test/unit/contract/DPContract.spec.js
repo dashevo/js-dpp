@@ -17,7 +17,7 @@ describe('DPContract', () => {
     const serializerMock = { encode: this.sinonSandbox.stub() };
     encodeMock = serializerMock.encode;
 
-    DPContract = rewiremock.proxy('../../../lib/contract/DPContract', {
+    DPContract = rewiremock.proxy('../../../lib/contract/Contract', {
       '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': serializerMock,
     });
@@ -39,7 +39,7 @@ describe('DPContract', () => {
   });
 
   describe('constructor', () => {
-    it('should create new DP Contract', () => {
+    it('should create new Contract', () => {
       dpContract = new DPContract(dpContractName, documents);
       expect(dpContract.name).to.equal(dpContractName);
       expect(dpContract.version).to.equal(DPContract.DEFAULTS.VERSION);
@@ -49,7 +49,7 @@ describe('DPContract', () => {
   });
 
   describe('#getId', () => {
-    it('should calculate DP Contract ID', () => {
+    it('should calculate Contract ID', () => {
       const hash = '123';
 
       hashMock.returns(hash);
@@ -241,7 +241,7 @@ describe('DPContract', () => {
   });
 
   describe('#toJSON', () => {
-    it('should return DP Contract as plain object', () => {
+    it('should return Contract as plain object', () => {
       const result = dpContract.toJSON();
 
       expect(result).to.deep.equal({
@@ -272,7 +272,7 @@ describe('DPContract', () => {
   });
 
   describe('#serialize', () => {
-    it('should return serialized DP Contract', () => {
+    it('should return serialized Contract', () => {
       const serializedDocument = '123';
 
       encodeMock.returns(serializedDocument);
@@ -290,7 +290,7 @@ describe('DPContract', () => {
       DPContract.prototype.serialize = this.sinonSandbox.stub();
     });
 
-    it('should return DP Contract hash', () => {
+    it('should return Contract hash', () => {
       const serializedDPContract = '123';
       const hashedDocument = '456';
 
