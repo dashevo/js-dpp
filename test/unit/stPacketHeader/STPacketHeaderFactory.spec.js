@@ -52,7 +52,7 @@ describe('STPacketHeaderFactory', () => {
 
       expect(newSTPacketHeader).to.be.an.instanceOf(STPacketHeader);
 
-      expect(newSTPacketHeader.getDPContractId()).to.equal(dpContractId);
+      expect(newSTPacketHeader.getContractId()).to.equal(dpContractId);
       expect(newSTPacketHeader.getItemsMerkleRoot()).to.equal(itemsMerkleRoot);
       expect(newSTPacketHeader.getItemsHash()).to.equal(itemsHash);
     });
@@ -100,7 +100,7 @@ describe('STPacketHeaderFactory', () => {
       this.sinonSandbox.stub(factory, 'createFromObject');
     });
 
-    it('should return new DPContract from serialized DPContract', () => {
+    it('should return new Contract from serialized Contract', () => {
       const serializedSTPacket = stPacketHeader.serialize();
 
       decodeMock.returns(rawSTPacketHeader);

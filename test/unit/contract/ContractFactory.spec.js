@@ -14,11 +14,11 @@ describe('ContractFactory', () => {
   let createContractMock;
   let factory;
   let dpContract;
-  let rawDPContract;
+  let rawContract;
 
   beforeEach(function beforeEach() {
     dpContract = getContractFixture();
-    rawDPContract = dpContract.toJSON();
+    rawContract = dpContract.toJSON();
 
     decodeMock = this.sinonSandbox.stub();
     validateContractMock = this.sinonSandbox.stub();
@@ -39,42 +39,42 @@ describe('ContractFactory', () => {
   });
 
   describe('create', () => {
-    it('should return new DPContract with specified name and documents definition', () => {
+    it('should return new Contract with specified name and documents definition', () => {
       const result = factory.create(
-        rawDPContract.name,
-        rawDPContract.documents,
+        rawContract.name,
+        rawContract.documents,
       );
 
       expect(result).to.equal(dpContract);
 
       expect(createContractMock).to.have.been.calledOnceWith({
-        name: rawDPContract.name,
-        documents: rawDPContract.documents,
+        name: rawContract.name,
+        documents: rawContract.documents,
       });
     });
   });
 
   describe('createFromObject', () => {
-    it('should return new DPContract with data from passed object', () => {
+    it('should return new Contract with data from passed object', () => {
       validateContractMock.returns(new ValidationResult());
 
-      const result = factory.createFromObject(rawDPContract);
+      const result = factory.createFromObject(rawContract);
 
       expect(result).to.equal(dpContract);
 
-      expect(validateContractMock).to.have.been.calledOnceWith(rawDPContract);
+      expect(validateContractMock).to.have.been.calledOnceWith(rawContract);
 
-      expect(createContractMock).to.have.been.calledOnceWith(rawDPContract);
+      expect(createContractMock).to.have.been.calledOnceWith(rawContract);
     });
 
-    it('should return new DPContract without validation if "skipValidation" option is passed', () => {
-      const result = factory.createFromObject(rawDPContract, { skipValidation: true });
+    it('should return new Contract without validation if "skipValidation" option is passed', () => {
+      const result = factory.createFromObject(rawContract, { skipValidation: true });
 
       expect(result).to.equal(dpContract);
 
       expect(validateContractMock).to.have.not.been.called();
 
-      expect(createContractMock).to.have.been.calledOnceWith(rawDPContract);
+      expect(createContractMock).to.have.been.calledOnceWith(rawContract);
     });
 
     it('should throw an error if passed object is not valid', () => {
@@ -84,13 +84,13 @@ describe('ContractFactory', () => {
 
       let error;
       try {
-        factory.createFromObject(rawDPContract);
+        factory.createFromObject(rawContract);
       } catch (e) {
         error = e;
       }
 
       expect(error).to.be.an.instanceOf(InvalidContractError);
-      expect(error.getRawDPContract()).to.equal(rawDPContract);
+      expect(error.getRawContract()).to.equal(rawContract);
 
       expect(error.getErrors()).to.have.length(1);
 
@@ -98,7 +98,7 @@ describe('ContractFactory', () => {
 
       expect(consensusError).to.equal(validationError);
 
-      expect(validateContractMock).to.have.been.calledOnceWith(rawDPContract);
+      expect(validateContractMock).to.have.been.calledOnceWith(rawContract);
 
       expect(createContractMock).to.have.not.been.called();
     });
@@ -109,20 +109,20 @@ describe('ContractFactory', () => {
       this.sinonSandbox.stub(factory, 'createFromObject');
     });
 
-    it('should return new DPContract from serialized DPContract', () => {
-      const serializedDPContract = dpContract.serialize();
+    it('should return new Contract from serialized Contract', () => {
+      const serializedContract = dpContract.serialize();
 
-      decodeMock.returns(rawDPContract);
+      decodeMock.returns(rawContract);
 
       factory.createFromObject.returns(dpContract);
 
-      const result = factory.createFromSerialized(serializedDPContract);
+      const result = factory.createFromSerialized(serializedContract);
 
       expect(result).to.equal(dpContract);
 
-      expect(factory.createFromObject).to.have.been.calledOnceWith(rawDPContract);
+      expect(factory.createFromObject).to.have.been.calledOnceWith(rawContract);
 
-      expect(decodeMock).to.have.been.calledOnceWith(serializedDPContract);
+      expect(decodeMock).to.have.been.calledOnceWith(serializedContract);
     });
   });
 });

@@ -10,19 +10,19 @@ const ConsensusError = require('../../../../lib/errors/ConsensusError');
 
 describe('validateSTPacketContractsFactory', () => {
   let rawSTPacket;
-  let rawDPContract;
+  let rawContract;
   let dpContract;
   let validateSTPacketContracts;
   let validateContractMock;
 
   beforeEach(function beforeEach() {
     dpContract = getContractFixture();
-    rawDPContract = dpContract.toJSON();
+    rawContract = dpContract.toJSON();
     rawSTPacket = {
       contractId: dpContract.getId(),
       itemsMerkleRoot: '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
       itemsHash: '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
-      contracts: [rawDPContract],
+      contracts: [rawContract],
       documents: [],
     };
 

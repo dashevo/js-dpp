@@ -55,7 +55,7 @@ describe('verifyDocumentsUniquenessByIndices', () => {
 
     dataProviderMock.fetchDocuments
       .withArgs(
-        stPacket.getDPContractId(),
+        stPacket.getContractId(),
         william.getType(),
         {
           where: {
@@ -69,7 +69,7 @@ describe('verifyDocumentsUniquenessByIndices', () => {
 
     dataProviderMock.fetchDocuments
       .withArgs(
-        stPacket.getDPContractId(),
+        stPacket.getContractId(),
         william.getType(),
         {
           where: {
@@ -83,7 +83,7 @@ describe('verifyDocumentsUniquenessByIndices', () => {
 
     dataProviderMock.fetchDocuments
       .withArgs(
-        stPacket.getDPContractId(),
+        stPacket.getContractId(),
         leon.getType(),
         {
           where: {
@@ -97,7 +97,7 @@ describe('verifyDocumentsUniquenessByIndices', () => {
 
     dataProviderMock.fetchDocuments
       .withArgs(
-        stPacket.getDPContractId(),
+        stPacket.getContractId(),
         leon.getType(),
         {
           where: {

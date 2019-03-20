@@ -20,7 +20,7 @@ const ConsensusError = require('../../../../lib/errors/ConsensusError');
 describe('validateSTPacketFactory', () => {
   let stPacket;
   let rawSTPacket;
-  let rawDPContract;
+  let rawContract;
   let dpContract;
   let validateSTPacket;
   let validateSTPacketContractsMock;
@@ -28,7 +28,7 @@ describe('validateSTPacketFactory', () => {
 
   beforeEach(function beforeEach() {
     dpContract = getContractFixture();
-    rawDPContract = dpContract.toJSON();
+    rawContract = dpContract.toJSON();
 
     stPacket = getSTPacketFixture();
     rawSTPacket = stPacket.toJSON();
@@ -367,7 +367,7 @@ describe('validateSTPacketFactory', () => {
     });
 
     it('should contain no more than one contract', () => {
-      rawSTPacket.contracts.push(rawDPContract, rawDPContract);
+      rawSTPacket.contracts.push(rawContract, rawContract);
 
       const result = validateSTPacket(rawSTPacket, dpContract);
 
@@ -408,7 +408,7 @@ describe('validateSTPacketFactory', () => {
   });
 
   it('should return invalid result if packet contains the both documents and contracts', () => {
-    rawSTPacket.contracts.push(rawDPContract);
+    rawSTPacket.contracts.push(rawContract);
 
     const result = validateSTPacket(rawSTPacket, dpContract);
 
@@ -451,7 +451,7 @@ describe('validateSTPacketFactory', () => {
 
   it('should validate Contract if present', () => {
     stPacket.setDocuments([]);
-    stPacket.setDPContract(dpContract);
+    stPacket.setContract(dpContract);
 
     rawSTPacket = stPacket.toJSON();
 

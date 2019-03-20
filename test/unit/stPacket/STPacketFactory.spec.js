@@ -79,7 +79,7 @@ describe('STPacketFactory', () => {
 
       expect(newSTPacket).to.be.an.instanceOf(STPacket);
 
-      expect(newSTPacket.getDPContractId()).to.equal(dpContractId);
+      expect(newSTPacket.getContractId()).to.equal(dpContractId);
     });
   });
 
@@ -97,7 +97,7 @@ describe('STPacketFactory', () => {
 
       validateSTPacketMock.returns(new ValidationResult());
 
-      dataProviderMock.fetchDPContract.resolves(dpContract);
+      dataProviderMock.fetchContract.resolves(dpContract);
 
       const result = await factory.createFromObject(rawSTPacket);
 
@@ -110,7 +110,7 @@ describe('STPacketFactory', () => {
 
       expect(createdRawSTPacket).to.deep.equal(rawSTPacket);
 
-      expect(dataProviderMock.fetchDPContract).to.have.been.calledOnceWith(rawSTPacket.contractId);
+      expect(dataProviderMock.fetchContract).to.have.been.calledOnceWith(rawSTPacket.contractId);
 
       expect(validateSTPacketMock).to.have.been.calledOnceWith(rawSTPacket, dpContract);
     });
@@ -137,7 +137,7 @@ describe('STPacketFactory', () => {
 
       expect(createdRawSTPacket).to.deep.equal(rawSTPacket);
 
-      expect(dataProviderMock.fetchDPContract).to.have.not.been.called();
+      expect(dataProviderMock.fetchContract).to.have.not.been.called();
 
       expect(validateSTPacketMock).to.have.not.been.called();
     });
@@ -157,9 +157,9 @@ describe('STPacketFactory', () => {
 
       const [consensusError] = error.getErrors();
       expect(consensusError).to.be.an.instanceOf(ContractNotPresentError);
-      expect(consensusError.getDPContractId()).to.equal(rawSTPacket.contractId);
+      expect(consensusError.getContractId()).to.equal(rawSTPacket.contractId);
 
-      expect(dataProviderMock.fetchDPContract).to.have.been.calledOnceWith(rawSTPacket.contractId);
+      expect(dataProviderMock.fetchContract).to.have.been.calledOnceWith(rawSTPacket.contractId);
       expect(validateSTPacketMock).to.have.not.been.called();
     });
 
@@ -169,7 +169,7 @@ describe('STPacketFactory', () => {
       createContractMock.returns(dpContract);
 
       stPacket.setDocuments([]);
-      stPacket.setDPContract(dpContract);
+      stPacket.setContract(dpContract);
 
       rawSTPacket = stPacket.toJSON();
 
@@ -179,13 +179,13 @@ describe('STPacketFactory', () => {
 
       expect(result.toJSON()).to.deep.equal(rawSTPacket);
 
-      expect(dataProviderMock.fetchDPContract).to.have.not.been.called();
+      expect(dataProviderMock.fetchContract).to.have.not.been.called();
 
       expect(validateSTPacketMock).to.have.been.calledOnceWith(rawSTPacket);
     });
 
     it('should throw an error if passed object is not valid', async () => {
-      dataProviderMock.fetchDPContract.resolves(dpContract);
+      dataProviderMock.fetchContract.resolves(dpContract);
 
       const validationError = new ConsensusError('test');
 
@@ -216,7 +216,7 @@ describe('STPacketFactory', () => {
       this.sinonSandbox.stub(factory, 'createFromObject');
     });
 
-    it('should return new DPContract from serialized DPContract', async () => {
+    it('should return new Contract from serialized Contract', async () => {
       const serializedSTPacket = stPacket.serialize();
 
       decodeMock.returns(rawSTPacket);

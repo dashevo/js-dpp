@@ -55,7 +55,7 @@ describe('verifyDocuments', () => {
     expectValidationError(result, InvalidDocumentScopeError);
 
     expect(fetchDocumentsByDocumentsMock).to.have.been.calledOnceWith(
-      stPacket.getDPContractId(),
+      stPacket.getContractId(),
       documents,
     );
 
@@ -72,7 +72,7 @@ describe('verifyDocuments', () => {
     expectValidationError(result, DocumentAlreadyPresentError);
 
     expect(fetchDocumentsByDocumentsMock).to.have.been.calledOnceWith(
-      stPacket.getDPContractId(),
+      stPacket.getContractId(),
       documents,
     );
 
@@ -92,7 +92,7 @@ describe('verifyDocuments', () => {
     expectValidationError(result, DocumentNotFoundError);
 
     expect(fetchDocumentsByDocumentsMock).to.have.been.calledOnceWith(
-      stPacket.getDPContractId(),
+      stPacket.getContractId(),
       documents,
     );
 
@@ -112,7 +112,7 @@ describe('verifyDocuments', () => {
     expectValidationError(result, DocumentNotFoundError);
 
     expect(fetchDocumentsByDocumentsMock).to.have.been.calledOnceWith(
-      stPacket.getDPContractId(),
+      stPacket.getContractId(),
       documents,
     );
 
@@ -131,7 +131,7 @@ describe('verifyDocuments', () => {
     expectValidationError(result, InvalidDocumentRevisionError);
 
     expect(fetchDocumentsByDocumentsMock).to.have.been.calledOnceWith(
-      stPacket.getDPContractId(),
+      stPacket.getContractId(),
       documents,
     );
 
@@ -152,7 +152,7 @@ describe('verifyDocuments', () => {
     expectValidationError(result, InvalidDocumentRevisionError);
 
     expect(fetchDocumentsByDocumentsMock).to.have.been.calledOnceWith(
-      stPacket.getDPContractId(),
+      stPacket.getContractId(),
       documents,
     );
 

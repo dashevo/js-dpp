@@ -92,14 +92,14 @@ describe('DocumentFactory', () => {
 
       expect(error).to.be.an.instanceOf(InvalidDocumentTypeError);
       expect(error.getType()).to.equal(type);
-      expect(error.getDPContract()).to.equal(dpContract);
+      expect(error.getContract()).to.equal(dpContract);
 
       expect(hashMock).to.have.not.been.called();
     });
   });
 
   describe('createFromObject', () => {
-    it('should return new DPContract with data from passed object', () => {
+    it('should return new Contract with data from passed object', () => {
       validateDocumentMock.returns(new ValidationResult());
 
       const result = factory.createFromObject(rawDocument);
@@ -148,7 +148,7 @@ describe('DocumentFactory', () => {
       this.sinonSandbox.stub(factory, 'createFromObject');
     });
 
-    it('should return new DPContract from serialized DPContract', () => {
+    it('should return new Contract from serialized Contract', () => {
       const serializedDocument = document.serialize();
 
       decodeMock.returns(rawDocument);
@@ -184,20 +184,20 @@ describe('DocumentFactory', () => {
     });
   });
 
-  describe('setDPContract', () => {
+  describe('setContract', () => {
     it('should set Contract', () => {
       factory.dpContract = null;
 
-      const result = factory.setDPContract(dpContract);
+      const result = factory.setContract(dpContract);
 
       expect(result).to.equal(factory);
       expect(factory.dpContract).to.equal(dpContract);
     });
   });
 
-  describe('getDPContract', () => {
+  describe('getContract', () => {
     it('should return Contract', () => {
-      const result = factory.getDPContract();
+      const result = factory.getContract();
 
       expect(result).to.equal(dpContract);
     });

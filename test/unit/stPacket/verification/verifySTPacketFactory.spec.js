@@ -68,7 +68,7 @@ describe('verifySTPacketFactory', () => {
       extraPayload: payload.toString(),
     });
 
-    dataProviderMock.fetchDPContract.resolves(dpContract);
+    dataProviderMock.fetchContract.resolves(dpContract);
   });
 
   it('should return invalid result if Transaction is not State Transition', async () => {
@@ -135,24 +135,24 @@ describe('verifySTPacketFactory', () => {
   });
 
   it('should return invalid result if Contract specified in ST Packet is not found', async () => {
-    dataProviderMock.fetchDPContract.resolves(undefined);
+    dataProviderMock.fetchContract.resolves(undefined);
 
     const result = await verifySTPacket(stPacket, stateTransition);
 
     expectValidationError(result, ContractNotPresentError);
 
-    expect(dataProviderMock.fetchDPContract).to.have.been.calledOnceWith(
-      stPacket.getDPContractId(),
+    expect(dataProviderMock.fetchContract).to.have.been.calledOnceWith(
+      stPacket.getContractId(),
     );
 
     const [error] = result.getErrors();
 
-    expect(error.getDPContractId()).to.equal(stPacket.getDPContractId());
+    expect(error.getContractId()).to.equal(stPacket.getContractId());
   });
 
   it('should return invalid result if Contract is not valid', async () => {
     stPacket.setDocuments([]);
-    stPacket.setDPContract(dpContract);
+    stPacket.setContract(dpContract);
 
     stateTransition.extraPayload.hashSTPacket = stPacket.hash();
 

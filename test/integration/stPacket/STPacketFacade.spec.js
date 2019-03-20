@@ -24,7 +24,7 @@ describe('STPacketFacade', () => {
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
-    dataProviderMock.fetchDPContract.resolves(dpContract);
+    dataProviderMock.fetchContract.resolves(dpContract);
     dataProviderMock.fetchTransaction.resolves(null);
     dataProviderMock.fetchDocuments.resolves([]);
 
@@ -43,7 +43,7 @@ describe('STPacketFacade', () => {
 
       expect(result).to.be.an.instanceOf(STPacket);
 
-      expect(result.getDPContractId()).to.equal(stPacket.getDPContractId());
+      expect(result.getContractId()).to.equal(stPacket.getContractId());
       expect(result.getDocuments()).to.deep.equal(stPacket.getDocuments());
     });
 

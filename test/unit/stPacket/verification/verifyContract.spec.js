@@ -16,7 +16,7 @@ describe('verifyContract', () => {
     dpContract = getContractFixture();
 
     stPacket = new STPacket(dpContract.getId());
-    stPacket.setDPContract(dpContract);
+    stPacket.setContract(dpContract);
   });
 
   it('should return invalid result if Contract is already present', async () => {
@@ -26,7 +26,7 @@ describe('verifyContract', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getDPContract()).to.equal(dpContract);
+    expect(error.getContract()).to.equal(dpContract);
   });
 
   it('should return valid result if Contract is not present', async () => {

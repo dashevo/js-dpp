@@ -51,9 +51,9 @@ describe('STPacketHeader', () => {
     });
   });
 
-  describe('#setDPContractId', () => {
+  describe('#setContractId', () => {
     it('should set Contract ID', () => {
-      const result = stPacketHeader.setDPContractId(dpContractId);
+      const result = stPacketHeader.setContractId(dpContractId);
 
       expect(result).to.be.an.instanceOf(STPacketHeader);
 
@@ -61,9 +61,9 @@ describe('STPacketHeader', () => {
     });
   });
 
-  describe('#getDPContractId', () => {
+  describe('#getContractId', () => {
     it('should return Contract ID', () => {
-      const result = stPacketHeader.getDPContractId();
+      const result = stPacketHeader.getContractId();
 
       expect(result).to.equal(dpContractId);
     });

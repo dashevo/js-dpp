@@ -38,9 +38,9 @@ describe('DashPlatformProtocol', () => {
     });
   });
 
-  describe('setDPContract', () => {
+  describe('setContract', () => {
     it('should set User ID', () => {
-      const result = dpp.setDPContract(dpContract);
+      const result = dpp.setContract(dpContract);
 
       expect(result).to.be.an.instanceOf(DashPlatformProtocol);
 
@@ -48,11 +48,11 @@ describe('DashPlatformProtocol', () => {
     });
   });
 
-  describe('getDPContract', () => {
+  describe('getContract', () => {
     it('should return Contract', () => {
       dpp.dpContract = dpContract;
 
-      const result = dpp.getDPContract();
+      const result = dpp.getContract();
 
       expect(result).to.equal(dpContract);
     });

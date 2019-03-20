@@ -2,10 +2,10 @@ const rewiremock = require('rewiremock/node');
 
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 
-describe('DPContract', () => {
+describe('Contract', () => {
   let hashMock;
   let encodeMock;
-  let DPContract;
+  let Contract;
   let dpContractName;
   let documentType;
   let documentSchema;
@@ -17,7 +17,7 @@ describe('DPContract', () => {
     const serializerMock = { encode: this.sinonSandbox.stub() };
     encodeMock = serializerMock.encode;
 
-    DPContract = rewiremock.proxy('../../../lib/contract/Contract', {
+    Contract = rewiremock.proxy('../../../lib/contract/Contract', {
       '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': serializerMock,
     });
@@ -35,15 +35,15 @@ describe('DPContract', () => {
       [documentType]: documentSchema,
     };
 
-    dpContract = new DPContract(dpContractName, documents);
+    dpContract = new Contract(dpContractName, documents);
   });
 
   describe('constructor', () => {
     it('should create new Contract', () => {
-      dpContract = new DPContract(dpContractName, documents);
+      dpContract = new Contract(dpContractName, documents);
       expect(dpContract.name).to.equal(dpContractName);
-      expect(dpContract.version).to.equal(DPContract.DEFAULTS.VERSION);
-      expect(dpContract.schema).to.equal(DPContract.DEFAULTS.SCHEMA);
+      expect(dpContract.version).to.equal(Contract.DEFAULTS.VERSION);
+      expect(dpContract.schema).to.equal(Contract.DEFAULTS.SCHEMA);
       expect(dpContract.documents).to.equal(documents);
     });
   });
@@ -245,9 +245,9 @@ describe('DPContract', () => {
       const result = dpContract.toJSON();
 
       expect(result).to.deep.equal({
-        $schema: DPContract.DEFAULTS.SCHEMA,
+        $schema: Contract.DEFAULTS.SCHEMA,
         name: dpContractName,
-        version: DPContract.DEFAULTS.VERSION,
+        version: Contract.DEFAULTS.VERSION,
         documents,
       });
     });
@@ -262,9 +262,9 @@ describe('DPContract', () => {
       const result = dpContract.toJSON();
 
       expect(result).to.deep.equal({
-        $schema: DPContract.DEFAULTS.SCHEMA,
+        $schema: Contract.DEFAULTS.SCHEMA,
         name: dpContractName,
-        version: DPContract.DEFAULTS.VERSION,
+        version: Contract.DEFAULTS.VERSION,
         documents,
         definitions,
       });
@@ -287,14 +287,14 @@ describe('DPContract', () => {
 
   describe('#hash', () => {
     beforeEach(function beforeEach() {
-      DPContract.prototype.serialize = this.sinonSandbox.stub();
+      Contract.prototype.serialize = this.sinonSandbox.stub();
     });
 
     it('should return Contract hash', () => {
-      const serializedDPContract = '123';
+      const serializedContract = '123';
       const hashedDocument = '456';
 
-      DPContract.prototype.serialize.returns(serializedDPContract);
+      Contract.prototype.serialize.returns(serializedContract);
 
       hashMock.returns(hashedDocument);
 
@@ -302,9 +302,9 @@ describe('DPContract', () => {
 
       expect(result).to.equal(hashedDocument);
 
-      expect(DPContract.prototype.serialize).to.have.been.calledOnce();
+      expect(Contract.prototype.serialize).to.have.been.calledOnce();
 
-      expect(hashMock).to.have.been.calledOnceWith(serializedDPContract);
+      expect(hashMock).to.have.been.calledOnceWith(serializedContract);
     });
   });
 });

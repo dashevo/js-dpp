@@ -42,7 +42,7 @@ describe('validateSTPacketDocumentsFactory', () => {
     );
   });
 
-  it('should return invalid result if ST Packet has different ID than DPContract', () => {
+  it('should return invalid result if ST Packet has different ID than Contract', () => {
     rawSTPacket.contractId = '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b';
 
     const result = validateSTPacketDocuments(rawSTPacket, dpContract);
@@ -51,7 +51,7 @@ describe('validateSTPacketDocumentsFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getDPContract()).to.equal(dpContract);
+    expect(error.getContract()).to.equal(dpContract);
     expect(error.getRawSTPacket()).to.equal(rawSTPacket);
 
     expect(validateDocumentMock.callCount).to.equal(5);
