@@ -134,22 +134,6 @@ describe('verifySTPacketFactory', () => {
     expect(error.getRegistrationTransaction()).to.equal(transaction);
   });
 
-  it('should return invalid result if Contract specified in ST Packet is not found', async () => {
-    dataProviderMock.fetchContract.resolves(undefined);
-
-    const result = await verifySTPacket(stPacket, stateTransition);
-
-    expectValidationError(result, ContractNotPresentError);
-
-    expect(dataProviderMock.fetchContract).to.have.been.calledOnceWith(
-      stPacket.getContractId(),
-    );
-
-    const [error] = result.getErrors();
-
-    expect(error.getContractId()).to.equal(stPacket.getContractId());
-  });
-
   it('should return invalid result if Contract is not valid', async () => {
     stPacket.setDocuments([]);
     stPacket.setContract(contract);
