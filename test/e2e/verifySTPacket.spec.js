@@ -2,14 +2,12 @@ const { startDrive } = require('@dashevo/dp-services-ctl');
 
 const DashPlatformProtocol = require('../../lib/DashPlatformProtocol');
 
-const DriveRPCError = require('../../lib/test/errors/DriveRPCError');
+const registerUser = require('../../lib/test/e2e/registerUser');
+const sendSTPacket = require('../../lib/test/e2e/sendSTPacket');
+const createStateTransition = require('../../lib/test/e2e/createStateTransition');
+const isDriveSynced = require('../../lib/test/e2e/isDriveSynced');
 
-const registerUser = require('../../lib/test/utils/registerUser');
-const sendSTPacket = require('../../lib/test/utils/sendSTPacket');
-const createStateTransition = require('../../lib/test/utils/createStateTransition');
-const isDriveSynced = require('../../lib/test/utils/isDriveSynced');
-
-describe('DPP', function main() {
+describe('verifySTPacket', function main() {
   this.timeout(90000);
 
   let dpp;
@@ -26,16 +24,14 @@ describe('DPP', function main() {
 
   it('should verify DP object uniqueness by indices by submitting correct queries to Drive', async () => {
     // Register a user
-    const username = 'simpleBlockchainUser';
-
-    const { userId, privateKeyString } = await registerUser(
-      username,
+    const user = await registerUser(
+      'simpleBlockchainUser',
       drive.dashCore.getApi(),
     );
 
     // Create the data contract
     const dpContract = dpp.contract.create('IndexedContract', {
-      user: {
+      profile: {
         indices: [
           {
             properties: [
@@ -70,12 +66,11 @@ describe('DPP', function main() {
     const dpContractPacket = dpp.packet.create(dpContract);
 
     const dpContractTransaction = createStateTransition(
-      userId,
-      privateKeyString,
+      user,
       dpContractPacket,
     );
 
-    const { tsId: dpContractTsId } = await sendSTPacket(
+    const dpContractTsId = await sendSTPacket(
       dpContractPacket,
       dpContractTransaction,
       drive.driveApi.getApi(),
@@ -85,22 +80,21 @@ describe('DPP', function main() {
     await isDriveSynced(drive.driveApi.getApi());
 
     // Create first user object
-    dpp.setUserId(userId);
+    dpp.setUserId(user.getId());
 
-    const firstUserObject = dpp.object.create('user', {
+    const firstUserObject = dpp.object.create('profile', {
       firstName: 'William',
       email: 'w.birkin@umbrella.co',
     });
 
     const firstUserPacket = dpp.packet.create([firstUserObject]);
     const firstUserTransaction = createStateTransition(
-      userId,
-      privateKeyString,
+      user,
       firstUserPacket,
       dpContractTsId,
     );
 
-    const { tsId: firstUserTsId } = await sendSTPacket(
+    const firstUserTsId = await sendSTPacket(
       firstUserPacket,
       firstUserTransaction,
       drive.driveApi.getApi(),
@@ -110,20 +104,19 @@ describe('DPP', function main() {
     await isDriveSynced(drive.driveApi.getApi());
 
     // Create second user object
-    const secondUserObject = dpp.object.create('user', {
+    const secondUserObject = dpp.object.create('profile', {
       firstName: 'Annette',
       email: 'a.birkin@umbrella.co',
     });
 
     const secondUserPacket = dpp.packet.create([secondUserObject]);
     const secondUserTransaction = createStateTransition(
-      userId,
-      privateKeyString,
+      user,
       secondUserPacket,
       firstUserTsId,
     );
 
-    const { tsId: secondUserTsId } = await sendSTPacket(
+    const secondUserTsId = await sendSTPacket(
       secondUserPacket,
       secondUserTransaction,
       drive.driveApi.getApi(),
@@ -133,15 +126,14 @@ describe('DPP', function main() {
     await isDriveSynced(drive.driveApi.getApi());
 
     // Create third user object violating unique indices
-    const thirdUserObject = dpp.object.create('user', {
+    const thirdUserObject = dpp.object.create('profile', {
       firstName: 'Leon',
       email: 'a.birkin@umbrella.co',
     });
 
     const thirdUserPacket = dpp.packet.create([thirdUserObject]);
     const thirdUserTransaction = createStateTransition(
-      userId,
-      privateKeyString,
+      user,
       thirdUserPacket,
       secondUserTsId,
     );
@@ -153,10 +145,10 @@ describe('DPP', function main() {
         drive.driveApi.getApi(),
         drive.dashCore.getApi(),
       );
-    } catch (e) {
-      expect(e).to.be.an.instanceOf(DriveRPCError);
 
-      const error = e.getOriginalError();
+      expect.fail('Duplicate object was successfully sent');
+    } catch (e) {
+      const error = e.originalError;
       expect(error.data[0].name).to.equal('DuplicateDPObjectError');
       expect(error.data[0].dpObject).to.deep.equal(thirdUserObject.toJSON());
       expect(error.data[0].indexDefinition).to.deep.equal({
