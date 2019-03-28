@@ -7,7 +7,7 @@ const STPacket = require('../../../lib/stPacket/STPacket');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const getSTPacketFixture = require('../../../lib/test/fixtures/getSTPacketFixture');
-const getDPContractFixture = require('../../../lib/test/fixtures/getDPContractFixture');
+const getContractFixture = require('../../../lib/test/fixtures/getContractFixture');
 
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 
@@ -16,49 +16,49 @@ const MissingOptionError = require('../../../lib/errors/MissingOptionError');
 describe('STPacketFacade', () => {
   let dpp;
   let stPacket;
-  let dpContract;
+  let contract;
   let dataProviderMock;
 
   beforeEach(function beforeEach() {
-    dpContract = getDPContractFixture();
+    contract = getContractFixture();
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
-    dataProviderMock.fetchDPContract.resolves(dpContract);
+    dataProviderMock.fetchContract.resolves(contract);
     dataProviderMock.fetchTransaction.resolves(null);
-    dataProviderMock.fetchDPObjects.resolves([]);
+    dataProviderMock.fetchDocuments.resolves([]);
 
     stPacket = getSTPacketFixture();
 
     dpp = new DashPlatformProtocol({
       userId: '6b74011f5d2ad1a8d45b71b9702f54205ce75253593c3cfbba3fdadeca278288',
-      dpContract,
+      contract,
       dataProvider: dataProviderMock,
     });
   });
 
   describe('create', () => {
     it('should create ST Packet', () => {
-      const result = dpp.packet.create(stPacket.getDPObjects());
+      const result = dpp.packet.create(stPacket.getDocuments());
 
       expect(result).to.be.an.instanceOf(STPacket);
 
-      expect(result.getDPContractId()).to.equal(stPacket.getDPContractId());
-      expect(result.getDPObjects()).to.deep.equal(stPacket.getDPObjects());
+      expect(result.getContractId()).to.equal(stPacket.getContractId());
+      expect(result.getDocuments()).to.deep.equal(stPacket.getDocuments());
     });
 
-    it('should throw an error if DP Contract is not defined', () => {
+    it('should throw an error if Contract is not defined', () => {
       dpp = new DashPlatformProtocol();
 
       let error;
       try {
-        dpp.packet.create(stPacket.objects);
+        dpp.packet.create(stPacket.documents);
       } catch (e) {
         error = e;
       }
 
       expect(error).to.be.an.instanceOf(MissingOptionError);
-      expect(error.getOptionName()).to.equal('dpContract');
+      expect(error.getOptionName()).to.equal('contract');
     });
   });
 
@@ -117,7 +117,7 @@ describe('STPacketFacade', () => {
       expect(result).to.be.an.instanceOf(ValidationResult);
     });
 
-    it('should throw an error if DP Contract is not defined', () => {
+    it('should throw an error if Contract is not defined', () => {
       dpp = new DashPlatformProtocol();
 
       let error;
@@ -128,7 +128,7 @@ describe('STPacketFacade', () => {
       }
 
       expect(error).to.be.an.instanceOf(MissingOptionError);
-      expect(error.getOptionName()).to.equal('dpContract');
+      expect(error.getOptionName()).to.equal('contract');
     });
   });
 

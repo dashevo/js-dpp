@@ -12,7 +12,7 @@ describe('STPacketHeaderFacade', () => {
     dpp = new DashPlatformProtocol();
 
     stPacketHeader = new STPacketHeader(
-      '4b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b75',
+      'HgKXrLhm7sMjPrRGS1UsETmmQ7nZHbaKN729zw55PUVk',
       '5b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b23',
       '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b12',
     );
@@ -21,14 +21,14 @@ describe('STPacketHeaderFacade', () => {
   describe('create', () => {
     it('should create ST Packet Header', () => {
       const result = dpp.packetHeader.create(
-        stPacketHeader.getDPContractId(),
+        stPacketHeader.getContractId(),
         stPacketHeader.getItemsMerkleRoot(),
         stPacketHeader.getItemsHash(),
       );
 
       expect(result).to.be.an.instanceOf(STPacketHeader);
 
-      expect(result.getDPContractId()).to.equal(stPacketHeader.getDPContractId());
+      expect(result.getContractId()).to.equal(stPacketHeader.getContractId());
       expect(result.getItemsMerkleRoot()).to.equal(stPacketHeader.getItemsMerkleRoot());
       expect(result.getItemsHash()).to.equal(stPacketHeader.getItemsHash());
     });
