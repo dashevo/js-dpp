@@ -30,7 +30,7 @@ describe('verifySTPacket', function main() {
     );
 
     // Create the data contract
-    const dpContract = dpp.contract.create('IndexedContract', {
+    const contract = dpp.contract.create('IndexedContract', {
       profile: {
         indices: [
           {
@@ -61,18 +61,18 @@ describe('verifySTPacket', function main() {
       },
     });
 
-    dpp.setDPContract(dpContract);
+    dpp.setContract(contract);
 
-    const dpContractPacket = dpp.packet.create(dpContract);
+    const contractPacket = dpp.packet.create(contract);
 
-    const dpContractTransaction = createStateTransition(
+    const contractTransaction = createStateTransition(
       user,
-      dpContractPacket,
+      contractPacket,
     );
 
-    const dpContractTsId = await sendSTPacket(
-      dpContractPacket,
-      dpContractTransaction,
+    const contractTsId = await sendSTPacket(
+      contractPacket,
+      contractTransaction,
       drive.driveApi.getApi(),
       drive.dashCore.getApi(),
     );
@@ -82,16 +82,16 @@ describe('verifySTPacket', function main() {
     // Create first user object
     dpp.setUserId(user.getId());
 
-    const firstUserObject = dpp.object.create('profile', {
+    const firstUserDocument = dpp.document.create('profile', {
       firstName: 'William',
       email: 'w.birkin@umbrella.co',
     });
 
-    const firstUserPacket = dpp.packet.create([firstUserObject]);
+    const firstUserPacket = dpp.packet.create([firstUserDocument]);
     const firstUserTransaction = createStateTransition(
       user,
       firstUserPacket,
-      dpContractTsId,
+      contractTsId,
     );
 
     const firstUserTsId = await sendSTPacket(
@@ -104,12 +104,12 @@ describe('verifySTPacket', function main() {
     await isDriveSynced(drive.driveApi.getApi());
 
     // Create second user object
-    const secondUserObject = dpp.object.create('profile', {
+    const secondUserDocument = dpp.document.create('profile', {
       firstName: 'Annette',
       email: 'a.birkin@umbrella.co',
     });
 
-    const secondUserPacket = dpp.packet.create([secondUserObject]);
+    const secondUserPacket = dpp.packet.create([secondUserDocument]);
     const secondUserTransaction = createStateTransition(
       user,
       secondUserPacket,
@@ -126,12 +126,12 @@ describe('verifySTPacket', function main() {
     await isDriveSynced(drive.driveApi.getApi());
 
     // Create third user object violating unique indices
-    const thirdUserObject = dpp.object.create('profile', {
+    const thirdUserDocument = dpp.document.create('profile', {
       firstName: 'Leon',
       email: 'a.birkin@umbrella.co',
     });
 
-    const thirdUserPacket = dpp.packet.create([thirdUserObject]);
+    const thirdUserPacket = dpp.packet.create([thirdUserDocument]);
     const thirdUserTransaction = createStateTransition(
       user,
       thirdUserPacket,
@@ -149,8 +149,8 @@ describe('verifySTPacket', function main() {
       expect.fail('Duplicate object was successfully sent');
     } catch (e) {
       const error = e.originalError;
-      expect(error.data[0].name).to.equal('DuplicateDPObjectError');
-      expect(error.data[0].dpObject).to.deep.equal(thirdUserObject.toJSON());
+      expect(error.data[0].name).to.equal('DuplicateDocumentError');
+      expect(error.data[0].dpObject).to.deep.equal(thirdUserDocument.toJSON());
       expect(error.data[0].indexDefinition).to.deep.equal({
         unique: true,
         properties: [
