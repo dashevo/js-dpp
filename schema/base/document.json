@@ -28,6 +28,13 @@
       "type": "string",
       "minLength": 34,
       "maxLength": 34
+    },
+    "$meta": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-zA-Z0-9-_]{1,255}$"
+      }
     }
   },
   "required": [
