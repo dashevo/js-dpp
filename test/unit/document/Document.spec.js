@@ -286,6 +286,69 @@ describe('Document', () => {
     });
   });
 
+  describe('#setMetadata', () => {
+    beforeEach(function beforeEach() {
+      Document.prototype.setMeta = this.sinonSandbox.stub();
+    });
+
+    it('should call setMeta for each document property', () => {
+      const meta = {
+        test1: 1,
+        test2: 2,
+      };
+
+      const result = document.setMetadata(meta);
+
+      expect(result).to.equal(document);
+
+      expect(Document.prototype.setMeta).to.have.been.calledTwice();
+
+      expect(Document.prototype.setMeta).to.have.been.calledWith('test1', 1);
+      expect(Document.prototype.setMeta).to.have.been.calledWith('test2', 2);
+    });
+  });
+
+  describe('#getMetadata', () => {
+    it('should return all meta', () => {
+      const meta = {
+        test1: 1,
+        test2: 2,
+      };
+
+      document.meta = meta;
+
+      expect(document.getMetadata()).to.equal(meta);
+    });
+  });
+
+  describe('#setMeta', () => {
+    it('should set value for specified meta property name', () => {
+      const path = 'answer';
+      const value = 42;
+
+      const result = document.setMeta(path, value);
+
+      expect(result).to.equal(document);
+
+      expect(lodashSetMock).to.have.been.calledOnceWith(document.meta, path, value);
+    });
+  });
+
+  describe('#getMeta', () => {
+    it('should return value for specified meta property name', () => {
+      const path = 'answer';
+      const value = 42;
+
+      lodashGetMock.returns(value);
+
+      const result = document.getMeta(path);
+
+      expect(result).to.equal(value);
+
+      expect(lodashGetMock).to.have.been.calledOnceWith(document.meta, path);
+    });
+  });
+
   describe('#toJSON', () => {
     it('should return Document as plain JS object', () => {
       expect(document.toJSON()).to.deep.equal(rawDocument);

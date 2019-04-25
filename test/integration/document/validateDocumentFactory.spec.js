@@ -339,6 +339,21 @@ describe('validateDocumentFactory', () => {
         expect(error.getRawDocument()).to.equal(rawDocument);
       });
     });
+
+    describe('$meta', () => {
+      it('should have at least 1 property if defined', () => {
+        rawDocument.$meta = {};
+
+        const result = validateDocument(rawDocument, contract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.$meta');
+        expect(error.keyword).to.equal('minProperties');
+      });
+    });
   });
 
   describe('Contract schema', () => {
@@ -383,6 +398,17 @@ describe('validateDocumentFactory', () => {
     rawDocument.$action = Document.ACTIONS.DELETE;
 
     const result = validateDocument(rawDocument, contract);
+
+    const [error] = result.getErrors();
+
+    expect(error.dataPath).to.equal('');
+    expect(error.keyword).to.equal('additionalProperties');
+  });
+
+  it('should throw validation error if allowMeta is false while $meta is set', () => {
+    rawDocument.$meta = {};
+
+    const result = validateDocument(rawDocument, contract, { allowMeta: false });
 
     const [error] = result.getErrors();
 
