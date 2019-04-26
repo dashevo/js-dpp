@@ -353,6 +353,24 @@ describe('validateDocumentFactory', () => {
         expect(error.dataPath).to.equal('.$meta');
         expect(error.keyword).to.equal('minProperties');
       });
+
+      it('should have valid property names', () => {
+        rawDocument.$meta = {
+          '123*&%': 42,
+        };
+
+        const result = validateDocument(rawDocument, contract);
+
+        expectJsonSchemaError(result, 2);
+
+        const [error, secondError] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.$meta');
+        expect(error.keyword).to.equal('pattern');
+
+        expect(secondError.dataPath).to.equal('.$meta');
+        expect(secondError.keyword).to.equal('propertyNames');
+      });
     });
   });
 
