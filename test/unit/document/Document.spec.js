@@ -299,6 +299,23 @@ describe('Document', () => {
     });
   });
 
+  describe('#removeMetadata', () => {
+    it('should remove all meta', () => {
+      const meta = {
+        test1: 1,
+        test2: 2,
+      };
+
+      document.meta = meta;
+
+      expect(document.getMetadata()).to.equal(meta);
+
+      document.removeMetadata();
+
+      expect(document.getMetadata()).to.equal(undefined);
+    });
+  });
+
   describe('#toJSON', () => {
     it('should return Document as plain JS object', () => {
       expect(document.toJSON()).to.deep.equal(rawDocument);
