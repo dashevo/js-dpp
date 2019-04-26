@@ -294,7 +294,7 @@ describe('Document', () => {
         userId: 'some string',
       };
 
-      document.meta = new Metadata(meta);
+      document.metadata = new Metadata(meta);
 
       expect(document.getMetadata()).to.deep.equal(meta);
     });
@@ -306,7 +306,7 @@ describe('Document', () => {
         userId: 'some string',
       };
 
-      document.meta = new Metadata(meta);
+      document.metadata = new Metadata(meta);
 
       expect(document.getMetadata()).to.deep.equal(meta);
 
