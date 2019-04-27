@@ -3,7 +3,7 @@ const rewiremock = require('rewiremock/node');
 
 const DataIsNotAllowedWithActionDeleteError = require('../../../lib/document/errors/DataIsNotAllowedWithActionDeleteError');
 
-const Metadata = require('../../../lib/document/Metadata');
+const DocumentMetadata = require('../../../lib/document/DocumentMetadata');
 
 describe('Document', () => {
   let lodashGetMock;
@@ -290,29 +290,29 @@ describe('Document', () => {
 
   describe('#getMetadata', () => {
     it('should return all meta', () => {
-      const meta = {
+      const meta = new DocumentMetadata({
         userId: 'some string',
-      };
+      });
 
-      document.metadata = new Metadata(meta);
+      document.metadata = meta;
 
-      expect(document.getMetadata()).to.deep.equal(meta);
+      expect(document.getMetadata()).to.be.equal(meta);
     });
   });
 
   describe('#removeMetadata', () => {
     it('should remove all meta', () => {
-      const meta = {
+      const meta = new DocumentMetadata({
         userId: 'some string',
-      };
+      });
 
-      document.metadata = new Metadata(meta);
+      document.metadata = meta;
 
       expect(document.getMetadata()).to.deep.equal(meta);
 
       document.removeMetadata();
 
-      expect(document.getMetadata()).to.equal(undefined);
+      expect(document.getMetadata()).to.be.undefined();
     });
   });
 
