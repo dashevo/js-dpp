@@ -34,6 +34,9 @@ describe('Document', () => {
       $scopeId: 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh',
       $action: Document.DEFAULTS.ACTION,
       $rev: Document.DEFAULTS.REVISION,
+      $meta: {
+        userId: 'a832e4145650bfe8462e768e9c4a9a0d3a0bb7dcd9b3e50c61c73ac9d2e16546',
+      },
     };
 
     document = new Document(rawDocument);
@@ -355,6 +358,20 @@ describe('Document', () => {
 
       expect(encodeMock).to.have.been.calledOnceWith(rawDocument);
     });
+
+    it('should skip meta if option `skipMeta` is true', () => {
+      const serializedDocument = '123';
+
+      encodeMock.returns(serializedDocument);
+
+      const result = document.serialize({ skipMeta: true });
+
+      expect(result).to.equal(serializedDocument);
+
+      delete rawDocument.$meta;
+
+      expect(encodeMock).to.have.been.calledOnceWith(rawDocument);
+    });
   });
 
   describe('#hash', () => {
@@ -374,7 +391,7 @@ describe('Document', () => {
 
       expect(result).to.equal(hashedDocument);
 
-      expect(Document.prototype.serialize).to.have.been.calledOnce();
+      expect(Document.prototype.serialize).to.have.been.calledOnceWith({ skipMeta: true });
 
       expect(hashMock).to.have.been.calledOnceWith(serializedDocument);
     });
