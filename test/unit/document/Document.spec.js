@@ -123,6 +123,27 @@ describe('Document', () => {
       expect(document.revision).to.equal(rawDocument.$rev);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
+
+    it('should create Document with $meta and data if present', () => {
+      const data = {
+        test: 1,
+      };
+
+      const meta = {
+        userId: 'test',
+      };
+
+      rawDocument = {
+        $meta: meta,
+        ...data,
+      };
+
+      document = new Document(rawDocument);
+
+      expect(document.metadata).to.be.instanceOf(DocumentMetadata);
+      expect(document.metadata.toJSON()).to.deep.equal(meta);
+      expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
+    });
   });
 
   describe('#getId', () => {
@@ -290,25 +311,25 @@ describe('Document', () => {
 
   describe('#getMetadata', () => {
     it('should return all meta', () => {
-      const meta = new DocumentMetadata({
+      const metadata = new DocumentMetadata({
         userId: 'some string',
       });
 
-      document.metadata = meta;
+      document.metadata = metadata;
 
-      expect(document.getMetadata()).to.be.equal(meta);
+      expect(document.getMetadata()).to.be.equal(metadata);
     });
   });
 
   describe('#removeMetadata', () => {
     it('should remove all meta', () => {
-      const meta = new DocumentMetadata({
+      const metadata = new DocumentMetadata({
         userId: 'some string',
       });
 
-      document.metadata = meta;
+      document.metadata = metadata;
 
-      expect(document.getMetadata()).to.deep.equal(meta);
+      expect(document.getMetadata()).to.deep.equal(metadata);
 
       document.removeMetadata();
 
