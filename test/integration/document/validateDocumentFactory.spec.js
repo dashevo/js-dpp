@@ -341,12 +341,25 @@ describe('validateDocumentFactory', () => {
     });
 
     describe('$meta', () => {
-      it('is not required', () => {
+      it('should not be required', () => {
         delete rawDocument.$meta;
 
         const result = validateDocument(rawDocument, contract);
 
         expectJsonSchemaError(result, 0);
+      });
+
+      it('should not have additional properties', () => {
+        rawDocument.$meta.test = 1;
+
+        const result = validateDocument(rawDocument, contract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.$meta');
+        expect(error.keyword).to.equal('additionalProperties');
       });
 
       describe('userId', () => {
