@@ -36,6 +36,30 @@
           "type": "string",
           "minLength": 64,
           "maxLength": 64
+        },
+        "reference":  {
+          "type": "object",
+          "properties": {
+            "blockHash": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            "blockHeight": {
+              "type": "number",
+              "multipleOf": 1
+            },
+            "stHeaderHash": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            "stPacketHash": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64
+            }
+          }
         }
       },
       "required": ["userId"],
