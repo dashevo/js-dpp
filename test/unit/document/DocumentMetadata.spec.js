@@ -2,14 +2,14 @@ const DocumentMetadata = require('../../../lib/document/DocumentMetadata');
 
 describe('DocumentMetadata', () => {
   let userId;
-  let reference;
+  let stReference;
   let rawDocumentMetadata;
   let documentMetadata;
 
   beforeEach(() => {
     userId = 'test';
 
-    reference = {
+    stReference = {
       blockHash: 'someBlockHash',
       blockHeight: 42,
       stHeaderHash: 'someHeaderHash',
@@ -18,7 +18,7 @@ describe('DocumentMetadata', () => {
 
     rawDocumentMetadata = {
       userId,
-      reference,
+      stReference,
     };
 
     documentMetadata = new DocumentMetadata(rawDocumentMetadata);
@@ -30,7 +30,7 @@ describe('DocumentMetadata', () => {
     });
 
     it('should create DocumentMetadata with `reference` if present', () => {
-      expect(documentMetadata.reference).to.deep.equal(reference);
+      expect(documentMetadata.stReference).to.deep.equal(stReference);
     });
   });
 
@@ -40,9 +40,9 @@ describe('DocumentMetadata', () => {
     });
   });
 
-  describe('#getReference', () => {
-    it('should return reference', () => {
-      expect(documentMetadata.getReference()).to.deep.equal(reference);
+  describe('#getSTReference', () => {
+    it('should return the reference', () => {
+      expect(documentMetadata.getSTReference()).to.deep.equal(stReference);
     });
   });
 

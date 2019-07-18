@@ -36,7 +36,7 @@ describe('Document', () => {
       $rev: Document.DEFAULTS.REVISION,
       $meta: {
         userId: 'a832e4145650bfe8462e768e9c4a9a0d3a0bb7dcd9b3e50c61c73ac9d2e16546',
-        reference: {
+        stReference: {
           blockHash: '000000000000000000000000000000000000000000000000000000000000000f',
           blockHeight: 42,
           stHeaderHash: '000000000000000000000000000000000000000000000000000000000000000f',

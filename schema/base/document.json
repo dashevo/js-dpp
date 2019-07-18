@@ -37,7 +37,7 @@
           "minLength": 64,
           "maxLength": 64
         },
-        "reference":  {
+        "stReference":  {
           "type": "object",
           "properties": {
             "blockHash": {
@@ -59,7 +59,13 @@
               "minLength": 64,
               "maxLength": 64
             }
-          }
+          },
+          "required": [
+            "blockHash",
+            "blockHeight",
+            "stHeaderHash",
+            "stPacketHash"
+          ]
         }
       },
       "required": ["userId"],
