@@ -47,7 +47,8 @@
             },
             "blockHeight": {
               "type": "number",
-              "multipleOf": 1
+              "multipleOf": 1,
+              "minimum": 1
             },
             "stHeaderHash": {
               "type": "string",
@@ -65,7 +66,8 @@
             "blockHeight",
             "stHeaderHash",
             "stPacketHash"
-          ]
+          ],
+          "additionalProperties": false
         }
       },
       "required": ["userId"],
