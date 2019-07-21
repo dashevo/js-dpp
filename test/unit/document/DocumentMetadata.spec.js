@@ -29,7 +29,7 @@ describe('DocumentMetadata', () => {
       expect(documentMetadata.userId).to.equal(userId);
     });
 
-    it('should create DocumentMetadata with `reference` if present', () => {
+    it('should create DocumentMetadata with `stReference` if present', () => {
       expect(documentMetadata.stReference).to.deep.equal(stReference);
     });
   });
@@ -41,7 +41,7 @@ describe('DocumentMetadata', () => {
   });
 
   describe('#getSTReference', () => {
-    it('should return the reference', () => {
+    it('should return the stReference', () => {
       expect(documentMetadata.getSTReference()).to.deep.equal(stReference);
     });
   });
