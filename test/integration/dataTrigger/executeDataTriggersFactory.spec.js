@@ -7,9 +7,9 @@ const dpnsDocumentFixture = require('../../../lib/test/fixtures/getDpnsDocumentF
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 const executeDataTriggersFactory = require('../../../lib/dataTrigger/executeDataTriggersFactory');
 
-const dpnsCreateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/domainCreateDataTrigger');
-const dpnsDeleteDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/domainCreateDataTrigger');
-const dpnsUpdateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/domainCreateDataTrigger');
+const dpnsCreateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
+const dpnsDeleteDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
+const dpnsUpdateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
 
 describe('domainDataTrigger', () => {
   let parentDocument;

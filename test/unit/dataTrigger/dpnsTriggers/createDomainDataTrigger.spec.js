@@ -1,4 +1,4 @@
-const domainCreateDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/domainCreateDataTrigger');
+const domainCreateDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
 const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
 const DataTriggerExecutionError = require('../../../../lib/errors/DataTriggerExecutionError');
 const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
