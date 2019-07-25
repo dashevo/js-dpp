@@ -1,9 +1,15 @@
+const Document = require('../../../lib/document/Document');
 const DataTriggerExecutionResult = require('../../../lib/dataTrigger/DataTriggerExecutionResult');
 const DataTriggerExecutionError = require('../../../lib/errors/DataTriggerExecutionError');
 const DataTriggerExecutionContext = require('../../../lib/dataTrigger/DataTriggerExecutionContext');
 const getDpnsContractFixture = require('../../../lib/test/fixtures/getDpnsContractFixture');
+const dpnsDocumentFixture = require('../../../lib/test/fixtures/getDpnsDocumentFixture');
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 const executeDataTriggersFactory = require('../../../lib/dataTrigger/executeDataTriggersFactory');
+
+const dpnsCreateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/domainCreateDataTrigger');
+const dpnsDeleteDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/domainCreateDataTrigger');
+const dpnsUpdateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/domainCreateDataTrigger');
 
 describe('domainDataTrigger', () => {
   let parentDocument;
@@ -11,10 +17,26 @@ describe('domainDataTrigger', () => {
   let context;
   let dataProviderMock;
   let contract;
+  const dpnsTriggers = [
+    dpnsCreateDomainDataTrigger,
+    dpnsDeleteDomainDataTrigger,
+    dpnsUpdateDomainDataTrigger,
+  ];
+  const domainDocumentType = 'domain';
 
   beforeEach(function beforeEach() {
     contract = getDpnsContractFixture();
-    childDocument =
+    this.sinonSandbox.stub(contract, 'getDataTriggers')
+      .withArgs()
+      .returns(dpnsTriggers)
+      .withArgs(domainDocumentType, Document.ACTIONS.CREATE)
+      .returns([dpnsCreateDomainDataTrigger])
+      .withArgs(domainDocumentType, Document.ACTIONS.DELETE)
+      .returns([dpnsDeleteDomainDataTrigger])
+      .withArgs(domainDocumentType, Document.ACTIONS.UPDATE)
+      .returns([dpnsUpdateDomainDataTrigger]);
+    childDocument = dpnsDocumentFixture.getChildDocumentFixture();
+    parentDocument = dpnsDocumentFixture.getParentDocumentFixture();
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchDocuments.resolves([]);
@@ -39,15 +61,18 @@ describe('domainDataTrigger', () => {
     );
   });
 
+  afterEach(() => {
+    contract.getDataTriggers.restore();
+  });
+
   it('Should work', async () => {
     const documents = [childDocument];
-    const dataProvider = {};
     const userId = 'userId';
     const dataTriggerExecutionResults = await executeDataTriggersFactory(
-      documents, contract, dataProvider, userId,
+      documents, contract, dataProviderMock, userId,
     )();
 
-    expect(dataTriggerExecutionResults).to.be.an.array();
+    expect(dataTriggerExecutionResults).to.be.an('array');
     expect(dataTriggerExecutionResults.length).to.be.equal(1);
     expect(dataTriggerExecutionResults[0]).to.be.an.instanceOf(DataTriggerExecutionResult);
 
@@ -57,5 +82,9 @@ describe('domainDataTrigger', () => {
     expect(result.getErrors()).to.be.an('array');
     expect(result.getErrors().length).to.be.equal(0);
     expect(result.isOk()).is.true();
+  });
+
+  it('Should execute both data triggers if there is two data triggers for the same document and action in the contract', async () => {
+    throw new Error('Not implemented');
   });
 });
