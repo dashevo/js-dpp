@@ -3,7 +3,6 @@ const Document = require('../../../lib/document/Document');
 const DataTriggerExecutionContext = require('../../../lib/dataTrigger/DataTriggerExecutionContext');
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 const getDpnsContractFixture = require('../../../lib/test/fixtures/getDpnsContractFixture');
-const domainCreateDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/domainCreateDataTrigger');
 const { getParentDocumentFixture, getChildDocumentFixture } = require('../../../lib/test/fixtures/getDpnsDocumentFixture');
 const DataTriggerExecutionResult = require('../../../lib/dataTrigger/DataTriggerExecutionResult');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
@@ -17,8 +16,10 @@ describe('DataTrigger', () => {
   let dataProviderMock;
   let parentDocument;
   let childDocument;
+  let triggerFunc;
 
   beforeEach(function beforeEach() {
+    triggerFunc = this.sinonSandbox.stub().resolves(new DataTriggerExecutionResult());
     contract = getDpnsContractFixture();
 
     parentDocument = getParentDocumentFixture();
@@ -48,15 +49,15 @@ describe('DataTrigger', () => {
   });
 
   it('should check trigger fields', () => {
-    const trigger = new DataTrigger(documentType, Document.ACTIONS.CREATE, domainCreateDataTrigger);
+    const trigger = new DataTrigger(documentType, Document.ACTIONS.CREATE, triggerFunc);
 
     expect(trigger.documentType).to.be.equal(documentType);
     expect(trigger.documentAction).to.be.equal(Document.ACTIONS.CREATE);
-    expect(trigger.trigger).to.be.equal(domainCreateDataTrigger);
+    expect(trigger.trigger).to.be.equal(triggerFunc);
   });
 
   it('should check trigger execution', async () => {
-    const trigger = new DataTrigger(documentType, Document.ACTIONS.CREATE, domainCreateDataTrigger);
+    const trigger = new DataTrigger(documentType, Document.ACTIONS.CREATE, triggerFunc);
     const result = await trigger.execute(childDocument, context);
 
     expect(result).to.be.instanceOf(DataTriggerExecutionResult);
@@ -64,7 +65,7 @@ describe('DataTrigger', () => {
 
   it('should fail with invalid type', async () => {
     const [document] = getDocumentsFixture();
-    const trigger = new DataTrigger(documentType, Document.ACTIONS.CREATE, domainCreateDataTrigger);
+    const trigger = new DataTrigger(documentType, Document.ACTIONS.CREATE, triggerFunc);
     const result = await trigger.execute(document, context);
 
     expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);

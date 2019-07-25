@@ -44,7 +44,7 @@ describe('domainCreateDataTrigger', () => {
   });
 
   it('should check result is DataTriggerExecutionResult instance and has no errors', async () => {
-    const result = await domainCreateDataTrigger(childDocument, context);
+    const result = await domainCreateDataTrigger.execute(childDocument, context);
 
     expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
     expect(result.getErrors()).to.be.an('array');
@@ -60,7 +60,7 @@ describe('domainCreateDataTrigger', () => {
       )
       .resolves({ confirmations: 10 });
 
-    const result = await domainCreateDataTrigger(childDocument, context);
+    const result = await domainCreateDataTrigger.execute(childDocument, context);
 
     expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
     expect(result.getErrors()).to.be.an('array');
@@ -78,7 +78,7 @@ describe('domainCreateDataTrigger', () => {
       )
       .resolves({ confirmations: 10 });
 
-    const result = await domainCreateDataTrigger(childDocument, context);
+    const result = await domainCreateDataTrigger.execute(childDocument, context);
 
     expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
     expect(result.getErrors()).to.be.an('array');
@@ -96,7 +96,7 @@ describe('domainCreateDataTrigger', () => {
       )
       .resolves({ confirmations: 10 });
 
-    const result = await domainCreateDataTrigger(childDocument, context);
+    const result = await domainCreateDataTrigger.execute(childDocument, context);
 
     expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
     expect(result.getErrors()).to.be.an('array');
@@ -113,7 +113,7 @@ describe('domainCreateDataTrigger', () => {
       },
     });
 
-    const result = await domainCreateDataTrigger(childDocument, context);
+    const result = await domainCreateDataTrigger.execute(childDocument, context);
 
     expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
     expect(result.getErrors()).to.be.an('array');
@@ -126,13 +126,13 @@ describe('domainCreateDataTrigger', () => {
   it('should fail with invalid action', async () => {
     childDocument.setAction(Document.ACTIONS.UPDATE);
 
-    const result = await domainCreateDataTrigger(childDocument, context);
+    const result = await domainCreateDataTrigger.execute(childDocument, context);
 
     expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
     expect(result.getErrors()).to.be.an('array');
     expect(result.getErrors().length).to.be.equal(1);
     expect(result.isOk()).is.false();
     expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerExecutionError);
-    expect(result.getErrors()[0].message).to.be.equal('Document action is not create');
+    expect(result.getErrors()[0].message).to.be.equal('Document action doesn\'t match trigger action');
   });
 });
