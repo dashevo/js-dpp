@@ -14,7 +14,6 @@ const dpnsUpdateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTrigge
 describe('domainDataTrigger', () => {
   let parentDocument;
   let childDocument;
-  let context;
   let dataProviderMock;
   let contract;
   const dpnsTriggers = [
@@ -53,12 +52,6 @@ describe('domainDataTrigger', () => {
         childDocument.getData().records.dashIdentity,
       )
       .resolves({ confirmations: 10 });
-
-    context = new DataTriggerExecutionContext(
-      dataProviderMock,
-      '6b74011f5d2ad1a8d45b71b9702f54205ce75253593c3cfbba3fdadeca278288',
-      contract,
-    );
   });
 
   afterEach(() => {
