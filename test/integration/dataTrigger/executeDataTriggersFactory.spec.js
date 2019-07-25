@@ -77,7 +77,8 @@ describe('domainDataTrigger', () => {
     expect(result.isOk()).is.true();
   });
 
-  it('Should execute both data triggers if there is two data triggers for the same document and action in the contract', async () => {
+  it('Should execute multiple data triggers if there is more than one data trigger for'
+    + ' the same document and action in the contract', async () => {
     throw new Error('Not implemented');
   });
 });
