@@ -22,6 +22,7 @@ describe('domainDataTrigger', () => {
     dpnsUpdateDomainDataTrigger,
   ];
   const domainDocumentType = 'domain';
+  let stateTransitionHeaderMock;
 
   beforeEach(function beforeEach() {
     contract = getDpnsContractFixture();
@@ -58,12 +59,13 @@ describe('domainDataTrigger', () => {
     contract.getDataTriggers.restore();
   });
 
-  it('Should work', async () => {
+  it('Should return an array of DataTriggerExecutionResult', async () => {
     const documents = [childDocument];
     const userId = 'userId';
-    const dataTriggerExecutionResults = await executeDataTriggersFactory(
-      documents, contract, dataProviderMock, userId,
-    )();
+    const context = new DataTriggerExecutionContext(
+      dataProviderMock, userId, contract, stateTransitionHeaderMock,
+    );
+    const dataTriggerExecutionResults = await executeDataTriggersFactory(documents, context)();
 
     expect(dataTriggerExecutionResults).to.be.an('array');
     expect(dataTriggerExecutionResults.length).to.be.equal(1);
@@ -77,7 +79,11 @@ describe('domainDataTrigger', () => {
     expect(result.isOk()).is.true();
   });
 
-  it('Should execute both data triggers if there is two data triggers for the same document and action in the contract', async () => {
+  it('Should execute multiple data triggers if there is more than one data trigger for'
+    + ' the same document and action in the contract', async () => {
+    throw new Error('Not implemented');
+  });
+  it('Should return a result for each passed document with success or error', async () => {
     throw new Error('Not implemented');
   });
 });
