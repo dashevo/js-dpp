@@ -60,6 +60,7 @@ describe('domainCreateDataTrigger', () => {
       )
       .resolves({ confirmations: 10 });
 
+
     const result = await domainCreateDataTrigger.execute(childDocument, context);
 
     expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
