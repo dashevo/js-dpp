@@ -6,6 +6,8 @@ const getDpnsContractFixture = require('../../../lib/test/fixtures/getDpnsContra
 const domainCreateDataTrigger = require('../../../lib/dataTrigger/dataTriggers/domainCreateDataTrigger');
 const { getParentDocumentFixture, getChildDocumentFixture } = require('../../../lib/test/fixtures/getDpnsDocumentFixture');
 const DataTriggerExecutionResult = require('../../../lib/dataTrigger/DataTriggerExecutionResult');
+const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
+const DataTriggerExecutionError = require('../../../lib/errors/DataTriggerExecutionError');
 
 const documentType = 'domain';
 
@@ -53,19 +55,23 @@ describe('DataTrigger', () => {
     expect(trigger.trigger).to.be.equal(domainCreateDataTrigger);
   });
 
-  it('should check trigger context', () => {
-    const trigger = new DataTrigger(documentType, Document.ACTIONS.CREATE, domainCreateDataTrigger);
-    trigger.setContext(context);
-
-    expect(trigger.context).to.be.equal(context);
-  });
-
   it('should check trigger execution', async () => {
     const trigger = new DataTrigger(documentType, Document.ACTIONS.CREATE, domainCreateDataTrigger);
-    trigger.setContext(context);
-
-    const result = await trigger.execute(childDocument);
+    const result = await trigger.execute(childDocument, context);
 
     expect(result).to.be.instanceOf(DataTriggerExecutionResult);
+  });
+
+  it('should fail with invalid type', async () => {
+    const [document] = getDocumentsFixture();
+    const trigger = new DataTrigger(documentType, Document.ACTIONS.CREATE, domainCreateDataTrigger);
+    const result = await trigger.execute(document, context);
+
+    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+    expect(result.getErrors()).to.be.an('array');
+    expect(result.getErrors().length).to.be.equal(1);
+    expect(result.isOk()).is.false();
+    expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerExecutionError);
+    expect(result.getErrors()[0].message).to.be.equal('Document type doesn\'t match trigger type');
   });
 });

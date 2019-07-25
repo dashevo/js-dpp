@@ -3,7 +3,6 @@ const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTrig
 const DataTriggerExecutionError = require('../../../../lib/errors/DataTriggerExecutionError');
 const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
 const { getParentDocumentFixture, getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
-const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 const Document = require('../../../../lib/document/Document');
@@ -123,20 +122,6 @@ describe('domainCreateDataTrigger', () => {
     expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerExecutionError);
     expect(result.getErrors()[0].message).to.be.equal('dashIdentity with corresponding id not found');
   });
-
-  it('should fail with invalid type', async () => {
-    const [document] = getDocumentsFixture();
-
-    const result = await domainCreateDataTrigger(document, context);
-
-    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
-    expect(result.getErrors()).to.be.an('array');
-    expect(result.getErrors().length).to.be.equal(1);
-    expect(result.isOk()).is.false();
-    expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerExecutionError);
-    expect(result.getErrors()[0].message).to.be.equal('Document type is not domain');
-  });
-
 
   it('should fail with invalid action', async () => {
     childDocument.setAction(Document.ACTIONS.UPDATE);

@@ -2,7 +2,6 @@ const domainUpdateDataTrigger = require('../../../../lib/dataTrigger/dataTrigger
 const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
 const DataTriggerExecutionError = require('../../../../lib/errors/DataTriggerExecutionError');
 const { getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
-const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const Document = require('../../../../lib/document/Document');
 
 describe('domainCreateDataTrigger', () => {
@@ -19,19 +18,6 @@ describe('domainCreateDataTrigger', () => {
     expect(result.getErrors()).to.be.an('array');
     expect(result.getErrors().length).to.be.equal(0);
     expect(result.isOk()).is.true();
-  });
-
-  it('should fail with invalid type', async () => {
-    const [documentWithAnotherType] = getDocumentsFixture();
-
-    const result = await domainUpdateDataTrigger(documentWithAnotherType);
-
-    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
-    expect(result.getErrors()).to.be.an('array');
-    expect(result.getErrors().length).to.be.equal(1);
-    expect(result.isOk()).is.false();
-    expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerExecutionError);
-    expect(result.getErrors()[0].message).to.be.equal('Document type is not domain');
   });
 
   it('should fail with invalid action', async () => {
