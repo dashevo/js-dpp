@@ -27,7 +27,7 @@ describe('domainDeleteDataTrigger', () => {
     );
   });
 
-  it('should fail with invalid action', async () => {
+  it('should always fail', async () => {
     document.setData({}).setAction(Document.ACTIONS.DELETE);
 
     const result = await domainDeleteDataTrigger.execute(document, context);

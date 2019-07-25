@@ -24,7 +24,7 @@ describe('domainUpdateDataTrigger', () => {
     );
   });
 
-  it('should fail with invalid action', async () => {
+  it('should always fail', async () => {
     document.setAction(Document.ACTIONS.UPDATE);
 
     const result = await domainUpdateDataTrigger.execute(document, context);
