@@ -14,6 +14,7 @@ describe('domainDataTrigger', () => {
 
   beforeEach(function beforeEach() {
     contract = getDpnsContractFixture();
+    childDocument =
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchDocuments.resolves([]);
@@ -39,8 +40,18 @@ describe('domainDataTrigger', () => {
   });
 
   it('Should work', async () => {
-    let dataTriggerExecutionResults = executeDataTriggersFactory([])();
-    const result = await domainDataTrigger(childDocument, context);
+    const documents = [childDocument];
+    const dataProvider = {};
+    const userId = 'userId';
+    const dataTriggerExecutionResults = await executeDataTriggersFactory(
+      documents, contract, dataProvider, userId,
+    )();
+
+    expect(dataTriggerExecutionResults).to.be.an.array();
+    expect(dataTriggerExecutionResults.length).to.be.equal(1);
+    expect(dataTriggerExecutionResults[0]).to.be.an.instanceOf(DataTriggerExecutionResult);
+
+    const [result] = dataTriggerExecutionResults;
 
     expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
     expect(result.getErrors()).to.be.an('array');
