@@ -1,4 +1,4 @@
-const domainUpdateDataTrigger = require('../../../../lib/dataTrigger/dataTriggers/domainUpdateDataTrigger');
+const domainUpdateDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/domainUpdateDataTrigger');
 const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
 const DataTriggerExecutionError = require('../../../../lib/errors/DataTriggerExecutionError');
 const { getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
