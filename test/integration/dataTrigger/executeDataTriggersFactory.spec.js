@@ -1,6 +1,5 @@
 const Document = require('../../../lib/document/Document');
 const DataTriggerExecutionResult = require('../../../lib/dataTrigger/DataTriggerExecutionResult');
-const DataTriggerExecutionError = require('../../../lib/errors/DataTriggerExecutionError');
 const DataTriggerExecutionContext = require('../../../lib/dataTrigger/DataTriggerExecutionContext');
 const getDpnsContractFixture = require('../../../lib/test/fixtures/getDpnsContractFixture');
 const dpnsDocumentFixture = require('../../../lib/test/fixtures/getDpnsDocumentFixture');
