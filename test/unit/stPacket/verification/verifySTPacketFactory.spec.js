@@ -194,10 +194,17 @@ describe('verifySTPacketFactory', () => {
     expect(verifyDocumentsMock).to.have.been.calledOnceWith(stPacket, userId);
   });
 
-  it('Should execute data triggers', () => {
-    throw new Error('Not Implemented');
-  });
-  it('Should add all data triggers execution errors to validation result in case if there are some', async () => {
+  it('Should execute data triggers and properly add errors to the final result', () => {
+    // TODO: test case:
+    // There should be at least one document with no registered triggers;
+    // There should two document with only one registered trigger:
+    //   - One document that fails the trigger;
+    //   - One document that passes the trigger;
+    // There should be three documents with at least two data triggers:
+    //   - One document passes all triggers
+    //   - One document that passes one trigger and fails another
+    //   - One document that fails both data triggers
+    //   - One document that fails one of the triggers, but more than with one error
     throw new Error('Not Implemented');
   });
 });
