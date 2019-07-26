@@ -197,4 +197,7 @@ describe('verifySTPacketFactory', () => {
   it('Should execute data triggers', () => {
     throw new Error('Not Implemented');
   });
+  it('Should add all data triggers execution errors to validation result in case if there are some', async () => {
+    throw new Error('Not Implemented');
+  });
 });

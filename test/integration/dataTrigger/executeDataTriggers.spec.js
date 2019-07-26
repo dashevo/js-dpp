@@ -58,7 +58,7 @@ describe('executeDataTriggers', () => {
     contract.getDataTriggers.restore();
   });
 
-  it('Should return an array of DataTriggerExecutionResult', async () => {
+  it('should return an array of DataTriggerExecutionResult', async () => {
     const documents = [childDocument];
     const userId = 'userId';
     const context = new DataTriggerExecutionContext(
