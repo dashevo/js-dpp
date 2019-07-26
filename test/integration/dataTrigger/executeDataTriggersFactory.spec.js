@@ -5,13 +5,13 @@ const DataTriggerExecutionContext = require('../../../lib/dataTrigger/DataTrigge
 const getDpnsContractFixture = require('../../../lib/test/fixtures/getDpnsContractFixture');
 const dpnsDocumentFixture = require('../../../lib/test/fixtures/getDpnsDocumentFixture');
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
-const executeDataTriggersFactory = require('../../../lib/dataTrigger/executeDataTriggersFactory');
+const executeDataTriggers = require('../../../lib/dataTrigger/executeDataTriggers');
 
 const dpnsCreateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
 const dpnsDeleteDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
 const dpnsUpdateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
 
-describe('domainDataTrigger', () => {
+describe('executeDataTriggers', () => {
   let parentDocument;
   let childDocument;
   let dataProviderMock;
@@ -65,7 +65,7 @@ describe('domainDataTrigger', () => {
     const context = new DataTriggerExecutionContext(
       dataProviderMock, userId, contract, stateTransitionHeaderMock,
     );
-    const dataTriggerExecutionResults = await executeDataTriggersFactory(documents, context)();
+    const dataTriggerExecutionResults = await executeDataTriggers(documents, context);
 
     expect(dataTriggerExecutionResults).to.be.an('array');
     expect(dataTriggerExecutionResults.length).to.be.equal(1);
