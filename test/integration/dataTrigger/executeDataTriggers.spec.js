@@ -85,4 +85,14 @@ describe('executeDataTriggers', () => {
   it('Should return a result for each passed document with success or error', async () => {
     throw new Error('Not implemented');
   });
+  // TODO: more test cases:
+  // There should be at least one document with no registered triggers;
+  // There should two document with only one registered trigger:
+  //   - One document that fails the trigger;
+  //   - One document that passes the trigger;
+  // There should be three documents with at least two data triggers:
+  //   - One document passes all triggers
+  //   - One document that passes one trigger and fails another
+  //   - One document that fails both data triggers
+  //   - One document that fails one of the triggers, but more than with one error
 });
