@@ -13,6 +13,8 @@ const verifySTPacketFactory = require('../../../../lib/stPacket/verification/ver
 
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
 const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
+const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
+const DataTriggerExecutionError = require('../../../../lib/errors/DataTriggerExecutionError');
 
 const UserNotFoundError = require('../../../../lib/errors/UserNotFoundError');
 const UnconfirmedUserError = require('../../../../lib/errors/UnconfirmedUserError');
@@ -194,17 +196,63 @@ describe('verifySTPacketFactory', () => {
     expect(verifyDocumentsMock).to.have.been.calledOnceWith(stPacket, userId);
   });
 
-  it('Should execute data triggers and properly add errors to the final result', () => {
-    // TODO: test case:
-    // There should be at least one document with no registered triggers;
-    // There should two document with only one registered trigger:
-    //   - One document that fails the trigger;
-    //   - One document that passes the trigger;
-    // There should be three documents with at least two data triggers:
-    //   - One document passes all triggers
-    //   - One document that passes one trigger and fails another
-    //   - One document that fails both data triggers
-    //   - One document that fails one of the triggers, but more than with one error
-    throw new Error('Not Implemented');
+  it('should execute data triggers and properly add errors to the final result', async () => {
+    const context = new DataTriggerExecutionContext(
+      dataProviderMock,
+      userId,
+      contract,
+      stateTransition,
+    );
+
+    let result = await verifySTPacket(stPacket, stateTransition);
+
+    expect(result).to.be.an.instanceOf(ValidationResult);
+    expect(result.isValid()).to.be.true();
+    expect(result.errors).to.be.an('array');
+    expect(result.errors.length).to.equal(0);
+
+    let errors = [new DataTriggerExecutionError(documents[0], context, 'My 1st error')];
+    executeDataTriggersMock.resolves([new DataTriggerExecutionResult(errors)]);
+
+    verifySTPacket = verifySTPacketFactory(
+      verifyContractMock,
+      verifyDocumentsMock,
+      dataProviderMock,
+      executeDataTriggersMock,
+    );
+
+    result = await verifySTPacket(stPacket, stateTransition);
+
+    expect(result).to.be.an.instanceOf(ValidationResult);
+    expect(result.isValid()).to.be.false();
+    expect(result.errors).to.be.an('array');
+    expect(result.errors.length).to.equal(1);
+    expect(result.errors[0]).to.be.instanceOf(DataTriggerExecutionError);
+    expect(result.errors[0].message).to.equal('My 1st error');
+
+    errors = [
+      new DataTriggerExecutionError(documents[0], context, 'My 2nd error'),
+      new DataTriggerExecutionError(documents[0], context, 'My 3rd error'),
+    ];
+
+    executeDataTriggersMock.resolves([new DataTriggerExecutionResult(errors)]);
+
+    verifySTPacket = verifySTPacketFactory(
+      verifyContractMock,
+      verifyDocumentsMock,
+      dataProviderMock,
+      executeDataTriggersMock,
+    );
+
+    result = await verifySTPacket(stPacket, stateTransition);
+
+    expect(result).to.be.an.instanceOf(ValidationResult);
+    expect(result.isValid()).to.be.false();
+    expect(result.errors).to.be.an('array');
+    expect(result.errors.length).to.equal(2);
+    expect(result.errors[0].message).to.equal('My 2nd error');
+    expect(result.errors[0]).to.be.instanceOf(DataTriggerExecutionError);
+    expect(result.errors[1].message).to.equal('My 3rd error');
+    expect(result.errors[1]).to.be.instanceOf(DataTriggerExecutionError);
   });
 });
