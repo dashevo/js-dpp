@@ -14,7 +14,7 @@ describe('executeDataTriggers', () => {
   let parentDocument;
   let childDocument;
   let dataProviderMock;
-  let contract;
+  let contractMock;
   const dpnsTriggers = [
     dpnsCreateDomainDataTrigger,
     dpnsDeleteDomainDataTrigger,
@@ -24,8 +24,8 @@ describe('executeDataTriggers', () => {
   let stateTransitionHeaderMock;
 
   beforeEach(function beforeEach() {
-    contract = getDpnsContractFixture();
-    this.sinonSandbox.stub(contract, 'getDataTriggers')
+    contractMock = getDpnsContractFixture();
+    this.sinonSandbox.stub(contractMock, 'getDataTriggers')
       .withArgs()
       .returns(dpnsTriggers)
       .withArgs(domainDocumentType, Document.ACTIONS.CREATE)
@@ -41,7 +41,7 @@ describe('executeDataTriggers', () => {
     dataProviderMock.fetchDocuments.resolves([]);
     dataProviderMock.fetchDocuments
       .withArgs(
-        contract.getId(),
+        contractMock.getId(),
         childDocument.getType(),
         { where: ['hash', '==', childDocument.getData().parentDomainHash] },
       )
@@ -55,14 +55,14 @@ describe('executeDataTriggers', () => {
   });
 
   afterEach(() => {
-    contract.getDataTriggers.restore();
+    contractMock.getDataTriggers.restore();
   });
 
   it('should return an array of DataTriggerExecutionResult', async () => {
     const documents = [childDocument];
     const userId = 'userId';
     const context = new DataTriggerExecutionContext(
-      dataProviderMock, userId, contract, stateTransitionHeaderMock,
+      dataProviderMock, userId, contractMock, stateTransitionHeaderMock,
     );
     const dataTriggerExecutionResults = await executeDataTriggers(documents, context);
 
@@ -84,6 +84,21 @@ describe('executeDataTriggers', () => {
   });
   it('Should return a result for each passed document with success or error', async () => {
     throw new Error('Not implemented');
+  });
+  it("Should not call any triggers if there's no triggers in the contract", async () => {
+    throw new Error('Not Implemented');
+  });
+  it("Should not call any triggers if documents have no triggers associated with it's type or action", async () => {
+    throw new Error('Not Implemented');
+  });
+  it("Should call only one trigger if there's one document with a trigger and one without", async () => {
+    throw new Error('Not Implemented');
+  });
+  it('Should return results for all the documents, whether they are any errors or not', async () => {
+    throw new Error('Not Implemented');
+  });
+  it("Should call any triggers if there's no triggers in the contract", async () => {
+    throw new Error('Not Implemented');
   });
   // TODO: more test cases:
   // There should be at least one document with no registered triggers;
