@@ -12,6 +12,7 @@ const { expectValidationError } = require('../../../../lib/test/expect/expectErr
 const verifySTPacketFactory = require('../../../../lib/stPacket/verification/verifySTPacketFactory');
 
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
+const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
 
 const UserNotFoundError = require('../../../../lib/errors/UserNotFoundError');
 const UnconfirmedUserError = require('../../../../lib/errors/UnconfirmedUserError');
@@ -22,6 +23,7 @@ const ConsensusError = require('../../../../lib/errors/ConsensusError');
 describe('verifySTPacketFactory', () => {
   let verifyContractMock;
   let verifyDocumentsMock;
+  let executeDataTriggersMock;
   let transaction;
   let dataProviderMock;
   let verifySTPacket;
@@ -34,6 +36,7 @@ describe('verifySTPacketFactory', () => {
   beforeEach(function beforeEach() {
     verifyContractMock = this.sinonSandbox.stub().resolves(new ValidationResult());
     verifyDocumentsMock = this.sinonSandbox.stub().resolves(new ValidationResult());
+    executeDataTriggersMock = this.sinonSandbox.stub().resolves([new DataTriggerExecutionResult()]);
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
@@ -46,6 +49,7 @@ describe('verifySTPacketFactory', () => {
       verifyContractMock,
       verifyDocumentsMock,
       dataProviderMock,
+      executeDataTriggersMock,
     );
 
     ({ userId } = getDocumentsFixture);
@@ -188,5 +192,9 @@ describe('verifySTPacketFactory', () => {
 
     expect(verifyContractMock).to.have.not.been.called();
     expect(verifyDocumentsMock).to.have.been.calledOnceWith(stPacket, userId);
+  });
+
+  it('Should execute data triggers', () => {
+    throw new Error('Not Implemented');
   });
 });
