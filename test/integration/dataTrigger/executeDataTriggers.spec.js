@@ -1,4 +1,5 @@
 const Document = require('../../../lib/document/Document');
+const DataTrigger = require('../../../lib/dataTrigger/DataTrigger');
 const DataTriggerExecutionResult = require('../../../lib/dataTrigger/DataTriggerExecutionResult');
 const DataTriggerExecutionContext = require('../../../lib/dataTrigger/DataTriggerExecutionContext');
 const getDpnsContractFixture = require('../../../lib/test/fixtures/getDpnsContractFixture');
@@ -93,9 +94,12 @@ describe('executeDataTriggers', () => {
       .withArgs(domainDocumentType, Document.ACTIONS.CREATE)
       .returns(dpnsTriggers);
 
+    const expectedTriggersCount = 3;
+    expect(dpnsTriggers.length).to.be.equal(expectedTriggersCount);
+
     const dataTriggerExecutionResults = await executeDataTriggers(documents, context);
     expect(dataTriggerExecutionResults).to.be.an('array');
-    expect(dataTriggerExecutionResults.length).to.be.equal(dpnsTriggers.length);
+    expect(dataTriggerExecutionResults.length).to.be.equal(expectedTriggersCount);
 
     dataTriggerExecutionResults.forEach((dataTriggerExecutionResult) => {
       expect(dataTriggerExecutionResult.errors).to.be.an('array');
@@ -103,12 +107,45 @@ describe('executeDataTriggers', () => {
     });
   });
 
-  it('should return a result for each passed document with success or error', async () => {
+  it('should return a result for each passed document with success or error', async function test() {
+    const doc1 = getDocumentsFixture()[0];
+    const doc2 = getDocumentsFixture()[1];
+    documents = [doc1, doc2, doc1];
+    const passingTriggerMockFunction = this.sinonSandbox.stub().resolves(true);
+    const throwingTriggerMockFunction = this.sinonSandbox.stub().resolves(false);
+    const passingDataTriggerMock = new DataTrigger(
+      doc1.getType(),
+      doc1.getAction(),
+      passingTriggerMockFunction,
+    );
+    const throwingDataTriggerMock = new DataTrigger(
+      doc2.getType(),
+      doc2.getAction(),
+      throwingTriggerMockFunction,
+    );
+    contractMock.getDataTriggers.resetBehavior();
+    contractMock.getDataTriggers
+      .withArgs(doc1.getType(), doc1.getAction())
+      .returns([passingDataTriggerMock])
+      .withArgs(doc2.getType(), doc2.getAction())
+      .returns([throwingDataTriggerMock]);
+    context = new DataTriggerExecutionContext(dataProviderMock, 'id', contractMock, stateTransitionHeaderMock);
     const dataTriggerExecutionResults = await executeDataTriggers(documents, context);
 
-    dataTriggerExecutionResults.forEach((dataTriggerExecutionResult) => {
-      expect(dataTriggerExecutionResult.isOk()).to.be.true();
-    });
+    const expectedResultsCount = 3;
+    expect(documents.length).to.be.equal(expectedResultsCount);
+    expect(dataTriggerExecutionResults.length).to.be.equal(expectedResultsCount);
+
+    const passingResults = dataTriggerExecutionResults.filter(result => result.isOk());
+    const failingResults = dataTriggerExecutionResults.filter(result => !result.isOk());
+
+    expect(passingResults.length).to.be.equal(2);
+    expect(failingResults.length).to.be.equal(1);
+    expect(failingResults[0].getErrors().length).to.be.equal(1);
+    expect(failingResults[0].getErrors()[0].getDocument()).to.be.deep.equal(doc2);
+
+    expect(passingTriggerMockFunction.callCount).to.be.equal(2);
+    expect(throwingTriggerMockFunction.callCount).to.be.equal(1);
   });
 
   it("should not call any triggers if documents have no triggers associated with it's type or action", async () => {
@@ -143,19 +180,7 @@ describe('executeDataTriggers', () => {
     expect(dpnsUpdateDomainDataTriggerMock.execute).not.to.be.called();
   });
 
-  it('should return results for all the documents, whether they are any errors or not', async () => {
-    documents = [childDocument, childDocument];
-
-    const dataTriggerExecutionResults = await executeDataTriggers(documents, context);
-
-    expect(dataTriggerExecutionResults.length).to.be.equal(documents.length);
-
-    dataTriggerExecutionResults.forEach((result) => {
-      expect(result).to.be.instanceOf(DataTriggerExecutionResult);
-    });
-  });
-
-  it("should call any triggers if there's no triggers in the contract", async () => {
+  it("should not call any triggers if there's no triggers in the contract", async () => {
     documents = getDocumentsFixture();
     contractMock.getDataTriggers
       .withArgs(domainDocumentType, Document.ACTIONS.CREATE)
