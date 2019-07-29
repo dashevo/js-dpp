@@ -63,9 +63,9 @@ describe('executeDataTriggers', () => {
       dataProviderMock, userId, contractMock, stateTransitionHeaderMock,
     );
     documents = [childDocument];
-    dpnsCreateDomainDataTriggerMock = this.sinonSandbox.stub().returns({ execute: this.sinonSandbox.stub() });
-    dpnsDeleteDomainDataTriggerMock = this.sinonSandbox.stub();
-    dpnsUpdateDomainDataTriggerMock = this.sinonSandbox.stub();
+    dpnsCreateDomainDataTriggerMock = { execute: this.sinonSandbox.stub() };
+    dpnsDeleteDomainDataTriggerMock = { execute: this.sinonSandbox.stub() };
+    dpnsUpdateDomainDataTriggerMock = { execute: this.sinonSandbox.stub() };
   });
 
   afterEach(() => {
@@ -122,8 +122,8 @@ describe('executeDataTriggers', () => {
 
     await executeDataTriggers(documents, context);
 
-    expect(dpnsDeleteDomainDataTriggerMock).not.to.be.called();
-    expect(dpnsUpdateDomainDataTriggerMock).not.to.be.called();
+    expect(dpnsDeleteDomainDataTriggerMock.execute).not.to.be.called();
+    expect(dpnsUpdateDomainDataTriggerMock.execute).not.to.be.called();
   });
 
   it("should call only one trigger if there's one document with a trigger and one without", async () => {
@@ -138,25 +138,37 @@ describe('executeDataTriggers', () => {
 
     await executeDataTriggers(documents, context);
 
-    expect(dpnsCreateDomainDataTriggerMock).to.be.calledOnce();
-    expect(dpnsDeleteDomainDataTriggerMock).not.to.be.called();
-    expect(dpnsUpdateDomainDataTriggerMock).not.to.be.called();
+    expect(dpnsCreateDomainDataTriggerMock.execute).to.be.calledOnce();
+    expect(dpnsDeleteDomainDataTriggerMock.execute).not.to.be.called();
+    expect(dpnsUpdateDomainDataTriggerMock.execute).not.to.be.called();
   });
 
   it('should return results for all the documents, whether they are any errors or not', async () => {
-    throw new Error('Not Implemented');
+    documents = [childDocument, childDocument];
+
+    const dataTriggerExecutionResults = await executeDataTriggers(documents, context);
+
+    expect(dataTriggerExecutionResults.length).to.be.equal(documents.length);
+
+    dataTriggerExecutionResults.forEach((result) => {
+      expect(result).to.be.instanceOf(DataTriggerExecutionResult);
+    });
   });
+
   it("should call any triggers if there's no triggers in the contract", async () => {
-    throw new Error('Not Implemented');
+    documents = getDocumentsFixture();
+    contractMock.getDataTriggers
+      .withArgs(domainDocumentType, Document.ACTIONS.CREATE)
+      .returns([dpnsCreateDomainDataTriggerMock])
+      .withArgs(domainDocumentType, Document.ACTIONS.DELETE)
+      .returns([dpnsDeleteDomainDataTriggerMock])
+      .withArgs(domainDocumentType, Document.ACTIONS.UPDATE)
+      .returns([dpnsUpdateDomainDataTriggerMock]);
+
+    await executeDataTriggers(documents, context);
+
+    expect(dpnsCreateDomainDataTriggerMock.execute).not.to.be.called();
+    expect(dpnsDeleteDomainDataTriggerMock.execute).not.to.be.called();
+    expect(dpnsUpdateDomainDataTriggerMock.execute).not.to.be.called();
   });
-  // TODO: more test cases:
-  // There should be at least one document with no registered triggers;
-  // There should two document with only one registered trigger:
-  //   - One document that fails the trigger;
-  //   - One document that passes the trigger;
-  // There should be three documents with at least two data triggers:
-  //   - One document passes all triggers
-  //   - One document that passes one trigger and fails another
-  //   - One document that fails both data triggers
-  //   - One document that fails one of the triggers, but more than with one error
 });
