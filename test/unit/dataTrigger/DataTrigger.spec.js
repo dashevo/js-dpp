@@ -11,7 +11,7 @@ const DataTriggerExecutionError = require('../../../lib/errors/DataTriggerExecut
 const documentType = 'domain';
 
 describe('DataTrigger', () => {
-  let contract;
+  let contractMock;
   let context;
   let dataProviderMock;
   let parentDocumentMock;
@@ -20,7 +20,7 @@ describe('DataTrigger', () => {
 
   beforeEach(function beforeEach() {
     triggerStub = this.sinonSandbox.stub().resolves(new DataTriggerExecutionResult());
-    contract = getDpnsContractFixture();
+    contractMock = getDpnsContractFixture();
 
     parentDocumentMock = getParentDocumentFixture();
     childDocumentMock = getChildDocumentFixture();
@@ -29,7 +29,7 @@ describe('DataTrigger', () => {
     dataProviderMock.fetchDocuments.resolves([]);
     dataProviderMock.fetchDocuments
       .withArgs(
-        contract.getId(),
+        contractMock.getId(),
         childDocumentMock.getType(),
         { where: ['hash', '==', childDocumentMock.getData().parentDomainHash] },
       )
@@ -44,7 +44,7 @@ describe('DataTrigger', () => {
     context = new DataTriggerExecutionContext(
       dataProviderMock,
       '6b74011f5d2ad1a8d45b71b9702f54205ce75253593c3cfbba3fdadeca278288',
-      contract,
+      contractMock,
     );
   });
 
