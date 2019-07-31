@@ -7,7 +7,7 @@ const Document = require('../../../../lib/document/Document');
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
 
-describe('domainUpdateDataTrigger', () => {
+describe('updateDomainDataTrigger', () => {
   let document;
   let context;
   let dataProviderMock;

@@ -6,7 +6,7 @@ const getDpnsContractFixture = require('../../../lib/test/fixtures/getDpnsContra
 const dpnsDocumentFixture = require('../../../lib/test/fixtures/getDpnsDocumentFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
-const executeDataTriggers = require('../../../lib/dataTrigger/executeDataTriggers');
+const executeDataTriggers = require('../../../lib/stPacket/executeDataTriggers');
 
 const dpnsCreateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
 const dpnsDeleteDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');

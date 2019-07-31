@@ -7,7 +7,7 @@ const Document = require('../../../../lib/document/Document');
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
 
-describe('domainDeleteDataTrigger', () => {
+describe('deleteDomainDataTrigger', () => {
   let document;
   let context;
   let dataProviderMock;
@@ -17,8 +17,6 @@ describe('domainDeleteDataTrigger', () => {
     contract = getDpnsContractFixture();
     document = getChildDocumentFixture();
 
-    // document.setData({});
-    // document.setAction(Document.ACTIONS.U
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     context = new DataTriggerExecutionContext(
       dataProviderMock,

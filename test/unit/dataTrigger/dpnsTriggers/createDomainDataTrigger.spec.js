@@ -7,7 +7,7 @@ const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsCon
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 const Document = require('../../../../lib/document/Document');
 
-describe('domainCreateDataTrigger', () => {
+describe('createDomainDataTrigger', () => {
   let parentDocument;
   let childDocument;
   let context;
