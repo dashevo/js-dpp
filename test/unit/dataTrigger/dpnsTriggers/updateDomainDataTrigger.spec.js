@@ -1,11 +1,10 @@
 const domainUpdateDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/updateDomainDataTrigger');
-const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
-const DataTriggerExecutionError = require('../../../../lib/errors/DataTriggerExecutionError');
 const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
 const { getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
 const Document = require('../../../../lib/document/Document');
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
+const TriggerResult = require('../../../../lib/dataTrigger/TriggerResult');
 
 describe('updateDomainDataTrigger', () => {
   let document;
@@ -27,13 +26,10 @@ describe('updateDomainDataTrigger', () => {
   it('should always fail', async () => {
     document.setAction(Document.ACTIONS.UPDATE);
 
-    const result = await domainUpdateDataTrigger.execute(document, context);
+    const result = await domainUpdateDataTrigger(document, context);
 
-    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
-    expect(result.getErrors()).to.be.an('array');
-    expect(result.getErrors().length).to.be.equal(1);
+    expect(result).to.be.an.instanceOf(TriggerResult);
+    expect(result.getMessage()).to.be.equal('Update action is not allowed');
     expect(result.isOk()).is.false();
-    expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerExecutionError);
-    expect(result.getErrors()[0].message).to.be.equal('Update action is not allowed');
   });
 });

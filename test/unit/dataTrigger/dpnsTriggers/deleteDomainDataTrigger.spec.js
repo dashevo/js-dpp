@@ -1,11 +1,10 @@
-const domainDeleteDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/deleteDomainDataTrigger');
-const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
-const DataTriggerExecutionError = require('../../../../lib/errors/DataTriggerExecutionError');
+const deleteDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/deleteDomainDataTrigger');
 const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
 const { getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
 const Document = require('../../../../lib/document/Document');
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
+const TriggerResult = require('../../../../lib/dataTrigger/TriggerResult');
 
 describe('deleteDomainDataTrigger', () => {
   let document;
@@ -28,13 +27,10 @@ describe('deleteDomainDataTrigger', () => {
   it('should always fail', async () => {
     document.setData({}).setAction(Document.ACTIONS.DELETE);
 
-    const result = await domainDeleteDataTrigger.execute(document, context);
+    const result = await deleteDomainDataTrigger(document, context);
 
-    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
-    expect(result.getErrors()).to.be.an('array');
-    expect(result.getErrors().length).to.be.equal(1);
+    expect(result).to.be.an.instanceOf(TriggerResult);
+    expect(result.getMessage()).to.be.equal('Delete action is not allowed');
     expect(result.isOk()).is.false();
-    expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerExecutionError);
-    expect(result.getErrors()[0].message).to.be.equal('Delete action is not allowed');
   });
 });
