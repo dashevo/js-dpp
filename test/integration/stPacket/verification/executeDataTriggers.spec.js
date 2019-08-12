@@ -1,16 +1,16 @@
-const Document = require('../../../lib/document/Document');
-const DataTrigger = require('../../../lib/dataTrigger/DataTrigger');
-const DataTriggerExecutionResult = require('../../../lib/dataTrigger/DataTriggerExecutionResult');
-const DataTriggerExecutionContext = require('../../../lib/dataTrigger/DataTriggerExecutionContext');
-const getDpnsContractFixture = require('../../../lib/test/fixtures/getDpnsContractFixture');
-const dpnsDocumentFixture = require('../../../lib/test/fixtures/getDpnsDocumentFixture');
-const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
-const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
-const executeDataTriggers = require('../../../lib/stPacket/executeDataTriggers');
+const Document = require('../../../../lib/document/Document');
+const DataTrigger = require('../../../../lib/dataTrigger/DataTrigger');
+const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
+const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
+const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
+const dpnsDocumentFixture = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
+const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
+const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
+const executeDataTriggers = require('../../../../lib/stPacket/verification/executeDataTriggers');
 
-const dpnsCreateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
-const dpnsDeleteDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
-const dpnsUpdateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
+const dpnsCreateDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
+const dpnsDeleteDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
+const dpnsUpdateDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
 
 describe('executeDataTriggers', () => {
   let parentDocument;
