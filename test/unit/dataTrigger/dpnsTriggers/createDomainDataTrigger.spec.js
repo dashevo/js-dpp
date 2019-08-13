@@ -1,12 +1,16 @@
 const createDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
-const TriggerResult = require('../../../../lib/dataTrigger/TriggerResult');
+
 const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
+const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
+
 const { getParentDocumentFixture, getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
 const getPreorderDocumentFixture = require('../../../../lib/test/fixtures/getPreorderDocumentFixture');
 const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
-const Document = require('../../../../lib/document/Document');
+
 const multihash = require('../../../../lib/util/multihash');
+
+const DataTriggerConditionError = require('../../../../lib/errors/DataTriggerConditionError');
 
 describe('createDomainDataTrigger', () => {
   let parentDocument;
@@ -24,8 +28,12 @@ describe('createDomainDataTrigger', () => {
     preorderDocument = getPreorderDocumentFixture();
 
     const {
-      preorderSalt, hash, records, parentDomainHash,
+      preorderSalt, hash, records, normalizedParentDomainName,
     } = childDocument.getData();
+
+    const parentDomainHash = multihash(
+      Buffer.from(normalizedParentDomainName),
+    ).toString('hex');
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchDocuments.resolves([]);
@@ -62,17 +70,16 @@ describe('createDomainDataTrigger', () => {
     );
   });
 
-  it('should check result is TriggerResult instance and has no errors', async () => {
+  it('should successfully execute if document is valid', async () => {
     const result = await createDomainDataTrigger(childDocument, context);
 
-    expect(result).to.be.an.instanceOf(TriggerResult);
-    expect(result.getMessage()).to.be.a('string');
-    expect(result.getMessage()).to.be.equal('');
-    expect(result.isOk()).is.true();
+    expect(result.isOk()).to.be.true();
   });
 
   it('should fail with invalid hash', async () => {
-    childDocument = getChildDocumentFixture({ hash: 'invalidHash' });
+    childDocument = getChildDocumentFixture({
+      hash: multihash(Buffer.from('invalidHash')).toString('hex'),
+    });
     dataProviderMock.fetchTransaction
       .withArgs(
         childDocument.getData().records.dashIdentity,
@@ -82,9 +89,13 @@ describe('createDomainDataTrigger', () => {
 
     const result = await createDomainDataTrigger(childDocument, context);
 
-    expect(result).to.be.an.instanceOf(TriggerResult);
-    expect(result.isOk()).is.false();
-    expect(result.getMessage()).to.be.equal('Document hash doesn\'t match actual hash');
+    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+    expect(result.isOk()).to.be.false();
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(DataTriggerConditionError);
+    expect(error.message).to.equal('Document hash doesn\'t match actual hash');
   });
 
   it('should fail with invalid normalizedLabel', async () => {
@@ -97,13 +108,17 @@ describe('createDomainDataTrigger', () => {
 
     const result = await createDomainDataTrigger(childDocument, context);
 
-    expect(result).to.be.an.instanceOf(TriggerResult);
-    expect(result.isOk()).is.false();
-    expect(result.getMessage()).to.be.equal('Normalized label doesn\'t match label');
+    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+    expect(result.isOk()).to.be.false();
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(DataTriggerConditionError);
+    expect(error.message).to.equal('Normalized label doesn\'t match label');
   });
 
-  it('should fail with invalid parrentDomain', async () => {
-    childDocument = getChildDocumentFixture({ parentDomainHash: 'invalidHash' });
+  it('should fail with invalid parent domain', async () => {
+    childDocument = getChildDocumentFixture({ normalizedParentDomainName: 'invalidName' });
     dataProviderMock.fetchTransaction
       .withArgs(
         childDocument.getData().records.dashIdentity,
@@ -112,12 +127,16 @@ describe('createDomainDataTrigger', () => {
 
     const result = await createDomainDataTrigger(childDocument, context);
 
-    expect(result).to.be.an.instanceOf(TriggerResult);
-    expect(result.isOk()).is.false();
-    expect(result.getMessage()).to.be.equal('Can\'t find parent domain matching parent hash');
+    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+    expect(result.isOk()).to.be.false();
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(DataTriggerConditionError);
+    expect(error.message).to.equal('Can\'t find parent domain matching parent hash');
   });
 
-  it('should fail with invalid transaction', async () => {
+  it('should fail with invalid userId', async () => {
     childDocument = getChildDocumentFixture({
       records: {
         dashIdentity: 'invalidHash',
@@ -126,18 +145,82 @@ describe('createDomainDataTrigger', () => {
 
     const result = await createDomainDataTrigger(childDocument, context);
 
-    expect(result).to.be.an.instanceOf(TriggerResult);
-    expect(result.isOk()).is.false();
-    expect(result.getMessage()).to.be.equal('dashIdentity with corresponding id not found');
+    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+    expect(result.isOk()).to.be.false();
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(DataTriggerConditionError);
+    expect(error.message).to.equal('userId doesn\'t match dashIdentity');
   });
 
-  // it('should fail with invalid action', async () => {
-  //   childDocument.setAction(Document.ACTIONS.UPDATE);
-  //
-  //   const result = await createDomainDataTrigger(childDocument, context);
-  //
-  //   expect(result).to.be.an.instanceOf(TriggerResult);
-  //   expect(result.isOk()).is.false();
-  //   expect(result.getMessage()).to.be.equal('Document action doesn\'t match trigger action');
-  // });
+  it('should fail with invalid transaction', async () => {
+    context.userId = 'invalidHash';
+
+    childDocument = getChildDocumentFixture({
+      records: {
+        dashIdentity: 'invalidHash',
+      },
+    });
+
+    const result = await createDomainDataTrigger(childDocument, context);
+
+    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+    expect(result.isOk()).to.be.false();
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(DataTriggerConditionError);
+    expect(error.message).to.equal('dashIdentity with corresponding id was not found');
+  });
+
+  it('should fail with preorder document was not found', async () => {
+    childDocument = getChildDocumentFixture({
+      preorderSalt: Buffer.alloc(256, '012fd').toString('hex'),
+    });
+
+    const result = await createDomainDataTrigger(childDocument, context);
+
+    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+    expect(result.isOk()).to.be.false();
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(DataTriggerConditionError);
+    expect(error.message).to.equal('preorderDocument was not found');
+  });
+
+  it('should fail with hash not being a valid multihash', async () => {
+    childDocument = getChildDocumentFixture({
+      hash: 'x',
+    });
+
+    const result = await createDomainDataTrigger(childDocument, context);
+
+    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+    expect(result.isOk()).to.be.false();
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(DataTriggerConditionError);
+    expect(error.message).to.equal('hash is not a valid multihash');
+  });
+
+  it('should fail with invalid full domain name length', async () => {
+    childDocument = getChildDocumentFixture({
+      normalizedParentDomainName: Buffer.alloc(512).toString('hex'),
+    });
+
+    const result = await createDomainDataTrigger(childDocument, context);
+
+    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+    expect(result.isOk()).to.be.false();
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(DataTriggerConditionError);
+    expect(error.message).to.equal(
+      'Full domain name length can not be more than 253 characters long',
+    );
+  });
 });

@@ -1,5 +1,4 @@
 const DataTrigger = require('../../../lib/dataTrigger/DataTrigger');
-const Document = require('../../../lib/document/Document');
 const DataTriggerExecutionContext = require('../../../lib/dataTrigger/DataTriggerExecutionContext');
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 const getDpnsContractFixture = require('../../../lib/test/fixtures/getDpnsContractFixture');
@@ -7,8 +6,7 @@ const { getParentDocumentFixture, getChildDocumentFixture } = require('../../../
 const DataTriggerExecutionResult = require('../../../lib/dataTrigger/DataTriggerExecutionResult');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const DataTriggerExecutionError = require('../../../lib/errors/DataTriggerExecutionError');
-
-const documentType = 'domain';
+const DataTriggerInvalidResultError = require('../../../lib/errors/DataTriggerInvalidResultError');
 
 describe('DataTrigger', () => {
   let contractMock;
@@ -17,10 +15,13 @@ describe('DataTrigger', () => {
   let parentDocumentMock;
   let childDocumentMock;
   let triggerStub;
+  let document;
 
   beforeEach(function beforeEach() {
     triggerStub = this.sinonSandbox.stub().resolves(new DataTriggerExecutionResult());
     contractMock = getDpnsContractFixture();
+
+    ([document] = getDocumentsFixture());
 
     parentDocumentMock = getParentDocumentFixture();
     childDocumentMock = getChildDocumentFixture();
@@ -50,101 +51,88 @@ describe('DataTrigger', () => {
 
   it('should check trigger fields', () => {
     const trigger = new DataTrigger(
-      documentType,
-      Document.ACTIONS.CREATE,
+      contractMock.getId(),
+      document.getType(),
+      document.getAction(),
       triggerStub,
-      contractMock,
     );
 
-    expect(trigger.documentType).to.be.equal(documentType);
-    expect(trigger.documentAction).to.be.equal(Document.ACTIONS.CREATE);
-    expect(trigger.trigger).to.be.equal(triggerStub);
+    expect(trigger.contractId).to.equal(contractMock.getId());
+    expect(trigger.documentType).to.equal(document.getType());
+    expect(trigger.documentAction).to.equal(document.getAction());
+    expect(trigger.trigger).to.equal(triggerStub);
   });
 
   describe('#execute', () => {
     it('should check trigger execution', async () => {
       const trigger = new DataTrigger(
-        documentType,
-        Document.ACTIONS.CREATE,
+        contractMock.getId(),
+        document.getType(),
+        document.getAction(),
         triggerStub,
-        contractMock,
       );
-      const result = await trigger.execute(childDocumentMock, context);
+
+      const result = await trigger.execute(context);
 
       expect(result).to.be.instanceOf(DataTriggerExecutionResult);
     });
 
-    it('should return result with an error if document type doesn\'t match trigger type', async () => {
-      const [document] = getDocumentsFixture();
+    it('should pass through the result of the trigger function', async () => {
+      const functionResult = new DataTriggerExecutionResult();
+
+      const triggerError = new Error('Trigger error');
+
+      functionResult.addError(triggerError);
+
+      triggerStub.resolves(functionResult);
+
       const trigger = new DataTrigger(
-        documentType,
-        Document.ACTIONS.CREATE,
+        contractMock.getId(),
+        document.getType(),
+        document.getAction(),
         triggerStub,
-        contractMock,
       );
+
       const result = await trigger.execute(document, context);
 
-      expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
-      expect(result.getErrors()).to.be.an('array');
-      expect(result.getErrors().length).to.be.equal(1);
-      expect(result.isOk()).is.false();
-      expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerExecutionError);
-      expect(result.getErrors()[0].message).to.be.equal('Document type doesn\'t match trigger type');
+      expect(result).to.deep.equal(functionResult);
+      expect(result.getErrors()[0]).to.deep.equal(triggerError);
     });
 
-    it('should return result with an error if document action doesn\'t match trigger action', async () => {
-      const [document] = getDocumentsFixture();
-      const trigger = new DataTrigger('niceDocument', Document.ACTIONS.UPDATE, triggerStub, contractMock);
-      const result = await trigger.execute(document, context);
+    it('should return a result with execution error if trigger function have thrown an error', async () => {
+      const triggerError = new Error('Trigger error');
+
+      triggerStub.throws(triggerError);
+
+      const trigger = new DataTrigger(
+        contractMock.getId(),
+        document.getType(),
+        document.getAction(),
+        triggerStub,
+      );
+
+      const result = await trigger.execute(context);
 
       expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
-      expect(result.getErrors()).to.be.an('array');
-      expect(result.getErrors().length).to.be.equal(1);
-      expect(result.isOk()).is.false();
       expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerExecutionError);
-      expect(result.getErrors()[0].message).to.be.equal('Document action doesn\'t match trigger action');
+      expect(result.getErrors()[0].message).to.equal(triggerError.message);
     });
 
-    // it('should catch DataTriggerExecutionError thrown from the callback and add it to the result', async () => {
-    //   const [document] = getDocumentsFixture();
-    //   triggerStub.throws(new DataTriggerExecutionError(document, context, 'Error from stub'));
-    //   const trigger = new DataTrigger('niceDocument', Document.ACTIONS.CREATE, triggerStub, contractMock);
-    //   const result = await trigger.execute(document, context);
-    //
-    //   expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
-    //   expect(result.getErrors()).to.be.an('array');
-    //   expect(result.getErrors().length).to.be.equal(1);
-    //   expect(result.isOk()).is.false();
-    //   expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerExecutionError);
-    //   expect(result.getErrors()[0].message).to.be.equal('Error from stub');
-    // });
-    //
-    // it("should add an error to result if trigger didn't return true and haven't throw any errors", async () => {
-    //   const [document] = getDocumentsFixture();
-    //   triggerStub.returns(false);
-    //   const trigger = new DataTrigger('niceDocument', Document.ACTIONS.CREATE, triggerStub, contractMock);
-    //   const result = await trigger.execute(document, context);
-    //
-    //   expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
-    //   expect(result.getErrors()).to.be.an('array');
-    //   expect(result.getErrors().length).to.be.equal(1);
-    //   expect(result.isOk()).is.false();
-    //   expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerExecutionError);
-    //   expect(result.getErrors()[0].message).to.be.equal("Data trigger haven't finished successfully");
-    // });
-    //
-    // it('should suppress error thrown from the trigger callback if it isn\'t a DataTriggerExecutionError', async () => {
-    //   const [document] = getDocumentsFixture();
-    //   triggerStub.throws(new Error('Error from stub'));
-    //   const trigger = new DataTrigger('niceDocument', Document.ACTIONS.CREATE, triggerStub, contractMock);
-    //   const result = await trigger.execute(document, context);
-    //
-    //   expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
-    //   expect(result.getErrors()).to.be.an('array');
-    //   expect(result.getErrors().length).to.be.equal(1);
-    //   expect(result.isOk()).is.false();
-    //   expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerExecutionError);
-    //   expect(result.getErrors()[0].message).to.be.equal('Unexpected error occurred while executing data trigger');
-    // });
+    it('should return a result with invalid result error if trigger function have not returned any result', async () => {
+      triggerStub.resolves(null);
+
+      const trigger = new DataTrigger(
+        contractMock.getId(),
+        document.getType(),
+        document.getAction(),
+        triggerStub,
+      );
+
+      const result = await trigger.execute(context);
+
+      expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+      expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerInvalidResultError);
+      expect(result.getErrors()[0].message).to.equal('Data trigger have not returned any result');
+    });
   });
 });

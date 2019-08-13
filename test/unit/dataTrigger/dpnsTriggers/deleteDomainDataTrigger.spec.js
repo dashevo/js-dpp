@@ -4,7 +4,7 @@ const { getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDp
 const Document = require('../../../../lib/document/Document');
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
-const TriggerResult = require('../../../../lib/dataTrigger/TriggerResult');
+const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
 
 describe('deleteDomainDataTrigger', () => {
   let document;
@@ -29,8 +29,8 @@ describe('deleteDomainDataTrigger', () => {
 
     const result = await deleteDomainDataTrigger(document, context);
 
-    expect(result).to.be.an.instanceOf(TriggerResult);
-    expect(result.getMessage()).to.be.equal('Delete action is not allowed');
-    expect(result.isOk()).is.false();
+    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+    expect(result.getErrors()[0].message).to.equal('Delete action is not allowed');
+    expect(result.isOk()).to.be.false();
   });
 });

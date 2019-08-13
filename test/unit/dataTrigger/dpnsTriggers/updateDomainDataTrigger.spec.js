@@ -4,7 +4,7 @@ const { getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDp
 const Document = require('../../../../lib/document/Document');
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
-const TriggerResult = require('../../../../lib/dataTrigger/TriggerResult');
+const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
 
 describe('updateDomainDataTrigger', () => {
   let document;
@@ -28,8 +28,8 @@ describe('updateDomainDataTrigger', () => {
 
     const result = await domainUpdateDataTrigger(document, context);
 
-    expect(result).to.be.an.instanceOf(TriggerResult);
-    expect(result.getMessage()).to.be.equal('Update action is not allowed');
-    expect(result.isOk()).is.false();
+    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+    expect(result.getErrors()[0].message).to.equal('Update action is not allowed');
+    expect(result.isOk()).to.be.false();
   });
 });
