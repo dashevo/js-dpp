@@ -46,8 +46,9 @@ describe('getDataTriggers', () => {
       contractId, 'domain', Document.ACTIONS.DELETE, deleteDomainDataTrigger,
     );
 
-    this.sinonSandbox.stub(process.env, 'DPNS_CONTRACT_ID')
-      .value(contractId);
+    this.sinonSandbox.stub(process, 'env').value({
+      DPNS_CONTRACT_ID: contractId,
+    });
 
     getDataTriggers = getDataTriggersFactory();
   });

@@ -192,7 +192,7 @@ describe('createDomainDataTrigger', () => {
 
   it('should fail with hash not being a valid multihash', async () => {
     childDocument = getChildDocumentFixture({
-      hash: 'x',
+      hash: '01',
     });
 
     const result = await createDomainDataTrigger(childDocument, context);
