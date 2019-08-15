@@ -28,7 +28,7 @@ describe('createDomainDataTrigger', () => {
     preorderDocument = getPreorderDocumentFixture();
 
     const {
-      preorderSalt, hash, records, normalizedParentDomainName,
+      preorderSalt, nameHash, records, normalizedParentDomainName,
     } = childDocument.getData();
 
     const parentDomainHash = multihash(
@@ -41,11 +41,11 @@ describe('createDomainDataTrigger', () => {
       .withArgs(
         contract.getId(),
         childDocument.getType(),
-        { where: ['hash', '==', parentDomainHash] },
+        { where: ['nameHash', '==', parentDomainHash] },
       )
       .resolves([parentDocument.toJSON()]);
 
-    const saltedDomainHash = multihash(Buffer.from(preorderSalt + hash, 'hex')).toString('hex');
+    const saltedDomainHash = multihash(Buffer.from(preorderSalt + nameHash, 'hex')).toString('hex');
 
     dataProviderMock.fetchDocuments
       .withArgs(
@@ -78,7 +78,7 @@ describe('createDomainDataTrigger', () => {
 
   it('should fail with invalid hash', async () => {
     childDocument = getChildDocumentFixture({
-      hash: multihash(Buffer.from('invalidHash')).toString('hex'),
+      nameHash: multihash(Buffer.from('invalidHash')).toString('hex'),
     });
     dataProviderMock.fetchTransaction
       .withArgs(
@@ -95,7 +95,7 @@ describe('createDomainDataTrigger', () => {
     const [error] = result.getErrors();
 
     expect(error).to.be.an.instanceOf(DataTriggerConditionError);
-    expect(error.message).to.equal('Document hash doesn\'t match actual hash');
+    expect(error.message).to.equal('Document nameHash doesn\'t match actual hash');
   });
 
   it('should fail with invalid normalizedLabel', async () => {
@@ -118,7 +118,12 @@ describe('createDomainDataTrigger', () => {
   });
 
   it('should fail with invalid parent domain', async () => {
-    childDocument = getChildDocumentFixture({ normalizedParentDomainName: 'invalidName' });
+    childDocument = getChildDocumentFixture({
+      normalizedLabel: 'label',
+      nameHash: multihash(Buffer.from('label.invaldName')).toString('hex'),
+      normalizedParentDomainName: 'invalidName',
+    });
+
     dataProviderMock.fetchTransaction
       .withArgs(
         childDocument.getData().records.dashIdentity,
