@@ -211,7 +211,7 @@ describe('verifySTPacketFactory', () => {
     expect(result.errors).to.be.an('array');
     expect(result.errors.length).to.equal(0);
 
-    let errors = [new DataTriggerExecutionError(documents[0], context, 'My 1st error')];
+    let errors = [new DataTriggerExecutionError(documents[0], context, new Error('My 1st error'))];
     executeDataTriggersMock.resolves([new DataTriggerExecutionResult(errors)]);
 
     verifySTPacket = verifySTPacketFactory(
@@ -231,8 +231,8 @@ describe('verifySTPacketFactory', () => {
     expect(result.errors[0].message).to.equal('My 1st error');
 
     errors = [
-      new DataTriggerExecutionError(documents[0], context, 'My 2nd error'),
-      new DataTriggerExecutionError(documents[0], context, 'My 3rd error'),
+      new DataTriggerExecutionError(documents[0], context, new Error('My 2nd error')),
+      new DataTriggerExecutionError(documents[0], context, new Error('My 3rd error')),
     ];
 
     executeDataTriggersMock.resolves([new DataTriggerExecutionResult(errors)]);

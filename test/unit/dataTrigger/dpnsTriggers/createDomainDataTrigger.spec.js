@@ -119,8 +119,9 @@ describe('createDomainDataTrigger', () => {
 
   it('should fail with invalid parent domain', async () => {
     childDocument = getChildDocumentFixture({
+      label: 'label',
       normalizedLabel: 'label',
-      nameHash: multihash(Buffer.from('label.invaldName')).toString('hex'),
+      nameHash: multihash(Buffer.from('label.invalidName')).toString('hex'),
       normalizedParentDomainName: 'invalidName',
     });
 
@@ -197,7 +198,7 @@ describe('createDomainDataTrigger', () => {
 
   it('should fail with hash not being a valid multihash', async () => {
     childDocument = getChildDocumentFixture({
-      hash: '01',
+      nameHash: '01',
     });
 
     const result = await createDomainDataTrigger(childDocument, context);
@@ -208,7 +209,7 @@ describe('createDomainDataTrigger', () => {
     const [error] = result.getErrors();
 
     expect(error).to.be.an.instanceOf(DataTriggerConditionError);
-    expect(error.message).to.equal('hash is not a valid multihash');
+    expect(error.message).to.equal('nameHash is not a valid multihash');
   });
 
   it('should fail with invalid full domain name length', async () => {
