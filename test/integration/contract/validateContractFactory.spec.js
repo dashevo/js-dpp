@@ -135,6 +135,23 @@ describe('validateContractFactory', () => {
       expect(error.dataPath).to.equal('.name');
       expect(error.keyword).to.equal('pattern');
     });
+
+    it('should not have properties starts or ends with - or _', () => {
+      const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_'];
+
+      invalidNames.forEach((name) => {
+        rawContract.name = name;
+
+        const result = validateContract(rawContract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.name');
+        expect(error.keyword).to.equal('pattern');
+      });
+    });
   });
 
   describe('version', () => {
@@ -261,6 +278,23 @@ describe('validateContractFactory', () => {
 
       expect(error.dataPath).to.equal('.definitions');
       expect(error.keyword).to.equal('maxProperties');
+    });
+
+    it('should not have properties starts or ends with - or _', () => {
+      const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_'];
+
+      invalidNames.forEach((name) => {
+        rawContract.definitions[name] = {};
+
+        const result = validateContract(rawContract);
+
+        expectJsonSchemaError(result, 2);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.definitions');
+        expect(error.keyword).to.equal('pattern');
+      });
     });
   });
 
@@ -392,6 +426,23 @@ describe('validateContractFactory', () => {
         expect(errors[0].keyword).to.equal('pattern');
         expect(errors[1].dataPath).to.equal('.documents[\'niceDocument\'].properties');
         expect(errors[1].keyword).to.equal('propertyNames');
+      });
+
+      it('should not have properties starts or ends with - or _', () => {
+        const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_'];
+
+        invalidNames.forEach((name) => {
+          rawContract.documents.niceDocument.properties[name] = {};
+
+          const result = validateContract(rawContract);
+
+          expectJsonSchemaError(result, 2);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.documents[\'niceDocument\'].properties');
+          expect(error.keyword).to.equal('pattern');
+        });
       });
 
       it('should have "additionalProperties" defined', () => {
