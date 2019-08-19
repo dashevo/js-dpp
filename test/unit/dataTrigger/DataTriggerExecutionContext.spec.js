@@ -4,7 +4,7 @@ const DataTriggerExecutionContext = require('../../../lib/dataTrigger/DataTrigge
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 const getDpnsContractFixture = require('../../../lib/test/fixtures/getDpnsContractFixture');
 
-describe('DataTrigger', () => {
+describe('DataTriggerExecutionContext', () => {
   let contractMock;
   let dataProviderMock;
   let stateTransitionHeaderMock;
