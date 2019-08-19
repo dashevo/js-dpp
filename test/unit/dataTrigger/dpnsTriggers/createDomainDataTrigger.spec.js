@@ -160,26 +160,6 @@ describe('createDomainDataTrigger', () => {
     expect(error.message).to.equal('userId doesn\'t match dashIdentity');
   });
 
-  it('should fail with invalid transaction', async () => {
-    context.userId = 'invalidHash';
-
-    childDocument = getChildDocumentFixture({
-      records: {
-        dashIdentity: 'invalidHash',
-      },
-    });
-
-    const result = await createDomainDataTrigger(childDocument, context);
-
-    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
-    expect(result.isOk()).to.be.false();
-
-    const [error] = result.getErrors();
-
-    expect(error).to.be.an.instanceOf(DataTriggerConditionError);
-    expect(error.message).to.equal('dashIdentity with corresponding id was not found');
-  });
-
   it('should fail with preorder document was not found', async () => {
     childDocument = getChildDocumentFixture({
       preorderSalt: Buffer.alloc(256, '012fd').toString('hex'),
