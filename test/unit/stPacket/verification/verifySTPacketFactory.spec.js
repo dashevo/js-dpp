@@ -94,6 +94,7 @@ describe('verifySTPacketFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.getTransaction()).to.equal(stateTransition);
+    expect(executeDataTriggersMock).have.not.been.called();
   });
 
   it('should return invalid result if State Transition contains wrong ST Packet hash', async () => {
@@ -107,6 +108,7 @@ describe('verifySTPacketFactory', () => {
 
     expect(error.getSTPacket()).to.equal(stPacket);
     expect(error.getStateTransition()).to.equal(stateTransition);
+    expect(executeDataTriggersMock).have.not.been.called();
   });
 
   it('should return invalid result if user not found', async () => {
@@ -121,6 +123,7 @@ describe('verifySTPacketFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.getUserId()).to.equal(userId);
+    expect(executeDataTriggersMock).have.not.been.called();
   });
 
   it('should return invalid result if user has less than 6 block confirmation', async () => {
@@ -137,6 +140,7 @@ describe('verifySTPacketFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.getRegistrationTransaction()).to.equal(transaction);
+    expect(executeDataTriggersMock).have.not.been.called();
   });
 
   it('should return invalid result if Contract is not valid', async () => {
@@ -162,6 +166,7 @@ describe('verifySTPacketFactory', () => {
     const [actualError] = result.getErrors();
 
     expect(actualError).to.equal(expectedError);
+    expect(executeDataTriggersMock).have.not.been.called();
   });
 
   it('should return invalid result if Documents are not valid', async () => {
@@ -182,21 +187,10 @@ describe('verifySTPacketFactory', () => {
     const [actualError] = result.getErrors();
 
     expect(actualError).to.equal(expectedError);
+    expect(executeDataTriggersMock).have.not.been.called();
   });
 
-  it('should return valid result if ST Packet is valid', async () => {
-    const result = await verifySTPacket(stPacket, stateTransition);
-
-    expect(result).to.be.an.instanceOf(ValidationResult);
-    expect(result.isValid()).to.be.true();
-
-    expect(dataProviderMock.fetchTransaction).to.have.been.calledOnceWith(userId);
-
-    expect(verifyContractMock).to.have.not.been.called();
-    expect(verifyDocumentsMock).to.have.been.calledOnceWith(stPacket, userId);
-  });
-
-  it('should execute data triggers and properly add errors to the final result', async () => {
+  it('should return invalid result if data triggers verification failed', async () => {
     const context = new DataTriggerExecutionContext(
       dataProviderMock,
       userId,
@@ -254,5 +248,17 @@ describe('verifySTPacketFactory', () => {
     expect(result.errors[0]).to.be.instanceOf(DataTriggerExecutionError);
     expect(result.errors[1].message).to.equal('My 3rd error');
     expect(result.errors[1]).to.be.instanceOf(DataTriggerExecutionError);
+  });
+
+  it('should return valid result if ST Packet is valid', async () => {
+    const result = await verifySTPacket(stPacket, stateTransition);
+
+    expect(result).to.be.an.instanceOf(ValidationResult);
+    expect(result.isValid()).to.be.true();
+
+    expect(dataProviderMock.fetchTransaction).to.have.been.calledOnceWith(userId);
+
+    expect(verifyContractMock).to.have.not.been.called();
+    expect(verifyDocumentsMock).to.have.been.calledOnceWith(stPacket, userId);
   });
 });
