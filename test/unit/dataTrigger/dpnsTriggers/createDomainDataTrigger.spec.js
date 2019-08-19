@@ -121,8 +121,8 @@ describe('createDomainDataTrigger', () => {
     childDocument = getChildDocumentFixture({
       label: 'label',
       normalizedLabel: 'label',
-      nameHash: multihash(Buffer.from('label.invalidName')).toString('hex'),
-      normalizedParentDomainName: 'invalidName',
+      nameHash: multihash(Buffer.from('label.invalidname')).toString('hex'),
+      normalizedParentDomainName: 'invalidname',
     });
 
     dataProviderMock.fetchTransaction
@@ -207,6 +207,25 @@ describe('createDomainDataTrigger', () => {
     expect(error).to.be.an.instanceOf(DataTriggerConditionError);
     expect(error.message).to.equal(
       'Full domain name length can not be more than 253 characters long',
+    );
+  });
+
+  it('should fail with normalizedParentDomainName not being lower case', async () => {
+    childDocument = getChildDocumentFixture({
+      nameHash: multihash(Buffer.from('child.Parent.domain')).toString('hex'),
+      normalizedParentDomainName: 'Parent.domain',
+    });
+
+    const result = await createDomainDataTrigger(childDocument, context);
+
+    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+    expect(result.isOk()).to.be.false();
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(DataTriggerConditionError);
+    expect(error.message).to.equal(
+      'Parent domain name is not normalized (e.g. contains non-lowercase letter)',
     );
   });
 });
