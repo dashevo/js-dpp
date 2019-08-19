@@ -123,21 +123,20 @@ describe('validateContractFactory', () => {
       expect(error.keyword).to.equal('maxLength');
     });
 
-    it('should be an alphanumeric string', () => {
-      rawContract.name = '*(*&^';
+    it('should be a valid string', () => {
+      const validNames = ['validName', 'valid_name', 'valid-name', 'abc', '123abc', 'abc123', 'abcdefghigklmnopqrstuvwx', 'ValidName'];
 
-      const result = validateContract(rawContract);
+      validNames.forEach((name) => {
+        rawContract.name = name;
 
-      expectJsonSchemaError(result);
+        const result = validateContract(rawContract);
 
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.equal('.name');
-      expect(error.keyword).to.equal('pattern');
+        expectJsonSchemaError(result, 0);
+      });
     });
 
-    it('should not have properties starts or ends with - or _', () => {
-      const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_'];
+    it('should not pass any invalid string', () => {
+      const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test'];
 
       invalidNames.forEach((name) => {
         rawContract.name = name;
@@ -280,8 +279,21 @@ describe('validateContractFactory', () => {
       expect(error.keyword).to.equal('maxProperties');
     });
 
-    it('should not have properties starts or ends with - or _', () => {
-      const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_'];
+    it('should be a valid string', () => {
+      const validNames = ['validName', 'valid_name', 'valid-name', 'abc', '123abc', 'abc123', 'ValidName',
+        'abcdefghigklmnopqrstuvwxyz01234567890abcdefghigklmnopqrstuvwxyz'];
+
+      validNames.forEach((name) => {
+        rawContract.definitions[name] = {};
+
+        const result = validateContract(rawContract);
+
+        expectJsonSchemaError(result, 0);
+      });
+    });
+
+    it('should not pass any invalid string', () => {
+      const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test'];
 
       invalidNames.forEach((name) => {
         rawContract.definitions[name] = {};
@@ -339,17 +351,34 @@ describe('validateContractFactory', () => {
       expect(error.keyword).to.equal('minProperties');
     });
 
-    it('should have no non-alphanumeric properties', () => {
-      rawContract.documents['(*&^'] = rawContract.documents.niceDocument;
+    it('should be a valid string', () => {
+      const validNames = ['validName', 'valid_name', 'valid-name', 'abc', '123abc', 'abc123', 'ValidName', 'validName',
+        'abcdefghigklmnopqrstuvwxyz01234567890abcdefghigklmnopqrstuvwxyz'];
 
-      const result = validateContract(rawContract);
+      validNames.forEach((name) => {
+        rawContract.documents[name] = rawContract.documents.niceDocument;
 
-      expectJsonSchemaError(result);
+        const result = validateContract(rawContract);
 
-      const [error] = result.getErrors();
+        expectJsonSchemaError(result, 0);
+      });
+    });
 
-      expect(error.dataPath).to.equal('.documents');
-      expect(error.keyword).to.equal('additionalProperties');
+    it('should not pass any invalid string', () => {
+      const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test'];
+
+      invalidNames.forEach((name) => {
+        rawContract.documents[name] = rawContract.documents.niceDocument;
+
+        const result = validateContract(rawContract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.documents');
+        expect(error.keyword).to.equal('additionalProperties');
+      });
     });
 
     it('should have no more than 100 properties', () => {
@@ -413,23 +442,21 @@ describe('validateContractFactory', () => {
         expect(error.params.missingProperty).to.equal('properties');
       });
 
-      it('should have no non-alphanumeric properties', () => {
-        rawContract.documents.niceDocument.properties['(*&^'] = {};
+      it('should be a valid string', () => {
+        const validNames = ['validName', 'valid_name', 'valid-name', 'abc', '123abc', 'abc123', 'ValidName', 'validName',
+          'abcdefghigklmnopqrstuvwxyz01234567890abcdefghigklmnopqrstuvwxyz'];
 
-        const result = validateContract(rawContract);
+        validNames.forEach((name) => {
+          rawContract.documents.niceDocument.properties[name] = {};
 
-        expectJsonSchemaError(result, 2);
+          const result = validateContract(rawContract);
 
-        const errors = result.getErrors();
-
-        expect(errors[0].dataPath).to.equal('.documents[\'niceDocument\'].properties');
-        expect(errors[0].keyword).to.equal('pattern');
-        expect(errors[1].dataPath).to.equal('.documents[\'niceDocument\'].properties');
-        expect(errors[1].keyword).to.equal('propertyNames');
+          expectJsonSchemaError(result, 0);
+        });
       });
 
-      it('should not have properties starts or ends with - or _', () => {
-        const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_'];
+      it('should not pass any invalid string', () => {
+        const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test'];
 
         invalidNames.forEach((name) => {
           rawContract.documents.niceDocument.properties[name] = {};
@@ -438,10 +465,12 @@ describe('validateContractFactory', () => {
 
           expectJsonSchemaError(result, 2);
 
-          const [error] = result.getErrors();
+          const errors = result.getErrors();
 
-          expect(error.dataPath).to.equal('.documents[\'niceDocument\'].properties');
-          expect(error.keyword).to.equal('pattern');
+          expect(errors[0].dataPath).to.equal('.documents[\'niceDocument\'].properties');
+          expect(errors[0].keyword).to.equal('pattern');
+          expect(errors[1].dataPath).to.equal('.documents[\'niceDocument\'].properties');
+          expect(errors[1].keyword).to.equal('propertyNames');
         });
       });
 
