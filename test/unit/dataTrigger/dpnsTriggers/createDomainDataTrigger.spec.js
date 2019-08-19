@@ -41,7 +41,7 @@ describe('createDomainDataTrigger', () => {
       .withArgs(
         contract.getId(),
         childDocument.getType(),
-        { where: ['nameHash', '==', parentDomainHash] },
+        { where: [['nameHash', '==', parentDomainHash]] },
       )
       .resolves([parentDocument.toJSON()]);
 
@@ -51,7 +51,7 @@ describe('createDomainDataTrigger', () => {
       .withArgs(
         contract.getId(),
         'preorder',
-        { where: ['saltedDomainHash', '==', saltedDomainHash] },
+        { where: [['saltedDomainHash', '==', saltedDomainHash]] },
       )
       .resolves([preorderDocument.toJSON()]);
 
