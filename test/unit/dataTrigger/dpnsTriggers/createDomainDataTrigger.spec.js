@@ -8,7 +8,7 @@ const getPreorderDocumentFixture = require('../../../../lib/test/fixtures/getPre
 const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 
-const multihash = require('../../../../lib/util/multihash');
+const multihash = require('../../../../lib/util/multihashDoubleSHA256');
 
 const DataTriggerConditionError = require('../../../../lib/errors/DataTriggerConditionError');
 
@@ -31,7 +31,7 @@ describe('createDomainDataTrigger', () => {
       preorderSalt, nameHash, records, normalizedParentDomainName,
     } = childDocument.getData();
 
-    const parentDomainHash = multihash(
+    const parentDomainHash = multihash.hash(
       Buffer.from(normalizedParentDomainName),
     ).toString('hex');
 
@@ -45,7 +45,7 @@ describe('createDomainDataTrigger', () => {
       )
       .resolves([parentDocument.toJSON()]);
 
-    const saltedDomainHash = multihash(Buffer.from(preorderSalt + nameHash, 'hex')).toString('hex');
+    const saltedDomainHash = multihash.hash(Buffer.from(preorderSalt + nameHash, 'hex')).toString('hex');
 
     dataProviderMock.fetchDocuments
       .withArgs(
@@ -78,7 +78,7 @@ describe('createDomainDataTrigger', () => {
 
   it('should fail with invalid hash', async () => {
     childDocument = getChildDocumentFixture({
-      nameHash: multihash(Buffer.from('invalidHash')).toString('hex'),
+      nameHash: multihash.hash(Buffer.from('invalidHash')).toString('hex'),
     });
     dataProviderMock.fetchTransaction
       .withArgs(
@@ -121,7 +121,7 @@ describe('createDomainDataTrigger', () => {
     childDocument = getChildDocumentFixture({
       label: 'label',
       normalizedLabel: 'label',
-      nameHash: multihash(Buffer.from('label.invalidname')).toString('hex'),
+      nameHash: multihash.hash(Buffer.from('label.invalidname')).toString('hex'),
       normalizedParentDomainName: 'invalidname',
     });
 
@@ -212,7 +212,7 @@ describe('createDomainDataTrigger', () => {
 
   it('should fail with normalizedParentDomainName not being lower case', async () => {
     childDocument = getChildDocumentFixture({
-      nameHash: multihash(Buffer.from('child.Parent.domain')).toString('hex'),
+      nameHash: multihash.hash(Buffer.from('child.Parent.domain')).toString('hex'),
       normalizedParentDomainName: 'Parent.domain',
     });
 
