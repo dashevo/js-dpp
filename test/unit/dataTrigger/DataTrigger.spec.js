@@ -1,8 +1,6 @@
 const DataTrigger = require('../../../lib/dataTrigger/DataTrigger');
 const DataTriggerExecutionContext = require('../../../lib/dataTrigger/DataTriggerExecutionContext');
-const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 const getDpnsContractFixture = require('../../../lib/test/fixtures/getDpnsContractFixture');
-const { getParentDocumentFixture, getChildDocumentFixture } = require('../../../lib/test/fixtures/getDpnsDocumentFixture');
 const DataTriggerExecutionResult = require('../../../lib/dataTrigger/DataTriggerExecutionResult');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const DataTriggerExecutionError = require('../../../lib/errors/DataTriggerExecutionError');
@@ -11,9 +9,6 @@ const DataTriggerInvalidResultError = require('../../../lib/errors/DataTriggerIn
 describe('DataTrigger', () => {
   let contractMock;
   let context;
-  let dataProviderMock;
-  let parentDocumentMock;
-  let childDocumentMock;
   let triggerStub;
   let document;
 
@@ -23,27 +18,8 @@ describe('DataTrigger', () => {
 
     ([document] = getDocumentsFixture());
 
-    parentDocumentMock = getParentDocumentFixture();
-    childDocumentMock = getChildDocumentFixture();
-
-    dataProviderMock = createDataProviderMock(this.sinonSandbox);
-    dataProviderMock.fetchDocuments.resolves([]);
-    dataProviderMock.fetchDocuments
-      .withArgs(
-        contractMock.getId(),
-        childDocumentMock.getType(),
-        { where: ['hash', '==', childDocumentMock.getData().parentDomainHash] },
-      )
-      .resolves([parentDocumentMock.toJSON()]);
-    dataProviderMock.fetchTransaction.resolves(null);
-    dataProviderMock.fetchTransaction
-      .withArgs(
-        childDocumentMock.getData().records.dashIdentity,
-      )
-      .resolves({ confirmations: 10 });
-
     context = new DataTriggerExecutionContext(
-      dataProviderMock,
+      null,
       '6b74011f5d2ad1a8d45b71b9702f54205ce75253593c3cfbba3fdadeca278288',
       contractMock,
     );

@@ -5,7 +5,6 @@ const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTri
 const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
 const dpnsDocumentFixture = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
-const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 
 const dpnsCreateDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
 const dpnsDeleteDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
@@ -14,16 +13,13 @@ const dpnsUpdateDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTri
 const executeDataTriggers = require('../../../../lib/stPacket/verification/executeDataTriggers');
 
 describe('executeDataTriggers', () => {
-  let parentDocument;
   let childDocument;
-  let dataProviderMock;
   let contractMock;
-  const dpnsTriggers = [
-    dpnsCreateDomainDataTrigger,
-    dpnsDeleteDomainDataTrigger,
-    dpnsUpdateDomainDataTrigger,
-  ];
-  const domainDocumentType = 'domain';
+
+  let dpnsTriggers;
+
+  let domainDocumentType;
+
   let stateTransitionHeaderMock;
   let context;
   let documents;
@@ -33,10 +29,17 @@ describe('executeDataTriggers', () => {
   let getDataTriggersMock;
 
   beforeEach(function beforeEach() {
+    domainDocumentType = 'domain';
+
+    dpnsTriggers = [
+      dpnsCreateDomainDataTrigger,
+      dpnsDeleteDomainDataTrigger,
+      dpnsUpdateDomainDataTrigger,
+    ];
+
     contractMock = getDpnsContractFixture();
 
     childDocument = dpnsDocumentFixture.getChildDocumentFixture();
-    parentDocument = dpnsDocumentFixture.getParentDocumentFixture();
 
     dpnsCreateDomainDataTriggerMock = { execute: this.sinonSandbox.stub() };
     dpnsUpdateDomainDataTriggerMock = { execute: this.sinonSandbox.stub() };
@@ -51,30 +54,10 @@ describe('executeDataTriggers', () => {
     dpnsDeleteDomainDataTriggerMock
       .execute.resolves(new DataTriggerExecutionResult());
 
-    dataProviderMock = createDataProviderMock(this.sinonSandbox);
-
-    dataProviderMock.fetchDocuments.resolves([]);
-
-    dataProviderMock.fetchDocuments
-      .withArgs(
-        contractMock.getId(),
-        childDocument.getType(),
-        { where: ['hash', '==', childDocument.getData().parentDomainHash] },
-      )
-      .resolves([parentDocument.toJSON()]);
-
-    dataProviderMock.fetchTransaction.resolves(null);
-
-    dataProviderMock.fetchTransaction
-      .withArgs(
-        childDocument.getData().records.dashIdentity,
-      )
-      .resolves({ confirmations: 10 });
-
     const userId = 'userId';
 
     context = new DataTriggerExecutionContext(
-      dataProviderMock, userId, contractMock, stateTransitionHeaderMock,
+      null, userId, contractMock, stateTransitionHeaderMock,
     );
 
     documents = [childDocument];
@@ -161,7 +144,7 @@ describe('executeDataTriggers', () => {
       .returns([throwingDataTriggerMock]);
 
     context = new DataTriggerExecutionContext(
-      dataProviderMock, 'id', contractMock, stateTransitionHeaderMock,
+      null, 'id', contractMock, stateTransitionHeaderMock,
     );
 
     const dataTriggerExecutionResults = await executeDataTriggers(
