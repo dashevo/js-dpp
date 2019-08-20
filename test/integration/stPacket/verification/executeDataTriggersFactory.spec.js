@@ -10,9 +10,9 @@ const dpnsCreateDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTri
 const dpnsDeleteDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
 const dpnsUpdateDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
 
-const executeDataTriggers = require('../../../../lib/stPacket/verification/executeDataTriggers');
+const executeDataTriggersFactory = require('../../../../lib/stPacket/verification/executeDataTriggersFactory');
 
-describe('executeDataTriggers', () => {
+describe('executeDataTriggersFactory', () => {
   let childDocument;
   let contractMock;
 
@@ -27,6 +27,8 @@ describe('executeDataTriggers', () => {
   let dpnsUpdateDomainDataTriggerMock;
   let dpnsDeleteDomainDataTriggerMock;
   let getDataTriggersMock;
+
+  let executeDataTriggers;
 
   beforeEach(function beforeEach() {
     domainDocumentType = 'domain';
@@ -67,11 +69,13 @@ describe('executeDataTriggers', () => {
     getDataTriggersMock.returns([
       dpnsCreateDomainDataTriggerMock,
     ]);
+
+    executeDataTriggers = executeDataTriggersFactory(getDataTriggersMock);
   });
 
   it('should return an array of DataTriggerExecutionResult', async () => {
     const dataTriggerExecutionResults = await executeDataTriggers(
-      documents, context, getDataTriggersMock,
+      documents, context,
     );
 
     expect(dataTriggerExecutionResults).to.have.a.lengthOf(1);
@@ -95,7 +99,7 @@ describe('executeDataTriggers', () => {
     expect(dpnsTriggers.length).to.equal(expectedTriggersCount);
 
     const dataTriggerExecutionResults = await executeDataTriggers(
-      documents, context, getDataTriggersMock,
+      documents, context,
     );
 
     expect(dataTriggerExecutionResults).to.have.a.lengthOf(expectedTriggersCount);
@@ -148,7 +152,7 @@ describe('executeDataTriggers', () => {
     );
 
     const dataTriggerExecutionResults = await executeDataTriggers(
-      documents, context, getDataTriggersMock,
+      documents, context,
     );
 
     const expectedResultsCount = 3;
@@ -179,7 +183,7 @@ describe('executeDataTriggers', () => {
       .withArgs(contractMock.getId(), domainDocumentType, Document.ACTIONS.UPDATE)
       .returns([dpnsUpdateDomainDataTriggerMock]);
 
-    await executeDataTriggers(documents, context, getDataTriggersMock);
+    await executeDataTriggers(documents, context);
 
     expect(dpnsDeleteDomainDataTriggerMock.execute).not.to.be.called();
     expect(dpnsUpdateDomainDataTriggerMock.execute).not.to.be.called();
@@ -198,7 +202,7 @@ describe('executeDataTriggers', () => {
       .withArgs(contractMock.getId(), domainDocumentType, Document.ACTIONS.UPDATE)
       .returns([dpnsUpdateDomainDataTriggerMock]);
 
-    await executeDataTriggers(documents, context, getDataTriggersMock);
+    await executeDataTriggers(documents, context);
 
     expect(dpnsCreateDomainDataTriggerMock.execute).to.be.calledOnce();
     expect(dpnsDeleteDomainDataTriggerMock.execute).not.to.be.called();
@@ -218,7 +222,7 @@ describe('executeDataTriggers', () => {
       .withArgs(contractMock.getId(), domainDocumentType, Document.ACTIONS.UPDATE)
       .returns([dpnsUpdateDomainDataTriggerMock]);
 
-    await executeDataTriggers(documents, context, getDataTriggersMock);
+    await executeDataTriggers(documents, context);
 
     expect(dpnsCreateDomainDataTriggerMock.execute).not.to.be.called();
     expect(dpnsDeleteDomainDataTriggerMock.execute).not.to.be.called();
