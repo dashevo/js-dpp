@@ -123,8 +123,9 @@ describe('validateContractFactory', () => {
       expect(error.keyword).to.equal('maxLength');
     });
 
-    it('should be a valid string', () => {
-      const validNames = ['validName', 'valid_name', 'valid-name', 'abc', '123abc', 'abc123', 'abcdefghigklmnopqrstuvwx', 'ValidName'];
+    it('should be the valid string format', () => {
+      const validNames = ['validName', 'valid_name', 'valid-name', 'abc', '123abc', 'abc123',
+        'abcdefghigklmnopqrstuvwx', 'ValidName', 'abc_gbf_gdb', 'abc-gbf-gdb'];
 
       validNames.forEach((name) => {
         rawContract.name = name;
@@ -135,7 +136,7 @@ describe('validateContractFactory', () => {
       });
     });
 
-    it('should not pass any invalid string', () => {
+    it('should return an invalid result if a string is in invalid format', () => {
       const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test'];
 
       invalidNames.forEach((name) => {
@@ -279,9 +280,9 @@ describe('validateContractFactory', () => {
       expect(error.keyword).to.equal('maxProperties');
     });
 
-    it('should be a valid string', () => {
+    it('should have valid property names', () => {
       const validNames = ['validName', 'valid_name', 'valid-name', 'abc', '123abc', 'abc123', 'ValidName',
-        'abcdefghigklmnopqrstuvwxyz01234567890abcdefghigklmnopqrstuvwxyz'];
+        'abcdefghigklmnopqrstuvwxyz01234567890abcdefghigklmnopqrstuvwxyz', 'abc_gbf_gdb', 'abc-gbf-gdb'];
 
       validNames.forEach((name) => {
         rawContract.definitions[name] = {};
@@ -292,7 +293,7 @@ describe('validateContractFactory', () => {
       });
     });
 
-    it('should not pass any invalid string', () => {
+    it('should return an invalid result if a property has invalid format', () => {
       const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test'];
 
       invalidNames.forEach((name) => {
@@ -351,9 +352,9 @@ describe('validateContractFactory', () => {
       expect(error.keyword).to.equal('minProperties');
     });
 
-    it('should be a valid string', () => {
+    it('should have valid property names', () => {
       const validNames = ['validName', 'valid_name', 'valid-name', 'abc', '123abc', 'abc123', 'ValidName', 'validName',
-        'abcdefghigklmnopqrstuvwxyz01234567890abcdefghigklmnopqrstuvwxyz'];
+        'abcdefghigklmnopqrstuvwxyz01234567890abcdefghigklmnopqrstuvwxyz', 'abc_gbf_gdb', 'abc-gbf-gdb'];
 
       validNames.forEach((name) => {
         rawContract.documents[name] = rawContract.documents.niceDocument;
@@ -364,7 +365,7 @@ describe('validateContractFactory', () => {
       });
     });
 
-    it('should not pass any invalid string', () => {
+    it('should return an invalid result if a property has invalid format', () => {
       const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test'];
 
       invalidNames.forEach((name) => {
@@ -442,9 +443,9 @@ describe('validateContractFactory', () => {
         expect(error.params.missingProperty).to.equal('properties');
       });
 
-      it('should be a valid string', () => {
+      it('should have valid property names', () => {
         const validNames = ['validName', 'valid_name', 'valid-name', 'abc', '123abc', 'abc123', 'ValidName', 'validName',
-          'abcdefghigklmnopqrstuvwxyz01234567890abcdefghigklmnopqrstuvwxyz'];
+          'abcdefghigklmnopqrstuvwxyz01234567890abcdefghigklmnopqrstuvwxyz', 'abc_gbf_gdb', 'abc-gbf-gdb'];
 
         validNames.forEach((name) => {
           rawContract.documents.niceDocument.properties[name] = {};
@@ -455,7 +456,7 @@ describe('validateContractFactory', () => {
         });
       });
 
-      it('should not pass any invalid string', () => {
+      it('should return an invalid result if a property has invalid format', () => {
         const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test'];
 
         invalidNames.forEach((name) => {
