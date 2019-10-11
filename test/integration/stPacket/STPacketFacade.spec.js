@@ -7,7 +7,7 @@ const STPacket = require('../../../lib/stPacket/STPacket');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const getSTPacketFixture = require('../../../lib/test/fixtures/getSTPacketFixture');
-const getContractFixture = require('../../../lib/test/fixtures/getContractFixture');
+const getContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 

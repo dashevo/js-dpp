@@ -5,7 +5,7 @@ const Document = require('../../../lib/document/Document');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
-const getContractFixture = require('../../../lib/test/fixtures/getContractFixture');
+const getContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
 const MissingOptionError = require('../../../lib/errors/MissingOptionError');
 

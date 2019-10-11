@@ -2,10 +2,10 @@ const rewiremock = require('rewiremock/node');
 
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 
-describe('Contract', () => {
+describe('DataContract', () => {
   let hashMock;
   let encodeMock;
-  let Contract;
+  let DataContract;
   let documentType;
   let documentSchema;
   let documents;
@@ -17,7 +17,7 @@ describe('Contract', () => {
     const serializerMock = { encode: this.sinonSandbox.stub() };
     encodeMock = serializerMock.encode;
 
-    Contract = rewiremock.proxy('../../../lib/contract/Contract', {
+    DataContract = rewiremock.proxy('../../../lib/contract/DataContract', {
       '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': serializerMock,
     });
@@ -36,21 +36,21 @@ describe('Contract', () => {
 
     contractId = '6b74011f5d2ad1a8d45b71b9702f54205ce75253593c3cfbba3fdadeca278288';
 
-    contract = new Contract(contractId, documents);
+    contract = new DataContract(contractId, documents);
   });
 
   describe('constructor', () => {
-    it('should create new Contract', () => {
-      contract = new Contract(contractId, documents);
+    it('should create new DataContract', () => {
+      contract = new DataContract(contractId, documents);
 
-      expect(contract.version).to.equal(Contract.DEFAULTS.VERSION);
-      expect(contract.schema).to.equal(Contract.DEFAULTS.SCHEMA);
+      expect(contract.version).to.equal(DataContract.DEFAULTS.VERSION);
+      expect(contract.schema).to.equal(DataContract.DEFAULTS.SCHEMA);
       expect(contract.documents).to.equal(documents);
     });
   });
 
   describe('#getContractId', () => {
-    it('should return base58 encoded Contract ID', () => {
+    it('should return base58 encoded DataContract ID', () => {
       const result = contract.getContractId();
 
       expect(result).to.equal(contractId);
@@ -220,13 +220,13 @@ describe('Contract', () => {
   });
 
   describe('#toJSON', () => {
-    it('should return Contract as plain object', () => {
+    it('should return DataContract as plain object', () => {
       const result = contract.toJSON();
 
       expect(result).to.deep.equal({
-        $schema: Contract.DEFAULTS.SCHEMA,
+        $schema: DataContract.DEFAULTS.SCHEMA,
         contractId,
-        version: Contract.DEFAULTS.VERSION,
+        version: DataContract.DEFAULTS.VERSION,
         documents,
       });
     });
@@ -241,9 +241,9 @@ describe('Contract', () => {
       const result = contract.toJSON();
 
       expect(result).to.deep.equal({
-        $schema: Contract.DEFAULTS.SCHEMA,
+        $schema: DataContract.DEFAULTS.SCHEMA,
         contractId,
-        version: Contract.DEFAULTS.VERSION,
+        version: DataContract.DEFAULTS.VERSION,
         documents,
         definitions,
       });
@@ -251,7 +251,7 @@ describe('Contract', () => {
   });
 
   describe('#serialize', () => {
-    it('should return serialized Contract', () => {
+    it('should return serialized DataContract', () => {
       const serializedDocument = '123';
 
       encodeMock.returns(serializedDocument);
@@ -266,14 +266,14 @@ describe('Contract', () => {
 
   describe('#hash', () => {
     beforeEach(function beforeEach() {
-      Contract.prototype.serialize = this.sinonSandbox.stub();
+      DataContract.prototype.serialize = this.sinonSandbox.stub();
     });
 
-    it('should return Contract hash', () => {
+    it('should return DataContract hash', () => {
       const serializedContract = '123';
       const hashedDocument = '456';
 
-      Contract.prototype.serialize.returns(serializedContract);
+      DataContract.prototype.serialize.returns(serializedContract);
 
       hashMock.returns(hashedDocument);
 
@@ -281,7 +281,7 @@ describe('Contract', () => {
 
       expect(result).to.equal(hashedDocument);
 
-      expect(Contract.prototype.serialize).to.have.been.calledOnce();
+      expect(DataContract.prototype.serialize).to.have.been.calledOnce();
 
       expect(hashMock).to.have.been.calledOnceWith(serializedContract);
     });

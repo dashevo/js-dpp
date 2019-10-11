@@ -5,9 +5,9 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const Document = require('../../../lib/document/Document');
 const validateDocumentFactory = require('../../../lib/document/validateDocumentFactory');
-const enrichContractWithBaseDocument = require('../../../lib/document/enrichContractWithBaseDocument');
+const enrichContractWithBaseDocument = require('../../../lib/document/enrichDataContractWithBaseDocument');
 
-const getContractFixture = require('../../../lib/test/fixtures/getContractFixture');
+const getContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
 const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTypeError');

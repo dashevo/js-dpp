@@ -3,7 +3,7 @@ const rewiremock = require('rewiremock/node');
 const Document = require('../../../lib/document/Document');
 
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
-const getContractFixture = require('../../../lib/test/fixtures/getContractFixture');
+const getContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 

@@ -2,7 +2,7 @@ const rewiremock = require('rewiremock/node');
 
 const STPacket = require('../../../lib/stPacket/STPacket');
 
-const getContractFixture = require('../../../lib/test/fixtures/getContractFixture');
+const getContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getSTPacketFixture = require('../../../lib/test/fixtures/getSTPacketFixture');
 
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');

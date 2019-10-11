@@ -2,7 +2,7 @@ const verifyContract = require('../../../../lib/stPacket/verification/verifyCont
 
 const STPacket = require('../../../../lib/stPacket/STPacket');
 
-const getContractFixture = require('../../../../lib/test/fixtures/getContractFixture');
+const getContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 
 const ContractAlreadyPresentError = require('../../../../lib/errors/ContractAlreadyPresentError');
 

@@ -1,6 +1,6 @@
 const DashPlatformProtocol = require('../../lib/DashPlatformProtocol');
 
-const getContractFixture = require('../../lib/test/fixtures/getContractFixture');
+const getContractFixture = require('../../lib/test/fixtures/getDataContractFixture');
 
 const createDataProviderMock = require('../../lib/test/mocks/createDataProviderMock');
 
