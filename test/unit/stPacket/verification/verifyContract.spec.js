@@ -15,7 +15,7 @@ describe.skip('verifyContract', () => {
   beforeEach(() => {
     contract = getContractFixture();
 
-    stPacket = new STPacket(contract.getContractId());
+    stPacket = new STPacket(contract.getId());
     stPacket.setContract(contract);
   });
 

@@ -25,7 +25,7 @@ describe.skip('STPacket', () => {
     dataContract = getDataContractFixture();
     documents = getDocumentsFixture();
 
-    contractId = dataContract.getContractId();
+    contractId = dataContract.getId();
     itemsHash = '14207b92f112bc674f32a8d04008d5c62f18d5b6c846acb0edfaf9f0b32fc293';
     itemsMerkleRoot = '44207b92f112bc674f32a8d04008d5c62f18d5b6c846acb0edfaf9f0b32fc292';
 

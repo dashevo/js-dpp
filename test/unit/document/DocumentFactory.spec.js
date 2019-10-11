@@ -69,7 +69,7 @@ describe('DocumentFactory', () => {
 
       expect(newDocument.get('name')).to.equal(name);
 
-      expect(hashMock).to.have.been.calledOnceWith(contract.getContractId() + userId);
+      expect(hashMock).to.have.been.calledOnceWith(contract.getId() + userId);
       expect(newDocument.scope).to.equal(scope);
 
       expect(generateMock).to.have.been.calledOnce();

@@ -27,13 +27,13 @@ describe('DataTrigger', () => {
 
   it('should check trigger fields', () => {
     const trigger = new DataTrigger(
-      contractMock.getContractId(),
+      contractMock.getId(),
       document.getType(),
       document.getAction(),
       triggerStub,
     );
 
-    expect(trigger.contractId).to.equal(contractMock.getContractId());
+    expect(trigger.contractId).to.equal(contractMock.getId());
     expect(trigger.documentType).to.equal(document.getType());
     expect(trigger.documentAction).to.equal(document.getAction());
     expect(trigger.trigger).to.equal(triggerStub);
@@ -42,7 +42,7 @@ describe('DataTrigger', () => {
   describe('#execute', () => {
     it('should check trigger execution', async () => {
       const trigger = new DataTrigger(
-        contractMock.getContractId(),
+        contractMock.getId(),
         document.getType(),
         document.getAction(),
         triggerStub,
@@ -63,7 +63,7 @@ describe('DataTrigger', () => {
       triggerStub.resolves(functionResult);
 
       const trigger = new DataTrigger(
-        contractMock.getContractId(),
+        contractMock.getId(),
         document.getType(),
         document.getAction(),
         triggerStub,
@@ -81,7 +81,7 @@ describe('DataTrigger', () => {
       triggerStub.throws(triggerError);
 
       const trigger = new DataTrigger(
-        contractMock.getContractId(),
+        contractMock.getId(),
         document.getType(),
         document.getAction(),
         triggerStub,
@@ -98,7 +98,7 @@ describe('DataTrigger', () => {
       triggerStub.resolves(null);
 
       const trigger = new DataTrigger(
-        contractMock.getContractId(),
+        contractMock.getId(),
         document.getType(),
         document.getAction(),
         triggerStub,

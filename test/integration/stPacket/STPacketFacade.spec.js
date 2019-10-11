@@ -43,7 +43,7 @@ describe.skip('STPacketFacade', () => {
 
       expect(result).to.be.an.instanceOf(STPacket);
 
-      expect(result.getContractId()).to.equal(stPacket.getContractId());
+      expect(result.getContractId()).to.equal(stPacket.getId());
       expect(result.getDocuments()).to.deep.equal(stPacket.getDocuments());
     });
 

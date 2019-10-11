@@ -32,7 +32,7 @@ describe.skip('verifyDocuments', () => {
     documents = getDocumentsFixture();
     contract = getContractFixture();
 
-    stPacket = new STPacket(contract.getContractId());
+    stPacket = new STPacket(contract.getId());
     stPacket.setDocuments(documents);
 
     fetchDocumentsByDocumentsMock = this.sinonSandbox.stub();
