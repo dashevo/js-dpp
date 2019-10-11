@@ -39,7 +39,7 @@ describe('createDomainDataTrigger', () => {
     dataProviderMock.fetchDocuments.resolves([]);
     dataProviderMock.fetchDocuments
       .withArgs(
-        contract.getId(),
+        contract.getContractId(),
         childDocument.getType(),
         { where: [['nameHash', '==', parentDomainHash]] },
       )
@@ -49,7 +49,7 @@ describe('createDomainDataTrigger', () => {
 
     dataProviderMock.fetchDocuments
       .withArgs(
-        contract.getId(),
+        contract.getContractId(),
         'preorder',
         { where: [['saltedDomainHash', '==', saltedDomainHash]] },
       )

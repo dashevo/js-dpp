@@ -19,13 +19,13 @@ describe('ContractFacade', () => {
   describe('create', () => {
     it('should create Contract', () => {
       const result = dpp.contract.create(
-        contract.getName(),
+        contract.getContractId(),
         contract.getDocuments(),
       );
 
       expect(result).to.be.an.instanceOf(Contract);
 
-      expect(result.getName()).to.equal(contract.getName());
+      expect(result.getContractId()).to.equal(contract.getContractId());
       expect(result.getDocuments()).to.equal(contract.getDocuments());
     });
   });

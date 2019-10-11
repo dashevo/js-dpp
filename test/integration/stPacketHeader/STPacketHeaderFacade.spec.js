@@ -4,7 +4,7 @@ const STPacketHeader = require('../../../lib/stPacketHeader/STPacketHeader');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-describe('STPacketHeaderFacade', () => {
+describe.skip('STPacketHeaderFacade', () => {
   let dpp;
   let stPacketHeader;
 

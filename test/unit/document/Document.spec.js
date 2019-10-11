@@ -155,7 +155,7 @@ describe('Document', () => {
     });
   });
 
-  describe('#getId', () => {
+  describe('#getContractId', () => {
     it('should calculate and return ID', () => {
       const idBuffer = Buffer.from('123');
       const id = bs58.encode(idBuffer);
