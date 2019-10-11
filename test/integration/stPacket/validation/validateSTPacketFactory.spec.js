@@ -23,7 +23,7 @@ describe.skip('validateSTPacketFactory', () => {
   let rawDataContract;
   let dataContract;
   let validateSTPacket;
-  let validateSTPacketContractsMock;
+  let validateSTPacketDataContractsMock;
   let validateSTPacketDocumentsMock;
 
   beforeEach(function beforeEach() {
@@ -36,12 +36,12 @@ describe.skip('validateSTPacketFactory', () => {
     const ajv = new Ajv();
     const validator = new JsonSchemaValidator(ajv);
 
-    validateSTPacketContractsMock = this.sinonSandbox.stub().returns(new ValidationResult());
+    validateSTPacketDataContractsMock = this.sinonSandbox.stub().returns(new ValidationResult());
     validateSTPacketDocumentsMock = this.sinonSandbox.stub().returns(new ValidationResult());
 
     validateSTPacket = validateSTPacketFactory(
       validator,
-      validateSTPacketContractsMock,
+      validateSTPacketDataContractsMock,
       validateSTPacketDocumentsMock,
     );
   });
@@ -60,7 +60,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(error.keyword).to.equal('required');
       expect(error.params.missingProperty).to.equal('contractId');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -73,10 +73,10 @@ describe.skip('validateSTPacketFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.contractId');
+      expect(error.dataPath).to.equal('.dataContractId');
       expect(error.keyword).to.equal('type');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -89,10 +89,10 @@ describe.skip('validateSTPacketFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.contractId');
+      expect(error.dataPath).to.equal('.dataContractId');
       expect(error.keyword).to.equal('minLength');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -105,10 +105,10 @@ describe.skip('validateSTPacketFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.contractId');
+      expect(error.dataPath).to.equal('.dataContractId');
       expect(error.keyword).to.equal('maxLength');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
   });
@@ -127,7 +127,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(error.keyword).to.equal('required');
       expect(error.params.missingProperty).to.equal('itemsMerkleRoot');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -143,7 +143,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(error.dataPath).to.equal('.itemsMerkleRoot');
       expect(error.keyword).to.equal('type');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -159,7 +159,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(error.dataPath).to.equal('.itemsMerkleRoot');
       expect(error.keyword).to.equal('minLength');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -175,7 +175,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(error.dataPath).to.equal('.itemsMerkleRoot');
       expect(error.keyword).to.equal('maxLength');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -206,7 +206,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(error.keyword).to.equal('required');
       expect(error.params.missingProperty).to.equal('itemsHash');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -222,7 +222,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(error.dataPath).to.equal('.itemsHash');
       expect(error.keyword).to.equal('type');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -238,7 +238,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(error.dataPath).to.equal('.itemsHash');
       expect(error.keyword).to.equal('minLength');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -254,7 +254,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(error.dataPath).to.equal('.itemsHash');
       expect(error.keyword).to.equal('maxLength');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -285,7 +285,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(error.keyword).to.equal('required');
       expect(error.params.missingProperty).to.equal('documents');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -301,7 +301,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(error.dataPath).to.equal('.documents');
       expect(error.keyword).to.equal('type');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -327,7 +327,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(errors[2].keyword).to.equal('oneOf');
       expect(errors[2].params.passingSchemas).to.be.null();
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
   });
@@ -346,7 +346,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(error.keyword).to.equal('required');
       expect(error.params.missingProperty).to.equal('contracts');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -362,7 +362,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(error.dataPath).to.equal('.contracts');
       expect(error.keyword).to.equal('type');
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
 
@@ -385,7 +385,7 @@ describe.skip('validateSTPacketFactory', () => {
       expect(errors[2].keyword).to.equal('oneOf');
       expect(errors[2].params.passingSchemas).to.be.null();
 
-      expect(validateSTPacketContractsMock).to.have.not.been.called();
+      expect(validateSTPacketDataContractsMock).to.have.not.been.called();
       expect(validateSTPacketDocumentsMock).to.have.not.been.called();
     });
   });
@@ -403,7 +403,7 @@ describe.skip('validateSTPacketFactory', () => {
     expect(error.keyword).to.equal('oneOf');
     expect(error.params.passingSchemas).to.deep.equal([0, 1]);
 
-    expect(validateSTPacketContractsMock).to.have.not.been.called();
+    expect(validateSTPacketDataContractsMock).to.have.not.been.called();
     expect(validateSTPacketDocumentsMock).to.have.not.been.called();
   });
 
@@ -426,7 +426,7 @@ describe.skip('validateSTPacketFactory', () => {
     expect(errors[2].keyword).to.equal('oneOf');
     expect(errors[2].params.passingSchemas).to.be.null();
 
-    expect(validateSTPacketContractsMock).to.have.not.been.called();
+    expect(validateSTPacketDataContractsMock).to.have.not.been.called();
     expect(validateSTPacketDocumentsMock).to.have.not.been.called();
   });
 
@@ -445,7 +445,7 @@ describe.skip('validateSTPacketFactory', () => {
     expect(error.keyword).to.equal('additionalProperties');
     expect(error.params.additionalProperty).to.equal(additionalProperty);
 
-    expect(validateSTPacketContractsMock).to.have.not.been.called();
+    expect(validateSTPacketDataContractsMock).to.have.not.been.called();
     expect(validateSTPacketDocumentsMock).to.have.not.been.called();
   });
 
@@ -457,7 +457,7 @@ describe.skip('validateSTPacketFactory', () => {
 
     const contractError = new ConsensusError('test');
 
-    validateSTPacketContractsMock.returns(
+    validateSTPacketDataContractsMock.returns(
       new ValidationResult([contractError]),
     );
 
@@ -465,7 +465,7 @@ describe.skip('validateSTPacketFactory', () => {
 
     expectValidationError(result);
 
-    expect(validateSTPacketContractsMock).to.have.been.calledOnceWith(rawSTPacket);
+    expect(validateSTPacketDataContractsMock).to.have.been.calledOnceWith(rawSTPacket);
 
     const [error] = result.getErrors();
 

@@ -4,7 +4,7 @@ const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const validateContractFactory = require('../../../lib/dataContract/validateDataContractFactory');
+const validateDataContractFactory = require('../../../lib/dataContract/validateDataContractFactory');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
@@ -24,7 +24,7 @@ describe('validateDataContractFactory', () => {
     const ajv = new Ajv();
     const validator = new JsonSchemaValidator(ajv);
 
-    validateDataContract = validateContractFactory(validator);
+    validateDataContract = validateDataContractFactory(validator);
   });
 
   describe('$schema', () => {
@@ -779,7 +779,7 @@ describe('validateDataContractFactory', () => {
     expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
   });
 
-  it('should return valid result if contract is valid', () => {
+  it('should return valid result if Data Contract is valid', () => {
     const result = validateDataContract(rawDataContract);
 
     expect(result).to.be.an.instanceOf(ValidationResult);

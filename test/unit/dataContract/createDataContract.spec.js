@@ -15,39 +15,39 @@ describe('createDataContract', () => {
     };
   });
 
-  it('should return new DataContract with "contractId" and documents', () => {
-    const contract = createDataContract(rawDataContract);
+  it('should return new DataContract with "dataContractId" and documents', () => {
+    const dataContract = createDataContract(rawDataContract);
 
-    expect(contract).to.be.an.instanceOf(DataContract);
+    expect(dataContract).to.be.an.instanceOf(DataContract);
 
-    expect(contract.getContractId()).to.equal(rawDataContract.contractId);
-    expect(contract.getDocuments()).to.equal(rawDataContract.documents);
+    expect(dataContract.getId()).to.equal(rawDataContract.contractId);
+    expect(dataContract.getDocuments()).to.equal(rawDataContract.documents);
   });
 
   it('should return new DataContract with "$schema" if present', () => {
     rawDataContract.$schema = 'http://test.com/schema';
 
-    const contract = createDataContract(rawDataContract);
+    const dataContract = createDataContract(rawDataContract);
 
-    expect(contract).to.be.an.instanceOf(DataContract);
+    expect(dataContract).to.be.an.instanceOf(DataContract);
 
-    expect(contract.getJsonMetaSchema()).to.equal(rawDataContract.$schema);
+    expect(dataContract.getJsonMetaSchema()).to.equal(rawDataContract.$schema);
 
-    expect(contract.getContractId()).to.equal(rawDataContract.contractId);
-    expect(contract.getDocuments()).to.equal(rawDataContract.documents);
+    expect(dataContract.getId()).to.equal(rawDataContract.contractId);
+    expect(dataContract.getDocuments()).to.equal(rawDataContract.documents);
   });
 
   it('should return new DataContract with "version" if present', () => {
     rawDataContract.version = 1;
 
-    const contract = createDataContract(rawDataContract);
+    const dataContract = createDataContract(rawDataContract);
 
-    expect(contract).to.be.an.instanceOf(DataContract);
+    expect(dataContract).to.be.an.instanceOf(DataContract);
 
-    expect(contract.getVersion()).to.equal(rawDataContract.version);
+    expect(dataContract.getVersion()).to.equal(rawDataContract.version);
 
-    expect(contract.getContractId()).to.equal(rawDataContract.contractId);
-    expect(contract.getDocuments()).to.equal(rawDataContract.documents);
+    expect(dataContract.getId()).to.equal(rawDataContract.contractId);
+    expect(dataContract.getDocuments()).to.equal(rawDataContract.documents);
   });
 
   it('should return new DataContract with "definitions" if present', () => {
@@ -55,13 +55,13 @@ describe('createDataContract', () => {
       subSchema: { type: 'object' },
     };
 
-    const contract = createDataContract(rawDataContract);
+    const dataContract = createDataContract(rawDataContract);
 
-    expect(contract).to.be.an.instanceOf(DataContract);
+    expect(dataContract).to.be.an.instanceOf(DataContract);
 
-    expect(contract.getDefinitions()).to.equal(rawDataContract.definitions);
+    expect(dataContract.getDefinitions()).to.equal(rawDataContract.definitions);
 
-    expect(contract.getContractId()).to.equal(rawDataContract.contractId);
-    expect(contract.getDocuments()).to.equal(rawDataContract.documents);
+    expect(dataContract.getId()).to.equal(rawDataContract.contractId);
+    expect(dataContract.getDocuments()).to.equal(rawDataContract.documents);
   });
 });

@@ -4,14 +4,14 @@ const getDataContractFixture = require('../../../lib/test/fixtures/getDataContra
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const InvalidContractError = require('../../../lib/dataContract/errors/InvalidDataContractError');
+const InvalidDataContractError = require('../../../lib/dataContract/errors/InvalidDataContractError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 
 describe('DataContractFactory', () => {
-  let ContractFactory;
+  let DataContractFactory;
   let decodeMock;
-  let validateContractMock;
-  let createContractMock;
+  let validateDataContractMock;
+  let createDataContractMock;
   let factory;
   let dataContract;
   let rawDataContract;
@@ -21,25 +21,25 @@ describe('DataContractFactory', () => {
     rawDataContract = dataContract.toJSON();
 
     decodeMock = this.sinonSandbox.stub();
-    validateContractMock = this.sinonSandbox.stub();
-    createContractMock = this.sinonSandbox.stub().returns(dataContract);
+    validateDataContractMock = this.sinonSandbox.stub();
+    createDataContractMock = this.sinonSandbox.stub().returns(dataContract);
 
     // Require Factory module for webpack
     // eslint-disable-next-line global-require
     require('../../../lib/dataContract/DataContractFactory');
 
-    ContractFactory = rewiremock.proxy('../../../lib/contract/ContractFactory', {
+    DataContractFactory = rewiremock.proxy('../../../lib/dataContract/DataContractFactory', {
       '../../../lib/util/serializer': { decode: decodeMock },
     });
 
-    factory = new ContractFactory(
-      createContractMock,
-      validateContractMock,
+    factory = new DataContractFactory(
+      createDataContractMock,
+      validateDataContractMock,
     );
   });
 
   describe('create', () => {
-    it('should return new Contract with specified name and documents definition', () => {
+    it('should return new Data Contract with specified name and documents definition', () => {
       const result = factory.create(
         rawDataContract.contractId,
         rawDataContract.documents,
@@ -47,7 +47,7 @@ describe('DataContractFactory', () => {
 
       expect(result).to.equal(dataContract);
 
-      expect(createContractMock).to.have.been.calledOnceWith({
+      expect(createDataContractMock).to.have.been.calledOnceWith({
         contractId: rawDataContract.contractId,
         documents: rawDataContract.documents,
       });
@@ -55,32 +55,32 @@ describe('DataContractFactory', () => {
   });
 
   describe('createFromObject', () => {
-    it('should return new Contract with data from passed object', () => {
-      validateContractMock.returns(new ValidationResult());
+    it('should return new Data Contract with data from passed object', () => {
+      validateDataContractMock.returns(new ValidationResult());
 
       const result = factory.createFromObject(rawDataContract);
 
       expect(result).to.equal(dataContract);
 
-      expect(validateContractMock).to.have.been.calledOnceWith(rawDataContract);
+      expect(validateDataContractMock).to.have.been.calledOnceWith(rawDataContract);
 
-      expect(createContractMock).to.have.been.calledOnceWith(rawDataContract);
+      expect(createDataContractMock).to.have.been.calledOnceWith(rawDataContract);
     });
 
-    it('should return new Contract without validation if "skipValidation" option is passed', () => {
+    it('should return new Data Contract without validation if "skipValidation" option is passed', () => {
       const result = factory.createFromObject(rawDataContract, { skipValidation: true });
 
       expect(result).to.equal(dataContract);
 
-      expect(validateContractMock).to.have.not.been.called();
+      expect(validateDataContractMock).to.have.not.been.called();
 
-      expect(createContractMock).to.have.been.calledOnceWith(rawDataContract);
+      expect(createDataContractMock).to.have.been.calledOnceWith(rawDataContract);
     });
 
     it('should throw an error if passed object is not valid', () => {
       const validationError = new ConsensusError('test');
 
-      validateContractMock.returns(new ValidationResult([validationError]));
+      validateDataContractMock.returns(new ValidationResult([validationError]));
 
       let error;
       try {
@@ -89,7 +89,7 @@ describe('DataContractFactory', () => {
         error = e;
       }
 
-      expect(error).to.be.an.instanceOf(InvalidContractError);
+      expect(error).to.be.an.instanceOf(InvalidDataContractError);
       expect(error.getRawDataContract()).to.equal(rawDataContract);
 
       expect(error.getErrors()).to.have.length(1);
@@ -98,9 +98,9 @@ describe('DataContractFactory', () => {
 
       expect(consensusError).to.equal(validationError);
 
-      expect(validateContractMock).to.have.been.calledOnceWith(rawDataContract);
+      expect(validateDataContractMock).to.have.been.calledOnceWith(rawDataContract);
 
-      expect(createContractMock).to.have.not.been.called();
+      expect(createDataContractMock).to.have.not.been.called();
     });
   });
 
@@ -109,20 +109,20 @@ describe('DataContractFactory', () => {
       this.sinonSandbox.stub(factory, 'createFromObject');
     });
 
-    it('should return new Contract from serialized Contract', () => {
-      const serializedContract = dataContract.serialize();
+    it('should return new Data Contract from serialized contract', () => {
+      const serializedDataContract = dataContract.serialize();
 
       decodeMock.returns(rawDataContract);
 
       factory.createFromObject.returns(dataContract);
 
-      const result = factory.createFromSerialized(serializedContract);
+      const result = factory.createFromSerialized(serializedDataContract);
 
       expect(result).to.equal(dataContract);
 
       expect(factory.createFromObject).to.have.been.calledOnceWith(rawDataContract);
 
-      expect(decodeMock).to.have.been.calledOnceWith(serializedContract);
+      expect(decodeMock).to.have.been.calledOnceWith(serializedDataContract);
     });
   });
 });

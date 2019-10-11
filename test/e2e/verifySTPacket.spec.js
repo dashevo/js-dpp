@@ -30,7 +30,7 @@ describe('verifySTPacket', function main() {
     );
 
     // Create the data contract
-    const contract = dpp.contract.create('IndexedContract', {
+    const dataContract = dpp.dataContract.create('IndexedContract', {
       profile: {
         indices: [
           {
@@ -61,9 +61,9 @@ describe('verifySTPacket', function main() {
       },
     });
 
-    dpp.setContract(contract);
+    dpp.setDataContract(dataContract);
 
-    const contractPacket = dpp.packet.create(contract);
+    const contractPacket = dpp.packet.create(dataContract);
 
     const contractTransaction = createStateTransition(
       user,

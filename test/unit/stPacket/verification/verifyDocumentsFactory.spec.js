@@ -15,7 +15,7 @@ const DocumentAlreadyPresentError = require('../../../../lib/errors/DocumentAlre
 const DocumentNotFoundError = require('../../../../lib/errors/DocumentNotFoundError');
 const InvalidDocumentRevisionError = require('../../../../lib/errors/InvalidDocumentRevisionError');
 const InvalidDocumentActionError = require('../../../../lib/stPacket/errors/InvalidDocumentActionError');
-const ContractNotPresentError = require('../../../../lib/errors/ContractNotPresentError');
+const ContractNotPresentError = require('../../../../lib/errors/DataContractNotPresentError');
 
 describe.skip('verifyDocuments', () => {
   let verifyDocuments;

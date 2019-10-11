@@ -7,7 +7,7 @@ const STPacket = require('../../../lib/stPacket/STPacket');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const getSTPacketFixture = require('../../../lib/test/fixtures/getSTPacketFixture');
-const getContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
+const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 
@@ -20,7 +20,7 @@ describe.skip('STPacketFacade', () => {
   let dataProviderMock;
 
   beforeEach(function beforeEach() {
-    contract = getContractFixture();
+    contract = getDataContractFixture();
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
@@ -43,7 +43,7 @@ describe.skip('STPacketFacade', () => {
 
       expect(result).to.be.an.instanceOf(STPacket);
 
-      expect(result.getContractId()).to.equal(stPacket.getId());
+      expect(result.getContractId()).to.equal(stPacket.getContractId());
       expect(result.getDocuments()).to.deep.equal(stPacket.getDocuments());
     });
 
@@ -58,7 +58,7 @@ describe.skip('STPacketFacade', () => {
       }
 
       expect(error).to.be.an.instanceOf(MissingOptionError);
-      expect(error.getOptionName()).to.equal('contract');
+      expect(error.getOptionName()).to.equal('dataContract');
     });
   });
 

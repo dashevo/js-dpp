@@ -9,7 +9,7 @@ describe('DataContract', () => {
   let documentType;
   let documentSchema;
   let documents;
-  let contract;
+  let dataContract;
   let contractId;
 
   beforeEach(function beforeEach() {
@@ -17,7 +17,7 @@ describe('DataContract', () => {
     const serializerMock = { encode: this.sinonSandbox.stub() };
     encodeMock = serializerMock.encode;
 
-    DataContract = rewiremock.proxy('../../../lib/contract/DataContract', {
+    DataContract = rewiremock.proxy('../../../lib/dataContract/DataContract', {
       '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': serializerMock,
     });
@@ -36,22 +36,22 @@ describe('DataContract', () => {
 
     contractId = '6b74011f5d2ad1a8d45b71b9702f54205ce75253593c3cfbba3fdadeca278288';
 
-    contract = new DataContract(contractId, documents);
+    dataContract = new DataContract(contractId, documents);
   });
 
   describe('constructor', () => {
     it('should create new DataContract', () => {
-      contract = new DataContract(contractId, documents);
+      dataContract = new DataContract(contractId, documents);
 
-      expect(contract.version).to.equal(DataContract.DEFAULTS.VERSION);
-      expect(contract.schema).to.equal(DataContract.DEFAULTS.SCHEMA);
-      expect(contract.documents).to.equal(documents);
+      expect(dataContract.version).to.equal(DataContract.DEFAULTS.VERSION);
+      expect(dataContract.schema).to.equal(DataContract.DEFAULTS.SCHEMA);
+      expect(dataContract.documents).to.equal(documents);
     });
   });
 
   describe('#getId', () => {
     it('should return base58 encoded DataContract ID', () => {
-      const result = contract.getId();
+      const result = dataContract.getId();
 
       expect(result).to.equal(contractId);
     });
@@ -59,9 +59,9 @@ describe('DataContract', () => {
 
   describe('#getJsonSchemaId', () => {
     it('should return JSON Schema $contractId', () => {
-      const result = contract.getJsonSchemaId();
+      const result = dataContract.getJsonSchemaId();
 
-      expect(result).to.equal('contract');
+      expect(result).to.equal('dataContract');
     });
   });
 
@@ -69,18 +69,18 @@ describe('DataContract', () => {
     it('should set version', () => {
       const version = 1;
 
-      const result = contract.setVersion(version);
+      const result = dataContract.setVersion(version);
 
-      expect(result).to.equal(contract);
-      expect(contract.version).to.equal(version);
+      expect(result).to.equal(dataContract);
+      expect(dataContract.version).to.equal(version);
     });
   });
 
   describe('#getVersion', () => {
     it('should return version', () => {
-      const result = contract.getVersion();
+      const result = dataContract.getVersion();
 
-      expect(result).to.equal(contract.version);
+      expect(result).to.equal(dataContract.version);
     });
   });
 
@@ -88,18 +88,18 @@ describe('DataContract', () => {
     it('should set meta schema', () => {
       const metaSchema = 'http://test.com/schema';
 
-      const result = contract.setJsonMetaSchema(metaSchema);
+      const result = dataContract.setJsonMetaSchema(metaSchema);
 
-      expect(result).to.equal(contract);
-      expect(contract.schema).to.equal(metaSchema);
+      expect(result).to.equal(dataContract);
+      expect(dataContract.schema).to.equal(metaSchema);
     });
   });
 
   describe('#getJsonMetaSchema', () => {
     it('should return meta schema', () => {
-      const result = contract.getJsonMetaSchema();
+      const result = dataContract.getJsonMetaSchema();
 
-      expect(result).to.equal(contract.schema);
+      expect(result).to.equal(dataContract.schema);
     });
   });
 
@@ -113,30 +113,30 @@ describe('DataContract', () => {
         },
       };
 
-      const result = contract.setDocuments(anotherDocuments);
+      const result = dataContract.setDocuments(anotherDocuments);
 
-      expect(result).to.equal(contract);
-      expect(contract.documents).to.equal(anotherDocuments);
+      expect(result).to.equal(dataContract);
+      expect(dataContract.documents).to.equal(anotherDocuments);
     });
   });
 
   describe('#getDocuments', () => {
     it('should return Documents definition', () => {
-      const result = contract.getDocuments();
+      const result = dataContract.getDocuments();
 
-      expect(result).to.equal(contract.documents);
+      expect(result).to.equal(dataContract.documents);
     });
   });
 
   describe('#isDocumentDefined', () => {
     it('should return true if Document schema is defined', () => {
-      const result = contract.isDocumentDefined('niceDocument');
+      const result = dataContract.isDocumentDefined('niceDocument');
 
       expect(result).to.equal(true);
     });
 
     it('should return false if Document schema is not defined', () => {
-      const result = contract.isDocumentDefined('undefinedDocument');
+      const result = dataContract.isDocumentDefined('undefinedDocument');
 
       expect(result).to.equal(false);
     });
@@ -151,12 +151,12 @@ describe('DataContract', () => {
         },
       };
 
-      const result = contract.setDocumentSchema(anotherType, anotherDefinition);
+      const result = dataContract.setDocumentSchema(anotherType, anotherDefinition);
 
-      expect(result).to.equal(contract);
+      expect(result).to.equal(dataContract);
 
-      expect(contract.documents).to.have.property(anotherType);
-      expect(contract.documents[anotherType]).to.equal(anotherDefinition);
+      expect(dataContract.documents).to.have.property(anotherType);
+      expect(dataContract.documents[anotherType]).to.equal(anotherDefinition);
     });
   });
 
@@ -164,7 +164,7 @@ describe('DataContract', () => {
     it('should throw error if Document is not defined', () => {
       let error;
       try {
-        contract.getDocumentSchema('undefinedObject');
+        dataContract.getDocumentSchema('undefinedObject');
       } catch (e) {
         error = e;
       }
@@ -173,7 +173,7 @@ describe('DataContract', () => {
     });
 
     it('should return Document Schema', () => {
-      const result = contract.getDocumentSchema(documentType);
+      const result = dataContract.getDocumentSchema(documentType);
 
       expect(result).to.equal(documentSchema);
     });
@@ -183,7 +183,7 @@ describe('DataContract', () => {
     it('should throw error if Document is not defined', () => {
       let error;
       try {
-        contract.getDocumentSchemaRef('undefinedObject');
+        dataContract.getDocumentSchemaRef('undefinedObject');
       } catch (e) {
         error = e;
       }
@@ -192,10 +192,10 @@ describe('DataContract', () => {
     });
 
     it('should return schema with $ref to Document schema', () => {
-      const result = contract.getDocumentSchemaRef(documentType);
+      const result = dataContract.getDocumentSchemaRef(documentType);
 
       expect(result).to.deep.equal({
-        $ref: 'contract#/documents/niceDocument',
+        $ref: 'dataContract#/documents/niceDocument',
       });
     });
   });
@@ -204,24 +204,24 @@ describe('DataContract', () => {
     it('should set definitions', () => {
       const definitions = {};
 
-      const result = contract.setDefinitions(definitions);
+      const result = dataContract.setDefinitions(definitions);
 
-      expect(result).to.equal(contract);
-      expect(contract.definitions).to.equal(definitions);
+      expect(result).to.equal(dataContract);
+      expect(dataContract.definitions).to.equal(definitions);
     });
   });
 
   describe('#getDefinitions', () => {
     it('should return definitions', () => {
-      const result = contract.getDefinitions();
+      const result = dataContract.getDefinitions();
 
-      expect(result).to.equal(contract.definitions);
+      expect(result).to.equal(dataContract.definitions);
     });
   });
 
   describe('#toJSON', () => {
     it('should return DataContract as plain object', () => {
-      const result = contract.toJSON();
+      const result = dataContract.toJSON();
 
       expect(result).to.deep.equal({
         $schema: DataContract.DEFAULTS.SCHEMA,
@@ -236,9 +236,9 @@ describe('DataContract', () => {
         subSchema: { type: 'object' },
       };
 
-      contract.setDefinitions(definitions);
+      dataContract.setDefinitions(definitions);
 
-      const result = contract.toJSON();
+      const result = dataContract.toJSON();
 
       expect(result).to.deep.equal({
         $schema: DataContract.DEFAULTS.SCHEMA,
@@ -256,11 +256,11 @@ describe('DataContract', () => {
 
       encodeMock.returns(serializedDocument);
 
-      const result = contract.serialize();
+      const result = dataContract.serialize();
 
       expect(result).to.equal(serializedDocument);
 
-      expect(encodeMock).to.have.been.calledOnceWith(contract.toJSON());
+      expect(encodeMock).to.have.been.calledOnceWith(dataContract.toJSON());
     });
   });
 
@@ -270,20 +270,20 @@ describe('DataContract', () => {
     });
 
     it('should return DataContract hash', () => {
-      const serializedContract = '123';
+      const serializedDataContract = '123';
       const hashedDocument = '456';
 
-      DataContract.prototype.serialize.returns(serializedContract);
+      DataContract.prototype.serialize.returns(serializedDataContract);
 
       hashMock.returns(hashedDocument);
 
-      const result = contract.hash();
+      const result = dataContract.hash();
 
       expect(result).to.equal(hashedDocument);
 
       expect(DataContract.prototype.serialize).to.have.been.calledOnce();
 
-      expect(hashMock).to.have.been.calledOnceWith(serializedContract);
+      expect(hashMock).to.have.been.calledOnceWith(serializedDataContract);
     });
   });
 });

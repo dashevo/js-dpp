@@ -51,7 +51,7 @@ describe.skip('validateSTPacketDocumentsFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getContract()).to.equal(contract);
+    expect(error.getDataContract()).to.equal(contract);
     expect(error.getRawSTPacket()).to.equal(rawSTPacket);
 
     expect(validateDocumentMock.callCount).to.equal(5);

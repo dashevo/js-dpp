@@ -6,7 +6,7 @@ const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixt
 const DataContract = require('../../../lib/dataContract/DataContract');
 const Document = require('../../../lib/document/Document');
 
-const ContractAndDocumentsNotAllowedSamePacketError = require('../../../lib/stPacket/errors/ContractAndDocumentsNotAllowedSamePacketError');
+const DataContractAndDocumentsNotAllowedSamePacketError = require('../../../lib/stPacket/errors/DataContractAndDocumentsNotAllowedSamePacketError');
 
 describe.skip('STPacket', () => {
   let hashMock;
@@ -117,7 +117,7 @@ describe.skip('STPacket', () => {
     });
   });
 
-  describe('#setContract', () => {
+  describe('#setDataContract', () => {
     it('should set DataContract', () => {
       const result = stPacket.setContract(dataContract);
 
@@ -137,13 +137,13 @@ describe.skip('STPacket', () => {
         error = e;
       }
 
-      expect(error).to.be.an.instanceOf(ContractAndDocumentsNotAllowedSamePacketError);
+      expect(error).to.be.an.instanceOf(DataContractAndDocumentsNotAllowedSamePacketError);
 
       expect(error.getSTPacket()).to.equal(stPacket);
     });
   });
 
-  describe('#getContract', () => {
+  describe('#getDataContract', () => {
     it('should return DataContract', () => {
       stPacket.contracts = [dataContract];
 
@@ -180,7 +180,7 @@ describe.skip('STPacket', () => {
         error = e;
       }
 
-      expect(error).to.be.an.instanceOf(ContractAndDocumentsNotAllowedSamePacketError);
+      expect(error).to.be.an.instanceOf(DataContractAndDocumentsNotAllowedSamePacketError);
 
       expect(error.getSTPacket()).to.equal(stPacket);
     });

@@ -26,7 +26,7 @@ describe.skip('verifyContract', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getContract()).to.equal(contract);
+    expect(error.getDataContract()).to.equal(contract);
   });
 
   it('should return valid result if Contract is not present', async () => {
