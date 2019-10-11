@@ -49,9 +49,9 @@ describe('Contract', () => {
     });
   });
 
-  describe('#getContractId', () => {
+  describe('#getId', () => {
     it('should return base58 encoded Contract ID', () => {
-      const result = contract.getContractId();
+      const result = contract.getId();
 
       expect(result).to.equal(contractId);
     });

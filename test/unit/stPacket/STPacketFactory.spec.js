@@ -60,7 +60,7 @@ describe.skip('STPacketFactory', () => {
 
     contract = getContractFixture();
 
-    contractId = contract.getContractId();
+    contractId = contract.getId();
 
     factory = new STPacketFactory(
       dataProviderMock,

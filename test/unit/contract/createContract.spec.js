@@ -19,7 +19,7 @@ describe('createContract', () => {
 
     expect(contract).to.be.an.instanceOf(Contract);
 
-    expect(contract.getContractId()).to.equal(rawContract.contractId);
+    expect(contract.getId()).to.equal(rawContract.contractId);
     expect(contract.getDocuments()).to.equal(rawContract.documents);
   });
 
@@ -32,7 +32,7 @@ describe('createContract', () => {
 
     expect(contract.getJsonMetaSchema()).to.equal(rawContract.$schema);
 
-    expect(contract.getContractId()).to.equal(rawContract.contractId);
+    expect(contract.getId()).to.equal(rawContract.contractId);
     expect(contract.getDocuments()).to.equal(rawContract.documents);
   });
 
@@ -45,7 +45,7 @@ describe('createContract', () => {
 
     expect(contract.getVersion()).to.equal(rawContract.version);
 
-    expect(contract.getContractId()).to.equal(rawContract.contractId);
+    expect(contract.getId()).to.equal(rawContract.contractId);
     expect(contract.getDocuments()).to.equal(rawContract.documents);
   });
 
@@ -60,7 +60,7 @@ describe('createContract', () => {
 
     expect(contract.getDefinitions()).to.equal(rawContract.definitions);
 
-    expect(contract.getContractId()).to.equal(rawContract.contractId);
+    expect(contract.getId()).to.equal(rawContract.contractId);
     expect(contract.getDocuments()).to.equal(rawContract.documents);
   });
 });

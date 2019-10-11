@@ -21,14 +21,14 @@ describe.skip('STPacketHeaderFacade', () => {
   describe('create', () => {
     it('should create ST Packet Header', () => {
       const result = dpp.packetHeader.create(
-        stPacketHeader.getContractId(),
+        stPacketHeader.getId(),
         stPacketHeader.getItemsMerkleRoot(),
         stPacketHeader.getItemsHash(),
       );
 
       expect(result).to.be.an.instanceOf(STPacketHeader);
 
-      expect(result.getContractId()).to.equal(stPacketHeader.getContractId());
+      expect(result.getContractId()).to.equal(stPacketHeader.getId());
       expect(result.getItemsMerkleRoot()).to.equal(stPacketHeader.getItemsMerkleRoot());
       expect(result.getItemsHash()).to.equal(stPacketHeader.getItemsHash());
     });

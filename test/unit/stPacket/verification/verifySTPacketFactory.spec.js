@@ -59,7 +59,7 @@ describe.skip('verifySTPacketFactory', () => {
     documents = getDocumentsFixture();
     contract = getContractFixture();
 
-    stPacket = new STPacket(contract.getContractId());
+    stPacket = new STPacket(contract.getId());
     stPacket.setDocuments(documents);
 
     const payload = new Transaction.Payload.SubTxTransitionPayload()
