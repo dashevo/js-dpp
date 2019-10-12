@@ -8,7 +8,7 @@ const validateSTPacketDocumentsFactory = require('../../../../lib/stPacket/valid
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 
 const DuplicateDocumentsError = require('../../../../lib/errors/DuplicateDocumentsError');
-const InvalidContractError = require('../../../../lib/errors/InvalidContractError');
+const InvalidDataContractError = require('../../../../lib/errors/InvalidDataContractError');
 const ConsensusError = require('../../../../lib/errors/ConsensusError');
 
 describe.skip('validateSTPacketDocumentsFactory', () => {
@@ -47,7 +47,7 @@ describe.skip('validateSTPacketDocumentsFactory', () => {
 
     const result = validateSTPacketDocuments(rawSTPacket, contract);
 
-    expectValidationError(result, InvalidContractError);
+    expectValidationError(result, InvalidDataContractError);
 
     const [error] = result.getErrors();
 
