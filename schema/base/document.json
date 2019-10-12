@@ -24,7 +24,7 @@
       "minLength": 64,
       "maxLength": 64
     },
-    "$scopeId": {
+    "$entropy": {
       "type": "string",
       "minLength": 34,
       "maxLength": 34
@@ -79,7 +79,7 @@
     "$action",
     "$rev",
     "$scope",
-    "$scopeId"
+    "$entropy"
   ],
   "additionalProperties": false
 }

@@ -52,11 +52,11 @@ describe('DocumentFactory', () => {
   describe('create', () => {
     it('should return new Document with specified type and data', () => {
       const scope = '123';
-      const scopeId = '456';
+      const entropy = '456';
       const name = 'Cutie';
 
       hashMock.returns(scope);
-      generateMock.returns(scopeId);
+      generateMock.returns(entropy);
 
       const newDocument = factory.create(
         rawDocument.$type,
@@ -73,7 +73,7 @@ describe('DocumentFactory', () => {
       expect(newDocument.scope).to.equal(scope);
 
       expect(generateMock).to.have.been.calledOnce();
-      expect(newDocument.scopeId).to.equal(scopeId);
+      expect(newDocument.entropy).to.equal(entropy);
 
       expect(newDocument.getAction()).to.equal(Document.DEFAULTS.ACTION);
 

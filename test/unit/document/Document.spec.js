@@ -31,7 +31,7 @@ describe('Document', () => {
     rawDocument = {
       $type: 'test',
       $scope: 'a832e4145650bfe8462e768e9c4a9a0d3a0bb7dcd9b3e50c61c73ac9d2e14068',
-      $scopeId: 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh',
+      $entropy: 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh',
       $action: Document.DEFAULTS.ACTION,
       $rev: Document.DEFAULTS.REVISION,
       $meta: {
@@ -69,19 +69,19 @@ describe('Document', () => {
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
-    it('should create Document with $scopeId and data if present', () => {
+    it('should create Document with $entropy and data if present', () => {
       const data = {
         test: 1,
       };
 
       rawDocument = {
-        $scopeId: 'test',
+        $entropy: 'test',
         ...data,
       };
 
       document = new Document(rawDocument);
 
-      expect(document.scopeId).to.equal(rawDocument.$scopeId);
+      expect(document.entropy).to.equal(rawDocument.$entropy);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
@@ -164,7 +164,7 @@ describe('Document', () => {
 
       const actualId = document.getId();
 
-      expect(hashMock).to.have.been.calledOnceWith(rawDocument.$scope + rawDocument.$scopeId);
+      expect(hashMock).to.have.been.calledOnceWith(rawDocument.$scope + rawDocument.$entropy);
 
       expect(id).to.equal(actualId);
     });

@@ -13,7 +13,7 @@ const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixt
 const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTypeError');
 const MissingDocumentActionError = require('../../../lib/errors/MissingDocumentActionError');
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
-const InvalidDocumentScopeIdError = require('../../../lib/errors/InvalidDocumentScopeIdError');
+const InvalidDocumentEntropyError = require('../../../lib/errors/InvalidDocumentEntropyError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 const JsonSchemaError = require('../../../lib/errors/JsonSchemaError');
 
@@ -256,9 +256,9 @@ describe('validateDocumentFactory', () => {
       });
     });
 
-    describe('$scopeId', () => {
+    describe('$entropy', () => {
       it('should be present', () => {
-        delete rawDocument.$scopeId;
+        delete rawDocument.$entropy;
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -269,14 +269,14 @@ describe('validateDocumentFactory', () => {
         expect(jsonError).to.be.an.instanceOf(JsonSchemaError);
         expect(jsonError.dataPath).to.equal('');
         expect(jsonError.keyword).to.equal('required');
-        expect(jsonError.params.missingProperty).to.equal('$scopeId');
+        expect(jsonError.params.missingProperty).to.equal('$entropy');
 
-        expect(scopeError).to.be.an.instanceOf(InvalidDocumentScopeIdError);
+        expect(scopeError).to.be.an.instanceOf(InvalidDocumentEntropyError);
         expect(scopeError.getRawDocument()).to.equal(rawDocument);
       });
 
       it('should be a string', () => {
-        rawDocument.$scopeId = 1;
+        rawDocument.$entropy = 1;
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -285,15 +285,15 @@ describe('validateDocumentFactory', () => {
         const [jsonError, scopeError] = result.getErrors();
 
         expect(jsonError).to.be.an.instanceOf(JsonSchemaError);
-        expect(jsonError.dataPath).to.equal('.$scopeId');
+        expect(jsonError.dataPath).to.equal('.$entropy');
         expect(jsonError.keyword).to.equal('type');
 
-        expect(scopeError).to.be.an.instanceOf(InvalidDocumentScopeIdError);
+        expect(scopeError).to.be.an.instanceOf(InvalidDocumentEntropyError);
         expect(scopeError.getRawDocument()).to.equal(rawDocument);
       });
 
       it('should be no less than 34 chars', () => {
-        rawDocument.$scopeId = '86b273ff';
+        rawDocument.$entropy = '86b273ff';
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -302,15 +302,15 @@ describe('validateDocumentFactory', () => {
         const [jsonError, scopeError] = result.getErrors();
 
         expect(jsonError).to.be.an.instanceOf(JsonSchemaError);
-        expect(jsonError.dataPath).to.equal('.$scopeId');
+        expect(jsonError.dataPath).to.equal('.$entropy');
         expect(jsonError.keyword).to.equal('minLength');
 
-        expect(scopeError).to.be.an.instanceOf(InvalidDocumentScopeIdError);
+        expect(scopeError).to.be.an.instanceOf(InvalidDocumentEntropyError);
         expect(scopeError.getRawDocument()).to.equal(rawDocument);
       });
 
       it('should be no longer than 34 chars', () => {
-        rawDocument.$scopeId = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
+        rawDocument.$entropy = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -319,23 +319,23 @@ describe('validateDocumentFactory', () => {
         const [jsonError, scopeError] = result.getErrors();
 
         expect(jsonError).to.be.an.instanceOf(JsonSchemaError);
-        expect(jsonError.dataPath).to.equal('.$scopeId');
+        expect(jsonError.dataPath).to.equal('.$entropy');
         expect(jsonError.keyword).to.equal('maxLength');
 
-        expect(scopeError).to.be.an.instanceOf(InvalidDocumentScopeIdError);
+        expect(scopeError).to.be.an.instanceOf(InvalidDocumentEntropyError);
         expect(scopeError.getRawDocument()).to.equal(rawDocument);
       });
 
       it('should be valid entropy', () => {
-        rawDocument.$scopeId = '86b273ff86b273ff86b273ff86b273ff86';
+        rawDocument.$entropy = '86b273ff86b273ff86b273ff86b273ff86';
 
         const result = validateDocument(rawDocument, dataContract);
 
-        expectValidationError(result, InvalidDocumentScopeIdError);
+        expectValidationError(result, InvalidDocumentEntropyError);
 
         const [error] = result.getErrors();
 
-        expect(error).to.be.an.instanceOf(InvalidDocumentScopeIdError);
+        expect(error).to.be.an.instanceOf(InvalidDocumentEntropyError);
         expect(error.getRawDocument()).to.equal(rawDocument);
       });
     });
