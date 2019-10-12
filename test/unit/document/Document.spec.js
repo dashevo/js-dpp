@@ -30,7 +30,8 @@ describe('Document', () => {
 
     rawDocument = {
       $type: 'test',
-      $scope: 'a832e4145650bfe8462e768e9c4a9a0d3a0bb7dcd9b3e50c61c73ac9d2e14068',
+      $contractId: 'a832e4145650bfe8462e768e9c4a9a0d3a0bb7dcd9b3e50c61c73ac9d2e14068',
+      $userId: 'a832e4145650bfe8462e768e9c4a9a0d3a0bb7dcd9b3e50c61c73ac9d2e16546',
       $entropy: 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh',
       $action: Document.DEFAULTS.ACTION,
       $rev: Document.DEFAULTS.REVISION,
@@ -69,6 +70,38 @@ describe('Document', () => {
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
+    it('should create Document with $contractId and data if present', () => {
+      const data = {
+        test: 1,
+      };
+
+      rawDocument = {
+        $contractId: 'test',
+        ...data,
+      };
+
+      document = new Document(rawDocument);
+
+      expect(document.contractId).to.equal(rawDocument.$contractId);
+      expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
+    });
+
+    it('should create Document with $userId and data if present', () => {
+      const data = {
+        test: 1,
+      };
+
+      rawDocument = {
+        $userId: 'test',
+        ...data,
+      };
+
+      document = new Document(rawDocument);
+
+      expect(document.userId).to.equal(rawDocument.$userId);
+      expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
+    });
+
     it('should create Document with $entropy and data if present', () => {
       const data = {
         test: 1,
@@ -82,22 +115,6 @@ describe('Document', () => {
       document = new Document(rawDocument);
 
       expect(document.entropy).to.equal(rawDocument.$entropy);
-      expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
-    });
-
-    it('should create Document with $scope and data if present', () => {
-      const data = {
-        test: 1,
-      };
-
-      rawDocument = {
-        $scope: 'test',
-        ...data,
-      };
-
-      document = new Document(rawDocument);
-
-      expect(document.scope).to.equal(rawDocument.$scope);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
@@ -164,7 +181,12 @@ describe('Document', () => {
 
       const actualId = document.getId();
 
-      expect(hashMock).to.have.been.calledOnceWith(rawDocument.$scope + rawDocument.$entropy);
+      expect(hashMock).to.have.been.calledOnceWith(
+        rawDocument.$contractId
+        + rawDocument.$userId
+        + rawDocument.$type
+        + rawDocument.$entropy,
+      );
 
       expect(id).to.equal(actualId);
     });

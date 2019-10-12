@@ -12,7 +12,6 @@ const InvalidDocumentError = require('../../../lib/document/errors/InvalidDocume
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 
 describe('DocumentFactory', () => {
-  let hashMock;
   let decodeMock;
   let generateMock;
   let validateDocumentMock;
@@ -24,13 +23,11 @@ describe('DocumentFactory', () => {
   let factory;
 
   beforeEach(function beforeEach() {
-    hashMock = this.sinonSandbox.stub();
     decodeMock = this.sinonSandbox.stub();
     generateMock = this.sinonSandbox.stub();
     validateDocumentMock = this.sinonSandbox.stub();
 
     DocumentFactory = rewiremock.proxy('../../../lib/document/DocumentFactory', {
-      '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': { decode: decodeMock },
       '../../../lib/util/entropy': { generate: generateMock },
       '../../../lib/document/Document': Document,
@@ -51,11 +48,10 @@ describe('DocumentFactory', () => {
 
   describe('create', () => {
     it('should return new Document with specified type and data', () => {
-      const scope = '123';
-      const entropy = '456';
+      const contractId = dataContract.getId();
+      const entropy = '789';
       const name = 'Cutie';
 
-      hashMock.returns(scope);
       generateMock.returns(entropy);
 
       const newDocument = factory.create(
@@ -69,8 +65,8 @@ describe('DocumentFactory', () => {
 
       expect(newDocument.get('name')).to.equal(name);
 
-      expect(hashMock).to.have.been.calledOnceWith(dataContract.getId() + userId);
-      expect(newDocument.scope).to.equal(scope);
+      expect(newDocument.contractId).to.equal(contractId);
+      expect(newDocument.userId).to.equal(userId);
 
       expect(generateMock).to.have.been.calledOnce();
       expect(newDocument.entropy).to.equal(entropy);
@@ -93,8 +89,6 @@ describe('DocumentFactory', () => {
       expect(error).to.be.an.instanceOf(InvalidDocumentTypeError);
       expect(error.getType()).to.equal(type);
       expect(error.getDataContract()).to.equal(dataContract);
-
-      expect(hashMock).to.have.not.been.called();
     });
   });
 

@@ -19,7 +19,12 @@
       "multipleOf": 1.0,
       "minimum": 1
     },
-    "$scope": {
+    "$contractId": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64
+    },
+    "$userId": {
       "type": "string",
       "minLength": 64,
       "maxLength": 64
@@ -78,7 +83,8 @@
     "$type",
     "$action",
     "$rev",
-    "$scope",
+    "$contractId",
+    "$userId",
     "$entropy"
   ],
   "additionalProperties": false
