@@ -11,7 +11,6 @@ const getDataContractFixture = require('../../../lib/test/fixtures/getDataContra
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
 const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTypeError');
-const MissingDocumentActionError = require('../../../lib/errors/MissingDocumentActionError');
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 const InvalidDocumentEntropyError = require('../../../lib/errors/InvalidDocumentEntropyError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
@@ -103,49 +102,6 @@ describe('validateDocumentFactory', () => {
       });
     });
 
-    describe('$action', () => {
-      it('should be present', () => {
-        delete rawDocument.$action;
-
-        const result = validateDocument(rawDocument, dataContract);
-
-        expectValidationError(
-          result,
-          MissingDocumentActionError,
-        );
-
-        const [error] = result.getErrors();
-
-        expect(error.getRawDocument()).to.equal(rawDocument);
-      });
-
-      it('should be a number', () => {
-        rawDocument.$action = 'string';
-
-        const result = validateDocument(rawDocument, dataContract);
-
-        expectJsonSchemaError(result);
-
-        const [error] = result.getErrors();
-
-        expect(error.dataPath).to.equal('.$action');
-        expect(error.keyword).to.equal('type');
-      });
-
-      it('should be defined enum', () => {
-        rawDocument.$action = 3;
-
-        const result = validateDocument(rawDocument, dataContract);
-
-        expectJsonSchemaError(result);
-
-        const [error] = result.getErrors();
-
-        expect(error.dataPath).to.equal('.$action');
-        expect(error.keyword).to.equal('enum');
-      });
-    });
-
     describe('$rev', () => {
       it('should be present', () => {
         delete rawDocument.$rev;
@@ -200,7 +156,6 @@ describe('validateDocumentFactory', () => {
         expect(error.keyword).to.equal('minimum');
       });
     });
-
 
     describe('$contractId', () => {
       it('should be present', () => {
@@ -503,20 +458,25 @@ describe('validateDocumentFactory', () => {
     });
   });
 
-  it('should validate against base Document schema if $action is DELETE', () => {
+  it('should validate against base Document schema if action option is DELETE', () => {
     delete rawDocument.name;
-    rawDocument.$action = Document.ACTIONS.DELETE;
 
-    const result = validateDocument(rawDocument, dataContract);
+    const result = validateDocument(
+      rawDocument,
+      dataContract,
+      { action: Document.ACTIONS.DELETE },
+    );
 
     expect(validator.validate).to.have.been.calledOnceWith(documentBaseSchema, rawDocument);
     expect(result.getErrors().length).to.equal(0);
   });
 
-  it('should throw validation error if additional fields are defined and $action is DELETE', () => {
-    rawDocument.$action = Document.ACTIONS.DELETE;
-
-    const result = validateDocument(rawDocument, dataContract);
+  it('should throw validation error if additional fields are defined and action options is DELETE', () => {
+    const result = validateDocument(
+      rawDocument,
+      dataContract,
+      { action: Document.ACTIONS.DELETE },
+    );
 
     const [error] = result.getErrors();
 

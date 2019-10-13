@@ -33,7 +33,6 @@ describe('Document', () => {
       $contractId: 'a832e4145650bfe8462e768e9c4a9a0d3a0bb7dcd9b3e50c61c73ac9d2e14068',
       $userId: 'a832e4145650bfe8462e768e9c4a9a0d3a0bb7dcd9b3e50c61c73ac9d2e16546',
       $entropy: 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh',
-      $action: Document.DEFAULTS.ACTION,
       $rev: Document.DEFAULTS.REVISION,
       $meta: {
         userId: 'a832e4145650bfe8462e768e9c4a9a0d3a0bb7dcd9b3e50c61c73ac9d2e16546',
@@ -47,6 +46,8 @@ describe('Document', () => {
     };
 
     document = new Document(rawDocument);
+
+    document.setAction(Document.DEFAULTS.ACTION);
   });
 
   describe('constructor', () => {
@@ -118,19 +119,18 @@ describe('Document', () => {
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
-    it('should create Document with $action and data if present', () => {
+    it('should create Document with undefined action and data if present', () => {
       const data = {
         test: 1,
       };
 
       rawDocument = {
-        $action: 'test',
         ...data,
       };
 
       document = new Document(rawDocument);
 
-      expect(document.action).to.equal(rawDocument.$action);
+      expect(document.action).to.equal(undefined);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
