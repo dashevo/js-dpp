@@ -25,50 +25,6 @@
       "type": "string",
       "minLength": 34,
       "maxLength": 34
-    },
-    "$meta": {
-      "type": "object",
-      "properties": {
-        "userId": {
-          "type": "string",
-          "minLength": 64,
-          "maxLength": 64
-        },
-        "stReference":  {
-          "type": "object",
-          "properties": {
-            "blockHash": {
-              "type": "string",
-              "minLength": 64,
-              "maxLength": 64
-            },
-            "blockHeight": {
-              "type": "number",
-              "multipleOf": 1,
-              "minimum": 1
-            },
-            "stHeaderHash": {
-              "type": "string",
-              "minLength": 64,
-              "maxLength": 64
-            },
-            "stPacketHash": {
-              "type": "string",
-              "minLength": 64,
-              "maxLength": 64
-            }
-          },
-          "required": [
-            "blockHash",
-            "blockHeight",
-            "stHeaderHash",
-            "stPacketHash"
-          ],
-          "additionalProperties": false
-        }
-      },
-      "required": ["userId"],
-      "additionalProperties": false
     }
   },
   "required": [

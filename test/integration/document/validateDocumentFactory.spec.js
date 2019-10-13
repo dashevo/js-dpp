@@ -350,84 +350,6 @@ describe('validateDocumentFactory', () => {
         expect(error.getRawDocument()).to.equal(rawDocument);
       });
     });
-
-    describe('$meta', () => {
-      it('should not be required', () => {
-        delete rawDocument.$meta;
-
-        const result = validateDocument(rawDocument, dataContract);
-
-        expectJsonSchemaError(result, 0);
-      });
-
-      it('should not have additional properties', () => {
-        rawDocument.$meta.test = 1;
-
-        const result = validateDocument(rawDocument, dataContract);
-
-        expectJsonSchemaError(result);
-
-        const [error] = result.getErrors();
-
-        expect(error.dataPath).to.equal('.$meta');
-        expect(error.keyword).to.equal('additionalProperties');
-      });
-
-      describe('userId', () => {
-        it('should be present', () => {
-          delete rawDocument.$meta.userId;
-
-          const result = validateDocument(rawDocument, dataContract);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.$meta');
-          expect(error.keyword).to.equal('required');
-          expect(error.params.missingProperty).to.equal('userId');
-        });
-
-        it('should be a string', () => {
-          rawDocument.$meta.userId = 1;
-
-          const result = validateDocument(rawDocument, dataContract);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.$meta.userId');
-          expect(error.keyword).to.equal('type');
-        });
-
-        it('should be no less than 64 chars', () => {
-          rawDocument.$meta.userId = '86b273ff';
-
-          const result = validateDocument(rawDocument, dataContract);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.$meta.userId');
-          expect(error.keyword).to.equal('minLength');
-        });
-
-        it('should be no longer than 64 chars', () => {
-          rawDocument.$meta.userId = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
-
-          const result = validateDocument(rawDocument, dataContract);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.$meta.userId');
-          expect(error.keyword).to.equal('maxLength');
-        });
-      });
-    });
   });
 
   describe('Data Contract schema', () => {
@@ -458,7 +380,7 @@ describe('validateDocumentFactory', () => {
     });
   });
 
-  it('should validate against base Document schema if action option is DELETE', () => {
+  it('should validate against base Document schema if `action` option is DELETE', () => {
     delete rawDocument.name;
 
     const result = validateDocument(
@@ -471,23 +393,12 @@ describe('validateDocumentFactory', () => {
     expect(result.getErrors().length).to.equal(0);
   });
 
-  it('should throw validation error if additional fields are defined and action options is DELETE', () => {
+  it('should throw validation error if additional fields are defined and `action` option is DELETE', () => {
     const result = validateDocument(
       rawDocument,
       dataContract,
       { action: Document.ACTIONS.DELETE },
     );
-
-    const [error] = result.getErrors();
-
-    expect(error.dataPath).to.equal('');
-    expect(error.keyword).to.equal('additionalProperties');
-  });
-
-  it('should throw validation error if allowMeta is false while $meta is set', () => {
-    rawDocument.$meta = {};
-
-    const result = validateDocument(rawDocument, dataContract, { allowMeta: false });
 
     const [error] = result.getErrors();
 
