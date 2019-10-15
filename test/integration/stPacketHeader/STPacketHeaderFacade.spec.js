@@ -28,7 +28,7 @@ describe.skip('STPacketHeaderFacade', () => {
 
       expect(result).to.be.an.instanceOf(STPacketHeader);
 
-      expect(result.getContractId()).to.equal(stPacketHeader.getContractId());
+      expect(result.getContractId()).to.equal(stPacketHeader.getId());
       expect(result.getItemsMerkleRoot()).to.equal(stPacketHeader.getItemsMerkleRoot());
       expect(result.getItemsHash()).to.equal(stPacketHeader.getItemsHash());
     });
