@@ -43,16 +43,32 @@ describe('StateTransition', () => {
   });
 
   describe('validate', () => {
-    it('should validate State Transition', async () => {
-      const result = await dpp.stateTransition.validate(stateTransition.toJSON());
+    it('should return invalid result if State Transition structure is invalid', async function it() {
+      const validateDataSpy = this.sinonSandbox.spy(
+        dpp.stateTransition,
+        'validateData',
+      );
+
+      const rawStateTransiton = stateTransition.toJSON();
+      delete rawStateTransiton.protocolVersion;
+
+      const result = await dpp.stateTransition.validate(rawStateTransiton);
 
       expect(result).to.be.an.instanceOf(ValidationResult);
+      expect(result.isValid()).to.be.false();
+
+      expect(validateDataSpy).to.not.be.called();
     });
 
-    it('should validate only data if skipStructureValidation is passed', async function it() {
+    it('should validate structure and data', async function it() {
       const validateStructureSpy = this.sinonSandbox.spy(
         dpp.stateTransition,
-        'validateStateTransitionStructure',
+        'validateStructure',
+      );
+
+      const validateDataSpy = this.sinonSandbox.spy(
+        dpp.stateTransition,
+        'validateData',
       );
 
       const result = await dpp.stateTransition.validate(
@@ -61,8 +77,28 @@ describe('StateTransition', () => {
       );
 
       expect(result).to.be.an.instanceOf(ValidationResult);
+      expect(result.isValid()).to.be.false();
 
-      expect(validateStructureSpy).to.not.be.called();
+      expect(validateStructureSpy).to.be.calledOnceWith(stateTransition);
+      expect(validateDataSpy).to.be.called(stateTransition);
+    });
+  });
+
+  describe('validateStructure', () => {
+    it('should validate State Transition', async () => {
+      const result = await dpp.stateTransition.validateStructure(stateTransition.toJSON());
+
+      expect(result).to.be.an.instanceOf(ValidationResult);
+      expect(result.isValid()).to.be.true();
+    });
+  });
+
+  describe('validateData', () => {
+    it('should validate State Transition', async () => {
+      const result = await dpp.stateTransition.validateData(stateTransition);
+
+      expect(result).to.be.an.instanceOf(ValidationResult);
+      expect(result.isValid()).to.be.false();
     });
   });
 });
