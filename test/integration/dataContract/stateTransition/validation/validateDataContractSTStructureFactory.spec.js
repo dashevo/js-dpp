@@ -1,22 +1,22 @@
 const Ajv = require('ajv');
 
-const validateDataContractSTStructureFactory = require('../../../../lib/dataContract/stateTransition/validateDataContractSTStructureFactory');
+const validateDataContractSTStructureFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractSTStructureFactory');
 
-const DataContractStateTransition = require('../../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const DataContractStateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractStateTransition');
 
-const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
-const dataContractSTSchema = require('../../../../schema/stateTransition/data-contract');
+const stateTransitionTypes = require('../../../../../lib/stateTransition/stateTransitionTypes');
+const dataContractSTSchema = require('../../../../../schema/stateTransition/data-contract');
 
-const JsonSchemaValidator = require('../../../../lib/validation/JsonSchemaValidator');
-const validateStateTransitionStructureFactory = require('../../../../lib/stateTransition/validate/validateStateTransitionStructureFactory');
+const JsonSchemaValidator = require('../../../../../lib/validation/JsonSchemaValidator');
+const validateStateTransitionStructureFactory = require('../../../../../lib/stateTransition/validation/validateStateTransitionStructureFactory');
 
-const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
+const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 
-const { expectValidationError, expectJsonSchemaError } = require('../../../../lib/test/expect/expectError');
+const { expectValidationError, expectJsonSchemaError } = require('../../../../../lib/test/expect/expectError');
 
-const ValidationResult = require('../../../../lib/validation/ValidationResult');
+const ValidationResult = require('../../../../../lib/validation/ValidationResult');
 
-const ConsensusError = require('../../../../lib/errors/ConsensusError');
+const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 
 describe('validateDataContractSTStructureFactory', () => {
   let validateDataContract;

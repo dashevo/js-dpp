@@ -1,6 +1,6 @@
 const Ajv = require('ajv');
 
-const validateStateTransitionStructureFactory = require('../../../../lib/stateTransition/validate/validateStateTransitionStructureFactory');
+const validateStateTransitionStructureFactory = require('../../../../lib/stateTransition/validation/validateStateTransitionStructureFactory');
 
 const JsonSchemaValidator = require('../../../../lib/validation/JsonSchemaValidator');
 

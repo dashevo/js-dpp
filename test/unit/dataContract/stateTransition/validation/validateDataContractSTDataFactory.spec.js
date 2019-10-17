@@ -1,16 +1,16 @@
-const validateDataContractSTDataFactory = require('../../../../lib/dataContract/stateTransition/validateDataContractSTDataFactory');
-const DataContractStateTransition = require('../../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const validateDataContractSTDataFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractSTDataFactory');
+const DataContractStateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractStateTransition');
 
-const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
-const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
+const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
+const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 
-const { expectValidationError } = require('../../../../lib/test/expect/expectError');
+const { expectValidationError } = require('../../../../../lib/test/expect/expectError');
 
-const ValidationResult = require('../../../../lib/validation/ValidationResult');
+const ValidationResult = require('../../../../../lib/validation/ValidationResult');
 
-const DataContractIdentityNotFoundError = require('../../../../lib/errors/DataContractIdentityNotFoundError');
-const UnconfirmedUserError = require('../../../../lib/errors/UnconfirmedUserError');
-const DataContractAlreadyPresentError = require('../../../../lib/errors/DataContractAlreadyPresentError');
+const DataContractIdentityNotFoundError = require('../../../../../lib/errors/DataContractIdentityNotFoundError');
+const UnconfirmedUserError = require('../../../../../lib/errors/UnconfirmedUserError');
+const DataContractAlreadyPresentError = require('../../../../../lib/errors/DataContractAlreadyPresentError');
 
 describe('validateDataContractSTDataFactory', () => {
   let validateDataContractSTData;
@@ -32,7 +32,7 @@ describe('validateDataContractSTDataFactory', () => {
     validateDataContractSTData = validateDataContractSTDataFactory(dataProviderMock);
   });
 
-  it('should return invalid result if contractId is wrong', async () => {
+  it('should return invalid result if Data Contract Identity not found with specified contractId', async () => {
     const result = await validateDataContractSTData(stateTransition);
 
     expectValidationError(result, DataContractIdentityNotFoundError);
@@ -61,6 +61,8 @@ describe('validateDataContractSTDataFactory', () => {
     expect(dataProviderMock.fetchTransaction).to.be.calledOnceWith(dataContract.getId());
     expect(dataProviderMock.fetchDataContract).to.not.be.called();
   });
+
+  it('should return invalid result if Data Contract Identity is wrong transaction');
 
   it('should return invalid result if Data Contract with specified contractId is already exist', async () => {
     dataProviderMock.fetchTransaction.resolves(registrationTransaction);
