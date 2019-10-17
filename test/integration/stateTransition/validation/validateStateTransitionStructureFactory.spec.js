@@ -6,6 +6,8 @@ const JsonSchemaValidator = require('../../../../lib/validation/JsonSchemaValida
 
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
+const dataContractSTSchema = require('../../../../schema/stateTransition/data-contract');
+
 const {
   expectValidationError,
   expectJsonSchemaError,
@@ -19,6 +21,7 @@ const InvalidStateTransitionTypeError = require('../../../../lib/errors/InvalidS
 
 describe('validateStateTransitionStructureFactory', () => {
   let validateStateTransitionStructure;
+  let validator;
   let extensionFunctionMock;
   let rawStateTransition;
 
@@ -42,7 +45,7 @@ describe('validateStateTransitionStructureFactory', () => {
     };
 
     const ajv = new Ajv();
-    const validator = new JsonSchemaValidator(ajv);
+    validator = new JsonSchemaValidator(ajv);
 
     validateStateTransitionStructure = validateStateTransitionStructureFactory(
       validator,
@@ -121,6 +124,46 @@ describe('validateStateTransitionStructureFactory', () => {
         const [error] = result.getErrors();
 
         expect(error.getRawStateTransition()).to.equal(rawStateTransition);
+
+        expect(extensionFunctionMock).to.not.be.called();
+      });
+    });
+  });
+
+  describe('Data Contract Schema', () => {
+    beforeEach(() => {
+      const typeExtensions = {
+        [stateTransitionTypes.DATA_CONTRACT]: {
+          function: extensionFunctionMock,
+          schema: dataContractSTSchema,
+        },
+      };
+
+      validateStateTransitionStructure = validateStateTransitionStructureFactory(
+        validator,
+        typeExtensions,
+      );
+
+      rawStateTransition = {
+        protocolVersion: 0,
+        type: stateTransitionTypes.DATA_CONTRACT,
+        dataContract: {},
+      };
+    });
+
+    describe('dataContract', () => {
+      it('should be present', () => {
+        delete rawStateTransition.dataContract;
+
+        const result = validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('dataContract');
 
         expect(extensionFunctionMock).to.not.be.called();
       });

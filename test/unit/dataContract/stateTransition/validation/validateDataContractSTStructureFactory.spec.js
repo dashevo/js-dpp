@@ -1,18 +1,10 @@
-const Ajv = require('ajv');
-
 const validateDataContractSTStructureFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractSTStructureFactory');
 
 const DataContractStateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractStateTransition');
 
-const stateTransitionTypes = require('../../../../../lib/stateTransition/stateTransitionTypes');
-const dataContractSTSchema = require('../../../../../schema/stateTransition/data-contract');
-
-const JsonSchemaValidator = require('../../../../../lib/validation/JsonSchemaValidator');
-const validateStateTransitionStructureFactory = require('../../../../../lib/stateTransition/validation/validateStateTransitionStructureFactory');
-
 const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 
-const { expectValidationError, expectJsonSchemaError } = require('../../../../../lib/test/expect/expectError');
+const { expectValidationError } = require('../../../../../lib/test/expect/expectError');
 
 const ValidationResult = require('../../../../../lib/validation/ValidationResult');
 
@@ -36,48 +28,6 @@ describe('validateDataContractSTStructureFactory', () => {
     validateDataContractSTStructure = validateDataContractSTStructureFactory(
       validateDataContract,
     );
-  });
-
-  describe('Schema', () => {
-    let validateStateTransitionStructure;
-    let extensionFunctionMock;
-
-    beforeEach(function beforeEach() {
-      extensionFunctionMock = this.sinonSandbox.stub();
-
-      const typeExtensions = {
-        [stateTransitionTypes.DATA_CONTRACT]: {
-          function: extensionFunctionMock,
-          schema: dataContractSTSchema,
-        },
-      };
-
-      const ajv = new Ajv();
-      const validator = new JsonSchemaValidator(ajv);
-
-      validateStateTransitionStructure = validateStateTransitionStructureFactory(
-        validator,
-        typeExtensions,
-      );
-    });
-
-    describe('dataContract', () => {
-      it('should be present', () => {
-        delete rawStateTransition.dataContract;
-
-        const result = validateStateTransitionStructure(rawStateTransition);
-
-        expectJsonSchemaError(result);
-
-        const [error] = result.getErrors();
-
-        expect(error.dataPath).to.equal('');
-        expect(error.keyword).to.equal('required');
-        expect(error.params.missingProperty).to.equal('dataContract');
-
-        expect(extensionFunctionMock).to.not.be.called();
-      });
-    });
   });
 
   it('should return invalid result if data contract is not invalid', () => {
