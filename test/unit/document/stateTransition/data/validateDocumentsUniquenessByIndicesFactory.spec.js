@@ -1,41 +1,35 @@
-const verifyDocumentsUniquenessByIndicesFactory = require('../../../../lib/stPacket/verification/verifyDocumentsUniquenessByIndicesFactory');
+const verifyDocumentsUniquenessByIndicesFactory = require('../../../../../lib/document/stateTransition/validation/data/validateDocumentsUniquenessByIndicesFactory');
 
-const STPacket = require('../../../../lib/stPacket/STPacket');
+const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
+const getContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 
-const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
-const getContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
+const { expectValidationError } = require('../../../../../lib/test/expect/expectError');
+const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
 
-const { expectValidationError } = require('../../../../lib/test/expect/expectError');
-const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
+const ValidationResult = require('../../../../../lib/validation/ValidationResult');
 
-const ValidationResult = require('../../../../lib/validation/ValidationResult');
+const DuplicateDocumentError = require('../../../../../lib/errors/DuplicateDocumentError');
 
-const DuplicateDocumentError = require('../../../../lib/errors/DuplicateDocumentError');
-
-describe.skip('verifyDocumentsUniquenessByIndices', () => {
+describe('validateDocumentsUniquenessByIndices', () => {
   let fetchDocumentsByDocumentsMock;
   let dataProviderMock;
-  let verifyDocumentsUniquenessByIndices;
-  let stPacket;
+  let validateDocumentsUniquenessByIndices;
   let documents;
-  let contract;
+  let dataContract;
   let userId;
 
   beforeEach(function beforeEach() {
     ({ userId } = getDocumentsFixture);
 
     documents = getDocumentsFixture();
-    contract = getContractFixture();
-
-    stPacket = new STPacket(contract.getId());
-    stPacket.setDocuments(documents);
+    dataContract = getContractFixture();
 
     fetchDocumentsByDocumentsMock = this.sinonSandbox.stub();
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchDocuments.resolves([]);
 
-    verifyDocumentsUniquenessByIndices = verifyDocumentsUniquenessByIndicesFactory(
+    validateDocumentsUniquenessByIndices = verifyDocumentsUniquenessByIndicesFactory(
       fetchDocumentsByDocumentsMock,
       dataProviderMock,
     );
@@ -48,7 +42,7 @@ describe.skip('verifyDocumentsUniquenessByIndices', () => {
 
     dataProviderMock.fetchDocuments
       .withArgs(
-        stPacket.getContractId(),
+        dataContract.getId(),
         william.getType(),
         {
           where: [
@@ -57,11 +51,11 @@ describe.skip('verifyDocumentsUniquenessByIndices', () => {
           ],
         },
       )
-      .resolves([william.toJSON()]);
+      .resolves([william]);
 
     dataProviderMock.fetchDocuments
       .withArgs(
-        stPacket.getContractId(),
+        dataContract.getId(),
         william.getType(),
         {
           where: [
@@ -70,9 +64,9 @@ describe.skip('verifyDocumentsUniquenessByIndices', () => {
           ],
         },
       )
-      .resolves([william.toJSON()]);
+      .resolves([william]);
 
-    const result = await verifyDocumentsUniquenessByIndices(stPacket, userId, contract);
+    const result = await validateDocumentsUniquenessByIndices(documents, userId, dataContract);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
@@ -81,11 +75,11 @@ describe.skip('verifyDocumentsUniquenessByIndices', () => {
   it('should return invalid result if Document has unique indices and there are duplicates', async () => {
     const [, , , william, leon] = documents;
 
-    const indicesDefinition = contract.getDocumentSchema(william.getType()).indices;
+    const indicesDefinition = dataContract.getDocumentSchema(william.getType()).indices;
 
     dataProviderMock.fetchDocuments
       .withArgs(
-        stPacket.getContractId(),
+        dataContract.getId(),
         william.getType(),
         {
           where: [
@@ -94,11 +88,11 @@ describe.skip('verifyDocumentsUniquenessByIndices', () => {
           ],
         },
       )
-      .resolves([leon.toJSON()]);
+      .resolves([leon]);
 
     dataProviderMock.fetchDocuments
       .withArgs(
-        stPacket.getContractId(),
+        dataContract.getId(),
         william.getType(),
         {
           where: [
@@ -107,11 +101,11 @@ describe.skip('verifyDocumentsUniquenessByIndices', () => {
           ],
         },
       )
-      .resolves([leon.toJSON()]);
+      .resolves([leon]);
 
     dataProviderMock.fetchDocuments
       .withArgs(
-        stPacket.getContractId(),
+        dataContract.getId(),
         leon.getType(),
         {
           where: [
@@ -120,11 +114,11 @@ describe.skip('verifyDocumentsUniquenessByIndices', () => {
           ],
         },
       )
-      .resolves([william.toJSON()]);
+      .resolves([william]);
 
     dataProviderMock.fetchDocuments
       .withArgs(
-        stPacket.getContractId(),
+        dataContract.getId(),
         leon.getType(),
         {
           where: [
@@ -133,9 +127,9 @@ describe.skip('verifyDocumentsUniquenessByIndices', () => {
           ],
         },
       )
-      .resolves([william.toJSON()]);
+      .resolves([william]);
 
-    const result = await verifyDocumentsUniquenessByIndices(stPacket, userId, contract);
+    const result = await validateDocumentsUniquenessByIndices(documents, userId, dataContract);
 
     expectValidationError(result, DuplicateDocumentError, 4);
 

@@ -1,18 +1,18 @@
-const Document = require('../../../../lib/document/Document');
-const DataTrigger = require('../../../../lib/dataTrigger/DataTrigger');
-const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
-const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
-const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
-const dpnsDocumentFixture = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
-const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
+const Document = require('../../../../../../lib/document/Document');
+const DataTrigger = require('../../../../../../lib/dataTrigger/DataTrigger');
+const DataTriggerExecutionResult = require('../../../../../../lib/dataTrigger/DataTriggerExecutionResult');
+const DataTriggerExecutionContext = require('../../../../../../lib/dataTrigger/DataTriggerExecutionContext');
+const getDpnsContractFixture = require('../../../../../../lib/test/fixtures/getDpnsContractFixture');
+const dpnsDocumentFixture = require('../../../../../../lib/test/fixtures/getDpnsDocumentFixture');
+const getDocumentsFixture = require('../../../../../../lib/test/fixtures/getDocumentsFixture');
 
-const dpnsCreateDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
-const dpnsDeleteDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
-const dpnsUpdateDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
+const dpnsCreateDomainDataTrigger = require('../../../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
+const dpnsDeleteDomainDataTrigger = require('../../../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
+const dpnsUpdateDomainDataTrigger = require('../../../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
 
-const executeDataTriggersFactory = require('../../../../lib/stPacket/verification/executeDataTriggersFactory');
+const executeDataTriggersFactory = require('../../../../../../lib/document/stateTransition/validation/data/executeDataTriggersFactory');
 
-describe.skip('executeDataTriggersFactory', () => {
+describe('executeDataTriggersFactory', () => {
   let childDocument;
   let contractMock;
 

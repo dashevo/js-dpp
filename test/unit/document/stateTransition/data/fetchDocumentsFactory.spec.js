@@ -1,11 +1,11 @@
-const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
-const getContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
+const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
+const getContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 
-const fetchDocumentsByDocumentsFactory = require('../../../../lib/stPacket/verification/fetchDocumentsByDocumentsFactory');
+const fetchDocumentsByDocumentsFactory = require('../../../../../lib/document/stateTransition/validation/data/fetchDocumentsFactory');
 
-const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
+const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
 
-describe.skip('fetchDocumentsByDocuments', () => {
+describe('fetchDocumentsFactory', () => {
   let fetchDocumentsByDocuments;
   let dataProviderMock;
   let documents;
