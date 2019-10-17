@@ -1,15 +1,15 @@
-const findDuplicateDocumentsByIndices = require('../../../../lib/stPacket/validation/findDuplicateDocumentsByIndices');
+const Document = require('../../../../../lib/document/Document');
 
-const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
-const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
+const findDuplicateDocumentsByIndices = require('../../../../../lib/document/stateTransition/validation/structure/findDuplicateDocumentsByIndices');
 
-describe.skip('findDuplicateDocumentsByIndices', () => {
-  let rawDocuments;
+const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
+const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
+
+describe('findDuplicateDocumentsByIndices', () => {
+  let documents;
   let contract;
 
   beforeEach(() => {
-    rawDocuments = getDocumentsFixture().map(o => o.toJSON());
-
     contract = getDataContractFixture();
     contract.setDocumentSchema('nonUniqueIndexDocument', {
       indices: [
@@ -55,32 +55,38 @@ describe.skip('findDuplicateDocumentsByIndices', () => {
       additionalProperties: false,
     });
 
-    const [, , , william] = rawDocuments;
+    documents = getDocumentsFixture();
 
-    rawDocuments.push(Object.assign({}, william, {
+    const [, , , william] = documents;
+
+    documents.push(new Document({
+      ...william.toJSON(),
       $type: 'nonUniqueIndexDocument',
     }));
 
-    rawDocuments.push(Object.assign({}, william, {
+    documents.push(new Document({
+      ...william.toJSON(),
       $type: 'singleDocument',
     }));
   });
 
   it('should return duplicate documents if they are present', () => {
-    const [, , , william, leon] = rawDocuments;
-    leon.lastName = 'Birkin';
+    const [, , , william, leon] = documents;
 
-    const duplicates = findDuplicateDocumentsByIndices(rawDocuments, contract);
+    leon.set('lastName', 'Birkin');
+
+    const duplicates = findDuplicateDocumentsByIndices(documents, contract);
     expect(duplicates).to.deep.equal(
       [
-        leon,
-        william,
+        leon.toJSON(),
+        william.toJSON(),
       ],
     );
   });
 
   it('should return an empty array of there are no duplicates', () => {
-    const duplicates = findDuplicateDocumentsByIndices(rawDocuments, contract);
+    const duplicates = findDuplicateDocumentsByIndices(documents, contract);
+
     expect(duplicates.length).to.equal(0);
   });
 });
