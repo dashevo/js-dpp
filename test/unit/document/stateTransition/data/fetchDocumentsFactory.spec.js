@@ -6,42 +6,42 @@ const fetchDocumentsByDocumentsFactory = require('../../../../../lib/document/st
 const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
 
 describe('fetchDocumentsFactory', () => {
-  let fetchDocumentsByDocuments;
+  let fetchDocuments;
   let dataProviderMock;
   let documents;
-  let contract;
+  let dataContract;
 
   beforeEach(function beforeEach() {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
-    fetchDocumentsByDocuments = fetchDocumentsByDocumentsFactory(dataProviderMock);
+    fetchDocuments = fetchDocumentsByDocumentsFactory(dataProviderMock);
 
     documents = getDocumentsFixture();
-    contract = getContractFixture();
+    dataContract = getContractFixture();
   });
 
   it('should fetch specified Documents using DataProvider', async () => {
     dataProviderMock.fetchDocuments.withArgs(
-      contract.getId(),
+      dataContract.getId(),
       documents[0].getType(),
     ).resolves([documents[0]]);
 
     dataProviderMock.fetchDocuments.withArgs(
-      contract.getId(),
+      dataContract.getId(),
       documents[1].getType(),
     ).resolves([documents[1], documents[2]]);
 
     dataProviderMock.fetchDocuments.withArgs(
-      contract.getId(),
+      dataContract.getId(),
       documents[3].getType(),
     ).resolves([documents[3], documents[4]]);
 
-    const fetchedDocuments = await fetchDocumentsByDocuments(contract.getId(), documents);
+    const fetchedDocuments = await fetchDocuments(documents);
 
     expect(dataProviderMock.fetchDocuments).to.have.been.calledThrice();
 
     const callArgsOne = [
-      contract.getId(),
+      dataContract.getId(),
       documents[0].getType(),
       {
         where: [
@@ -51,7 +51,7 @@ describe('fetchDocumentsFactory', () => {
     ];
 
     const callArgsTwo = [
-      contract.getId(),
+      dataContract.getId(),
       documents[1].getType(),
       {
         where: [
@@ -64,7 +64,7 @@ describe('fetchDocumentsFactory', () => {
     ];
 
     const callArgsThree = [
-      contract.getId(),
+      dataContract.getId(),
       documents[3].getType(),
       {
         where: [

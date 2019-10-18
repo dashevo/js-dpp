@@ -11,7 +11,6 @@ const ValidationResult = require('../../../../../lib/validation/ValidationResult
 const DuplicateDocumentError = require('../../../../../lib/errors/DuplicateDocumentError');
 
 describe('validateDocumentsUniquenessByIndices', () => {
-  let fetchDocumentsByDocumentsMock;
   let dataProviderMock;
   let validateDocumentsUniquenessByIndices;
   let documents;
@@ -24,13 +23,10 @@ describe('validateDocumentsUniquenessByIndices', () => {
     documents = getDocumentsFixture();
     dataContract = getContractFixture();
 
-    fetchDocumentsByDocumentsMock = this.sinonSandbox.stub();
-
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchDocuments.resolves([]);
 
     validateDocumentsUniquenessByIndices = verifyDocumentsUniquenessByIndicesFactory(
-      fetchDocumentsByDocumentsMock,
       dataProviderMock,
     );
   });
@@ -66,7 +62,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
       )
       .resolves([william]);
 
-    const result = await validateDocumentsUniquenessByIndices(documents, userId, dataContract);
+    const result = await validateDocumentsUniquenessByIndices(documents, dataContract);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
@@ -129,7 +125,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
       )
       .resolves([william]);
 
-    const result = await validateDocumentsUniquenessByIndices(documents, userId, dataContract);
+    const result = await validateDocumentsUniquenessByIndices(documents, dataContract);
 
     expectValidationError(result, DuplicateDocumentError, 4);
 
