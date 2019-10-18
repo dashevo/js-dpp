@@ -8,9 +8,8 @@ const { expectValidationError } = require('../../../../../lib/test/expect/expect
 
 const ValidationResult = require('../../../../../lib/validation/ValidationResult');
 
-const DataContractIdentityNotFoundError = require('../../../../../lib/errors/DataContractIdentityNotFoundError');
-const UnconfirmedUserError = require('../../../../../lib/errors/UnconfirmedUserError');
 const DataContractAlreadyPresentError = require('../../../../../lib/errors/DataContractAlreadyPresentError');
+const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 
 describe('validateDataContractSTDataFactory', () => {
   let validateDataContractSTData;
@@ -18,9 +17,12 @@ describe('validateDataContractSTDataFactory', () => {
   let stateTransition;
   let dataProviderMock;
   let registrationTransaction;
+  let validateBlockchainUserMock;
 
   beforeEach(function beforeEach() {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
+
+    validateBlockchainUserMock = this.sinonSandbox.stub().resolves(new ValidationResult());
 
     registrationTransaction = {
       confirmations: 6,
@@ -29,40 +31,30 @@ describe('validateDataContractSTDataFactory', () => {
     dataContract = getDataContractFixture();
     stateTransition = new DataContractStateTransition(dataContract);
 
-    validateDataContractSTData = validateDataContractSTDataFactory(dataProviderMock);
+    validateDataContractSTData = validateDataContractSTDataFactory(
+      dataProviderMock,
+      validateBlockchainUserMock,
+    );
   });
 
-  it('should return invalid result if Data Contract Identity not found with specified contractId', async () => {
-    const result = await validateDataContractSTData(stateTransition);
+  it('should return invalid result if Data Contract Identity is invalid', async () => {
+    const blockchainUserError = new ConsensusError('error');
 
-    expectValidationError(result, DataContractIdentityNotFoundError);
-
-    const [error] = result.getErrors();
-
-    expect(error.getDataContractId()).to.equal(dataContract.getId());
-
-    expect(dataProviderMock.fetchTransaction).to.be.calledOnceWith(dataContract.getId());
-    expect(dataProviderMock.fetchDataContract).to.not.be.called();
-  });
-
-  it('should return invalid result if Data Contract Identity is not confirmed', async () => {
-    registrationTransaction.confirmations = 2;
-
-    dataProviderMock.fetchTransaction.resolves(registrationTransaction);
+    validateBlockchainUserMock.resolves(
+      new ValidationResult([blockchainUserError]),
+    );
 
     const result = await validateDataContractSTData(stateTransition);
 
-    expectValidationError(result, UnconfirmedUserError);
+    expectValidationError(result);
 
     const [error] = result.getErrors();
 
-    expect(error.getRegistrationTransaction()).to.equal(registrationTransaction);
+    expect(error).to.equal(blockchainUserError);
 
-    expect(dataProviderMock.fetchTransaction).to.be.calledOnceWith(dataContract.getId());
+    expect(validateBlockchainUserMock).to.be.calledOnceWith(dataContract.getId());
     expect(dataProviderMock.fetchDataContract).to.not.be.called();
   });
-
-  it('should return invalid result if Data Contract Identity is wrong transaction');
 
   it('should return invalid result if Data Contract with specified contractId is already exist', async () => {
     dataProviderMock.fetchTransaction.resolves(registrationTransaction);
@@ -76,7 +68,7 @@ describe('validateDataContractSTDataFactory', () => {
 
     expect(error.getDataContract()).to.equal(dataContract);
 
-    expect(dataProviderMock.fetchTransaction).to.be.calledOnceWith(dataContract.getId());
+    expect(validateBlockchainUserMock).to.be.calledOnceWith(dataContract.getId());
     expect(dataProviderMock.fetchDataContract).to.be.calledOnceWith(dataContract.getId());
   });
 
@@ -88,7 +80,7 @@ describe('validateDataContractSTDataFactory', () => {
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
 
-    expect(dataProviderMock.fetchTransaction).to.be.calledOnceWith(dataContract.getId());
+    expect(validateBlockchainUserMock).to.be.calledOnceWith(dataContract.getId());
     expect(dataProviderMock.fetchDataContract).to.be.calledOnceWith(dataContract.getId());
   });
 });
