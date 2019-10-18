@@ -1,4 +1,6 @@
 dist
+
+# They are temporary here
 test/unit/stPacket
 test/unit/stPacketHeader
 test/integration/stPacket
