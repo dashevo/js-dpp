@@ -11,7 +11,6 @@ const getDataContractFixture = require('../../../lib/test/fixtures/getDataContra
 const { expectJsonSchemaError, expectValidationError } = require('../../../lib/test/expect/expectError');
 
 const DuplicateIndexError = require('../../../lib/errors/DuplicateIndexError');
-const UniqueIndexMustHaveUserIdPrefixError = require('../../../lib/errors/UniqueIndexMustHaveUserIdPrefixError');
 const UndefinedIndexPropertyError = require('../../../lib/errors/UndefinedIndexPropertyError');
 
 describe('validateDataContractFactory', () => {
@@ -670,22 +669,8 @@ describe('validateDataContractFactory', () => {
         });
       });
 
-      it('should have "unique" flag', () => {
-        rawDataContract.documents.indexedDocument.indices[0].unique = undefined;
-
-        const result = validateDataContract(rawDataContract);
-
-        expectJsonSchemaError(result);
-
-        const [error] = result.getErrors();
-
-        expect(error.dataPath).to.equal('.documents[\'indexedDocument\'].indices[0]');
-        expect(error.params.missingProperty).to.equal('unique');
-        expect(error.keyword).to.equal('required');
-      });
-
-      it('should have "unique" flag equal "true"', () => {
-        rawDataContract.documents.indexedDocument.indices[0].unique = false;
+      it('should have "unique" flag to be of a boolean type', () => {
+        rawDataContract.documents.indexedDocument.indices[0].unique = 12;
 
         const result = validateDataContract(rawDataContract);
 
@@ -694,7 +679,7 @@ describe('validateDataContractFactory', () => {
         const [error] = result.getErrors();
 
         expect(error.dataPath).to.equal('.documents[\'indexedDocument\'].indices[0].unique');
-        expect(error.keyword).to.equal('const');
+        expect(error.keyword).to.equal('type');
       });
     });
   });
@@ -727,37 +712,6 @@ describe('validateDataContractFactory', () => {
     expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
     expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
     expect(error.getDocumentType()).to.deep.equal('indexedDocument');
-  });
-
-  it('should return invalid result if indices don\'t have $userId prefix', () => {
-    const indexDefinition = rawDataContract.documents.indexedDocument.indices[0];
-
-    const firstIndex = indexDefinition.properties.shift();
-    indexDefinition.properties.push(firstIndex);
-
-    const result = validateDataContract(rawDataContract);
-
-    expectValidationError(result, UniqueIndexMustHaveUserIdPrefixError);
-
-    const [error] = result.getErrors();
-
-    expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
-    expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
-    expect(error.getDocumentType()).to.deep.equal('indexedDocument');
-  });
-
-  it('should return invalid result if indices don\'t have $userId prefix as a first field', () => {
-    const indexDefinition = rawDataContract.documents.indexedDocument.indices[0];
-
-    indexDefinition.properties.shift();
-
-    const result = validateDataContract(rawDataContract);
-
-    expectValidationError(result, UniqueIndexMustHaveUserIdPrefixError);
-
-    const [error] = result.getErrors();
-
-    expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
   });
 
   it('should return invalid result if indices has undefined property', () => {
