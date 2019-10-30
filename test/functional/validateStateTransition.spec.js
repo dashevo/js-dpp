@@ -116,7 +116,7 @@ describe('validateStateTransition', function main() {
     });
   });
 
-  it('should not validate contract state transition without a blockchain user', async () => {
+  it('should validate contract state transition without a blockchain user', async () => {
     dataContract.contractId = Buffer.alloc(32).toString('hex');
 
     const stateTransition = new DataContractStateTransition(dataContract);
@@ -138,7 +138,7 @@ describe('validateStateTransition', function main() {
     });
   });
 
-  it('should not validate contract state transition when it submitted twice', async () => {
+  it('should validate contract state transition when it submitted twice', async () => {
     const stateTransition = new DataContractStateTransition(dataContract);
 
     await withinTransaction(async (blockHeight, blockHash) => {
@@ -161,6 +161,58 @@ describe('validateStateTransition', function main() {
       } catch (e) {
         const [error] = JSON.parse(e.metadata.get('errors')[0]);
         expect(error.message).to.equal('Data Contract is already present');
+      }
+    });
+  });
+
+  it('should validate document uniqueness by using indicies', async () => {
+    const [,,, indexDocument, anotherDocument] = documents;
+
+    anotherDocument.set('lastName', 'Birkin');
+
+    const stateTransition = new DataContractStateTransition(dataContract);
+
+    await withinTransaction(async (blockHeight, blockHash) => {
+      const request = new ApplyStateTransitionRequest();
+      request.setStateTransition(stateTransition.serialize());
+      request.setBlockHeight(blockHeight);
+      request.setBlockHash(blockHash);
+
+      await driveUpdateStateApi.applyStateTransition(request);
+    });
+
+    const documentsStateTransition = new DocumentsStateTransition([indexDocument]);
+
+    await withinTransaction(async (blockHeight, blockHash) => {
+      const request = new ApplyStateTransitionRequest();
+      request.setStateTransition(documentsStateTransition.serialize());
+      request.setBlockHeight(blockHeight);
+      request.setBlockHash(blockHash);
+
+      await driveUpdateStateApi.applyStateTransition(request);
+    });
+
+    const duplicateStateTransition = new DocumentsStateTransition([anotherDocument]);
+
+    await withinTransaction(async (blockHeight, blockHash) => {
+      const request = new ApplyStateTransitionRequest();
+      request.setStateTransition(duplicateStateTransition.serialize());
+      request.setBlockHeight(blockHeight);
+      request.setBlockHash(blockHash);
+
+      try {
+        await driveUpdateStateApi.applyStateTransition(request);
+      } catch (e) {
+        const [error] = JSON.parse(e.metadata.get('errors')[0]);
+        expect(error.message).to.equal('Duplicate Document found');
+        expect(error.document).to.deep.equal(anotherDocument.toJSON());
+        expect(error.indexDefinition).to.deep.equal({
+          unique: true,
+          properties: [
+            { $userId: 'asc' },
+            { lastName: 'desc' },
+          ],
+        });
       }
     });
   });
