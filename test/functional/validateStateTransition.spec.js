@@ -73,7 +73,7 @@ describe('validateStateTransition', function main() {
   let dataContract;
   let documents;
 
-  async function withinTransaction(call) {
+  async function withinBlock(call) {
     const blockHeight = 0;
     const blockHash = Buffer.alloc(16, 0);
 
@@ -121,7 +121,7 @@ describe('validateStateTransition', function main() {
 
     const stateTransition = new DataContractStateTransition(dataContract);
 
-    await withinTransaction(async (blockHeight, blockHash) => {
+    await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
       request.setStateTransition(stateTransition.serialize());
       request.setBlockHeight(blockHeight);
@@ -141,7 +141,7 @@ describe('validateStateTransition', function main() {
   it('should validate contract state transition when it submitted twice', async () => {
     const stateTransition = new DataContractStateTransition(dataContract);
 
-    await withinTransaction(async (blockHeight, blockHash) => {
+    await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
       request.setStateTransition(stateTransition.serialize());
       request.setBlockHeight(blockHeight);
@@ -150,7 +150,7 @@ describe('validateStateTransition', function main() {
       await driveUpdateStateApi.applyStateTransition(request);
     });
 
-    await withinTransaction(async (blockHeight, blockHash) => {
+    await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
       request.setStateTransition(stateTransition.serialize());
       request.setBlockHeight(blockHeight);
@@ -172,7 +172,7 @@ describe('validateStateTransition', function main() {
 
     const stateTransition = new DataContractStateTransition(dataContract);
 
-    await withinTransaction(async (blockHeight, blockHash) => {
+    await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
       request.setStateTransition(stateTransition.serialize());
       request.setBlockHeight(blockHeight);
@@ -183,7 +183,7 @@ describe('validateStateTransition', function main() {
 
     const documentsStateTransition = new DocumentsStateTransition([indexDocument]);
 
-    await withinTransaction(async (blockHeight, blockHash) => {
+    await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
       request.setStateTransition(documentsStateTransition.serialize());
       request.setBlockHeight(blockHeight);
@@ -194,7 +194,7 @@ describe('validateStateTransition', function main() {
 
     const duplicateStateTransition = new DocumentsStateTransition([anotherDocument]);
 
-    await withinTransaction(async (blockHeight, blockHash) => {
+    await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
       request.setStateTransition(duplicateStateTransition.serialize());
       request.setBlockHeight(blockHeight);
@@ -220,7 +220,7 @@ describe('validateStateTransition', function main() {
   it('should successfuly submit valid contract and documents', async () => {
     const stateTransition = new DataContractStateTransition(dataContract);
 
-    await withinTransaction(async (blockHeight, blockHash) => {
+    await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
       request.setStateTransition(stateTransition.serialize());
       request.setBlockHeight(blockHeight);
@@ -231,7 +231,7 @@ describe('validateStateTransition', function main() {
 
     const documentsStateTransition = new DocumentsStateTransition(documents);
 
-    await withinTransaction(async (blockHeight, blockHash) => {
+    await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
       request.setStateTransition(documentsStateTransition.serialize());
       request.setBlockHeight(blockHeight);
