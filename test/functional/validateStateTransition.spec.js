@@ -183,6 +183,8 @@ describe('validateStateTransition', function main() {
 
     const documentsStateTransition = new DocumentsStateTransition([indexDocument]);
 
+    const duplicateStateTransition = new DocumentsStateTransition([anotherDocument]);
+
     await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
       request.setStateTransition(documentsStateTransition.serialize());
@@ -190,18 +192,14 @@ describe('validateStateTransition', function main() {
       request.setBlockHash(blockHash);
 
       await driveUpdateStateApi.applyStateTransition(request);
-    });
 
-    const duplicateStateTransition = new DocumentsStateTransition([anotherDocument]);
-
-    await withinBlock(async (blockHeight, blockHash) => {
-      const request = new ApplyStateTransitionRequest();
-      request.setStateTransition(duplicateStateTransition.serialize());
-      request.setBlockHeight(blockHeight);
-      request.setBlockHash(blockHash);
+      const anotherRequest = new ApplyStateTransitionRequest();
+      anotherRequest.setStateTransition(duplicateStateTransition.serialize());
+      anotherRequest.setBlockHeight(blockHeight + 1);
+      anotherRequest.setBlockHash(Buffer.alloc(32, blockHeight + 1));
 
       try {
-        await driveUpdateStateApi.applyStateTransition(request);
+        await driveUpdateStateApi.applyStateTransition(anotherRequest);
       } catch (e) {
         const [error] = JSON.parse(e.metadata.get('errors')[0]);
         expect(error.message).to.equal('Duplicate Document found');
