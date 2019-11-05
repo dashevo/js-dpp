@@ -784,29 +784,6 @@ describe('validateDataContractFactory', () => {
     expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
   });
 
-  it('should return invalid result if index property is a single $userId', () => {
-    const indexDefinition = {
-      properties: [
-        { $userId: 'asc' },
-      ],
-    };
-
-    const indeciesDefinition = rawDataContract.documents.indexedDocument.indices;
-
-    indeciesDefinition.push(indexDefinition);
-
-    const result = validateDataContract(rawDataContract);
-
-    expectValidationError(result, SingleSystemPropertyIndexError);
-
-    const [error] = result.getErrors();
-
-    expect(error.getPropertyName()).to.equal('$userId');
-    expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
-    expect(error.getDocumentType()).to.deep.equal('indexedDocument');
-    expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
-  });
-
   it('should return valid result if Data Contract is valid', () => {
     const result = validateDataContract(rawDataContract);
 
