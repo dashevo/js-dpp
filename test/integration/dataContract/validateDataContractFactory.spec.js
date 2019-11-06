@@ -819,6 +819,33 @@ describe('validateDataContractFactory', () => {
     expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
   });
 
+  it('should return invalid result if index property is array with many item definitions', () => {
+    const propertiesDefinition = rawDataContract.documents.indexedDocument.properties;
+
+    propertiesDefinition.arrayProperty = {
+      type: 'array',
+      items: [{}, {}],
+    };
+
+    const indexDefinition = rawDataContract.documents.indexedDocument.indices[0];
+
+    indexDefinition.properties.push({
+      arrayProperty: 'asc',
+    });
+
+    const result = validateDataContract(rawDataContract);
+
+    expectValidationError(result, InvalidIndexPropertyTypeError);
+
+    const [error] = result.getErrors();
+
+    expect(error.getPropertyName()).to.equal('arrayProperty');
+    expect(error.getPropertyType()).to.equal('array');
+    expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
+    expect(error.getDocumentType()).to.deep.equal('indexedDocument');
+    expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
+  });
+
   it('should return invalid result if index property is a single $id', () => {
     const indexDefinition = {
       properties: [
