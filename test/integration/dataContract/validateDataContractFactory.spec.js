@@ -13,7 +13,7 @@ const { expectJsonSchemaError, expectValidationError } = require('../../../lib/t
 const DuplicateIndexError = require('../../../lib/errors/DuplicateIndexError');
 const UndefinedIndexPropertyError = require('../../../lib/errors/UndefinedIndexPropertyError');
 const InvalidIndexPropertyTypeError = require('../../../lib/errors/InvalidIndexPropertyTypeError');
-const SingleSystemPropertyIndexError = require('../../../lib/errors/SingleSystemPropertyIndexError');
+const SystemPropertyIndexAlreadyPresentError = require('../../../lib/errors/SystemPropertyIndexAlreadyPresentError');
 
 describe('validateDataContractFactory', () => {
   let rawDataContract;
@@ -774,7 +774,7 @@ describe('validateDataContractFactory', () => {
 
     const result = validateDataContract(rawDataContract);
 
-    expectValidationError(result, SingleSystemPropertyIndexError);
+    expectValidationError(result, SystemPropertyIndexAlreadyPresentError);
 
     const [error] = result.getErrors();
 
