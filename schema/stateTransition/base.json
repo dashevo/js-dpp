@@ -8,6 +8,30 @@
     "type": {
       "type": "number",
       "enum": [1, 2]
+    },
+    "publicKeyId": {
+      "anyOf": [
+        {
+          "type": "number",
+          "multipleOf": 1.0,
+          "minimum": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "signature": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 89,
+          "maxLength": 89
+        },
+        {
+          "type": "null"
+        }
+      ]
     }
   },
   "required": [

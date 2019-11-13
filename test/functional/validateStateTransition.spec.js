@@ -215,7 +215,7 @@ describe('validateStateTransition', function main() {
     });
   });
 
-  it('should successfuly submit valid contract and documents', async () => {
+  it('should successfully submit valid contract and documents', async () => {
     const stateTransition = new DataContractStateTransition(dataContract);
 
     await withinBlock(async (blockHeight, blockHash) => {

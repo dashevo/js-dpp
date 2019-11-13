@@ -27,7 +27,7 @@ describe('AbstractStateTransition', () => {
     const serializedData = stateTransition.toJSON();
 
     expect(serializedData).to.deep.equal({
-      keyId: null,
+      publicKeyId: null,
       protocolVersion: 0,
       signature: null,
       type: 1,
@@ -84,13 +84,13 @@ describe('AbstractStateTransition', () => {
   it('should return serialized hash', () => {
     const hash = stateTransition.hash();
 
-    expect(hash).to.be.equal('70ff74f6c47c6f4c8d3090e13c4e108a797630b84551c5635f11848a2a96c665');
+    expect(hash).to.be.equal('dcea91861d071861c45f70a308b89b288e168b32b4a7389e682fc1360b8c1953');
   });
 
   it('should return serialized data', () => {
     const serializedData = stateTransition.serialize();
 
-    expect(serializedData.toString('hex')).to.be.equal('a4647479706501656b65794964f6697369676e6174757265f66f70726f746f636f6c56657273696f6e00');
+    expect(serializedData.toString('hex')).to.be.equal('a4647479706501697369676e6174757265f66b7075626c69634b65794964f66f70726f746f636f6c56657273696f6e00');
   });
 
   it('should return serialized data without signature data', () => {
@@ -102,7 +102,7 @@ describe('AbstractStateTransition', () => {
   it('should return key ID', () => {
     stateTransition.sign(signPayload);
 
-    const keyId = stateTransition.getKeyId();
+    const keyId = stateTransition.getPublicKeyId();
 
     expect(keyId).to.be.equal(signPayload.id);
   });
