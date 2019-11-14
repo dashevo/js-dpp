@@ -6,7 +6,7 @@ const InvalidSignatureTypeError = require('../../../lib/stateTransition/errors/I
 
 describe('AbstractStateTransition', () => {
   let stateTransition;
-  let signPayload;
+  let signOptions;
   let privateKey;
   let publicKeyId;
 
@@ -16,8 +16,8 @@ describe('AbstractStateTransition', () => {
 
     stateTransition = new StateTransitionMock();
 
-    signPayload = {
-      id: 1,
+    signOptions = {
+      id: publicKeyId,
       type: signatureTypes.ECDSA,
       privateKey,
     };
@@ -44,7 +44,7 @@ describe('AbstractStateTransition', () => {
   });
 
   it('should sign data and validate signature', () => {
-    stateTransition.sign(signPayload);
+    stateTransition.sign(signOptions);
 
     // eslint-disable-next-line no-underscore-dangle
     const isValid = stateTransition.verifySignature(publicKeyId._getID());
@@ -53,20 +53,20 @@ describe('AbstractStateTransition', () => {
   });
 
   it('should throw InvalidSignatureTypeError if signature type is not equal ECDSA', () => {
-    signPayload.type = 2;
+    signOptions.type = 2;
 
     try {
-      stateTransition.sign(signPayload);
+      stateTransition.sign(signOptions);
 
       expect.fail('Should throw InvalidSignatureTypeError');
     } catch (e) {
       expect(e).to.be.instanceOf(InvalidSignatureTypeError);
-      expect(e.getSignatureType()).to.be.equal(signPayload.type);
+      expect(e.getSignatureType()).to.be.equal(signOptions.type);
     }
   });
 
   it('should not verify signature with wrong public key', () => {
-    stateTransition.sign(signPayload);
+    stateTransition.sign(signOptions);
 
     publicKeyId = 'someKey';
 
@@ -100,11 +100,11 @@ describe('AbstractStateTransition', () => {
   });
 
   it('should return key ID', () => {
-    stateTransition.sign(signPayload);
+    stateTransition.sign(signOptions);
 
     const keyId = stateTransition.getPublicKeyId();
 
-    expect(keyId).to.be.equal(signPayload.id);
+    expect(keyId).to.be.equal(signOptions.id);
   });
 
   it('should return protocol version', async () => {
