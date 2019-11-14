@@ -1,0 +1,40 @@
+{
+  "$id": "https://schema.dash.org/dpp-0-4-0/state-transition/identity-create",
+  "properties": {
+    "identityCreateStateTransitionVersion": {
+      "type": "number",
+      "multiplierOf": 1.0
+    },
+    "lockedOutPoint": {
+      "type": "string",
+      "minLength": 72,
+      "maxLength": 72,
+      "pattern": "^[a-fA-F0-9]+$"
+    },
+    "identityType": {
+      "type": "number",
+      "multiplierOf": 1.0
+    },
+    "publicKeys": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "minItems": 1,
+      "maxItems": 10
+    },
+    "ownershipProofSignature": {
+      "type": "string",
+      "minLength": 72,
+      "maxLength": 72,
+      "pattern": "^[a-fA-F0-9]+$"
+    }
+  },
+  "required": [
+    "identityCreateStateTransitionVersion",
+    "lockedOutPoint",
+    "identityType",
+    "publicKeys",
+    "ownershipProofSignature"
+  ]
+}

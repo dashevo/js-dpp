@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.dash.org/dpp-0-4-0/meta/dash-schema",
+  "$id": "https://schema.dash.org/dpp-0-4-0/base/public-key",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "number",
+      "multipleOf": 1.0,
+      "minimum": 1
+    },
+    "type": {
+      "type": "number",
+      "multipleOf": 1.0,
+      "minimum": 1
+    },
+    "publicKey": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^[a-fA-F0-9]+$"
+    },
+    "isEnabled": {
+      "type": "boolean"
+    },
+  },
+  "required": [
+    "id",
+    "type",
+    "publicKey",
+    "isEnabled"
+  ],
+  "additionalProperties": false
+}
