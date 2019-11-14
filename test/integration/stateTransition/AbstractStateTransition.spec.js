@@ -8,11 +8,11 @@ describe('AbstractStateTransition', () => {
   let stateTransition;
   let signPayload;
   let privateKey;
-  let publicKey;
+  let publicKeyId;
 
   beforeEach(() => {
     privateKey = new PrivateKey();
-    ({ publicKey } = privateKey);
+    ({ publicKey: publicKeyId } = privateKey);
 
     stateTransition = new StateTransitionMock();
 
@@ -47,7 +47,7 @@ describe('AbstractStateTransition', () => {
     stateTransition.sign(signPayload);
 
     // eslint-disable-next-line no-underscore-dangle
-    const isValid = stateTransition.verifySignature(publicKey._getID());
+    const isValid = stateTransition.verifySignature(publicKeyId._getID());
 
     expect(isValid).to.be.true();
   });
@@ -68,15 +68,15 @@ describe('AbstractStateTransition', () => {
   it('should not verify signature with wrong public key', () => {
     stateTransition.sign(signPayload);
 
-    publicKey = 'someKey';
+    publicKeyId = 'someKey';
 
-    const isValid = stateTransition.verifySignature(publicKey);
+    const isValid = stateTransition.verifySignature(publicKeyId);
 
     expect(isValid).to.be.false();
   });
 
   it('should not verify signature before sign was made', () => {
-    const isValid = stateTransition.verifySignature(publicKey);
+    const isValid = stateTransition.verifySignature(publicKeyId);
 
     expect(isValid).to.be.false();
   });
