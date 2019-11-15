@@ -3,7 +3,8 @@
   "properties": {
     "identityCreateStateTransitionVersion": {
       "type": "number",
-      "multiplierOf": 1.0
+      "multipleOf": 1.0,
+      "minimum": 0
     },
     "lockedOutPoint": {
       "type": "string",
@@ -13,7 +14,8 @@
     },
     "identityType": {
       "type": "number",
-      "multiplierOf": 1.0
+      "multipleOf": 1.0,
+      "minimum": 0
     },
     "publicKeys": {
       "type": "array",
