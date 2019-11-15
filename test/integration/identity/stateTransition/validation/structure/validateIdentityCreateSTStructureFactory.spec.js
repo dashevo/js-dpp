@@ -16,6 +16,10 @@ const JsonSchemaError = require(
   '../../../../../../lib/errors/JsonSchemaError',
 );
 
+const IdentityCreateStateTransition = require(
+  '../../../../../../lib/identity/stateTransitions/IdentityCreateStateTransition',
+);
+
 describe('validateIdentityCreateSTStructureFactory', () => {
   let validateIdentityCreateST;
   let rawStateTransition;
@@ -40,7 +44,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
           isEnabled: true,
         },
       ],
-      ownershipProofSignature: Buffer.alloc(74).toString('base64'),
+      ownershipProofSignature: `AA${Buffer.alloc(63).toString('base64')}`,
     };
   });
 
@@ -268,5 +272,17 @@ describe('validateIdentityCreateSTStructureFactory', () => {
 
     expect(error.keyword).to.equal('pattern');
     expect(error.dataPath).to.equal('.ownershipProofSignature');
+  });
+
+  it('should pass valid raw state transition', () => {
+    const result = validateIdentityCreateST(rawStateTransition);
+
+    expect(result.isValid()).to.be.true();
+  });
+
+  it('should pass valid state transition', () => {
+    const result = validateIdentityCreateST(new IdentityCreateStateTransition(rawStateTransition));
+
+    expect(result.isValid()).to.be.true();
   });
 });
