@@ -16,6 +16,10 @@ const JsonSchemaError = require(
   '../../../../../../lib/errors/JsonSchemaError',
 );
 
+const IdentityCreateStateTransition = require(
+  '../../../../../../lib/identity/stateTransitions/IdentityCreateStateTransition',
+);
+
 describe('validateIdentityCreateSTStructureFactory', () => {
   let validateIdentityCreateST;
   let rawStateTransition;
@@ -40,7 +44,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
           isEnabled: true,
         },
       ],
-      ownershipProofSignature: Buffer.alloc(74).toString('base64'),
+      ownershipProofSignature: Buffer.alloc(65).toString('base64'),
     };
   });
 
@@ -231,7 +235,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     expect(error.keyword).to.equal('required');
   });
 
-  it('should throw an error if ownershipProofSignature is less than 86 character in length', () => {
+  it('should throw an error if ownershipProofSignature is less than 88 character in length', () => {
     rawStateTransition.ownershipProofSignature = 'AA';
 
     const result = validateIdentityCreateST(rawStateTransition);
@@ -244,7 +248,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     expect(error.dataPath).to.equal('.ownershipProofSignature');
   });
 
-  it('should throw an error if ownershipProofSignature is more than 87 character in length', () => {
+  it('should throw an error if ownershipProofSignature is more than 88 character in length', () => {
     rawStateTransition.ownershipProofSignature = Buffer.alloc(90).toString('base64');
 
     const result = validateIdentityCreateST(rawStateTransition);
@@ -258,7 +262,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
   });
 
   it('should throw an error if ownershipProofSignature is not base64', () => {
-    rawStateTransition.ownershipProofSignature = '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&';
+    rawStateTransition.ownershipProofSignature = '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&';
 
     const result = validateIdentityCreateST(rawStateTransition);
 
@@ -268,5 +272,17 @@ describe('validateIdentityCreateSTStructureFactory', () => {
 
     expect(error.keyword).to.equal('pattern');
     expect(error.dataPath).to.equal('.ownershipProofSignature');
+  });
+
+  it('should pass valid raw state transition', () => {
+    const result = validateIdentityCreateST(rawStateTransition);
+
+    expect(result.isValid()).to.be.true();
+  });
+
+  it('should pass valid state transition', () => {
+    const result = validateIdentityCreateST(new IdentityCreateStateTransition(rawStateTransition));
+
+    expect(result.isValid()).to.be.true();
   });
 });
