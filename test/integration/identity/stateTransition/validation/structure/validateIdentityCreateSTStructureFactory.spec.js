@@ -44,7 +44,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
           isEnabled: true,
         },
       ],
-      ownershipProofSignature: `AA${Buffer.alloc(63).toString('base64')}`,
+      ownershipProofSignature: Buffer.alloc(65).toString('base64'),
     };
   });
 
@@ -235,7 +235,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     expect(error.keyword).to.equal('required');
   });
 
-  it('should throw an error if ownershipProofSignature is less than 86 character in length', () => {
+  it('should throw an error if ownershipProofSignature is less than 88 character in length', () => {
     rawStateTransition.ownershipProofSignature = 'AA';
 
     const result = validateIdentityCreateST(rawStateTransition);
@@ -248,7 +248,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     expect(error.dataPath).to.equal('.ownershipProofSignature');
   });
 
-  it('should throw an error if ownershipProofSignature is more than 87 character in length', () => {
+  it('should throw an error if ownershipProofSignature is more than 88 character in length', () => {
     rawStateTransition.ownershipProofSignature = Buffer.alloc(90).toString('base64');
 
     const result = validateIdentityCreateST(rawStateTransition);
@@ -262,7 +262,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
   });
 
   it('should throw an error if ownershipProofSignature is not base64', () => {
-    rawStateTransition.ownershipProofSignature = '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&';
+    rawStateTransition.ownershipProofSignature = '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&';
 
     const result = validateIdentityCreateST(rawStateTransition);
 
