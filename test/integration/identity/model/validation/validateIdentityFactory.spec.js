@@ -26,7 +26,7 @@ describe('validateIdentityFactory', () => {
         {
           id: 1,
           type: 0,
-          publicKey: 'someKey',
+          publicKey: 'I5q3O2KMNSWAYd4eF7fY5g2grOju4fSAoqrqTJ9kEtc=',
           isEnabled: true,
         },
       ],
