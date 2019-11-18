@@ -84,8 +84,6 @@ describe('Identity', () => {
         getIdentityId: () => 'someId',
         getIdentityType: () => 5,
         getPublicKeys: () => rawModel.publicKeys,
-        getIdentityType: () => 0,
-        getIdentityId: () => Buffer.alloc(32).toString('base64'),
       });
 
       expect(instance.id).to.equal('someId');
@@ -131,6 +129,32 @@ describe('Identity', () => {
     it('should set public keys', () => {
       model.setPublicKeys(42);
       expect(model.publicKeys).to.equal(42);
+    });
+  });
+
+  describe('#serialize', () => {
+    it('should return encoded json object', () => {
+      encodeMock.returns(42); // for example
+      const result = model.serialize();
+
+      expect(encodeMock).to.have.been.calledOnceWith(model.toJSON());
+      expect(result).to.equal(42);
+    });
+  });
+
+  describe('#hash', () => {
+    it('should return hex string of a buffer return by serialize', () => {
+      const buffer = Buffer.from('someString');
+      const bufferHex = buffer.toString('hex');
+
+      encodeMock.returns(buffer);
+      hashMock.returns(buffer);
+
+      const result = model.hash();
+
+      expect(encodeMock).to.have.been.calledOnceWith(model.toJSON());
+      expect(hashMock).to.have.been.calledOnceWith(buffer);
+      expect(result).to.equal(bufferHex);
     });
   });
 
