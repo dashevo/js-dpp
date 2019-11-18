@@ -1,6 +1,6 @@
-const IdentityModel = require('../../../../lib/identity/model/IdentityModel');
+const Identity = require('../../../../lib/identity/model/Identity');
 
-describe('IdentityModel', () => {
+describe('Identity', () => {
   let rawModel;
   let model;
 
@@ -17,19 +17,19 @@ describe('IdentityModel', () => {
       ],
     };
 
-    model = new IdentityModel(rawModel);
+    model = new Identity(rawModel);
   });
 
   describe('#constructor', () => {
     it('should create not set anything if raw model is not passed', () => {
-      const instance = new IdentityModel();
+      const instance = new Identity();
 
       expect(instance.id).to.be.undefined();
       expect(instance.publicKeys).to.be.undefined();
     });
 
     it('should set valiables from raw model', () => {
-      const instance = new IdentityModel(rawModel);
+      const instance = new Identity(rawModel);
 
       expect(instance.id).to.equal(rawModel.id);
       expect(instance.publicKeys).to.deep.equal(rawModel.publicKeys);
@@ -67,7 +67,7 @@ describe('IdentityModel', () => {
     });
 
     it('should set proper data from state transition', () => {
-      const instance = new IdentityModel();
+      const instance = new Identity();
 
       instance.applyStateTransition({
         getType: () => 3,
