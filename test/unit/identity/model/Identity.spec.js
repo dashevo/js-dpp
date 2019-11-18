@@ -75,6 +75,7 @@ describe('Identity', () => {
         getLockedOutPoint: () => Buffer.alloc(1).toString('base64'),
         getPublicKeys: () => rawModel.publicKeys,
         getIdentityType: () => 0,
+        getIdentityId: () => Buffer.alloc(32).toString('base64'),
       });
 
       expect(instance.id).to.deep.equal(Buffer.from(
