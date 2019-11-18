@@ -14,13 +14,17 @@ const IdentitySTWrongVersionError = require(
   '../../../../../../lib/errors/IdentitySTWrongVersionError',
 );
 
+const createDataProviderMock = require('../../../../../../lib/test/mocks/createDataProviderMock');
+
 describe('validateIdentityCreateSTDataFactory', () => {
   let validateIdentityCreateSTData;
   let rawStateTransition;
   let stateTransition;
+  let dataProviderMock;
 
   beforeEach(() => {
-    validateIdentityCreateSTData = validateIdentityCreateSTDataFactory();
+    dataProviderMock = createDataProviderMock(this.sinonSandbox);
+    validateIdentityCreateSTData = validateIdentityCreateSTDataFactory(dataProviderMock);
 
     rawStateTransition = {
       identityCreateStateTransitionVersion: 0,
