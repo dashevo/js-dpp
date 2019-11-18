@@ -84,6 +84,8 @@ describe('Identity', () => {
         getIdentityId: () => 'someId',
         getIdentityType: () => 5,
         getPublicKeys: () => rawModel.publicKeys,
+        getIdentityType: () => 0,
+        getIdentityId: () => Buffer.alloc(32).toString('base64'),
       });
 
       expect(instance.id).to.equal('someId');
