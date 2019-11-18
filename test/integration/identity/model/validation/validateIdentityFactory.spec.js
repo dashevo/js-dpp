@@ -4,9 +4,9 @@ const JsonSchemaValidator = require(
   '../../../../../lib/validation/JsonSchemaValidator',
 );
 
-const { expectValidationError } = require(
-  '../../../../../lib/test/expect/expectError',
-);
+// const { expectValidationError } = require(
+//   '../../../../../lib/test/expect/expectError',
+// );
 
 const validateIdentityFactory = require(
   '../../../../../lib/identity/model/validation/validateIdentityFactory',
