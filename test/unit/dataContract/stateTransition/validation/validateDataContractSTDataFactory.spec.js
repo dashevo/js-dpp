@@ -1,7 +1,7 @@
 const validateDataContractSTDataFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractSTDataFactory');
 const DataContractStateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractStateTransition');
 
-const { IDENTITY_TYPES } = require('../../../../../lib/identity/constants');
+const Identity = require('../../../../../lib/identity/model/Identity');
 
 const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
 const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
@@ -28,7 +28,7 @@ describe('validateDataContractSTDataFactory', () => {
 
     rawIdentity = {
       id: 'iTYF+bWBA4MYRURcsBpBkgfwiqV7sYVnTDPR4uQ/KLU=',
-      identityType: IDENTITY_TYPES.APPLICATION,
+      identityType: Identity.TYPES.APPLICATION,
       publicKeys: [
         {
           id: 1,
@@ -63,7 +63,7 @@ describe('validateDataContractSTDataFactory', () => {
     expect(error).to.equal(blockchainUserError);
 
     expect(checkIdentityMock).to.be.calledOnceWithExactly(
-      dataContract.getId(), IDENTITY_TYPES.APPLICATION,
+      dataContract.getId(), Identity.TYPES.APPLICATION,
     );
     expect(dataProviderMock.fetchDataContract).to.not.be.called();
   });
@@ -81,7 +81,7 @@ describe('validateDataContractSTDataFactory', () => {
     expect(error.getDataContract()).to.equal(dataContract);
 
     expect(checkIdentityMock).to.be.calledOnceWithExactly(
-      dataContract.getId(), IDENTITY_TYPES.APPLICATION,
+      dataContract.getId(), Identity.TYPES.APPLICATION,
     );
     expect(dataProviderMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
   });
@@ -95,7 +95,7 @@ describe('validateDataContractSTDataFactory', () => {
     expect(result.isValid()).to.be.true();
 
     expect(checkIdentityMock).to.be.calledOnceWithExactly(
-      dataContract.getId(), IDENTITY_TYPES.APPLICATION,
+      dataContract.getId(), Identity.TYPES.APPLICATION,
     );
     expect(dataProviderMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
   });
