@@ -7,6 +7,7 @@ describe('Identity', () => {
   beforeEach(() => {
     rawModel = {
       id: 'someId',
+      identityType: 0,
       publicKeys: [
         {
           id: 1,
@@ -73,6 +74,7 @@ describe('Identity', () => {
         getType: () => 3,
         getLockedOutPoint: () => Buffer.alloc(1).toString('base64'),
         getPublicKeys: () => rawModel.publicKeys,
+        getIdentityType: () => 0,
       });
 
       expect(instance.id).to.deep.equal(Buffer.from(
