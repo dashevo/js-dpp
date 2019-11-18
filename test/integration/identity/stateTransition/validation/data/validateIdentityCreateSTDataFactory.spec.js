@@ -22,7 +22,7 @@ describe('validateIdentityCreateSTDataFactory', () => {
   let stateTransition;
   let dataProviderMock;
 
-  beforeEach(() => {
+  beforeEach(function beforeEach() {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     validateIdentityCreateSTData = validateIdentityCreateSTDataFactory(dataProviderMock);
 
@@ -44,15 +44,22 @@ describe('validateIdentityCreateSTDataFactory', () => {
     stateTransition = new IdentityCreateStateTransition(rawStateTransition);
   });
 
-  it('should throw an error if state transition version is higher than one currently set', () => {
+  it('should throw an error if state transition version is higher than one currently set', async () => {
     stateTransition.identityCreateStateTransitionVersion = 42;
 
-    const result = validateIdentityCreateSTData(stateTransition);
+    const result = await validateIdentityCreateSTData(stateTransition);
 
     expectValidationError(result, IdentitySTWrongVersionError, 1);
 
     const [error] = result.getErrors();
 
     expect(error.message).to.equal('Identity state transition version is too high');
+  });
+
+
+  it('should pass valid state transition', async () => {
+    const result = await validateIdentityCreateSTData(stateTransition);
+
+    expect(result.isValid()).to.be.true();
   });
 });
