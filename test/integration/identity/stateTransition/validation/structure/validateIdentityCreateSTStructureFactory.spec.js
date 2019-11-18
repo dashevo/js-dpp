@@ -205,7 +205,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     expect(error.dataPath).to.equal('.publicKeys');
   });
 
-  it('should throw an error if publicKeys have mote than 10 items', () => {
+  it('should throw an error if publicKeys have more than 10 items', () => {
     const [key] = rawStateTransition.publicKeys;
 
     for (let i = 0; i < 10; i++) {
