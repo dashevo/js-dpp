@@ -1,10 +1,13 @@
-const Identity = require('../../../../lib/identity/model/Identity');
+const rewiremock = require('rewiremock/node');
 
 describe('Identity', () => {
   let rawModel;
   let model;
+  let Identity;
+  let hashMock;
+  let encodeMock;
 
-  beforeEach(() => {
+  beforeEach(function beforeEach() {
     rawModel = {
       id: 'someId',
       identityType: 0,
@@ -18,17 +21,23 @@ describe('Identity', () => {
       ],
     };
 
+    hashMock = this.sinonSandbox.stub();
+    encodeMock = this.sinonSandbox.stub();
+
+    Identity = rewiremock.proxy(
+      '../../../../lib/identity/model/Identity',
+      {
+        '../../../../lib/util/hash': hashMock,
+        '../../../../lib/util/serializer': {
+          encode: encodeMock,
+        },
+      },
+    );
+
     model = new Identity(rawModel);
   });
 
   describe('#constructor', () => {
-    it('should create not set anything if raw model is not passed', () => {
-      const instance = new Identity();
-
-      expect(instance.id).to.be.undefined();
-      expect(instance.publicKeys).to.be.undefined();
-    });
-
     it('should set valiables from raw model', () => {
       const instance = new Identity(rawModel);
 
@@ -68,24 +77,19 @@ describe('Identity', () => {
     });
 
     it('should set proper data from state transition', () => {
-      const instance = new Identity();
+      const instance = new Identity({});
 
       instance.applyStateTransition({
         getType: () => 3,
-        getLockedOutPoint: () => Buffer.alloc(1).toString('base64'),
+        getIdentityId: () => 'someId',
+        getIdentityType: () => 5,
         getPublicKeys: () => rawModel.publicKeys,
         getIdentityType: () => 0,
         getIdentityId: () => Buffer.alloc(32).toString('base64'),
       });
 
-      expect(instance.id).to.deep.equal(Buffer.from(
-        [
-          143, 67, 150, 37, 23, 142, 29, 113,
-          182, 46, 166, 186, 6, 27, 179, 187,
-          28, 223, 162, 57, 90, 193, 167, 125,
-          18, 39, 212, 111, 95, 239, 5, 126,
-        ],
-      ));
+      expect(instance.id).to.equal('someId');
+      expect(instance.identityType).to.equal(5);
       expect(instance.publicKeys).to.deep.equal(rawModel.publicKeys);
     });
   });
@@ -96,9 +100,37 @@ describe('Identity', () => {
     });
   });
 
+  describe('#setId', () => {
+    it('should set id', () => {
+      model.setId(42);
+      expect(model.id).to.equal(42);
+    });
+  });
+
+  describe('#getIdentityType', () => {
+    it('should return set identity type', () => {
+      model.identityType = 42;
+      expect(model.getIdentityType()).to.equal(42);
+    });
+  });
+
+  describe('#setIdentityType', () => {
+    it('should set identity type', () => {
+      model.setIdentityType(42);
+      expect(model.identityType).to.equal(42);
+    });
+  });
+
   describe('#getPublicKeys', () => {
     it('should return set public keys', () => {
       expect(model.getPublicKeys()).to.deep.equal(rawModel.publicKeys);
+    });
+  });
+
+  describe('#setPublicKeys', () => {
+    it('should set public keys', () => {
+      model.setPublicKeys(42);
+      expect(model.publicKeys).to.equal(42);
     });
   });
 
