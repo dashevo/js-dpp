@@ -1,5 +1,7 @@
 const rewiremock = require('rewiremock/node');
 
+const PublicKey = require('../../../../lib/identity/PublicKey');
+
 const stateTransitionTypes = require(
   '../../../../lib/stateTransition/stateTransitionTypes',
 );
@@ -20,7 +22,7 @@ describe('IdentityCreateStateTransition', () => {
         {
           id: 1,
           type: 1,
-          publicKey: 'someString',
+          data: 'someString',
           isEnabled: true,
         },
       ],
@@ -65,8 +67,8 @@ describe('IdentityCreateStateTransition', () => {
       expect(stateTransition.lockedOutPoint).to.deep.equal(
         rawStateTransition.lockedOutPoint,
       );
-      expect(stateTransition.publicKeys).to.have.deep.members([
-        rawStateTransition.publicKeys[0],
+      expect(stateTransition.publicKeys).to.deep.equal([
+        new PublicKey(rawStateTransition.publicKeys[0]),
       ]);
       expect(stateTransition.ownershipProofSignature).to.deep.equal(
         rawStateTransition.ownershipProofSignature,
@@ -136,24 +138,29 @@ describe('IdentityCreateStateTransition', () => {
 
   describe('#setPublicKeys', () => {
     it('should set public keys', () => {
-      stateTransition.setPublicKeys([1, 2]);
-      expect(stateTransition.publicKeys).to.have.deep.members([1, 2]);
+      const publicKeys = [new PublicKey(), new PublicKey()];
+
+      stateTransition.setPublicKeys(publicKeys);
+
+      expect(stateTransition.publicKeys).to.have.deep.members(publicKeys);
     });
   });
 
   describe('#getPublicKeys', () => {
     it('should return set public keys', () => {
-      expect(stateTransition.getPublicKeys()).to.deep.equal(rawStateTransition.publicKeys);
+      expect(stateTransition.getPublicKeys()).to.deep.equal(
+        rawStateTransition.publicKeys.map(rawPublicKey => new PublicKey(rawPublicKey)),
+      );
     });
   });
 
   describe('#addPublicKeys', () => {
     it('should add more public keys', () => {
+      const publicKeys = [new PublicKey(), new PublicKey()];
+
       stateTransition.publicKeys = [];
-      stateTransition.addPublicKeys([1, 2]);
-      expect(stateTransition.getPublicKeys()).to.have.deep.members([
-        1, 2,
-      ]);
+      stateTransition.addPublicKeys(publicKeys);
+      expect(stateTransition.getPublicKeys()).to.have.deep.members(publicKeys);
     });
   });
 
