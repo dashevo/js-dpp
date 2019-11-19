@@ -33,6 +33,16 @@ describe('IdentityFactory', () => {
   });
 
   describe('#create', () => {
+    it('should call factory `createFromObject` with default empty object', function it() {
+      factory.createFromObject = this.sinonSandbox.stub();
+      factory.createFromObject.returns(42);
+
+      const result = factory.create();
+
+      expect(factory.createFromObject).to.have.been.calledOnceWithExactly({});
+      expect(result).to.equal(42);
+    });
+
     it('should call `createFromObject`', function it() {
       factory.createFromObject = this.sinonSandbox.stub();
       factory.createFromObject.returns(42);
@@ -75,6 +85,20 @@ describe('IdentityFactory', () => {
         expect(e.getErrors()).to.have.deep.members(errors);
         expect(e.getRawIdentity()).to.deep.equal(rawIdentity);
       }
+    });
+
+    it('should create an identity if validation passed', () => {
+      const rawIdentity = {
+        id: 'blabla',
+      };
+
+      validateMock.returns({
+        isValid: () => true,
+      });
+
+      const result = factory.createFromObject(rawIdentity);
+
+      expect(result.id).to.equal('blabla');
     });
   });
 

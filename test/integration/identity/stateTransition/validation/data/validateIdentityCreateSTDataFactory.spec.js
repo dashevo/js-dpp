@@ -70,6 +70,8 @@ describe('validateIdentityCreateSTDataFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.message).to.equal('Identity state transition version is too high');
+    expect(error.getStateTransition()).to.deep.equal(stateTransition);
+    expect(error.getVersion()).to.equal(0);
   });
 
   it('should throw an error if identity type is unknown', async () => {
@@ -82,6 +84,7 @@ describe('validateIdentityCreateSTDataFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.message).to.equal('Identity type is within the reserved types range, but is unknown to the protocol');
+    expect(error.getStateTransition()).to.deep.equal(stateTransition);
   });
 
   it('should throw an error if keys have same ids', async () => {
@@ -97,6 +100,7 @@ describe('validateIdentityCreateSTDataFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.message).to.equal('Duplicated public key ids found in the identity state transition');
+    expect(error.getStateTransition()).to.deep.equal(stateTransition);
   });
 
   it('should throw an error if keys have same key strings', async () => {
@@ -112,6 +116,7 @@ describe('validateIdentityCreateSTDataFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.message).to.equal('Duplicated public keys found in the identity state transition');
+    expect(error.getStateTransition()).to.deep.equal(stateTransition);
   });
 
   it('should throw an error if identity already exists', async () => {
@@ -124,6 +129,7 @@ describe('validateIdentityCreateSTDataFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.message).to.equal(`Identity with id ${stateTransition.getIdentityId()} already exists`);
+    expect(error.getStateTransition()).to.deep.equal(stateTransition);
   });
 
   it('should pass valid state transition', async () => {
