@@ -57,7 +57,7 @@ describe('IdentityCreateStateTransition', () => {
       stateTransition = new IdentityCreateStateTransition();
 
       expect(stateTransition.identityCreateStateTransitionVersion).to.equal(0);
-      expect(stateTransition.identityType).to.equal(0);
+      expect(stateTransition.identityType).to.be.undefined();
       expect(stateTransition.publicKeys).to.deep.equal([]);
     });
 

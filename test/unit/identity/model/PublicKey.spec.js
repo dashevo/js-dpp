@@ -22,7 +22,7 @@ describe('PublicKey', () => {
       expect(instance.id).to.be.undefined();
       expect(instance.type).to.be.undefined();
       expect(instance.data).to.be.undefined();
-      expect(instance.enabled).to.be.undefined();
+      expect(instance.enabled).to.be.true();
     });
 
     it('should set variables from raw model', () => {
