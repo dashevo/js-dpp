@@ -1,6 +1,6 @@
 const Identity = require('../../../../lib/identity/model/Identity');
 
-const checkIdentityFactory = require('../../../../lib/stateTransition/validation/checkIdentityFactory');
+const validateIdentityTypeFactory = require('../../../../lib/stateTransition/validation/validateIdentityTypeFactory');
 
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 
@@ -11,8 +11,8 @@ const ValidationResult = require('../../../../lib/validation/ValidationResult');
 const IdentityNotFoundError = require('../../../../lib/errors/IdentityNotFoundError');
 const UnexpectedIdentityTypeError = require('../../../../lib/errors/UnexpectedIdentityTypeError');
 
-describe('checkIdentityFactory', () => {
-  let checkIdentity;
+describe('validateIdentityTypeFactory', () => {
+  let validateIdentityType;
   let dataProviderMock;
   let userId;
   let rawIdentityUser;
@@ -20,7 +20,7 @@ describe('checkIdentityFactory', () => {
   beforeEach(function beforeEach() {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
-    checkIdentity = checkIdentityFactory(
+    validateIdentityType = validateIdentityTypeFactory(
       dataProviderMock,
     );
 
@@ -41,7 +41,7 @@ describe('checkIdentityFactory', () => {
   });
 
   it('should return invalid result if identity is not found', async () => {
-    const result = await checkIdentity(userId, Identity.TYPES.USER);
+    const result = await validateIdentityType(userId, [Identity.TYPES.USER]);
 
     expectValidationError(result, IdentityNotFoundError);
 
@@ -53,14 +53,14 @@ describe('checkIdentityFactory', () => {
   it('should return invalid result if the identity has the wrong type', async () => {
     dataProviderMock.fetchIdentity.resolves(rawIdentityUser);
 
-    const result = await checkIdentity(userId, Identity.TYPES.APPLICATION);
+    const result = await validateIdentityType(userId, [Identity.TYPES.APPLICATION]);
 
     expectValidationError(result, UnexpectedIdentityTypeError);
 
     const [error] = result.getErrors();
 
     expect(error.getIdentity()).to.equal(rawIdentityUser);
-    expect(error.getExpectedIdentityType()).to.equal(Identity.TYPES.APPLICATION);
+    expect(error.getExpectedIdentityTypes()).to.deep.equal([Identity.TYPES.APPLICATION]);
 
     expect(dataProviderMock.fetchIdentity).to.be.calledOnceWith(userId);
   });
@@ -68,7 +68,7 @@ describe('checkIdentityFactory', () => {
   it('should return valid result', async () => {
     dataProviderMock.fetchIdentity.resolves(rawIdentityUser);
 
-    const result = await checkIdentity(userId, Identity.TYPES.USER);
+    const result = await validateIdentityType(userId, [Identity.TYPES.USER]);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
