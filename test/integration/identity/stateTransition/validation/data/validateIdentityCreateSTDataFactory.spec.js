@@ -1,3 +1,5 @@
+const getIdentityCreateStateTransition = require('../../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
+
 const { expectValidationError } = require(
   '../../../../../../lib/test/expect/expectError',
 );
@@ -34,7 +36,6 @@ const createDataProviderMock = require('../../../../../../lib/test/mocks/createD
 
 describe('validateIdentityCreateSTDataFactory', () => {
   let validateIdentityCreateSTData;
-  let rawStateTransition;
   let stateTransition;
   let dataProviderMock;
 
@@ -42,22 +43,7 @@ describe('validateIdentityCreateSTDataFactory', () => {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     validateIdentityCreateSTData = validateIdentityCreateSTDataFactory(dataProviderMock);
 
-    rawStateTransition = {
-      identityCreateStateTransitionVersion: 0,
-      lockedOutPoint: Buffer.alloc(36).toString('base64'),
-      identityType: 0,
-      publicKeys: [
-        {
-          id: 1,
-          type: 1,
-          publicKey: Buffer.alloc(240).toString('base64'),
-          isEnabled: true,
-        },
-      ],
-      ownershipProofSignature: Buffer.alloc(74).toString('base64'),
-    };
-
-    stateTransition = new IdentityCreateStateTransition(rawStateTransition);
+    stateTransition = getIdentityCreateStateTransition();
   });
 
   it('should throw an error if state transition version is higher than one currently set', async () => {
