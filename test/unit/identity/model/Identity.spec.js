@@ -160,6 +160,18 @@ describe('Identity', () => {
     });
   });
 
+  describe('#getPublicKeyById', () => {
+    it('should return a public key for a given id', () => {
+      const key = model.getPublicKeyById(1);
+      expect(key).to.be.deep.equal(rawModel.publicKeys[0]);
+    });
+
+    it("should retunrn undefined if there's no key with such id", () => {
+      const key = model.getPublicKeyById(3);
+      expect(key).to.be.undefined();
+    });
+  });
+
   describe('#serialize', () => {
     it('should return encoded json object', () => {
       encodeMock.returns(42); // for example
