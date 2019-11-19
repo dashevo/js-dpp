@@ -1,11 +1,6 @@
 {
   "$id": "https://schema.dash.org/dpp-0-4-0/idenitity/state-transitions/identity-create",
   "properties": {
-    "identityCreateStateTransitionVersion": {
-      "type": "number",
-      "multipleOf": 1.0,
-      "minimum": 0
-    },
     "lockedOutPoint": {
       "type": "string",
       "minLength": 48,
@@ -34,7 +29,6 @@
     }
   },
   "required": [
-    "identityCreateStateTransitionVersion",
     "lockedOutPoint",
     "identityType",
     "publicKeys",

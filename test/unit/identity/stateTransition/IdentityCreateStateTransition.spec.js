@@ -15,7 +15,6 @@ describe('IdentityCreateStateTransition', () => {
 
   beforeEach(function beforeEach() {
     rawStateTransition = {
-      identityCreateStateTransitionVersion: 1,
       lockedOutPoint: 'c3BlY2lhbEJ1ZmZlcg==',
       identityType: 1,
       publicKeys: [
@@ -56,13 +55,11 @@ describe('IdentityCreateStateTransition', () => {
     it('should create an instance with default values if nothing specified', () => {
       stateTransition = new IdentityCreateStateTransition();
 
-      expect(stateTransition.identityCreateStateTransitionVersion).to.equal(0);
       expect(stateTransition.identityType).to.be.undefined();
       expect(stateTransition.publicKeys).to.deep.equal([]);
     });
 
     it('should create an instance with specified data from specified raw transition', () => {
-      expect(stateTransition.identityCreateStateTransitionVersion).to.equal(1);
       expect(stateTransition.identityType).to.equal(1);
       expect(stateTransition.lockedOutPoint).to.deep.equal(
         rawStateTransition.lockedOutPoint,
@@ -79,19 +76,6 @@ describe('IdentityCreateStateTransition', () => {
   describe('#getType', () => {
     it('should return IDENTITY_CREATE type', () => {
       expect(stateTransition.getType()).to.equal(stateTransitionTypes.IDENTITY_CREATE);
-    });
-  });
-
-  describe('#setIdentityStateTransitionVersion', () => {
-    it('should set identity state transition version', () => {
-      stateTransition.setIdentityStateTransitionVersion(42);
-      expect(stateTransition.identityCreateStateTransitionVersion).to.equal(42);
-    });
-  });
-
-  describe('#getIdentityStateTransitionVersion', () => {
-    it('should return currently set identity state transition version', () => {
-      expect(stateTransition.getIdentityStateTransitionVersion()).to.equal(1);
     });
   });
 
@@ -221,7 +205,6 @@ describe('IdentityCreateStateTransition', () => {
       expect(json).to.deep.equal({
         protocolVersion: 0,
         type: 3,
-        identityCreateStateTransitionVersion: 1,
         identityType: 1,
         lockedOutPoint: rawStateTransition.lockedOutPoint,
         publicKeys: rawStateTransition.publicKeys,
