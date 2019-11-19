@@ -139,6 +139,9 @@ describe('StateTransitionFacade', () => {
 
 
       dataProviderMock.fetchDataContract.resolves(dataContract);
+      dataProviderMock.fetchIdentity.resolves({
+        identityType: 0,
+      });
 
       const validateStructureSpy = this.sinonSandbox.spy(
         dpp.stateTransition,
