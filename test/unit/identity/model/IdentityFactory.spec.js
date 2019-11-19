@@ -15,7 +15,7 @@ describe('IdentityFactory', () => {
     decodeMock = this.sinonSandbox.stub();
 
     IdentityFactory = rewiremock.proxy(
-      '../../../../lib/identity/model/IdentityFactory',
+      '../../../../lib/identity/IdentityFactory',
       {
         '../../../../lib/util/serializer': {
           decode: decodeMock,

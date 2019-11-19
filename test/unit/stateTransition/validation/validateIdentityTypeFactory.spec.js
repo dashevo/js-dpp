@@ -1,4 +1,4 @@
-const Identity = require('../../../../lib/identity/model/Identity');
+const Identity = require('../../../../lib/identity/Identity');
 
 const validateIdentityTypeFactory = require('../../../../lib/stateTransition/validation/validateIdentityTypeFactory');
 

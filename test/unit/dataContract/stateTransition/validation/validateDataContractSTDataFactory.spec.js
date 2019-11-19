@@ -1,7 +1,7 @@
 const validateDataContractSTDataFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractSTDataFactory');
 const DataContractStateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractStateTransition');
 
-const Identity = require('../../../../../lib/identity/model/Identity');
+const Identity = require('../../../../../lib/identity/Identity');
 
 const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
 const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');

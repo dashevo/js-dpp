@@ -1,5 +1,5 @@
 const validateDocumentsSTDataFactory = require('../../../../../lib/document/stateTransition/validation/data/validateDocumentsSTDataFactory');
-const Identity = require('../../../../../lib/identity/model/Identity');
+const Identity = require('../../../../../lib/identity/Identity');
 
 const Document = require('../../../../../lib/document/Document');
 const DocumentsStateTransition = require('../../../../../lib/document/stateTransition/DocumentsStateTransition');

@@ -1,5 +1,5 @@
 {
-  "$id": "https://schema.dash.org/dpp-0-4-0/state-transition/identity-create",
+  "$id": "https://schema.dash.org/dpp-0-4-0/idenitity/state-transitions/identity-create",
   "properties": {
     "identityCreateStateTransitionVersion": {
       "type": "number",
@@ -21,7 +21,7 @@
     "publicKeys": {
       "type": "array",
       "items": {
-        "$ref": "https://schema.dash.org/dpp-0-4-0/base/public-key"
+        "$ref": "https://schema.dash.org/dpp-0-4-0/identity/public-key"
       },
       "minItems": 1,
       "maxItems": 10

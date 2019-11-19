@@ -25,7 +25,7 @@ describe('Identity', () => {
     encodeMock = this.sinonSandbox.stub();
 
     Identity = rewiremock.proxy(
-      '../../../../lib/identity/model/Identity',
+      '../../../../lib/identity/Identity',
       {
         '../../../../lib/util/hash': hashMock,
         '../../../../lib/util/serializer': {

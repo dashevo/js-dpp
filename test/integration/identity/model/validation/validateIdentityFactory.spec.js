@@ -11,10 +11,10 @@ const { expectValidationError } = require(
 );
 
 const validateIdentityFactory = require(
-  '../../../../../lib/identity/model/validation/validateIdentityFactory',
+  '../../../../../lib/identity/validation/validateIdentityFactory',
 );
 
-const Identity = require('../../../../../lib/identity/model/Identity');
+const Identity = require('../../../../../lib/identity/Identity');
 
 const JsonSchemaError = require(
   '../../../../../lib/errors/JsonSchemaError',

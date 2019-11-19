@@ -24,10 +24,10 @@ describe('IdentityFacade', () => {
     validateFactoryMock.returns(validateMock);
 
     IdentityFacade = rewiremock.proxy(
-      '../../../../lib/identity/model/IdentityFacade',
+      '../../../../lib/identity/IdentityFacade',
       {
-        '../../../../lib/identity/model/IdentityFactory': factoryClassMock,
-        '../../../../lib/identity/model/validation/validateIdentityFactory': validateFactoryMock,
+        '../../../../lib/identity/IdentityFactory': factoryClassMock,
+        '../../../../lib/identity/validation/validateIdentityFactory': validateFactoryMock,
       },
     );
 
