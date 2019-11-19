@@ -1,5 +1,7 @@
 const Ajv = require('ajv');
 
+const getIdentityFixture = require('../../../../../lib/test/fixtures/getIdentityFixture');
+
 const JsonSchemaValidator = require(
   '../../../../../lib/validation/JsonSchemaValidator',
 );
@@ -23,32 +25,24 @@ const IncorrectIdentityTypeError = require(
 );
 
 describe('validateIdentityFactory', () => {
-  let identity;
+  let rawIdentity;
   let validate;
+  let identity;
 
   beforeEach(() => {
     const schemaValidator = new JsonSchemaValidator(new Ajv());
 
-    identity = {
-      id: Buffer.alloc(32).toString('base64'),
-      identityType: 0,
-      publicKeys: [
-        {
-          id: 1,
-          type: 0,
-          publicKey: 'I5q3O2KMNSWAYd4eF7fY5g2grOju4fSAoqrqTJ9kEtc=',
-          isEnabled: true,
-        },
-      ],
-    };
+    identity = getIdentityFixture();
+
+    rawIdentity = identity.toJSON();
 
     validate = validateIdentityFactory(schemaValidator);
   });
 
   it('should throw an error if id is not set', () => {
-    identity.id = undefined;
+    rawIdentity.id = undefined;
 
-    const result = validate(identity);
+    const result = validate(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -59,9 +53,9 @@ describe('validateIdentityFactory', () => {
   });
 
   it('should throw an error if identityType is not set', () => {
-    identity.identityType = undefined;
+    rawIdentity.identityType = undefined;
 
-    const result = validate(identity);
+    const result = validate(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -72,9 +66,9 @@ describe('validateIdentityFactory', () => {
   });
 
   it('should throw an error if publicKeys is not set', () => {
-    identity.publicKeys = undefined;
+    rawIdentity.publicKeys = undefined;
 
-    const result = validate(identity);
+    const result = validate(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -85,9 +79,9 @@ describe('validateIdentityFactory', () => {
   });
 
   it('should throw an error if id is less than 42 characters', () => {
-    identity.id = Buffer.alloc(28).toString('base64');
+    rawIdentity.id = Buffer.alloc(28).toString('base64');
 
-    const result = validate(identity);
+    const result = validate(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -98,9 +92,9 @@ describe('validateIdentityFactory', () => {
   });
 
   it('should throw an error if id is more than 44 characters', () => {
-    identity.id = Buffer.alloc(36).toString('base64');
+    rawIdentity.id = Buffer.alloc(36).toString('base64');
 
-    const result = validate(identity);
+    const result = validate(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -111,9 +105,9 @@ describe('validateIdentityFactory', () => {
   });
 
   it('should throw an error if id is not base64', () => {
-    identity.id = '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&';
+    rawIdentity.id = '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&';
 
-    const result = validate(identity);
+    const result = validate(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -124,9 +118,9 @@ describe('validateIdentityFactory', () => {
   });
 
   it('should throw an error if identityType is not a multiple of 1', () => {
-    identity.identityType = 1.2;
+    rawIdentity.identityType = 1.2;
 
-    const result = validate(identity);
+    const result = validate(rawIdentity);
 
     expect(result.isValid()).to.be.false();
 
@@ -137,9 +131,9 @@ describe('validateIdentityFactory', () => {
   });
 
   it('should throw an error if identityType is less than 0', () => {
-    identity.identityType = -1;
+    rawIdentity.identityType = -1;
 
-    const result = validate(identity);
+    const result = validate(rawIdentity);
 
     expect(result.isValid()).to.be.false();
 
@@ -150,9 +144,9 @@ describe('validateIdentityFactory', () => {
   });
 
   it('should throw an error if identityType is more than 65535', () => {
-    identity.identityType = 77777;
+    rawIdentity.identityType = 77777;
 
-    const result = validate(identity);
+    const result = validate(rawIdentity);
 
     expect(result.isValid()).to.be.false();
 
@@ -163,9 +157,9 @@ describe('validateIdentityFactory', () => {
   });
 
   it('should throw an error if publicKeys have no keys', () => {
-    identity.publicKeys = [];
+    rawIdentity.publicKeys = [];
 
-    const result = validate(identity);
+    const result = validate(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -176,14 +170,14 @@ describe('validateIdentityFactory', () => {
   });
 
   it('should throw an error if publicKeys have more than 100 keys', () => {
-    const [key] = identity.publicKeys;
+    const [key] = rawIdentity.publicKeys;
 
-    identity.publicKeys = [];
+    rawIdentity.publicKeys = [];
     for (let i = 0; i < 101; i++) {
-      identity.publicKeys.push(key);
+      rawIdentity.publicKeys.push(key);
     }
 
-    const result = validate(identity);
+    const result = validate(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -194,24 +188,24 @@ describe('validateIdentityFactory', () => {
   });
 
   it('should throw an error if type is not known', () => {
-    identity.identityType = 42;
+    rawIdentity.identityType = 42;
 
-    const result = validate(identity);
+    const result = validate(rawIdentity);
 
     expectValidationError(result, IncorrectIdentityTypeError, 1);
 
     const [error] = result.getErrors();
 
-    expect(error.getIdentity()).to.deep.equal(identity);
+    expect(error.getIdentity()).to.deep.equal(rawIdentity);
   });
 
   it('should pass valid raw identity', () => {
-    const result = validate(identity);
+    const result = validate(rawIdentity);
     expect(result.isValid()).to.be.true();
   });
 
   it('should pass valid identity', () => {
-    const result = validate(new Identity(identity));
+    const result = validate(new Identity(rawIdentity));
     expect(result.isValid()).to.be.true();
   });
 });

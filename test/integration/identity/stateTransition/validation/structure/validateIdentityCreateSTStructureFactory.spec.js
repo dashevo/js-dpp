@@ -2,7 +2,6 @@ const Ajv = require('ajv');
 
 const getIdentityCreateStateTransitionFixture = require('../../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
-
 const JsonSchemaValidator = require(
   '../../../../../../lib/validation/JsonSchemaValidator',
 );
