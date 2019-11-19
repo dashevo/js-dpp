@@ -1,4 +1,4 @@
-const getIdentityCreateStateTransition = require('../../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
+const getIdentityCreateStateTransitionFixture = require('../../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
 const { expectValidationError } = require(
   '../../../../../../lib/test/expect/expectError',
@@ -6,10 +6,6 @@ const { expectValidationError } = require(
 
 const validateIdentityCreateSTDataFactory = require(
   '../../../../../../lib/identity/stateTransitions/validation/data/validateIdentityCreateSTDataFactory',
-);
-
-const IdentityCreateStateTransition = require(
-  '../../../../../../lib/identity/stateTransitions/IdentityCreateStateTransition',
 );
 
 const IdentitySTWrongVersionError = require(
@@ -43,7 +39,7 @@ describe('validateIdentityCreateSTDataFactory', () => {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     validateIdentityCreateSTData = validateIdentityCreateSTDataFactory(dataProviderMock);
 
-    stateTransition = getIdentityCreateStateTransition();
+    stateTransition = getIdentityCreateStateTransitionFixture();
   });
 
   it('should throw an error if state transition version is higher than one currently set', async () => {
