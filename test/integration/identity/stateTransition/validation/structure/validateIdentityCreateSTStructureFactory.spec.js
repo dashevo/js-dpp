@@ -128,12 +128,12 @@ describe('validateIdentityCreateSTStructureFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.message).to.equal('should have required property \'identityType\'');
+    expect(error.message).to.equal('should have required property \'.identityType\'');
     expect(error.keyword).to.equal('required');
   });
 
-  it('should throw an error if identityType is not a multiple of 1', () => {
-    rawStateTransition.identityType = 1.2;
+  it('should throw an error if type is not a multiple of 1', () => {
+    rawStateTransition.type = 1.2;
 
     const result = validateIdentityCreateST(rawStateTransition);
 
@@ -142,11 +142,11 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.keyword).to.equal('multipleOf');
-    expect(error.dataPath).to.equal('.identityType');
+    expect(error.dataPath).to.equal('.type');
   });
 
-  it('should throw an error if identityType is less than 0', () => {
-    rawStateTransition.identityType = -1;
+  it('should throw an error if type is less than 0', () => {
+    rawStateTransition.type = -1;
 
     const result = validateIdentityCreateST(rawStateTransition);
 
@@ -155,11 +155,11 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.keyword).to.equal('minimum');
-    expect(error.dataPath).to.equal('.identityType');
+    expect(error.dataPath).to.equal('.type');
   });
 
-  it('should throw an error if identityType is more than 65535', () => {
-    rawStateTransition.identityType = 100000;
+  it('should throw an error if type is more than 65535', () => {
+    rawStateTransition.type = 100000;
 
     const result = validateIdentityCreateST(rawStateTransition);
 
@@ -168,7 +168,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.keyword).to.equal('maximum');
-    expect(error.dataPath).to.equal('.identityType');
+    expect(error.dataPath).to.equal('.type');
   });
 
   it('should throw an error if publicKeys is not set', () => {

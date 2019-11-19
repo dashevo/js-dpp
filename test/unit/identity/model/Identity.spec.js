@@ -10,7 +10,7 @@ describe('Identity', () => {
   beforeEach(function beforeEach() {
     rawModel = {
       id: 'someId',
-      identityType: 0,
+      type: 0,
       publicKeys: [
         {
           id: 1,
@@ -42,15 +42,15 @@ describe('Identity', () => {
       const instance = new Identity();
 
       expect(instance.id).to.be.undefined();
-      expect(instance.identityType).to.be.undefined();
+      expect(instance.type).to.be.undefined();
       expect(instance.publicKeys).to.be.undefined();
     });
 
-    it('should set valiables from raw model', () => {
+    it('should set variables from raw model', () => {
       const instance = new Identity(rawModel);
 
       expect(instance.id).to.equal(rawModel.id);
-      expect(instance.identityType).to.equal(rawModel.identityType);
+      expect(instance.type).to.equal(rawModel.type);
       expect(instance.publicKeys).to.deep.equal(rawModel.publicKeys);
     });
   });
@@ -115,7 +115,7 @@ describe('Identity', () => {
       });
 
       expect(instance.id).to.equal('someId');
-      expect(instance.identityType).to.equal(5);
+      expect(instance.type).to.equal(5);
       expect(instance.publicKeys).to.deep.equal(rawModel.publicKeys);
     });
   });
@@ -133,17 +133,17 @@ describe('Identity', () => {
     });
   });
 
-  describe('#getIdentityType', () => {
+  describe('#getType', () => {
     it('should return set identity type', () => {
-      model.identityType = 42;
-      expect(model.getIdentityType()).to.equal(42);
+      model.type = 42;
+      expect(model.getType()).to.equal(42);
     });
   });
 
-  describe('#setIdentityType', () => {
+  describe('#setType', () => {
     it('should set identity type', () => {
-      model.setIdentityType(42);
-      expect(model.identityType).to.equal(42);
+      model.setType(42);
+      expect(model.type).to.equal(42);
     });
   });
 

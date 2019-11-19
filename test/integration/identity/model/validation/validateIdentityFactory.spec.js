@@ -26,7 +26,7 @@ const IncorrectIdentityTypeError = require(
 
 describe('validateIdentityFactory', () => {
   let rawIdentity;
-  let validate;
+  let validateIdentity;
   let identity;
 
   beforeEach(() => {
@@ -36,13 +36,13 @@ describe('validateIdentityFactory', () => {
 
     rawIdentity = identity.toJSON();
 
-    validate = validateIdentityFactory(schemaValidator);
+    validateIdentity = validateIdentityFactory(schemaValidator);
   });
 
   it('should throw an error if id is not set', () => {
     rawIdentity.id = undefined;
 
-    const result = validate(rawIdentity);
+    const result = validateIdentity(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -52,23 +52,23 @@ describe('validateIdentityFactory', () => {
     expect(error.keyword).to.equal('required');
   });
 
-  it('should throw an error if identityType is not set', () => {
-    rawIdentity.identityType = undefined;
+  it('should throw an error if type is not set', () => {
+    rawIdentity.type = undefined;
 
-    const result = validate(rawIdentity);
+    const result = validateIdentity(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
     const [error] = result.getErrors();
 
-    expect(error.message).to.equal('should have required property \'identityType\'');
+    expect(error.message).to.equal('should have required property \'type\'');
     expect(error.keyword).to.equal('required');
   });
 
   it('should throw an error if publicKeys is not set', () => {
     rawIdentity.publicKeys = undefined;
 
-    const result = validate(rawIdentity);
+    const result = validateIdentity(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -81,7 +81,7 @@ describe('validateIdentityFactory', () => {
   it('should throw an error if id is less than 42 characters', () => {
     rawIdentity.id = Buffer.alloc(28).toString('base64');
 
-    const result = validate(rawIdentity);
+    const result = validateIdentity(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -94,7 +94,7 @@ describe('validateIdentityFactory', () => {
   it('should throw an error if id is more than 44 characters', () => {
     rawIdentity.id = Buffer.alloc(36).toString('base64');
 
-    const result = validate(rawIdentity);
+    const result = validateIdentity(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -107,7 +107,7 @@ describe('validateIdentityFactory', () => {
   it('should throw an error if id is not base64', () => {
     rawIdentity.id = '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&';
 
-    const result = validate(rawIdentity);
+    const result = validateIdentity(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -117,49 +117,49 @@ describe('validateIdentityFactory', () => {
     expect(error.dataPath).to.equal('.id');
   });
 
-  it('should throw an error if identityType is not a multiple of 1', () => {
-    rawIdentity.identityType = 1.2;
+  it('should throw an error if type is not a multiple of 1', () => {
+    rawIdentity.type = 1.2;
 
-    const result = validate(rawIdentity);
+    const result = validateIdentity(rawIdentity);
 
     expect(result.isValid()).to.be.false();
 
     const [error] = result.getErrors();
 
     expect(error.keyword).to.equal('multipleOf');
-    expect(error.dataPath).to.equal('.identityType');
+    expect(error.dataPath).to.equal('.type');
   });
 
-  it('should throw an error if identityType is less than 0', () => {
-    rawIdentity.identityType = -1;
+  it('should throw an error if type is less than 0', () => {
+    rawIdentity.type = -1;
 
-    const result = validate(rawIdentity);
+    const result = validateIdentity(rawIdentity);
 
     expect(result.isValid()).to.be.false();
 
     const [error] = result.getErrors();
 
     expect(error.keyword).to.equal('minimum');
-    expect(error.dataPath).to.equal('.identityType');
+    expect(error.dataPath).to.equal('.type');
   });
 
-  it('should throw an error if identityType is more than 65535', () => {
-    rawIdentity.identityType = 77777;
+  it('should throw an error if type is more than 65535', () => {
+    rawIdentity.type = 77777;
 
-    const result = validate(rawIdentity);
+    const result = validateIdentity(rawIdentity);
 
     expect(result.isValid()).to.be.false();
 
     const [error] = result.getErrors();
 
     expect(error.keyword).to.equal('maximum');
-    expect(error.dataPath).to.equal('.identityType');
+    expect(error.dataPath).to.equal('.type');
   });
 
   it('should throw an error if publicKeys have no keys', () => {
     rawIdentity.publicKeys = [];
 
-    const result = validate(rawIdentity);
+    const result = validateIdentity(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -177,7 +177,7 @@ describe('validateIdentityFactory', () => {
       rawIdentity.publicKeys.push(key);
     }
 
-    const result = validate(rawIdentity);
+    const result = validateIdentity(rawIdentity);
 
     expectValidationError(result, JsonSchemaError, 1);
 
@@ -188,9 +188,9 @@ describe('validateIdentityFactory', () => {
   });
 
   it('should throw an error if type is not known', () => {
-    rawIdentity.identityType = 42;
+    rawIdentity.type = 42;
 
-    const result = validate(rawIdentity);
+    const result = validateIdentity(rawIdentity);
 
     expectValidationError(result, IncorrectIdentityTypeError, 1);
 
@@ -200,12 +200,12 @@ describe('validateIdentityFactory', () => {
   });
 
   it('should pass valid raw identity', () => {
-    const result = validate(rawIdentity);
+    const result = validateIdentity(rawIdentity);
     expect(result.isValid()).to.be.true();
   });
 
   it('should pass valid identity', () => {
-    const result = validate(new Identity(rawIdentity));
+    const result = validateIdentity(new Identity(rawIdentity));
     expect(result.isValid()).to.be.true();
   });
 });

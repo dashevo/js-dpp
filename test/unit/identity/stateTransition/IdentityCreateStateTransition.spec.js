@@ -129,7 +129,7 @@ describe('IdentityCreateStateTransition', () => {
   });
 
   describe('#getIdentityType', () => {
-    it('should return set identity type', () => {
+    it('should return identity type', () => {
       expect(stateTransition.getIdentityType()).to.equal(1);
     });
   });

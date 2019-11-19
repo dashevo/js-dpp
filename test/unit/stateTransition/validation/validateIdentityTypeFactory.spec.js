@@ -28,7 +28,7 @@ describe('validateIdentityTypeFactory', () => {
 
     rawIdentityUser = {
       id: userId,
-      identityType: Identity.TYPES.USER,
+      type: Identity.TYPES.USER,
       publicKeys: [
         {
           id: 1,
