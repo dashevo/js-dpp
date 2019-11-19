@@ -44,6 +44,15 @@ describe('IdentityFacade', () => {
   });
 
   describe('#create', () => {
+    it('should call factory `createFromObject` with default empty object', () => {
+      factoryMock.createFromObject.returns(42);
+
+      const result = facade.create();
+
+      expect(factoryMock.createFromObject).to.have.been.calledOnceWithExactly({});
+      expect(result).to.equal(42);
+    });
+
     it('should call factory `createFromObject`', () => {
       const data = {
         item: 'blabla',

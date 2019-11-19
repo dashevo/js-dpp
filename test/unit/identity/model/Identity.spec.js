@@ -38,20 +38,31 @@ describe('Identity', () => {
   });
 
   describe('#constructor', () => {
+    it('should not set anything if nothing passed', () => {
+      const instance = new Identity();
+
+      expect(instance.id).to.be.undefined();
+      expect(instance.identityType).to.be.undefined();
+      expect(instance.publicKeys).to.be.undefined();
+    });
+
     it('should set valiables from raw model', () => {
       const instance = new Identity(rawModel);
 
       expect(instance.id).to.equal(rawModel.id);
+      expect(instance.identityType).to.equal(rawModel.identityType);
       expect(instance.publicKeys).to.deep.equal(rawModel.publicKeys);
     });
   });
 
   describe('#applyStateTransition', () => {
     it('should throw an error if state transition is of wrong type', () => {
+      const stateTransition = {
+        getType: () => 42,
+      };
+
       try {
-        model.applyStateTransition({
-          getType: () => 42,
-        });
+        model.applyStateTransition(stateTransition);
 
         expect.fail('error was not thrown');
       } catch (e) {
@@ -59,10 +70,27 @@ describe('Identity', () => {
         expect(e.message).to.equal(
           'Can\'t apply a state transition to the Identity model, wrong state transition type',
         );
+        expect(e.getStateTransition()).to.deep.equal(stateTransition);
       }
     });
 
-    it('should throw na error if data is already set', () => {
+    it('should throw an error if id is already set', () => {
+      try {
+        model.applyStateTransition({
+          getType: () => 3,
+        });
+
+        expect.fail('error was not thrown');
+      } catch (e) {
+        expect(e.message).to.equal(
+          'Can\'t apply identity create state transition to already existing model',
+        );
+      }
+    });
+
+    it('should throw an error if publicKeys is already set', () => {
+      model.id = undefined;
+
       try {
         model.applyStateTransition({
           getType: () => 3,
