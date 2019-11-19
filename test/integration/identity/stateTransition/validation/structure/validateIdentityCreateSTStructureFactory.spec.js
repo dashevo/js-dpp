@@ -1,5 +1,7 @@
 const Ajv = require('ajv');
 
+const getIdentityCreateStateTransitionFixture = require('../../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
+
 const JsonSchemaValidator = require(
   '../../../../../../lib/validation/JsonSchemaValidator',
 );
@@ -23,6 +25,7 @@ const IdentityCreateStateTransition = require(
 describe('validateIdentityCreateSTStructureFactory', () => {
   let validateIdentityCreateST;
   let rawStateTransition;
+  let stateTransition;
 
   beforeEach(() => {
     const ajv = new Ajv();
@@ -32,20 +35,9 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       validator,
     );
 
-    rawStateTransition = {
-      identityCreateStateTransitionVersion: 0,
-      lockedOutPoint: Buffer.alloc(36).toString('base64'),
-      identityType: 0,
-      publicKeys: [
-        {
-          id: 1,
-          type: 1,
-          publicKey: Buffer.alloc(240).toString('base64'),
-          isEnabled: true,
-        },
-      ],
-      ownershipProofSignature: Buffer.alloc(65).toString('base64'),
-    };
+    stateTransition = getIdentityCreateStateTransitionFixture();
+
+    rawStateTransition = stateTransition.toJSON();
   });
 
   it('should throw an error if identityCreateStateTransitionVersion is not set', () => {
