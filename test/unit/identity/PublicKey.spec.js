@@ -1,4 +1,4 @@
-const PublicKey = require('../../../../lib/identity/PublicKey');
+const PublicKey = require('../../../lib/identity/PublicKey');
 
 describe('PublicKey', () => {
   let rawPublicKey;

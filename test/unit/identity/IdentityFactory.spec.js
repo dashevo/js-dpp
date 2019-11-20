@@ -1,7 +1,7 @@
 const rewiremock = require('rewiremock/node');
 
 const InvalidIdentityError = require(
-  '../../../../lib/identity/errors/InvalidIdentityError',
+  '../../../lib/identity/errors/InvalidIdentityError',
 );
 
 describe('IdentityFactory', () => {
@@ -15,9 +15,9 @@ describe('IdentityFactory', () => {
     decodeMock = this.sinonSandbox.stub();
 
     IdentityFactory = rewiremock.proxy(
-      '../../../../lib/identity/IdentityFactory',
+      '../../../lib/identity/IdentityFactory',
       {
-        '../../../../lib/util/serializer': {
+        '../../../lib/util/serializer': {
           decode: decodeMock,
         },
       },

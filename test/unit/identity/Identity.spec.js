@@ -1,6 +1,6 @@
 const rewiremock = require('rewiremock/node');
 
-const PublicKey = require('../../../../lib/identity/PublicKey');
+const PublicKey = require('../../../lib/identity/PublicKey');
 
 describe('Identity', () => {
   let rawIdentity;
@@ -27,10 +27,10 @@ describe('Identity', () => {
     encodeMock = this.sinonSandbox.stub();
 
     Identity = rewiremock.proxy(
-      '../../../../lib/identity/Identity',
+      '../../../lib/identity/Identity',
       {
-        '../../../../lib/util/hash': hashMock,
-        '../../../../lib/util/serializer': {
+        '../../../lib/util/hash': hashMock,
+        '../../../lib/util/serializer': {
           encode: encodeMock,
         },
       },
@@ -56,73 +56,6 @@ describe('Identity', () => {
       expect(instance.publicKeys).to.deep.equal(
         rawIdentity.publicKeys.map(rawPublicKey => new PublicKey(rawPublicKey)),
       );
-    });
-  });
-
-  describe('#applyStateTransition', () => {
-    it('should throw an error if state transition is of wrong type', () => {
-      const stateTransition = {
-        getType: () => 42,
-      };
-
-      try {
-        identity.applyStateTransition(stateTransition);
-
-        expect.fail('error was not thrown');
-      } catch (e) {
-        expect(e.name).to.equal('WrongStateTransitionTypeError');
-        expect(e.message).to.equal(
-          'Can\'t apply a state transition to the Identity model, wrong state transition type',
-        );
-        expect(e.getStateTransition()).to.deep.equal(stateTransition);
-      }
-    });
-
-    it('should throw an error if id is already set', () => {
-      try {
-        identity.applyStateTransition({
-          getType: () => 3,
-        });
-
-        expect.fail('error was not thrown');
-      } catch (e) {
-        expect(e.message).to.equal(
-          'Can\'t apply identity create state transition to already existing model',
-        );
-      }
-    });
-
-    it('should throw an error if publicKeys is already set', () => {
-      identity.id = undefined;
-
-      try {
-        identity.applyStateTransition({
-          getType: () => 3,
-        });
-
-        expect.fail('error was not thrown');
-      } catch (e) {
-        expect(e.message).to.equal(
-          'Can\'t apply identity create state transition to already existing model',
-        );
-      }
-    });
-
-    it('should set proper data from state transition', () => {
-      const instance = new Identity({});
-
-      const publicKeys = rawIdentity.publicKeys.map(rawPublicKey => new PublicKey(rawPublicKey));
-
-      instance.applyStateTransition({
-        getType: () => 3,
-        getIdentityId: () => 'someId',
-        getIdentityType: () => 5,
-        getPublicKeys: () => publicKeys,
-      });
-
-      expect(instance.id).to.equal('someId');
-      expect(instance.type).to.equal(5);
-      expect(instance.publicKeys).to.deep.equal(publicKeys);
     });
   });
 

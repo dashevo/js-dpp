@@ -1,27 +1,27 @@
 const Ajv = require('ajv');
 
-const getIdentityFixture = require('../../../../../lib/test/fixtures/getIdentityFixture');
+const getIdentityFixture = require('../../../../lib/test/fixtures/getIdentityFixture');
 
 const JsonSchemaValidator = require(
-  '../../../../../lib/validation/JsonSchemaValidator',
+  '../../../../lib/validation/JsonSchemaValidator',
 );
 
 const { expectValidationError } = require(
-  '../../../../../lib/test/expect/expectError',
+  '../../../../lib/test/expect/expectError',
 );
 
 const validateIdentityFactory = require(
-  '../../../../../lib/identity/validation/validateIdentityFactory',
+  '../../../../lib/identity/validation/validateIdentityFactory',
 );
 
-const Identity = require('../../../../../lib/identity/Identity');
+const Identity = require('../../../../lib/identity/Identity');
 
 const JsonSchemaError = require(
-  '../../../../../lib/errors/JsonSchemaError',
+  '../../../../lib/errors/JsonSchemaError',
 );
 
 const IncorrectIdentityTypeError = require(
-  '../../../../../lib/errors/IncorrectIdentityTypeError',
+  '../../../../lib/errors/IncorrectIdentityTypeError',
 );
 
 describe('validateIdentityFactory', () => {
