@@ -11,9 +11,10 @@
     "type": {
       "type": "number",
       "multipleOf": 1.0,
-      "minimum": 0
+      "minimum": 0,
+      "enum": [1]
     },
-    "publicKey": {
+    "data": {
       "type": "string",
       "minLength": 1,
       "maxLength": 2048,
@@ -26,7 +27,7 @@
   "required": [
     "id",
     "type",
-    "publicKey",
+    "data",
     "isEnabled"
   ],
   "additionalProperties": false

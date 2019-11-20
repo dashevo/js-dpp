@@ -1,5 +1,7 @@
 const rewiremock = require('rewiremock/node');
 
+const PublicKey = require('../../../../lib/identity/PublicKey');
+
 const stateTransitionTypes = require(
   '../../../../lib/stateTransition/stateTransitionTypes',
 );
@@ -13,14 +15,13 @@ describe('IdentityCreateStateTransition', () => {
 
   beforeEach(function beforeEach() {
     rawStateTransition = {
-      identityCreateStateTransitionVersion: 1,
       lockedOutPoint: 'c3BlY2lhbEJ1ZmZlcg==',
       identityType: 1,
       publicKeys: [
         {
           id: 1,
           type: 1,
-          publicKey: 'someString',
+          data: 'someString',
           isEnabled: true,
         },
       ],
@@ -54,19 +55,17 @@ describe('IdentityCreateStateTransition', () => {
     it('should create an instance with default values if nothing specified', () => {
       stateTransition = new IdentityCreateStateTransition();
 
-      expect(stateTransition.identityCreateStateTransitionVersion).to.equal(0);
-      expect(stateTransition.identityType).to.equal(0);
+      expect(stateTransition.identityType).to.be.undefined();
       expect(stateTransition.publicKeys).to.deep.equal([]);
     });
 
     it('should create an instance with specified data from specified raw transition', () => {
-      expect(stateTransition.identityCreateStateTransitionVersion).to.equal(1);
       expect(stateTransition.identityType).to.equal(1);
       expect(stateTransition.lockedOutPoint).to.deep.equal(
         rawStateTransition.lockedOutPoint,
       );
-      expect(stateTransition.publicKeys).to.have.deep.members([
-        rawStateTransition.publicKeys[0],
+      expect(stateTransition.publicKeys).to.deep.equal([
+        new PublicKey(rawStateTransition.publicKeys[0]),
       ]);
       expect(stateTransition.ownershipProofSignature).to.deep.equal(
         rawStateTransition.ownershipProofSignature,
@@ -77,19 +76,6 @@ describe('IdentityCreateStateTransition', () => {
   describe('#getType', () => {
     it('should return IDENTITY_CREATE type', () => {
       expect(stateTransition.getType()).to.equal(stateTransitionTypes.IDENTITY_CREATE);
-    });
-  });
-
-  describe('#setIdentityStateTransitionVersion', () => {
-    it('should set identity state transition version', () => {
-      stateTransition.setIdentityStateTransitionVersion(42);
-      expect(stateTransition.identityCreateStateTransitionVersion).to.equal(42);
-    });
-  });
-
-  describe('#getIdentityStateTransitionVersion', () => {
-    it('should return currently set identity state transition version', () => {
-      expect(stateTransition.getIdentityStateTransitionVersion()).to.equal(1);
     });
   });
 
@@ -136,24 +122,29 @@ describe('IdentityCreateStateTransition', () => {
 
   describe('#setPublicKeys', () => {
     it('should set public keys', () => {
-      stateTransition.setPublicKeys([1, 2]);
-      expect(stateTransition.publicKeys).to.have.deep.members([1, 2]);
+      const publicKeys = [new PublicKey(), new PublicKey()];
+
+      stateTransition.setPublicKeys(publicKeys);
+
+      expect(stateTransition.publicKeys).to.have.deep.members(publicKeys);
     });
   });
 
   describe('#getPublicKeys', () => {
     it('should return set public keys', () => {
-      expect(stateTransition.getPublicKeys()).to.deep.equal(rawStateTransition.publicKeys);
+      expect(stateTransition.getPublicKeys()).to.deep.equal(
+        rawStateTransition.publicKeys.map(rawPublicKey => new PublicKey(rawPublicKey)),
+      );
     });
   });
 
   describe('#addPublicKeys', () => {
     it('should add more public keys', () => {
+      const publicKeys = [new PublicKey(), new PublicKey()];
+
       stateTransition.publicKeys = [];
-      stateTransition.addPublicKeys([1, 2]);
-      expect(stateTransition.getPublicKeys()).to.have.deep.members([
-        1, 2,
-      ]);
+      stateTransition.addPublicKeys(publicKeys);
+      expect(stateTransition.getPublicKeys()).to.have.deep.members(publicKeys);
     });
   });
 
@@ -214,7 +205,6 @@ describe('IdentityCreateStateTransition', () => {
       expect(json).to.deep.equal({
         protocolVersion: 0,
         type: 3,
-        identityCreateStateTransitionVersion: 1,
         identityType: 1,
         lockedOutPoint: rawStateTransition.lockedOutPoint,
         publicKeys: rawStateTransition.publicKeys,

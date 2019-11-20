@@ -40,33 +40,6 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     rawStateTransition = stateTransition.toJSON();
   });
 
-  it('should throw an error if identityCreateStateTransitionVersion is not set', () => {
-    rawStateTransition.identityCreateStateTransitionVersion = undefined;
-
-    const result = validateIdentityCreateST(rawStateTransition);
-
-    expectValidationError(result, JsonSchemaError, 1);
-
-    const [error] = result.getErrors();
-
-    expect(error.message).to.equal('should have required property \'identityCreateStateTransitionVersion\'');
-    expect(error.keyword).to.equal('required');
-  });
-
-  it('should throw an error if identityCreateStateTransitionVersion is not a multiple of 1', () => {
-    rawStateTransition.identityCreateStateTransitionVersion = 1.2;
-
-    const result = validateIdentityCreateST(rawStateTransition);
-
-    expectValidationError(result, JsonSchemaError, 1);
-
-    const [error] = result.getErrors();
-
-    expect(error.message).to.equal('should be multiple of 1');
-    expect(error.keyword).to.equal('multipleOf');
-    expect(error.dataPath).to.equal('.identityCreateStateTransitionVersion');
-  });
-
   it('should throw an error if lockedOutPoint is not set', () => {
     rawStateTransition.lockedOutPoint = undefined;
 

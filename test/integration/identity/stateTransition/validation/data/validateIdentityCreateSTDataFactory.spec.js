@@ -8,10 +8,6 @@ const validateIdentityCreateSTDataFactory = require(
   '../../../../../../lib/identity/stateTransitions/validation/data/validateIdentityCreateSTDataFactory',
 );
 
-const IdentitySTWrongVersionError = require(
-  '../../../../../../lib/errors/IdentitySTWrongVersionError',
-);
-
 const UnknownIdentityTypeError = require(
   '../../../../../../lib/errors/UnknownIdentityTypeError',
 );
@@ -40,20 +36,6 @@ describe('validateIdentityCreateSTDataFactory', () => {
     validateIdentityCreateSTData = validateIdentityCreateSTDataFactory(dataProviderMock);
 
     stateTransition = getIdentityCreateStateTransitionFixture();
-  });
-
-  it('should throw an error if state transition version is higher than one currently set', async () => {
-    stateTransition.identityCreateStateTransitionVersion = 42;
-
-    const result = await validateIdentityCreateSTData(stateTransition);
-
-    expectValidationError(result, IdentitySTWrongVersionError, 1);
-
-    const [error] = result.getErrors();
-
-    expect(error.message).to.equal('Identity state transition version is too high');
-    expect(error.getStateTransition()).to.deep.equal(stateTransition);
-    expect(error.getVersion()).to.equal(0);
   });
 
   it('should throw an error if identity type is unknown', async () => {

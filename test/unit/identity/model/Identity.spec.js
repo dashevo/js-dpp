@@ -1,21 +1,23 @@
 const rewiremock = require('rewiremock/node');
 
+const PublicKey = require('../../../../lib/identity/PublicKey');
+
 describe('Identity', () => {
-  let rawModel;
-  let model;
+  let rawIdentity;
+  let identity;
   let Identity;
   let hashMock;
   let encodeMock;
 
   beforeEach(function beforeEach() {
-    rawModel = {
+    rawIdentity = {
       id: 'someId',
       type: 0,
       publicKeys: [
         {
           id: 1,
           type: 1,
-          publicKey: 'somePublicKey',
+          data: 'somePublicKey',
           isEnabled: true,
         },
       ],
@@ -34,7 +36,7 @@ describe('Identity', () => {
       },
     );
 
-    model = new Identity(rawModel);
+    identity = new Identity(rawIdentity);
   });
 
   describe('#constructor', () => {
@@ -43,15 +45,17 @@ describe('Identity', () => {
 
       expect(instance.id).to.be.undefined();
       expect(instance.type).to.be.undefined();
-      expect(instance.publicKeys).to.be.undefined();
+      expect(instance.publicKeys).to.deep.equal([]);
     });
 
     it('should set variables from raw model', () => {
-      const instance = new Identity(rawModel);
+      const instance = new Identity(rawIdentity);
 
-      expect(instance.id).to.equal(rawModel.id);
-      expect(instance.type).to.equal(rawModel.type);
-      expect(instance.publicKeys).to.deep.equal(rawModel.publicKeys);
+      expect(instance.id).to.equal(rawIdentity.id);
+      expect(instance.type).to.equal(rawIdentity.type);
+      expect(instance.publicKeys).to.deep.equal(
+        rawIdentity.publicKeys.map(rawPublicKey => new PublicKey(rawPublicKey)),
+      );
     });
   });
 
@@ -62,7 +66,7 @@ describe('Identity', () => {
       };
 
       try {
-        model.applyStateTransition(stateTransition);
+        identity.applyStateTransition(stateTransition);
 
         expect.fail('error was not thrown');
       } catch (e) {
@@ -76,7 +80,7 @@ describe('Identity', () => {
 
     it('should throw an error if id is already set', () => {
       try {
-        model.applyStateTransition({
+        identity.applyStateTransition({
           getType: () => 3,
         });
 
@@ -89,10 +93,10 @@ describe('Identity', () => {
     });
 
     it('should throw an error if publicKeys is already set', () => {
-      model.id = undefined;
+      identity.id = undefined;
 
       try {
-        model.applyStateTransition({
+        identity.applyStateTransition({
           getType: () => 3,
         });
 
@@ -107,67 +111,72 @@ describe('Identity', () => {
     it('should set proper data from state transition', () => {
       const instance = new Identity({});
 
+      const publicKeys = rawIdentity.publicKeys.map(rawPublicKey => new PublicKey(rawPublicKey));
+
       instance.applyStateTransition({
         getType: () => 3,
         getIdentityId: () => 'someId',
         getIdentityType: () => 5,
-        getPublicKeys: () => rawModel.publicKeys,
+        getPublicKeys: () => publicKeys,
       });
 
       expect(instance.id).to.equal('someId');
       expect(instance.type).to.equal(5);
-      expect(instance.publicKeys).to.deep.equal(rawModel.publicKeys);
+      expect(instance.publicKeys).to.deep.equal(publicKeys);
     });
   });
 
   describe('#getId', () => {
     it('should return set id', () => {
-      expect(model.getId()).to.equal(rawModel.id);
+      expect(identity.getId()).to.equal(rawIdentity.id);
     });
   });
 
   describe('#setId', () => {
     it('should set id', () => {
-      model.setId(42);
-      expect(model.id).to.equal(42);
+      identity.setId(42);
+      expect(identity.id).to.equal(42);
     });
   });
 
   describe('#getType', () => {
     it('should return set identity type', () => {
-      model.type = 42;
-      expect(model.getType()).to.equal(42);
+      identity.type = 42;
+      expect(identity.getType()).to.equal(42);
     });
   });
 
   describe('#setType', () => {
     it('should set identity type', () => {
-      model.setType(42);
-      expect(model.type).to.equal(42);
+      identity.setType(42);
+      expect(identity.type).to.equal(42);
     });
   });
 
   describe('#getPublicKeys', () => {
     it('should return set public keys', () => {
-      expect(model.getPublicKeys()).to.deep.equal(rawModel.publicKeys);
+      expect(identity.getPublicKeys()).to.deep.equal(
+        rawIdentity.publicKeys.map(rawPublicKey => new PublicKey(rawPublicKey)),
+      );
     });
   });
 
   describe('#setPublicKeys', () => {
     it('should set public keys', () => {
-      model.setPublicKeys(42);
-      expect(model.publicKeys).to.equal(42);
+      identity.setPublicKeys(42);
+      expect(identity.publicKeys).to.equal(42);
     });
   });
 
   describe('#getPublicKeyById', () => {
     it('should return a public key for a given id', () => {
-      const key = model.getPublicKeyById(1);
-      expect(key).to.be.deep.equal(rawModel.publicKeys[0]);
+      const key = identity.getPublicKeyById(1);
+
+      expect(key).to.be.deep.equal(new PublicKey(rawIdentity.publicKeys[0]));
     });
 
-    it("should retunrn undefined if there's no key with such id", () => {
-      const key = model.getPublicKeyById(3);
+    it("should return undefined if there's no key with such id", () => {
+      const key = identity.getPublicKeyById(3);
       expect(key).to.be.undefined();
     });
   });
@@ -175,9 +184,9 @@ describe('Identity', () => {
   describe('#serialize', () => {
     it('should return encoded json object', () => {
       encodeMock.returns(42); // for example
-      const result = model.serialize();
+      const result = identity.serialize();
 
-      expect(encodeMock).to.have.been.calledOnceWith(model.toJSON());
+      expect(encodeMock).to.have.been.calledOnceWith(identity.toJSON());
       expect(result).to.equal(42);
     });
   });
@@ -190,19 +199,19 @@ describe('Identity', () => {
       encodeMock.returns(buffer);
       hashMock.returns(buffer);
 
-      const result = model.hash();
+      const result = identity.hash();
 
-      expect(encodeMock).to.have.been.calledOnceWith(model.toJSON());
+      expect(encodeMock).to.have.been.calledOnceWith(identity.toJSON());
       expect(hashMock).to.have.been.calledOnceWith(buffer);
       expect(result).to.equal(bufferHex);
     });
   });
 
   describe('#toJSON', () => {
-    it('should return json reresentation', () => {
-      const json = model.toJSON();
+    it('should return json representation', () => {
+      const json = identity.toJSON();
 
-      expect(json).to.deep.equal(rawModel);
+      expect(json).to.deep.equal(rawIdentity);
     });
   });
 });
