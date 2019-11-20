@@ -1,9 +1,9 @@
 const rewiremock = require('rewiremock/node');
 
-const PublicKey = require('../../../../lib/identity/PublicKey');
+const PublicKey = require('../../../../../lib/identity/PublicKey');
 
 const stateTransitionTypes = require(
-  '../../../../lib/stateTransition/stateTransitionTypes',
+  '../../../../../lib/stateTransition/stateTransitionTypes',
 );
 
 describe('IdentityCreateTransition', () => {
@@ -39,10 +39,10 @@ describe('IdentityCreateTransition', () => {
     };
 
     IdentityCreateTransition = rewiremock.proxy(
-      '../../../../lib/identity/stateTransitions/IdentityCreateTransition',
+      '../../../../../lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition',
       {
-        '../../../../lib/util/hash': hashMock,
-        '../../../../node_modules/@dashevo/dashcore-lib': {
+        '../../../../../lib/util/hash': hashMock,
+        '../../../../../node_modules/@dashevo/dashcore-lib': {
           HashSigner: hashSignerMock,
         },
       },

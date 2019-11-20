@@ -1,25 +1,25 @@
 const Ajv = require('ajv');
 
-const getIdentityCreateSTFixture = require('../../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
+const getIdentityCreateSTFixture = require('../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
 const JsonSchemaValidator = require(
-  '../../../../../../lib/validation/JsonSchemaValidator',
+  '../../../../../lib/validation/JsonSchemaValidator',
 );
 
 const validateIdentityCreateSTStructureFactory = require(
-  '../../../../../../lib/identity/stateTransitions/validation/structure/validateIdentityCreateSTStructureFactory',
+  '../../../../../lib/identity/stateTransitions/identityCreateTransition/validateIdentityCreateSTStructureFactory',
 );
 
 const { expectValidationError } = require(
-  '../../../../../../lib/test/expect/expectError',
+  '../../../../../lib/test/expect/expectError',
 );
 
 const JsonSchemaError = require(
-  '../../../../../../lib/errors/JsonSchemaError',
+  '../../../../../lib/errors/JsonSchemaError',
 );
 
 const IdentityCreateTransition = require(
-  '../../../../../../lib/identity/stateTransitions/IdentityCreateTransition',
+  '../../../../../lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition',
 );
 
 describe('validateIdentityCreateSTStructureFactory', () => {

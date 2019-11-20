@@ -1,30 +1,30 @@
-const getIdentityCreateSTFixture = require('../../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
+const getIdentityCreateSTFixture = require('../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
 const { expectValidationError } = require(
-  '../../../../../../lib/test/expect/expectError',
+  '../../../../../lib/test/expect/expectError',
 );
 
 const validateIdentityCreateSTDataFactory = require(
-  '../../../../../../lib/identity/stateTransitions/validation/data/validateIdentityCreateSTDataFactory',
+  '../../../../../lib/identity/stateTransitions/identityCreateTransition/validateIdentityCreateSTDataFactory',
 );
 
 const UnknownIdentityTypeError = require(
-  '../../../../../../lib/errors/UnknownIdentityTypeError',
+  '../../../../../lib/errors/UnknownIdentityTypeError',
 );
 
 const DuplicatedIdentitySTPublicKeyError = require(
-  '../../../../../../lib/errors/DuplicatedIdentitySTPublicKeyError',
+  '../../../../../lib/errors/DuplicatedIdentitySTPublicKeyError',
 );
 
 const DuplicatedIdentitySTPublicKeyIdError = require(
-  '../../../../../../lib/errors/DuplicatedIdentitySTPublicKeyIdError',
+  '../../../../../lib/errors/DuplicatedIdentitySTPublicKeyIdError',
 );
 
 const IdentityAlreadyExistsError = require(
-  '../../../../../../lib/errors/IdentityAlreadyExistsError',
+  '../../../../../lib/errors/IdentityAlreadyExistsError',
 );
 
-const createDataProviderMock = require('../../../../../../lib/test/mocks/createDataProviderMock');
+const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
 
 describe('validateIdentityCreateSTDataFactory', () => {
   let validateIdentityCreateSTData;
