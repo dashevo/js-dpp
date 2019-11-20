@@ -1,4 +1,4 @@
-const getIdentityCreateStateTransitionFixture = require('../../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
+const getIdentityCreateSTFixture = require('../../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
 const { expectValidationError } = require(
   '../../../../../../lib/test/expect/expectError',
@@ -35,7 +35,7 @@ describe('validateIdentityCreateSTDataFactory', () => {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     validateIdentityCreateSTData = validateIdentityCreateSTDataFactory(dataProviderMock);
 
-    stateTransition = getIdentityCreateStateTransitionFixture();
+    stateTransition = getIdentityCreateSTFixture();
   });
 
   it('should throw an error if identity type is unknown', async () => {

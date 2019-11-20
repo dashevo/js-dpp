@@ -1,6 +1,6 @@
 const Ajv = require('ajv');
 
-const getIdentityCreateStateTransitionFixture = require('../../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
+const getIdentityCreateSTFixture = require('../../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
 const JsonSchemaValidator = require(
   '../../../../../../lib/validation/JsonSchemaValidator',
@@ -18,8 +18,8 @@ const JsonSchemaError = require(
   '../../../../../../lib/errors/JsonSchemaError',
 );
 
-const IdentityCreateStateTransition = require(
-  '../../../../../../lib/identity/stateTransitions/IdentityCreateStateTransition',
+const IdentityCreateTransition = require(
+  '../../../../../../lib/identity/stateTransitions/IdentityCreateTransition',
 );
 
 describe('validateIdentityCreateSTStructureFactory', () => {
@@ -35,7 +35,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       validator,
     );
 
-    stateTransition = getIdentityCreateStateTransitionFixture();
+    stateTransition = getIdentityCreateSTFixture();
 
     rawStateTransition = stateTransition.toJSON();
   });
@@ -246,7 +246,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
   });
 
   it('should pass valid state transition', () => {
-    const result = validateIdentityCreateST(new IdentityCreateStateTransition(rawStateTransition));
+    const result = validateIdentityCreateST(new IdentityCreateTransition(rawStateTransition));
 
     expect(result.isValid()).to.be.true();
   });

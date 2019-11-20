@@ -6,12 +6,12 @@ const stateTransitionTypes = require(
   '../../../../lib/stateTransition/stateTransitionTypes',
 );
 
-describe('IdentityCreateStateTransition', () => {
+describe('IdentityCreateTransition', () => {
   let rawStateTransition;
   let stateTransition;
   let hashMock;
   let hashSignerMock;
-  let IdentityCreateStateTransition;
+  let IdentityCreateTransition;
 
   beforeEach(function beforeEach() {
     rawStateTransition = {
@@ -38,8 +38,8 @@ describe('IdentityCreateStateTransition', () => {
       verifyDataSignature: this.sinonSandbox.stub(),
     };
 
-    IdentityCreateStateTransition = rewiremock.proxy(
-      '../../../../lib/identity/stateTransitions/IdentityCreateStateTransition',
+    IdentityCreateTransition = rewiremock.proxy(
+      '../../../../lib/identity/stateTransitions/IdentityCreateTransition',
       {
         '../../../../lib/util/hash': hashMock,
         '../../../../node_modules/@dashevo/dashcore-lib': {
@@ -48,12 +48,12 @@ describe('IdentityCreateStateTransition', () => {
       },
     );
 
-    stateTransition = new IdentityCreateStateTransition(rawStateTransition);
+    stateTransition = new IdentityCreateTransition(rawStateTransition);
   });
 
   describe('#constructor', () => {
     it('should create an instance with default values if nothing specified', () => {
-      stateTransition = new IdentityCreateStateTransition();
+      stateTransition = new IdentityCreateTransition();
 
       expect(stateTransition.identityType).to.be.undefined();
       expect(stateTransition.publicKeys).to.deep.equal([]);
@@ -91,7 +91,7 @@ describe('IdentityCreateStateTransition', () => {
         toString: () => 42,
       });
 
-      stateTransition = new IdentityCreateStateTransition();
+      stateTransition = new IdentityCreateTransition();
       stateTransition.setLockedOutPoint(Buffer.alloc(0).toString('base64'));
 
       expect(hashMock).to.have.been.calledOnceWith(Buffer.alloc(0));
