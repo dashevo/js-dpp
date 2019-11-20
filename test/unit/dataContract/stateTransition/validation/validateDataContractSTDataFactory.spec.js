@@ -19,12 +19,14 @@ describe('validateDataContractSTDataFactory', () => {
   let stateTransition;
   let dataProviderMock;
   let rawIdentity;
-  let validateIdentityTypeMock;
+  let validateIdentityExistenceAndTypeMock;
 
   beforeEach(function beforeEach() {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
-    validateIdentityTypeMock = this.sinonSandbox.stub().resolves(new ValidationResult());
+    validateIdentityExistenceAndTypeMock = this.sinonSandbox.stub().resolves(
+      new ValidationResult(),
+    );
 
     rawIdentity = {
       id: 'iTYF+bWBA4MYRURcsBpBkgfwiqV7sYVnTDPR4uQ/KLU=',
@@ -43,14 +45,14 @@ describe('validateDataContractSTDataFactory', () => {
 
     validateDataContractSTData = validateDataContractSTDataFactory(
       dataProviderMock,
-      validateIdentityTypeMock,
+      validateIdentityExistenceAndTypeMock,
     );
   });
 
   it('should return invalid result if Data Contract Identity is invalid', async () => {
     const blockchainUserError = new ConsensusError('error');
 
-    validateIdentityTypeMock.resolves(
+    validateIdentityExistenceAndTypeMock.resolves(
       new ValidationResult([blockchainUserError]),
     );
 
@@ -62,7 +64,7 @@ describe('validateDataContractSTDataFactory', () => {
 
     expect(error).to.equal(blockchainUserError);
 
-    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       dataContract.getId(), [Identity.TYPES.APPLICATION],
     );
     expect(dataProviderMock.fetchDataContract).to.not.be.called();
@@ -80,7 +82,7 @@ describe('validateDataContractSTDataFactory', () => {
 
     expect(error.getDataContract()).to.equal(dataContract);
 
-    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       dataContract.getId(), [Identity.TYPES.APPLICATION],
     );
     expect(dataProviderMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
@@ -94,7 +96,7 @@ describe('validateDataContractSTDataFactory', () => {
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
 
-    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       dataContract.getId(), [Identity.TYPES.APPLICATION],
     );
     expect(dataProviderMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
