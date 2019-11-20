@@ -4,7 +4,7 @@
     "id": {
       "type": "string",
       "minLength": 32,
-      "maxLength": 44,
+      "maxLength": 46,
       "pattern": "^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$"
     },
     "type": {
