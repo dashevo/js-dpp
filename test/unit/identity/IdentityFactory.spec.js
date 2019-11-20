@@ -1,17 +1,25 @@
 const rewiremock = require('rewiremock/node');
 
+const Identity = require('../../../lib/identity/Identity');
+
+const getIdentityFixture = require('../../../lib/test/fixtures/getIdentityFixture');
+
+const ValidationResult = require('../../../lib/validation/ValidationResult');
+const ConsensusError = require('../../../lib/errors/ConsensusError');
+
 const InvalidIdentityError = require(
   '../../../lib/identity/errors/InvalidIdentityError',
 );
 
 describe('IdentityFactory', () => {
   let factory;
-  let validateMock;
+  let validateIdentityMock;
   let decodeMock;
   let IdentityFactory;
+  let identity;
 
   beforeEach(function beforeEach() {
-    validateMock = this.sinonSandbox.stub();
+    validateIdentityMock = this.sinonSandbox.stub();
     decodeMock = this.sinonSandbox.stub();
 
     IdentityFactory = rewiremock.proxy(
@@ -20,41 +28,31 @@ describe('IdentityFactory', () => {
         '../../../lib/util/serializer': {
           decode: decodeMock,
         },
+        '../../../lib/identity/Identity': Identity,
       },
     );
 
-    factory = new IdentityFactory(validateMock);
+    factory = new IdentityFactory(validateIdentityMock);
+
+    identity = getIdentityFixture();
   });
 
   describe('#constructor', () => {
     it('should set validator', () => {
-      expect(factory.validateIdentity).to.equal(validateMock);
+      expect(factory.validateIdentity).to.equal(validateIdentityMock);
     });
   });
 
   describe('#create', () => {
-    it('should call factory `createFromObject` with default empty object', function it() {
-      factory.createFromObject = this.sinonSandbox.stub();
-      factory.createFromObject.returns(42);
+    it('should create Identity with specified id, type and public keys', () => {
+      const result = factory.create(
+        identity.getId(),
+        identity.getType(),
+        identity.getPublicKeys(),
+      );
 
-      const result = factory.create();
-
-      expect(factory.createFromObject).to.have.been.calledOnceWithExactly({});
-      expect(result).to.equal(42);
-    });
-
-    it('should call `createFromObject`', function it() {
-      factory.createFromObject = this.sinonSandbox.stub();
-      factory.createFromObject.returns(42);
-
-      const data = {
-        item: 42,
-      };
-
-      const result = factory.create(data);
-
-      expect(factory.createFromObject).to.have.been.calledOnceWithExactly(data);
-      expect(result).to.equal(42);
+      expect(result).to.be.an.instanceOf(Identity);
+      expect(result).to.deep.equal(identity);
     });
   });
 
@@ -62,59 +60,54 @@ describe('IdentityFactory', () => {
     it('should skip validation if options is set', () => {
       factory.createFromObject({}, { skipValidation: true });
 
-      expect(validateMock).to.have.not.been.called();
+      expect(validateIdentityMock).to.have.not.been.called();
     });
 
     it('should throw an error if validation have failed', () => {
-      const errors = [1, 2];
-      const rawIdentity = {
-        data: 'balbla',
-      };
+      const errors = [new ConsensusError('error')];
 
-      validateMock.returns({
-        isValid: () => false,
-        getErrors: () => errors,
-      });
+      validateIdentityMock.returns(new ValidationResult(errors));
 
       try {
-        factory.createFromObject(rawIdentity);
+        factory.createFromObject(identity.toJSON());
 
         expect.fail('error was not thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(InvalidIdentityError);
         expect(e.getErrors()).to.have.deep.members(errors);
-        expect(e.getRawIdentity()).to.deep.equal(rawIdentity);
+        expect(e.getRawIdentity()).to.deep.equal(identity.toJSON());
       }
     });
 
     it('should create an identity if validation passed', () => {
-      const rawIdentity = {
-        id: 'blabla',
-      };
+      validateIdentityMock.returns(new ValidationResult());
 
-      validateMock.returns({
-        isValid: () => true,
-      });
+      const result = factory.createFromObject(identity.toJSON());
 
-      const result = factory.createFromObject(rawIdentity);
-
-      expect(result.id).to.equal('blabla');
+      expect(result).to.be.an.instanceOf(Identity);
+      expect(result).to.deep.equal(identity);
     });
   });
 
   describe('#createFromSerialized', () => {
-    it('should decode data and pass it to `createFromObject`', function it() {
-      factory.createFromObject = this.sinonSandbox.stub();
-      factory.createFromObject.returns(43);
-      decodeMock.returns(42);
+    beforeEach(function beforeEach() {
+      this.sinonSandbox.stub(factory, 'createFromObject');
+    });
 
-      const serialized = 'serialized';
+    it('should return new Identity from serialized one', () => {
+      const serializedIdentity = identity.serialize();
 
-      const result = factory.createFromSerialized(serialized);
+      decodeMock.returns(identity.toJSON());
 
-      expect(decodeMock).to.have.been.calledOnceWithExactly(serialized);
-      expect(factory.createFromObject).to.have.been.calledOnceWithExactly(42);
-      expect(result).to.equal(43);
+      factory.createFromObject.returns(identity);
+
+      const result = factory.createFromSerialized(serializedIdentity);
+
+      expect(result).to.equal(identity);
+
+      expect(factory.createFromObject).to.have.been.calledOnceWith(identity.toJSON());
+
+      expect(decodeMock).to.have.been.calledOnceWith(serializedIdentity);
     });
   });
 });
