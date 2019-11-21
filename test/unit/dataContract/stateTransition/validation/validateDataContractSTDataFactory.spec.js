@@ -40,14 +40,14 @@ describe('validateDataContractSTDataFactory', () => {
       publicKey,
     });
 
-    const publicKetId = 1;
+    const publicKeyId = 1;
 
     rawIdentity = {
       id: 'iTYF+bWBA4MYRURcsBpBkgfwiqV7sYVnTDPR4uQ/KLU=',
       identityType: Identity.TYPES.APPLICATION,
       publicKeys: [
         {
-          id: publicKetId,
+          id: publicKeyId,
           publicKey,
           isEnabled: true,
         },
@@ -58,7 +58,7 @@ describe('validateDataContractSTDataFactory', () => {
     dataContract = getDataContractFixture();
     stateTransition = new DataContractStateTransition(dataContract);
     stateTransition.sign({
-      id: publicKetId,
+      id: publicKeyId,
       userId: rawIdentity.id,
       type: signatureTypes.ECDSA,
       privateKey,
@@ -68,6 +68,8 @@ describe('validateDataContractSTDataFactory', () => {
       dataProviderMock,
       validateIdentityExistenceAndTypeMock,
     );
+
+    dataProviderMock.fetchIdentity.resolves(rawIdentity);
   });
 
   it('should return invalid result if Data Contract Identity is invalid', async () => {
@@ -94,7 +96,6 @@ describe('validateDataContractSTDataFactory', () => {
   });
 
   it('should return invalid result if Data Contract with specified contractId is already exist', async () => {
-    dataProviderMock.fetchIdentity.resolves(rawIdentity);
     dataProviderMock.fetchDataContract.resolves(dataContract);
 
     const result = await validateDataContractSTData(stateTransition);
@@ -114,8 +115,6 @@ describe('validateDataContractSTDataFactory', () => {
   });
 
   it('should return valid result', async () => {
-    dataProviderMock.fetchIdentity.resolves(rawIdentity);
-
     const result = await validateDataContractSTData(stateTransition);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
@@ -133,7 +132,6 @@ describe('validateDataContractSTDataFactory', () => {
 
   it('should return invalid result on invalid signature', async () => {
     stateTransition.signature = 'invalidSignature';
-    dataProviderMock.fetchIdentity.resolves(rawIdentity);
 
     const result = await validateDataContractSTData(stateTransition);
 
@@ -154,7 +152,6 @@ describe('validateDataContractSTDataFactory', () => {
 
   it('should return invalid result if state transition is not signed', async () => {
     stateTransition = new DataContractStateTransition(dataContract);
-    dataProviderMock.fetchIdentity.resolves(rawIdentity);
 
     const result = await validateDataContractSTData(stateTransition);
 

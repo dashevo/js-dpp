@@ -1,3 +1,5 @@
+const { PrivateKey } = require('@dashevo/dashcore-lib');
+
 const validateDocumentsSTDataFactory = require('../../../../../lib/document/stateTransition/validation/data/validateDocumentsSTDataFactory');
 const Identity = require('../../../../../lib/identity/Identity');
 
@@ -21,6 +23,9 @@ const DocumentNotFoundError = require('../../../../../lib/errors/DocumentNotFoun
 const InvalidDocumentRevisionError = require('../../../../../lib/errors/InvalidDocumentRevisionError');
 const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 const InvalidDocumentActionError = require('../../../../../lib/document/errors/InvalidDocumentActionError');
+const InvalidStateTransitionSignatureError = require('../../../../../lib/errors/InvalidStateTransitionSignatureError');
+
+const signatureTypes = require('../../../../../lib/stateTransition/signatureTypes');
 
 describe('validateDocumentsSTDataFactory', () => {
   let validateDocumentsSTData;
@@ -34,6 +39,8 @@ describe('validateDocumentsSTDataFactory', () => {
   let validateIdentityExistenceAndTypeMock;
   let executeDataTriggersMock;
   let fetchAndValidateDataContractMock;
+  let rawIdentity;
+  let signOptions;
 
   beforeEach(function beforeEach() {
     ({ userId } = getDocumentsFixture);
@@ -41,10 +48,41 @@ describe('validateDocumentsSTDataFactory', () => {
     documents = getDocumentsFixture();
     dataContract = getContractFixture();
 
+    const privateKey = new PrivateKey();
+    const publicKey = privateKey.toPublicKey().toBuffer().toString('base64');
+
+    const getPublicKeyById = this.sinonSandbox.stub().returns({
+      publicKey,
+    });
+
+    const publicKeyId = 1;
+
+    rawIdentity = {
+      id: userId,
+      identityType: Identity.TYPES.APPLICATION,
+      publicKeys: [
+        {
+          id: publicKeyId,
+          publicKey,
+          isEnabled: true,
+        },
+      ],
+      getPublicKeyById,
+    };
+
+    signOptions = {
+      id: publicKeyId,
+      userId,
+      type: signatureTypes.ECDSA,
+      privateKey,
+    };
+
     stateTransition = new DocumentsStateTransition(documents);
+    stateTransition.sign(signOptions);
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchDataContract.resolves(dataContract);
+    dataProviderMock.fetchIdentity.resolves(rawIdentity);
 
     fetchDocumentsMock = this.sinonSandbox.stub().resolves([]);
     validateIdentityExistenceAndTypeMock = this.sinonSandbox.stub().resolves(
@@ -92,6 +130,9 @@ describe('validateDocumentsSTDataFactory', () => {
     expect(fetchDocumentsMock).to.have.not.been.called();
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
     expect(executeDataTriggersMock).to.have.not.been.called();
+
+    expect(dataProviderMock.fetchIdentity).to.not.be.called();
+    expect(rawIdentity.getPublicKeyById).to.not.be.called();
   });
 
   it('should return invalid result if Data Contract is not present', async () => {
@@ -119,6 +160,9 @@ describe('validateDocumentsSTDataFactory', () => {
     expect(fetchDocumentsMock).to.have.not.been.called();
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
     expect(executeDataTriggersMock).to.have.not.been.called();
+
+    expect(dataProviderMock.fetchIdentity).to.not.be.called();
+    expect(rawIdentity.getPublicKeyById).to.not.be.called();
   });
 
   it('should return invalid result if Document with action "create" is already present', async () => {
@@ -143,6 +187,9 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
     expect(executeDataTriggersMock).to.have.not.been.called();
+
+    expect(dataProviderMock.fetchIdentity).to.not.be.called();
+    expect(rawIdentity.getPublicKeyById).to.not.be.called();
   });
 
   it('should return invalid result if Document with action "update" is not present', async () => {
@@ -166,6 +213,9 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
     expect(executeDataTriggersMock).to.have.not.been.called();
+
+    expect(dataProviderMock.fetchIdentity).to.not.be.called();
+    expect(rawIdentity.getPublicKeyById).to.not.be.called();
   });
 
   it('should return invalid result if Document with action "delete" is not present', async () => {
@@ -190,6 +240,9 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
     expect(executeDataTriggersMock).to.have.not.been.called();
+
+    expect(dataProviderMock.fetchIdentity).to.not.be.called();
+    expect(rawIdentity.getPublicKeyById).to.not.be.called();
   });
 
   it('should return invalid result if Document with action "update" has wrong revision', async () => {
@@ -216,6 +269,9 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
     expect(executeDataTriggersMock).to.have.not.been.called();
+
+    expect(dataProviderMock.fetchIdentity).to.not.be.called();
+    expect(rawIdentity.getPublicKeyById).to.not.be.called();
   });
 
   it('should return invalid result if Document with action "delete" has wrong revision', async () => {
@@ -242,6 +298,9 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
     expect(executeDataTriggersMock).to.have.not.been.called();
+
+    expect(dataProviderMock.fetchIdentity).to.not.be.called();
+    expect(rawIdentity.getPublicKeyById).to.not.be.called();
   });
 
   it('should throw an error if Document has invalid action', async () => {
@@ -267,6 +326,9 @@ describe('validateDocumentsSTDataFactory', () => {
 
       expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
       expect(executeDataTriggersMock).to.have.not.been.called();
+
+      expect(dataProviderMock.fetchIdentity).to.not.be.called();
+      expect(rawIdentity.getPublicKeyById).to.not.be.called();
     }
   });
 
@@ -299,6 +361,9 @@ describe('validateDocumentsSTDataFactory', () => {
     );
 
     expect(executeDataTriggersMock).to.have.not.been.called();
+
+    expect(dataProviderMock.fetchIdentity).to.not.be.called();
+    expect(rawIdentity.getPublicKeyById).to.not.be.called();
   });
 
   it('should return invalid result if data triggers execution failed', async () => {
@@ -343,9 +408,14 @@ describe('validateDocumentsSTDataFactory', () => {
       documents,
       dataTriggersExecutionContext,
     );
+
+    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(stateTransition.getUserId());
+    expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
+      stateTransition.getPublicKeyId(),
+    );
   });
 
-  it('should return valid result if Documents are valid', async () => {
+  it('should return valid result if Documents and signature are valid', async () => {
     const fetchedDocuments = [
       new Document(documents[1].toJSON()),
       new Document(documents[2].toJSON()),
@@ -370,6 +440,9 @@ describe('validateDocumentsSTDataFactory', () => {
       new DataTriggerExecutionResult(),
     ]);
 
+    stateTransition.sign(
+      signOptions,
+    );
 
     const result = await validateDocumentsSTData(stateTransition);
 
@@ -392,6 +465,49 @@ describe('validateDocumentsSTDataFactory', () => {
     expect(executeDataTriggersMock).to.have.been.calledOnceWithExactly(
       documents,
       dataTriggersExecutionContext,
+    );
+
+    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(stateTransition.getUserId());
+    expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
+      stateTransition.getPublicKeyId(),
+    );
+  });
+
+  it('should return invalid result on invalid signature', async () => {
+    documents[1].setRevision(3);
+
+    const result = await validateDocumentsSTData(stateTransition);
+
+    expect(result).to.be.an.instanceOf(ValidationResult);
+    expect(result.isValid()).to.be.false();
+
+    expectValidationError(result, InvalidStateTransitionSignatureError);
+
+    const [error] = result.getErrors();
+
+    expect(error.getRawStateTransition()).to.equal(stateTransition);
+    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(stateTransition.getUserId());
+    expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
+      stateTransition.getPublicKeyId(),
+    );
+  });
+
+  it('should return invalid result if state transition is not signed', async () => {
+    stateTransition = new DocumentsStateTransition(documents);
+
+    const result = await validateDocumentsSTData(stateTransition);
+
+    expect(result).to.be.an.instanceOf(ValidationResult);
+    expect(result.isValid()).to.be.false();
+
+    expectValidationError(result, InvalidStateTransitionSignatureError);
+
+    const [error] = result.getErrors();
+
+    expect(error.getRawStateTransition()).to.equal(stateTransition);
+    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(stateTransition.getUserId());
+    expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
+      stateTransition.getPublicKeyId(),
     );
   });
 });
