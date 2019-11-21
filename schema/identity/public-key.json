@@ -10,8 +10,6 @@
     },
     "type": {
       "type": "number",
-      "multipleOf": 1.0,
-      "minimum": 0,
       "enum": [1]
     },
     "data": {
