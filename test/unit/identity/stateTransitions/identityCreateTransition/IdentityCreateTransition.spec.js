@@ -1,6 +1,6 @@
 const rewiremock = require('rewiremock/node');
 
-const PublicKey = require('../../../../../lib/identity/PublicKey');
+const IdentityPublicKey = require('../../../../../lib/identity/IdentityPublicKey');
 
 const stateTransitionTypes = require(
   '../../../../../lib/stateTransition/stateTransitionTypes',
@@ -64,7 +64,7 @@ describe('IdentityCreateTransition', () => {
         rawStateTransition.lockedOutPoint,
       );
       expect(stateTransition.publicKeys).to.deep.equal([
-        new PublicKey(rawStateTransition.publicKeys[0]),
+        new IdentityPublicKey(rawStateTransition.publicKeys[0]),
       ]);
     });
   });
@@ -118,7 +118,7 @@ describe('IdentityCreateTransition', () => {
 
   describe('#setPublicKeys', () => {
     it('should set public keys', () => {
-      const publicKeys = [new PublicKey(), new PublicKey()];
+      const publicKeys = [new IdentityPublicKey(), new IdentityPublicKey()];
 
       stateTransition.setPublicKeys(publicKeys);
 
@@ -129,14 +129,14 @@ describe('IdentityCreateTransition', () => {
   describe('#getPublicKeys', () => {
     it('should return set public keys', () => {
       expect(stateTransition.getPublicKeys()).to.deep.equal(
-        rawStateTransition.publicKeys.map(rawPublicKey => new PublicKey(rawPublicKey)),
+        rawStateTransition.publicKeys.map(rawPublicKey => new IdentityPublicKey(rawPublicKey)),
       );
     });
   });
 
   describe('#addPublicKeys', () => {
     it('should add more public keys', () => {
-      const publicKeys = [new PublicKey(), new PublicKey()];
+      const publicKeys = [new IdentityPublicKey(), new IdentityPublicKey()];
 
       stateTransition.publicKeys = [];
       stateTransition.addPublicKeys(publicKeys);

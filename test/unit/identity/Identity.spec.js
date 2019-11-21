@@ -1,6 +1,6 @@
 const rewiremock = require('rewiremock/node');
 
-const PublicKey = require('../../../lib/identity/PublicKey');
+const IdentityPublicKey = require('../../../lib/identity/IdentityPublicKey');
 
 describe('Identity', () => {
   let rawIdentity;
@@ -54,7 +54,7 @@ describe('Identity', () => {
       expect(instance.id).to.equal(rawIdentity.id);
       expect(instance.type).to.equal(rawIdentity.type);
       expect(instance.publicKeys).to.deep.equal(
-        rawIdentity.publicKeys.map(rawPublicKey => new PublicKey(rawPublicKey)),
+        rawIdentity.publicKeys.map(rawPublicKey => new IdentityPublicKey(rawPublicKey)),
       );
     });
   });
@@ -89,7 +89,7 @@ describe('Identity', () => {
   describe('#getPublicKeys', () => {
     it('should return set public keys', () => {
       expect(identity.getPublicKeys()).to.deep.equal(
-        rawIdentity.publicKeys.map(rawPublicKey => new PublicKey(rawPublicKey)),
+        rawIdentity.publicKeys.map(rawPublicKey => new IdentityPublicKey(rawPublicKey)),
       );
     });
   });
@@ -105,7 +105,7 @@ describe('Identity', () => {
     it('should return a public key for a given id', () => {
       const key = identity.getPublicKeyById(1);
 
-      expect(key).to.be.deep.equal(new PublicKey(rawIdentity.publicKeys[0]));
+      expect(key).to.be.deep.equal(new IdentityPublicKey(rawIdentity.publicKeys[0]));
     });
 
     it("should return undefined if there's no key with such id", () => {

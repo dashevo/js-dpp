@@ -1,6 +1,6 @@
-const PublicKey = require('../../../lib/identity/PublicKey');
+const IdentityPublicKey = require('../../../lib/identity/IdentityPublicKey');
 
-describe('PublicKey', () => {
+describe('IdentityPublicKey', () => {
   let rawPublicKey;
   let publicKey;
 
@@ -12,12 +12,12 @@ describe('PublicKey', () => {
       isEnabled: true,
     };
 
-    publicKey = new PublicKey(rawPublicKey);
+    publicKey = new IdentityPublicKey(rawPublicKey);
   });
 
   describe('#constructor', () => {
     it('should not set anything if nothing passed', () => {
-      const instance = new PublicKey();
+      const instance = new IdentityPublicKey();
 
       expect(instance.id).to.be.undefined();
       expect(instance.type).to.be.undefined();
@@ -26,7 +26,7 @@ describe('PublicKey', () => {
     });
 
     it('should set variables from raw model', () => {
-      const instance = new PublicKey(rawPublicKey);
+      const instance = new IdentityPublicKey(rawPublicKey);
 
       expect(instance.id).to.equal(rawPublicKey.id);
       expect(instance.type).to.equal(rawPublicKey.type);
