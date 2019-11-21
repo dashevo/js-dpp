@@ -28,9 +28,7 @@ describe('IdentityCreateTransition', () => {
     };
 
     hashMock = this.sinonSandbox.stub();
-    hashMock.returns({
-      toString: () => 42,
-    });
+    hashMock.returns(Buffer.alloc(32));
 
     hashSignerMock = {
       signData: this.sinonSandbox.stub(),
@@ -83,15 +81,13 @@ describe('IdentityCreateTransition', () => {
 
     it('should set `identityId`', () => {
       hashMock.reset();
-      hashMock.returns({
-        toString: () => 42,
-      });
+      hashMock.returns(Buffer.alloc(32));
 
       stateTransition = new IdentityCreateTransition();
       stateTransition.setLockedOutPoint(Buffer.alloc(0).toString('base64'));
 
       expect(hashMock).to.have.been.calledOnceWith(Buffer.alloc(0));
-      expect(stateTransition.identityId).to.equal(42);
+      expect(stateTransition.identityId).to.equal('11111111111111111111111111111111');
     });
   });
 
@@ -147,7 +143,7 @@ describe('IdentityCreateTransition', () => {
   describe('#getIdentityId', () => {
     it('should return set identity id', () => {
       expect(stateTransition.getIdentityId()).to.equal(
-        42,
+        '11111111111111111111111111111111',
       );
     });
   });
