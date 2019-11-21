@@ -25,7 +25,6 @@ describe('IdentityCreateTransition', () => {
           isEnabled: true,
         },
       ],
-      ownershipProofSignature: 'c3BlY2lhbEJ1ZmZlcg==',
     };
 
     hashMock = this.sinonSandbox.stub();
@@ -67,9 +66,6 @@ describe('IdentityCreateTransition', () => {
       expect(stateTransition.publicKeys).to.deep.equal([
         new PublicKey(rawStateTransition.publicKeys[0]),
       ]);
-      expect(stateTransition.ownershipProofSignature).to.deep.equal(
-        rawStateTransition.ownershipProofSignature,
-      );
     });
   });
 
@@ -148,48 +144,6 @@ describe('IdentityCreateTransition', () => {
     });
   });
 
-  describe('#signOwnershipProof', () => {
-    it('should set ownership prood signature', () => {
-      hashSignerMock.signData.returns(42);
-      stateTransition.signOwnershipProof('wowMuchPrivateKey');
-
-      expect(hashSignerMock.signData).to.have.been.calledOnceWith(
-        Buffer.from('specialBuffer'),
-        'wowMuchPrivateKey',
-      );
-      expect(stateTransition.ownershipProofSignature).to.equal(42);
-    });
-  });
-
-  describe('#verifyOwnershipProofSignature', () => {
-    it('should call HashSigner and return boolean', () => {
-      hashSignerMock.verifyDataSignature.returns(true);
-      const result = stateTransition.verifyOwnershipProofSignature('wowMuchPublicKeyHash');
-
-      expect(hashSignerMock.verifyDataSignature).to.have.been.calledOnceWith(
-        Buffer.from('specialBuffer'),
-        Buffer.from('specialBuffer'),
-        'wowMuchPublicKeyHash',
-      );
-      expect(result).to.be.true();
-    });
-  });
-
-  describe('#setOwnershipProofSignature', () => {
-    it('should set ownership proof signature', () => {
-      stateTransition.setOwnershipProofSignature(Buffer.alloc(42, 3));
-      expect(stateTransition.ownershipProofSignature).to.deep.equal(Buffer.alloc(42, 3));
-    });
-  });
-
-  describe('#getOwnershipProofSignature', () => {
-    it('should return set ownership proof signature', () => {
-      expect(stateTransition.getOwnershipProofSignature()).to.deep.equal(
-        rawStateTransition.ownershipProofSignature,
-      );
-    });
-  });
-
   describe('#getIdentityId', () => {
     it('should return set identity id', () => {
       expect(stateTransition.getIdentityId()).to.equal(
@@ -208,7 +162,6 @@ describe('IdentityCreateTransition', () => {
         identityType: 1,
         lockedOutPoint: rawStateTransition.lockedOutPoint,
         publicKeys: rawStateTransition.publicKeys,
-        ownershipProofSignature: rawStateTransition.ownershipProofSignature,
       });
     });
   });
