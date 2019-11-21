@@ -61,7 +61,7 @@ async function registerUser(coreApi) {
   return userId;
 }
 
-describe('validateStateTransition', function main() {
+describe.skip('validateStateTransition', function main() {
   this.timeout(180000);
 
   let driveInstance;
