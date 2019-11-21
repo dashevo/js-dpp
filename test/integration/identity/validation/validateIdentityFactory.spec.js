@@ -7,7 +7,7 @@ const JsonSchemaValidator = require(
   '../../../../lib/validation/JsonSchemaValidator',
 );
 
-const { expectValidationError } = require(
+const { expectValidationError, expectJsonSchemaError } = require(
   '../../../../lib/test/expect/expectError',
 );
 
@@ -21,23 +21,31 @@ const JsonSchemaError = require(
   '../../../../lib/errors/JsonSchemaError',
 );
 
-const IncorrectIdentityTypeError = require(
-  '../../../../lib/errors/IncorrectIdentityTypeError',
-);
+const ConsensusError = require('../../../../lib/errors/ConsensusError');
+const ValidationResult = require('../../../../lib/validation/ValidationResult');
 
 describe('validateIdentityFactory', () => {
   let rawIdentity;
   let validateIdentity;
   let identity;
+  let validateIdentityTypeMock;
+  let validateDuplicatePublicKeysMock;
 
-  beforeEach(() => {
+  beforeEach(function beforeEach() {
     const schemaValidator = new JsonSchemaValidator(new Ajv());
+
+    validateIdentityTypeMock = this.sinonSandbox.stub().returns(new ValidationResult());
+    validateDuplicatePublicKeysMock = this.sinonSandbox.stub().returns(new ValidationResult());
+
+    validateIdentity = validateIdentityFactory(
+      schemaValidator,
+      validateIdentityTypeMock,
+      validateDuplicatePublicKeysMock,
+    );
 
     identity = getIdentityFixture();
 
     rawIdentity = identity.toJSON();
-
-    validateIdentity = validateIdentityFactory(schemaValidator);
   });
 
   describe('id', () => {
@@ -46,13 +54,16 @@ describe('validateIdentityFactory', () => {
 
       const result = validateIdentity(rawIdentity);
 
-      expectValidationError(result, JsonSchemaError, 1);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
       expect(error.dataPath).to.equal('');
       expect(error.params.missingProperty).to.equal('id');
       expect(error.keyword).to.equal('required');
+
+      expect(validateIdentityTypeMock).to.not.be.called();
+      expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
 
     it('should be a string', () => {
@@ -60,12 +71,15 @@ describe('validateIdentityFactory', () => {
 
       const result = validateIdentity(rawIdentity);
 
-      expectValidationError(result, JsonSchemaError, 1);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
       expect(error.dataPath).to.equal('.id');
       expect(error.keyword).to.equal('type');
+
+      expect(validateIdentityTypeMock).to.not.be.called();
+      expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
 
     it('should not be less than 32 characters', () => {
@@ -73,12 +87,15 @@ describe('validateIdentityFactory', () => {
 
       const result = validateIdentity(rawIdentity);
 
-      expectValidationError(result, JsonSchemaError, 1);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('minLength');
       expect(error.dataPath).to.equal('.id');
+
+      expect(validateIdentityTypeMock).to.not.be.called();
+      expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
 
     it('should not be more than 46 characters', () => {
@@ -86,12 +103,15 @@ describe('validateIdentityFactory', () => {
 
       const result = validateIdentity(rawIdentity);
 
-      expectValidationError(result, JsonSchemaError, 1);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('maxLength');
       expect(error.dataPath).to.equal('.id');
+
+      expect(validateIdentityTypeMock).to.not.be.called();
+      expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
 
     it('should be base58 encoded', () => {
@@ -99,12 +119,15 @@ describe('validateIdentityFactory', () => {
 
       const result = validateIdentity(rawIdentity);
 
-      expectValidationError(result, JsonSchemaError, 1);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('pattern');
       expect(error.dataPath).to.equal('.id');
+
+      expect(validateIdentityTypeMock).to.not.be.called();
+      expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
   });
 
@@ -114,13 +137,16 @@ describe('validateIdentityFactory', () => {
 
       const result = validateIdentity(rawIdentity);
 
-      expectValidationError(result, JsonSchemaError, 1);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
       expect(error.dataPath).to.equal('');
       expect(error.params.missingProperty).to.equal('type');
       expect(error.keyword).to.equal('required');
+
+      expect(validateIdentityTypeMock).to.not.be.called();
+      expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
 
     it('should be an integer', () => {
@@ -128,12 +154,15 @@ describe('validateIdentityFactory', () => {
 
       const result = validateIdentity(rawIdentity);
 
-      expect(result.isValid()).to.be.false();
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('multipleOf');
       expect(error.dataPath).to.equal('.type');
+
+      expect(validateIdentityTypeMock).to.not.be.called();
+      expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
 
     it('should be greater than 0', () => {
@@ -141,12 +170,15 @@ describe('validateIdentityFactory', () => {
 
       const result = validateIdentity(rawIdentity);
 
-      expect(result.isValid()).to.be.false();
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('minimum');
       expect(error.dataPath).to.equal('.type');
+
+      expect(validateIdentityTypeMock).to.not.be.called();
+      expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
 
     it('should be less than 65535', () => {
@@ -154,24 +186,15 @@ describe('validateIdentityFactory', () => {
 
       const result = validateIdentity(rawIdentity);
 
-      expect(result.isValid()).to.be.false();
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('maximum');
       expect(error.dataPath).to.equal('.type');
-    });
 
-    it('should return invalid result if type is not known', () => {
-      rawIdentity.type = 42;
-
-      const result = validateIdentity(rawIdentity);
-
-      expectValidationError(result, IncorrectIdentityTypeError, 1);
-
-      const [error] = result.getErrors();
-
-      expect(error.getIdentity()).to.deep.equal(rawIdentity);
+      expect(validateIdentityTypeMock).to.not.be.called();
+      expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
   });
 
@@ -181,13 +204,16 @@ describe('validateIdentityFactory', () => {
 
       const result = validateIdentity(rawIdentity);
 
-      expectValidationError(result, JsonSchemaError, 1);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
       expect(error.dataPath).to.equal('');
       expect(error.params.missingProperty).to.equal('publicKeys');
       expect(error.keyword).to.equal('required');
+
+      expect(validateIdentityTypeMock).to.not.be.called();
+      expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
 
     it('should be an array', () => {
@@ -201,6 +227,9 @@ describe('validateIdentityFactory', () => {
 
       expect(error.dataPath).to.equal('.publicKeys');
       expect(error.keyword).to.equal('type');
+
+      expect(validateIdentityTypeMock).to.not.be.called();
+      expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
 
     it('should not be empty', () => {
@@ -208,12 +237,15 @@ describe('validateIdentityFactory', () => {
 
       const result = validateIdentity(rawIdentity);
 
-      expectValidationError(result, JsonSchemaError, 1);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('minItems');
       expect(error.dataPath).to.equal('.publicKeys');
+
+      expect(validateIdentityTypeMock).to.not.be.called();
+      expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
 
     it('should throw an error if publicKeys have more than 100 keys', () => {
@@ -226,23 +258,304 @@ describe('validateIdentityFactory', () => {
 
       const result = validateIdentity(rawIdentity);
 
-      expectValidationError(result, JsonSchemaError, 1);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('maxItems');
       expect(error.dataPath).to.equal('.publicKeys');
+
+      expect(validateIdentityTypeMock).to.not.be.called();
+      expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
+
+    describe('publicKey', () => {
+      describe('id', () => {
+        it('should be present', () => {
+          delete rawIdentity.publicKeys[0].id;
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.publicKeys[0]');
+          expect(error.params.missingProperty).to.equal('id');
+          expect(error.keyword).to.equal('required');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+
+        it('should be a number', () => {
+          rawIdentity.publicKeys[0].id = 'abc';
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.publicKeys[0].id');
+          expect(error.keyword).to.equal('type');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+
+        it('should be an integer', () => {
+          rawIdentity.publicKeys[0].id = 1.2;
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.keyword).to.equal('multipleOf');
+          expect(error.dataPath).to.equal('.publicKeys[0].id');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+
+        it('should be greater than 0', () => {
+          rawIdentity.publicKeys[0].id = -1;
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.keyword).to.equal('minimum');
+          expect(error.dataPath).to.equal('.publicKeys[0].id');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+      });
+
+      describe('type', () => {
+        it('should be present', () => {
+          delete rawIdentity.publicKeys[0].type;
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.publicKeys[0]');
+          expect(error.params.missingProperty).to.equal('type');
+          expect(error.keyword).to.equal('required');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+
+        it('should be a number', () => {
+          rawIdentity.publicKeys[0].type = 'abc';
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.publicKeys[0].type');
+          expect(error.keyword).to.equal('type');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+
+        it('should be a part of enum', () => {
+          rawIdentity.publicKeys[0].type = 2;
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.publicKeys[0].type');
+          expect(error.keyword).to.equal('enum');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+      });
+
+      describe('data', () => {
+        it('should be present', () => {
+          delete rawIdentity.publicKeys[0].data;
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.publicKeys[0]');
+          expect(error.params.missingProperty).to.equal('data');
+          expect(error.keyword).to.equal('required');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+
+        it('should be a string', () => {
+          rawIdentity.publicKeys[0].data = 1;
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.publicKeys[0].data');
+          expect(error.keyword).to.equal('type');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+
+        it('should be longer than 0', () => {
+          rawIdentity.publicKeys[0].data = '';
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.publicKeys[0].data');
+          expect(error.keyword).to.equal('minLength');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+
+        it('should be shorter than 2048', () => {
+          rawIdentity.publicKeys[0].data = '1'.repeat(2049);
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.publicKeys[0].data');
+          expect(error.keyword).to.equal('maxLength');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+
+        it('should be base64 encoded', () => {
+          rawIdentity.publicKeys[0].data = '12345cxzcijsn';
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.publicKeys[0].data');
+          expect(error.keyword).to.equal('pattern');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+      });
+
+      describe('isEnabled', () => {
+        it('should be present', () => {
+          delete rawIdentity.publicKeys[0].isEnabled;
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.publicKeys[0]');
+          expect(error.params.missingProperty).to.equal('isEnabled');
+          expect(error.keyword).to.equal('required');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+
+        it('should be a boolean', () => {
+          rawIdentity.publicKeys[0].isEnabled = 'abc';
+
+          const result = validateIdentity(rawIdentity);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.publicKeys[0].isEnabled');
+          expect(error.keyword).to.equal('type');
+
+          expect(validateIdentityTypeMock).to.not.be.called();
+          expect(validateDuplicatePublicKeysMock).to.not.be.called();
+        });
+      });
+    });
+  });
+
+  it('should return invalid result if there are duplicate keys', () => {
+    const consensusError = new ConsensusError('error');
+
+    validateIdentityTypeMock.returns(new ValidationResult([consensusError]));
+
+    const result = validateIdentity(rawIdentity);
+
+    expectValidationError(result);
+
+    const [error] = result.getErrors();
+
+    expect(error).to.equal(consensusError);
+
+    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(rawIdentity.type);
+    expect(validateDuplicatePublicKeysMock).to.be.calledOnceWithExactly(rawIdentity.publicKeys);
+  });
+
+  it('should return invalid result if identity type is unknown', () => {
+    const consensusError = new ConsensusError('error');
+
+    validateDuplicatePublicKeysMock.returns(new ValidationResult([consensusError]));
+
+    const result = validateIdentity(rawIdentity);
+
+    expectValidationError(result);
+
+    const [error] = result.getErrors();
+
+    expect(error).to.equal(consensusError);
+
+    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(rawIdentity.type);
+    expect(validateDuplicatePublicKeysMock).to.be.calledOnceWithExactly(rawIdentity.publicKeys);
   });
 
   it('should return valid result if a raw identity is valid', () => {
     const result = validateIdentity(rawIdentity);
+
+    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(rawIdentity.type);
+    expect(validateDuplicatePublicKeysMock).to.be.calledOnceWithExactly(rawIdentity.publicKeys);
 
     expect(result.isValid()).to.be.true();
   });
 
   it('should return valid result if an identity model is valid', () => {
     const result = validateIdentity(new Identity(rawIdentity));
+
+    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(rawIdentity.type);
+    expect(validateDuplicatePublicKeysMock).to.be.calledOnceWithExactly(rawIdentity.publicKeys);
 
     expect(result.isValid()).to.be.true();
   });
