@@ -1,5 +1,5 @@
 const validateDocumentsSTDataFactory = require('../../../../../lib/document/stateTransition/validation/data/validateDocumentsSTDataFactory');
-const Identity = require('../../../../../lib/identity/model/Identity');
+const Identity = require('../../../../../lib/identity/Identity');
 
 const Document = require('../../../../../lib/document/Document');
 const DocumentsStateTransition = require('../../../../../lib/document/stateTransition/DocumentsStateTransition');
@@ -31,7 +31,7 @@ describe('validateDocumentsSTDataFactory', () => {
   let userId;
   let validateDocumentsUniquenessByIndicesMock;
   let dataProviderMock;
-  let validateIdentityTypeMock;
+  let validateIdentityExistenceAndTypeMock;
   let executeDataTriggersMock;
   let fetchAndValidateDataContractMock;
 
@@ -47,7 +47,9 @@ describe('validateDocumentsSTDataFactory', () => {
     dataProviderMock.fetchDataContract.resolves(dataContract);
 
     fetchDocumentsMock = this.sinonSandbox.stub().resolves([]);
-    validateIdentityTypeMock = this.sinonSandbox.stub().resolves(new ValidationResult());
+    validateIdentityExistenceAndTypeMock = this.sinonSandbox.stub().resolves(
+      new ValidationResult(),
+    );
     executeDataTriggersMock = this.sinonSandbox.stub();
 
     validateDocumentsUniquenessByIndicesMock = this.sinonSandbox.stub();
@@ -61,7 +63,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
     validateDocumentsSTData = validateDocumentsSTDataFactory(
       dataProviderMock,
-      validateIdentityTypeMock,
+      validateIdentityExistenceAndTypeMock,
       fetchDocumentsMock,
       validateDocumentsUniquenessByIndicesMock,
       executeDataTriggersMock,
@@ -72,7 +74,7 @@ describe('validateDocumentsSTDataFactory', () => {
   it('should return invalid result if userId is not valid', async () => {
     const userError = new ConsensusError('error');
 
-    validateIdentityTypeMock.resolves(new ValidationResult([userError]));
+    validateIdentityExistenceAndTypeMock.resolves(new ValidationResult([userError]));
 
     const result = await validateDocumentsSTData(stateTransition);
 
@@ -80,7 +82,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
     );
 
@@ -110,7 +112,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
 
-    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
     );
 
@@ -135,7 +137,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
 
-    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
     );
 
@@ -158,7 +160,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
 
-    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
     );
 
@@ -182,7 +184,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
 
-    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
     );
 
@@ -208,7 +210,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
 
-    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
     );
 
@@ -234,7 +236,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
 
-    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
     );
 
@@ -259,7 +261,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
       expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
 
-      expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+      expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
         userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
       );
 
@@ -287,7 +289,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
 
-    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
     );
 
@@ -328,7 +330,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
 
-    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
     );
 
@@ -378,7 +380,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
 
-    expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
     );
 
