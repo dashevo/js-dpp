@@ -9,7 +9,7 @@
       "type": "number",
       "enum": [1, 2]
     },
-    "publicKeyId": {
+    "signaturePublicKeyId": {
       "anyOf": [
         {
           "type": "number",
@@ -22,21 +22,15 @@
       ]
     },
     "signature": {
-      "anyOf": [
-        {
-          "type": "string",
-          "minLength": 89,
-          "maxLength": 89
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "type": "string",
+      "minLength": 86,
+      "maxLength": 88
     }
   },
   "required": [
     "protocolVersion",
-    "type"
+    "type",
+    "signature"
   ],
   "additionalProperties": false
 }
