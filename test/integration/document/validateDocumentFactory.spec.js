@@ -24,6 +24,8 @@ const {
   expectJsonSchemaError,
 } = require('../../../lib/test/expect/expectError');
 
+const generateRandomId = require('../../../lib/test/utils/generateRandomId');
+
 describe('validateDocumentFactory', () => {
   let dataContract;
   let rawDocuments;
@@ -408,7 +410,7 @@ describe('validateDocumentFactory', () => {
   });
 
   it('should return invalid result if a document contractId is not equal to Data Contract ID', () => {
-    rawDocument.$contractId = 'GRBKRi26YRSPSnUgkSkJaVjZwWDnTZBJkFWNV2PC7ERY';
+    rawDocument.$contractId = generateRandomId();
 
     const result = validateDocument(
       rawDocument,

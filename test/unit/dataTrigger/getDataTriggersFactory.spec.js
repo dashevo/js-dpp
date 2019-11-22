@@ -9,6 +9,7 @@ const createDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/c
 const updateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/updateDomainDataTrigger');
 const deleteDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/deleteDomainDataTrigger');
 
+const generateRandomId = require('../../../lib/test/utils/generateRandomId');
 
 describe('getDataTriggers', () => {
   let getDataTriggers;
@@ -34,7 +35,7 @@ describe('getDataTriggers', () => {
     deleteDocument.data = {};
     deleteDocument.setAction(Document.ACTIONS.DELETE);
 
-    dataContractId = 'someContractId';
+    dataContractId = generateRandomId();
 
     createTrigger = new DataTrigger(
       dataContractId, 'domain', Document.ACTIONS.CREATE, createDomainDataTrigger,
