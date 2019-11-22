@@ -15,8 +15,9 @@ const ValidationResult = require('../../../../../lib/validation/ValidationResult
 const DataContractAlreadyPresentError = require('../../../../../lib/errors/DataContractAlreadyPresentError');
 const InvalidStateTransitionSignatureError = require('../../../../../lib/errors/InvalidStateTransitionSignatureError');
 const ConsensusError = require('../../../../../lib/errors/ConsensusError');
+const InvalidIdentityPublicKeyType = require('../../../../../lib/errors/InvalidIdentityPublicKeyType');
 
-const signatureTypes = require('../../../../../lib/stateTransition/signatureTypes');
+const IdentityPublicKey = require('../../../../../lib/identity/IdentityPublicKey');
 
 describe('validateDataContractSTDataFactory', () => {
   let validateDataContractSTData;
@@ -25,6 +26,7 @@ describe('validateDataContractSTDataFactory', () => {
   let dataProviderMock;
   let rawIdentity;
   let validateIdentityExistenceAndTypeMock;
+  let identityPublicKey;
 
   beforeEach(function beforeEach() {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
@@ -33,14 +35,17 @@ describe('validateDataContractSTDataFactory', () => {
       new ValidationResult(),
     );
 
-    const privateKey = new PrivateKey();
-    const publicKey = privateKey.toPublicKey().toBuffer().toString('base64');
-
-    const getPublicKeyById = this.sinonSandbox.stub().returns({
-      publicKey,
-    });
-
+    const privateKeyModel = new PrivateKey();
+    const privateKey = privateKeyModel.toBuffer().toString('base64');
+    const publicKey = privateKeyModel.toPublicKey().toBuffer().toString('base64');
     const publicKeyId = 1;
+
+    identityPublicKey = new IdentityPublicKey()
+      .setId(publicKeyId)
+      .setType(IdentityPublicKey.TYPES.ECDSA_SECP256K1)
+      .setData(publicKey);
+
+    const getPublicKeyById = this.sinonSandbox.stub().returns(identityPublicKey);
 
     rawIdentity = {
       id: 'iTYF+bWBA4MYRURcsBpBkgfwiqV7sYVnTDPR4uQ/KLU=',
@@ -57,12 +62,7 @@ describe('validateDataContractSTDataFactory', () => {
 
     dataContract = getDataContractFixture();
     stateTransition = new DataContractStateTransition(dataContract);
-    stateTransition.sign({
-      id: publicKeyId,
-      userId: rawIdentity.id,
-      type: signatureTypes.ECDSA,
-      privateKey,
-    });
+    stateTransition.sign(identityPublicKey, privateKey);
 
     validateDataContractSTData = validateDataContractSTDataFactory(
       dataProviderMock,
@@ -124,9 +124,8 @@ describe('validateDataContractSTDataFactory', () => {
       dataContract.getId(), [Identity.TYPES.APPLICATION],
     );
     expect(dataProviderMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(stateTransition.getUserId());
     expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
-      stateTransition.getPublicKeyId(),
+      stateTransition.getSignaturePublicKeyId(),
     );
   });
 
@@ -144,29 +143,28 @@ describe('validateDataContractSTDataFactory', () => {
 
     expect(error.getRawStateTransition()).to.equal(stateTransition);
     expect(dataProviderMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(stateTransition.getUserId());
     expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
-      stateTransition.getPublicKeyId(),
+      stateTransition.getSignaturePublicKeyId(),
     );
   });
 
-  it('should return invalid result if state transition is not signed', async () => {
-    stateTransition = new DataContractStateTransition(dataContract);
+  it('should return invalid result if public key has wrong type', async () => {
+    const type = 30000;
+    identityPublicKey.setType(type);
 
     const result = await validateDataContractSTData(stateTransition);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.false();
 
-    expectValidationError(result, InvalidStateTransitionSignatureError);
+    expectValidationError(result, InvalidIdentityPublicKeyType);
 
     const [error] = result.getErrors();
 
-    expect(error.getRawStateTransition()).to.equal(stateTransition);
+    expect(error.getType()).to.equal(type);
     expect(dataProviderMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(stateTransition.getUserId());
     expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
-      stateTransition.getPublicKeyId(),
+      stateTransition.getSignaturePublicKeyId(),
     );
   });
 });

@@ -68,7 +68,7 @@ describe('DocumentsStateTransition', () => {
         type: stateTransitionTypes.DOCUMENTS,
         actions: documents.map(d => d.getAction()),
         documents: documents.map(d => d.toJSON()),
-        publicKeyId: null,
+        signaturePublicKeyId: null,
         signature: null,
       });
     });

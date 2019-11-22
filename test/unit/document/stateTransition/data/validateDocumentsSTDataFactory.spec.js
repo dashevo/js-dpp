@@ -24,8 +24,9 @@ const InvalidDocumentRevisionError = require('../../../../../lib/errors/InvalidD
 const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 const InvalidDocumentActionError = require('../../../../../lib/document/errors/InvalidDocumentActionError');
 const InvalidStateTransitionSignatureError = require('../../../../../lib/errors/InvalidStateTransitionSignatureError');
+const InvalidIdentityPublicKeyType = require('../../../../../lib/errors/InvalidIdentityPublicKeyType');
 
-const signatureTypes = require('../../../../../lib/stateTransition/signatureTypes');
+const IdentityPublicKey = require('../../../../../lib/identity/IdentityPublicKey');
 
 describe('validateDocumentsSTDataFactory', () => {
   let validateDocumentsSTData;
@@ -40,7 +41,8 @@ describe('validateDocumentsSTDataFactory', () => {
   let executeDataTriggersMock;
   let fetchAndValidateDataContractMock;
   let rawIdentity;
-  let signOptions;
+  let identityPublicKey;
+  let privateKey;
 
   beforeEach(function beforeEach() {
     ({ userId } = getDocumentsFixture);
@@ -48,14 +50,18 @@ describe('validateDocumentsSTDataFactory', () => {
     documents = getDocumentsFixture();
     dataContract = getContractFixture();
 
-    const privateKey = new PrivateKey();
-    const publicKey = privateKey.toPublicKey().toBuffer().toString('base64');
-
-    const getPublicKeyById = this.sinonSandbox.stub().returns({
-      publicKey,
-    });
+    const privateKeyModel = new PrivateKey();
+    privateKey = privateKeyModel.toBuffer().toString('base64');
+    const publicKey = privateKeyModel.toPublicKey().toBuffer().toString('base64');
 
     const publicKeyId = 1;
+
+    identityPublicKey = new IdentityPublicKey()
+      .setId(publicKeyId)
+      .setType(IdentityPublicKey.TYPES.ECDSA_SECP256K1)
+      .setData(publicKey);
+
+    const getPublicKeyById = this.sinonSandbox.stub().returns(identityPublicKey);
 
     rawIdentity = {
       id: userId,
@@ -70,15 +76,8 @@ describe('validateDocumentsSTDataFactory', () => {
       getPublicKeyById,
     };
 
-    signOptions = {
-      id: publicKeyId,
-      userId,
-      type: signatureTypes.ECDSA,
-      privateKey,
-    };
-
     stateTransition = new DocumentsStateTransition(documents);
-    stateTransition.sign(signOptions);
+    stateTransition.sign(identityPublicKey, privateKey);
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchDataContract.resolves(dataContract);
@@ -409,9 +408,8 @@ describe('validateDocumentsSTDataFactory', () => {
       dataTriggersExecutionContext,
     );
 
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(stateTransition.getUserId());
     expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
-      stateTransition.getPublicKeyId(),
+      stateTransition.getSignaturePublicKeyId(),
     );
   });
 
@@ -440,9 +438,7 @@ describe('validateDocumentsSTDataFactory', () => {
       new DataTriggerExecutionResult(),
     ]);
 
-    stateTransition.sign(
-      signOptions,
-    );
+    stateTransition.sign(identityPublicKey, privateKey);
 
     const result = await validateDocumentsSTData(stateTransition);
 
@@ -467,9 +463,8 @@ describe('validateDocumentsSTDataFactory', () => {
       dataTriggersExecutionContext,
     );
 
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(stateTransition.getUserId());
     expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
-      stateTransition.getPublicKeyId(),
+      stateTransition.getSignaturePublicKeyId(),
     );
   });
 
@@ -486,9 +481,8 @@ describe('validateDocumentsSTDataFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.getRawStateTransition()).to.equal(stateTransition);
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(stateTransition.getUserId());
     expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
-      stateTransition.getPublicKeyId(),
+      stateTransition.getSignaturePublicKeyId(),
     );
   });
 
@@ -505,9 +499,27 @@ describe('validateDocumentsSTDataFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.getRawStateTransition()).to.equal(stateTransition);
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(stateTransition.getUserId());
     expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
-      stateTransition.getPublicKeyId(),
+      stateTransition.getSignaturePublicKeyId(),
+    );
+  });
+
+  it('should return invalid result if public key has wrong type', async () => {
+    const type = 30000;
+    identityPublicKey.setType(type);
+
+    const result = await validateDocumentsSTData(stateTransition);
+
+    expect(result).to.be.an.instanceOf(ValidationResult);
+    expect(result.isValid()).to.be.false();
+
+    expectValidationError(result, InvalidIdentityPublicKeyType);
+
+    const [error] = result.getErrors();
+
+    expect(error.getType()).to.equal(type);
+    expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
+      stateTransition.getSignaturePublicKeyId(),
     );
   });
 });

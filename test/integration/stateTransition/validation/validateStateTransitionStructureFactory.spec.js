@@ -32,6 +32,7 @@ describe('validateStateTransitionStructureFactory', () => {
   let extensionFunctionMock;
   let rawStateTransition;
   let dataContract;
+  let privateKey;
 
   beforeEach(function beforeEach() {
     extensionFunctionMock = this.sinonSandbox.stub();
@@ -62,10 +63,13 @@ describe('validateStateTransitionStructureFactory', () => {
 
     dataContract = getDataContractFixture();
 
+    privateKey = '9lA4LRDnVxY1MGQinh6DwlSRzugQf7BNgKEpCcl+HJM=';
+
     rawStateTransition = {
       protocolVersion: 0,
       type: stateTransitionTypes.DATA_CONTRACT,
       extension: {},
+      signature: 'H8tcxA468bMRB5183MER6xud6olAXfxutwDQiv5vaiN8AXFkup6jkSXWQdmaVF5Wvw2ppkYxXAGsBI2N94OMxvw=',
     };
   });
 
@@ -138,6 +142,116 @@ describe('validateStateTransitionStructureFactory', () => {
         expect(extensionFunctionMock).to.not.be.called();
       });
     });
+
+    describe('signature', () => {
+      it('should be present', async () => {
+        delete rawStateTransition.signature;
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('signature');
+
+        expect(extensionFunctionMock).to.not.be.called();
+      });
+
+      it('should no have length < 86', async () => {
+        rawStateTransition.signature = 'xqA468bMRB5183MER6xud6olAXfxutwDQiv5vaiN8AXFkup6jkSXWQdmaVF5Wvw2ppkYxXAGsBI2N94OMxvw=';
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.signature');
+        expect(error.keyword).to.equal('minLength');
+
+        expect(extensionFunctionMock).to.not.be.called();
+      });
+
+      it('should not have length > 88', async () => {
+        rawStateTransition.signature = 'H8tcxqwertyA468bMRB5183MER6xud6olAXfxutwDQiv5vaiN8AXFkup6jkSXWQdmaVF5Wvw2ppkYxXAGsBI2N94OMxvw=';
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.signature');
+        expect(error.keyword).to.equal('maxLength');
+
+        expect(extensionFunctionMock).to.not.be.called();
+      });
+
+      it('should be base64 encoded', async () => {
+        rawStateTransition.signature = '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&';
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.signature');
+        expect(error.keyword).to.equal('pattern');
+
+        expect(extensionFunctionMock).to.not.be.called();
+      });
+    });
+
+    describe('signaturePublicKeyId', () => {
+      it('should fail if not integer', async () => {
+        rawStateTransition.signaturePublicKeyId = 1.4;
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result, 3);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.signaturePublicKeyId');
+        expect(error.keyword).to.equal('multipleOf');
+
+        expect(extensionFunctionMock).to.not.be.called();
+      });
+
+      it('should fail if not number', async () => {
+        rawStateTransition.signaturePublicKeyId = 'aaaaa';
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result, 3);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.signaturePublicKeyId');
+        expect(error.keyword).to.equal('type');
+
+        expect(extensionFunctionMock).to.not.be.called();
+      });
+
+      it('should not be < 1', async () => {
+        rawStateTransition.signaturePublicKeyId = 0;
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result, 3);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.signaturePublicKeyId');
+        expect(error.keyword).to.equal('minimum');
+
+        expect(extensionFunctionMock).to.not.be.called();
+      });
+    });
   });
 
   describe('Data Contract Schema', () => {
@@ -154,9 +268,10 @@ describe('validateStateTransitionStructureFactory', () => {
         typeExtensions,
       );
 
-      const statTransition = new DataContractStateTransition(dataContract);
+      const stateTransition = new DataContractStateTransition(dataContract);
+      stateTransition.signByPrivateKey(privateKey);
 
-      rawStateTransition = statTransition.toJSON();
+      rawStateTransition = stateTransition.toJSON();
     });
 
     describe('dataContract', () => {
@@ -184,7 +299,6 @@ describe('validateStateTransitionStructureFactory', () => {
 
       expect(result).to.be.an.instanceOf(ValidationResult);
       expect(result.isValid()).to.be.true();
-
       expect(extensionFunctionMock).to.be.calledOnceWith(rawStateTransition);
     });
   });
@@ -206,6 +320,7 @@ describe('validateStateTransitionStructureFactory', () => {
       const documents = getDocumentsFixture();
 
       const stateTransition = new DocumentsStateTransition(documents);
+      stateTransition.signByPrivateKey(privateKey);
 
       rawStateTransition = stateTransition.toJSON();
     });

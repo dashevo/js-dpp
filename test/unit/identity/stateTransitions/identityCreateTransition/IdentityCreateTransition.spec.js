@@ -158,6 +158,8 @@ describe('IdentityCreateTransition', () => {
         identityType: 1,
         lockedOutPoint: rawStateTransition.lockedOutPoint,
         publicKeys: rawStateTransition.publicKeys,
+        signaturePublicKeyId: null,
+        signature: null,
       });
     });
   });

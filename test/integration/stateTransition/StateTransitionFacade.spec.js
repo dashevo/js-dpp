@@ -1,3 +1,5 @@
+const { PrivateKey } = require('@dashevo/dashcore-lib');
+
 const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
 const DataContractStateTransition = require('../../../lib/dataContract/stateTransition/DataContractStateTransition');
@@ -11,6 +13,7 @@ const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixt
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 
 const Identity = require('../../../lib/identity/Identity');
+const IdentityPublicKey = require('../../../lib/identity/IdentityPublicKey');
 
 const MissingOptionError = require('../../../lib/errors/MissingOptionError');
 
@@ -20,13 +23,25 @@ describe('StateTransitionFacade', () => {
   let documentsStateTransition;
   let dataProviderMock;
   let dataContract;
+  let identityPublicKey;
 
   beforeEach(function beforeEach() {
+    const privateKeyModel = new PrivateKey();
+    const privateKey = privateKeyModel.toBuffer().toString('base64');
+    const publicKey = privateKeyModel.toPublicKey().toBuffer().toString('base64');
+
     dataContract = getDataContractFixture();
     dataContractStateTransition = new DataContractStateTransition(dataContract);
+    dataContractStateTransition.signByPrivateKey(privateKey);
+
+    identityPublicKey = new IdentityPublicKey()
+      .setId(1)
+      .setType(IdentityPublicKey.TYPES.ECDSA_SECP256K1)
+      .setData(publicKey);
 
     const documents = getDocumentsFixture();
     documentsStateTransition = new DocumentsStateTransition(documents);
+    documentsStateTransition.sign(identityPublicKey, privateKey);
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
@@ -136,6 +151,7 @@ describe('StateTransitionFacade', () => {
       dataProviderMock.fetchDataContract.resolves(dataContract);
       dataProviderMock.fetchIdentity.resolves({
         type: Identity.TYPES.USER,
+        getPublicKeyById: this.sinonSandbox.stub().returns(identityPublicKey),
       });
 
       const validateStructureSpy = this.sinonSandbox.spy(
