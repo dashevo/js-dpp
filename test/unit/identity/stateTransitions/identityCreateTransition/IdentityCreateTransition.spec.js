@@ -1,5 +1,6 @@
 const rewiremock = require('rewiremock/node');
 
+const Identity = require('../../../../../lib/identity/Identity');
 const IdentityPublicKey = require('../../../../../lib/identity/IdentityPublicKey');
 
 const stateTransitionTypes = require(
@@ -16,11 +17,11 @@ describe('IdentityCreateTransition', () => {
   beforeEach(function beforeEach() {
     rawStateTransition = {
       lockedOutPoint: 'c3BlY2lhbEJ1ZmZlcg==',
-      identityType: 1,
+      identityType: Identity.TYPES.USER,
       publicKeys: [
         {
           id: 1,
-          type: 1,
+          type: IdentityPublicKey.TYPES.ECDSA_SECP256K1,
           data: 'someString',
           isEnabled: true,
         },
@@ -154,8 +155,8 @@ describe('IdentityCreateTransition', () => {
 
       expect(json).to.deep.equal({
         protocolVersion: 0,
-        type: 3,
-        identityType: 1,
+        type: stateTransitionTypes.IDENTITY_CREATE,
+        identityType: Identity.TYPES.USER,
         lockedOutPoint: rawStateTransition.lockedOutPoint,
         publicKeys: rawStateTransition.publicKeys,
         signaturePublicKeyId: null,

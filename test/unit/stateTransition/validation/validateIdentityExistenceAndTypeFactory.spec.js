@@ -1,4 +1,5 @@
 const Identity = require('../../../../lib/identity/Identity');
+const IdentityPublicKey = require('../../../../lib/identity/IdentityPublicKey');
 
 const validateIdentityExistenceAndTypeFactory = require('../../../../lib/stateTransition/validation/validateIdentityExistenceAndTypeFactory');
 
@@ -24,7 +25,7 @@ describe('validateIdentityExistenceAndType', () => {
       dataProviderMock,
     );
 
-    userId = 'iTYF+bWBA4MYRURcsBpBkgfwiqV7sYVnTDPR4uQ/KLU=';
+    userId = 'GjMgC7bnVdMi8gLzUAtmG9PwHCtPi8zJrxKmXr6HQT6J';
 
     rawIdentityUser = {
       id: userId,
@@ -32,8 +33,8 @@ describe('validateIdentityExistenceAndType', () => {
       publicKeys: [
         {
           id: 1,
-          type: 1,
-          publicKey: 'z3HAPrJkpgffXX0b3w0lb/PZs6A5IXzHj1p8Fnzmgmk=',
+          type: IdentityPublicKey.TYPES.ECDSA_SECP256K1,
+          data: 'z3HAPrJkpgffXX0b3w0lb/PZs6A5IXzHj1p8Fnzmgmk=',
           isEnabled: true,
         },
       ],
