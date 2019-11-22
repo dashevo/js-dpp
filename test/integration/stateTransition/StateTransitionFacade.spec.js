@@ -1,5 +1,3 @@
-const { Transaction } = require('@dashevo/dashcore-lib');
-
 const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
 const DataContractStateTransition = require('../../../lib/dataContract/stateTransition/DataContractStateTransition');
@@ -11,6 +9,8 @@ const getDataContractFixture = require('../../../lib/test/fixtures/getDataContra
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
+
+const Identity = require('../../../lib/identity/Identity');
 
 const MissingOptionError = require('../../../lib/errors/MissingOptionError');
 
@@ -130,15 +130,13 @@ describe('StateTransitionFacade', () => {
     });
 
     it('should validate Documents ST structure and data', async function it() {
-      dataProviderMock.fetchTransaction.resolves({
-        type: Transaction.TYPES.TRANSACTION_SUBTX_REGISTER,
-        confirmations: 6,
-      });
-
       dataProviderMock.fetchDocuments.resolves([]);
 
 
       dataProviderMock.fetchDataContract.resolves(dataContract);
+      dataProviderMock.fetchIdentity.resolves({
+        type: Identity.TYPES.USER,
+      });
 
       const validateStructureSpy = this.sinonSandbox.spy(
         dpp.stateTransition,

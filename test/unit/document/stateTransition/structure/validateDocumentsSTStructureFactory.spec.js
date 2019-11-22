@@ -1,3 +1,5 @@
+const generateRandomId = require('../../../../../lib/test/utils/generateRandomId');
+
 const DocumentsStateTransition = require('../../../../../lib/document/stateTransition/DocumentsStateTransition');
 
 const getContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
@@ -68,7 +70,7 @@ describe('validateDocumentsSTStructureFactory', () => {
   it('should return invalid result if there are documents with different $contractId', async () => {
     const [firstRawDocument, secondRawDocument, thirdRawDocument] = rawStateTransition.documents;
 
-    secondRawDocument.$contractId = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
+    secondRawDocument.$contractId = generateRandomId();
     delete thirdRawDocument.$contractId;
 
     const result = await validateDocumentsSTStructure(rawStateTransition);
@@ -198,7 +200,7 @@ describe('validateDocumentsSTStructureFactory', () => {
   });
 
   it('should return invalid result if there are documents with different User IDs', async () => {
-    const differentUserId = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
+    const differentUserId = generateRandomId();
 
     documents[0].userId = differentUserId;
     rawStateTransition.documents[0].$userId = differentUserId;

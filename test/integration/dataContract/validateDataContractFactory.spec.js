@@ -98,8 +98,8 @@ describe('validateDataContractFactory', () => {
       expect(error.keyword).to.equal('type');
     });
 
-    it('should be no less than 64 chars', () => {
-      rawDataContract.contractId = '86b273ff';
+    it('should be no less than 42 chars', () => {
+      rawDataContract.contractId = '1'.repeat(41);
 
       const result = validateDataContract(rawDataContract);
 
@@ -111,8 +111,8 @@ describe('validateDataContractFactory', () => {
       expect(error.keyword).to.equal('minLength');
     });
 
-    it('should be no longer than 64 chars', () => {
-      rawDataContract.contractId = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
+    it('should be no longer than 44 chars', () => {
+      rawDataContract.contractId = '1'.repeat(45);
 
       const result = validateDataContract(rawDataContract);
 
@@ -122,6 +122,19 @@ describe('validateDataContractFactory', () => {
 
       expect(error.dataPath).to.equal('.contractId');
       expect(error.keyword).to.equal('maxLength');
+    });
+
+    it('should be base58 encoded', () => {
+      rawDataContract.contractId = '&'.repeat(44);
+
+      const result = validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('pattern');
+      expect(error.dataPath).to.equal('.contractId');
     });
   });
 
