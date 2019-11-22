@@ -408,7 +408,7 @@ describe('validateDocumentFactory', () => {
   });
 
   it('should return invalid result if a document contractId is not equal to Data Contract ID', () => {
-    rawDocument.$contractId = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
+    rawDocument.$contractId = 'GRBKRi26YRSPSnUgkSkJaVjZwWDnTZBJkFWNV2PC7ERY';
 
     const result = validateDocument(
       rawDocument,
