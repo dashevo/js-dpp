@@ -1,4 +1,5 @@
 const Identity = require('../../../../lib/identity/Identity');
+const IdentityPublicKey = require('../../../../lib/identity/IdentityPublicKey');
 
 const validateIdentityExistenceAndTypeFactory = require('../../../../lib/stateTransition/validation/validateIdentityExistenceAndTypeFactory');
 
@@ -32,7 +33,7 @@ describe('validateIdentityExistenceAndType', () => {
       publicKeys: [
         {
           id: 1,
-          type: 1,
+          type: IdentityPublicKey.TYPES.ECDSA_SECP256K1,
           publicKey: 'z3HAPrJkpgffXX0b3w0lb/PZs6A5IXzHj1p8Fnzmgmk=',
           isEnabled: true,
         },
