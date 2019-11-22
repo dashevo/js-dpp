@@ -1,6 +1,6 @@
 const rewiremock = require('rewiremock/node');
 
-const PublicKey = require('../../../../../lib/identity/PublicKey');
+const IdentityPublicKey = require('../../../../../lib/identity/IdentityPublicKey');
 
 const stateTransitionTypes = require(
   '../../../../../lib/stateTransition/stateTransitionTypes',
@@ -28,9 +28,7 @@ describe('IdentityCreateTransition', () => {
     };
 
     hashMock = this.sinonSandbox.stub();
-    hashMock.returns({
-      toString: () => 42,
-    });
+    hashMock.returns(Buffer.alloc(32));
 
     hashSignerMock = {
       signData: this.sinonSandbox.stub(),
@@ -64,7 +62,7 @@ describe('IdentityCreateTransition', () => {
         rawStateTransition.lockedOutPoint,
       );
       expect(stateTransition.publicKeys).to.deep.equal([
-        new PublicKey(rawStateTransition.publicKeys[0]),
+        new IdentityPublicKey(rawStateTransition.publicKeys[0]),
       ]);
     });
   });
@@ -83,15 +81,13 @@ describe('IdentityCreateTransition', () => {
 
     it('should set `identityId`', () => {
       hashMock.reset();
-      hashMock.returns({
-        toString: () => 42,
-      });
+      hashMock.returns(Buffer.alloc(32));
 
       stateTransition = new IdentityCreateTransition();
       stateTransition.setLockedOutPoint(Buffer.alloc(0).toString('base64'));
 
       expect(hashMock).to.have.been.calledOnceWith(Buffer.alloc(0));
-      expect(stateTransition.identityId).to.equal(42);
+      expect(stateTransition.identityId).to.equal('11111111111111111111111111111111');
     });
   });
 
@@ -118,7 +114,7 @@ describe('IdentityCreateTransition', () => {
 
   describe('#setPublicKeys', () => {
     it('should set public keys', () => {
-      const publicKeys = [new PublicKey(), new PublicKey()];
+      const publicKeys = [new IdentityPublicKey(), new IdentityPublicKey()];
 
       stateTransition.setPublicKeys(publicKeys);
 
@@ -129,14 +125,14 @@ describe('IdentityCreateTransition', () => {
   describe('#getPublicKeys', () => {
     it('should return set public keys', () => {
       expect(stateTransition.getPublicKeys()).to.deep.equal(
-        rawStateTransition.publicKeys.map(rawPublicKey => new PublicKey(rawPublicKey)),
+        rawStateTransition.publicKeys.map(rawPublicKey => new IdentityPublicKey(rawPublicKey)),
       );
     });
   });
 
   describe('#addPublicKeys', () => {
     it('should add more public keys', () => {
-      const publicKeys = [new PublicKey(), new PublicKey()];
+      const publicKeys = [new IdentityPublicKey(), new IdentityPublicKey()];
 
       stateTransition.publicKeys = [];
       stateTransition.addPublicKeys(publicKeys);
@@ -147,7 +143,7 @@ describe('IdentityCreateTransition', () => {
   describe('#getIdentityId', () => {
     it('should return set identity id', () => {
       expect(stateTransition.getIdentityId()).to.equal(
-        42,
+        '11111111111111111111111111111111',
       );
     });
   });
