@@ -24,9 +24,6 @@
     }
   ],
   "license": "MIT",
-  "publishConfig": {
-    "tag": "dev"
-  },
   "devDependencies": {
     "@babel/core": "^7.2.0",
     "@babel/polyfill": "^7.0.0",
