@@ -27,7 +27,7 @@ describe('StateTransitionFacade', () => {
 
   beforeEach(function beforeEach() {
     const privateKeyModel = new PrivateKey();
-    const privateKey = privateKeyModel.toBuffer().toString('base64');
+    const privateKey = privateKeyModel.toBuffer();
     const publicKey = privateKeyModel.toPublicKey().toBuffer().toString('base64');
 
     dataContract = getDataContractFixture();

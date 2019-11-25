@@ -51,7 +51,7 @@ describe('validateDocumentsSTDataFactory', () => {
     dataContract = getContractFixture();
 
     const privateKeyModel = new PrivateKey();
-    privateKey = privateKeyModel.toBuffer().toString('base64');
+    privateKey = privateKeyModel.toBuffer();
     const publicKey = privateKeyModel.toPublicKey().toBuffer().toString('base64');
 
     const publicKeyId = 1;

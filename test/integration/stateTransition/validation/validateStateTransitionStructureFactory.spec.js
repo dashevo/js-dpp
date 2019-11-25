@@ -63,7 +63,7 @@ describe('validateStateTransitionStructureFactory', () => {
 
     dataContract = getDataContractFixture();
 
-    privateKey = '9lA4LRDnVxY1MGQinh6DwlSRzugQf7BNgKEpCcl+HJM=';
+    privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
 
     rawStateTransition = {
       protocolVersion: 0,

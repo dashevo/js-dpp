@@ -151,9 +151,21 @@ describe('IdentityCreateTransition', () => {
 
   describe('#toJSON', () => {
     it('should return JSON representation of the object', () => {
-      const json = stateTransition.toJSON();
+      const jsonWithASig = stateTransition.toJSON();
 
-      expect(json).to.deep.equal({
+      expect(jsonWithASig).to.deep.equal({
+        protocolVersion: 0,
+        type: stateTransitionTypes.IDENTITY_CREATE,
+        identityType: Identity.TYPES.USER,
+        lockedOutPoint: rawStateTransition.lockedOutPoint,
+        publicKeys: rawStateTransition.publicKeys,
+        signature: null,
+        signaturePublicKeyId: null,
+      });
+
+      const jsonWithSig = stateTransition.toJSON({ skipSignature: true });
+
+      expect(jsonWithSig).to.deep.equal({
         protocolVersion: 0,
         type: stateTransitionTypes.IDENTITY_CREATE,
         identityType: Identity.TYPES.USER,

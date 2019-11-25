@@ -13,7 +13,7 @@ describe('AbstractStateTransition', () => {
 
   beforeEach(() => {
     const privateKeyModel = new PrivateKey();
-    privateKey = privateKeyModel.toBuffer().toString('base64');
+    privateKey = privateKeyModel.toBuffer().toString('hex');
     const publicKey = privateKeyModel.toPublicKey().toBuffer().toString('base64');
 
     stateTransition = new StateTransitionMock();
@@ -146,7 +146,7 @@ describe('AbstractStateTransition', () => {
   });
 
   it('should sign with only private key and validate with only public key', () => {
-    privateKey = '9lA4LRDnVxY1MGQinh6DwlSRzugQf7BNgKEpCcl+HJM=';
+    privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
 
     stateTransition.signByPrivateKey(privateKey);
 
@@ -156,8 +156,8 @@ describe('AbstractStateTransition', () => {
   });
 
   it('should validate sign by only public key', () => {
-    privateKey = '9lA4LRDnVxY1MGQinh6DwlSRzugQf7BNgKEpCcl+HJM=';
-    const publicKey = 'AuSUjdwroIhJE8onpM0SbIB/Q4EHWobKpwNGtVKRwBI2';
+    privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
+    const publicKey = 'A1eUrJ7lM6F1m6dbIyk+vXimKfzki+QRMHMwoAmggt6L';
 
     stateTransition.signByPrivateKey(privateKey);
 
@@ -167,7 +167,7 @@ describe('AbstractStateTransition', () => {
   });
 
   it('should return false if validate sign by only wrong public key', async () => {
-    privateKey = '9lA4LRDnVxY1MGQinh6DwlSRzugQf7BNgKEpCcl+HJM=';
+    privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
     const publicKey = 'wrongKey';
 
     stateTransition.signByPrivateKey(privateKey);
