@@ -1,3 +1,5 @@
+const generateRandomId = require('../../../../lib/test/utils/generateRandomId');
+
 const Identity = require('../../../../lib/identity/Identity');
 const IdentityPublicKey = require('../../../../lib/identity/IdentityPublicKey');
 
@@ -25,7 +27,7 @@ describe('validateIdentityExistenceAndType', () => {
       dataProviderMock,
     );
 
-    userId = 'GjMgC7bnVdMi8gLzUAtmG9PwHCtPi8zJrxKmXr6HQT6J';
+    userId = generateRandomId();
 
     rawIdentityUser = {
       id: userId,

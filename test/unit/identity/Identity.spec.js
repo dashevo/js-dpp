@@ -65,24 +65,10 @@ describe('Identity', () => {
     });
   });
 
-  describe('#setId', () => {
-    it('should set id', () => {
-      identity.setId(42);
-      expect(identity.id).to.equal(42);
-    });
-  });
-
   describe('#getType', () => {
     it('should return set identity type', () => {
       identity.type = 42;
       expect(identity.getType()).to.equal(42);
-    });
-  });
-
-  describe('#setType', () => {
-    it('should set identity type', () => {
-      identity.setType(42);
-      expect(identity.type).to.equal(42);
     });
   });
 

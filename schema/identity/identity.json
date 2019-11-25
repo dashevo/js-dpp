@@ -3,8 +3,8 @@
   "properties": {
     "id": {
       "type": "string",
-      "minLength": 32,
-      "maxLength": 46,
+      "minLength": 42,
+      "maxLength": 44,
       "pattern": "^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$"
     },
     "type": {

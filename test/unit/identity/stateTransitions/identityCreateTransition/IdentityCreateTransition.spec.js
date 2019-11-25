@@ -159,8 +159,6 @@ describe('IdentityCreateTransition', () => {
         identityType: Identity.TYPES.USER,
         lockedOutPoint: rawStateTransition.lockedOutPoint,
         publicKeys: rawStateTransition.publicKeys,
-        signaturePublicKeyId: null,
-        signature: null,
       });
     });
   });

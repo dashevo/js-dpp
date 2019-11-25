@@ -1,5 +1,4 @@
 const Ajv = require('ajv');
-const bs58 = require('bs58');
 
 const getIdentityFixture = require('../../../../lib/test/fixtures/getIdentityFixture');
 
@@ -82,8 +81,8 @@ describe('validateIdentityFactory', () => {
       expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
 
-    it('should not be less than 32 characters', () => {
-      rawIdentity.id = bs58.encode(Buffer.alloc(28));
+    it('should not be less than 42 characters', () => {
+      rawIdentity.id = '1'.repeat(41);
 
       const result = validateIdentity(rawIdentity);
 
@@ -98,8 +97,8 @@ describe('validateIdentityFactory', () => {
       expect(validateDuplicatePublicKeysMock).to.not.be.called();
     });
 
-    it('should not be more than 46 characters', () => {
-      rawIdentity.id = bs58.encode(Buffer.alloc(56));
+    it('should not be more than 44 characters', () => {
+      rawIdentity.id = '1'.repeat(45);
 
       const result = validateIdentity(rawIdentity);
 
