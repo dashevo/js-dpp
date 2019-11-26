@@ -24,7 +24,7 @@ const InvalidDocumentRevisionError = require('../../../../../lib/errors/InvalidD
 const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 const InvalidDocumentActionError = require('../../../../../lib/document/errors/InvalidDocumentActionError');
 const InvalidStateTransitionSignatureError = require('../../../../../lib/errors/InvalidStateTransitionSignatureError');
-const InvalidIdentityPublicKeyType = require('../../../../../lib/errors/InvalidIdentityPublicKeyType');
+const InvalidIdentityPublicKeyTypeError = require('../../../../../lib/errors/InvalidIdentityPublicKeyTypeError');
 
 const IdentityPublicKey = require('../../../../../lib/identity/IdentityPublicKey');
 
@@ -513,7 +513,7 @@ describe('validateDocumentsSTDataFactory', () => {
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.false();
 
-    expectValidationError(result, InvalidIdentityPublicKeyType);
+    expectValidationError(result, InvalidIdentityPublicKeyTypeError);
 
     const [error] = result.getErrors();
 

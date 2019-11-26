@@ -15,7 +15,7 @@ const ValidationResult = require('../../../../../lib/validation/ValidationResult
 const DataContractAlreadyPresentError = require('../../../../../lib/errors/DataContractAlreadyPresentError');
 const InvalidStateTransitionSignatureError = require('../../../../../lib/errors/InvalidStateTransitionSignatureError');
 const ConsensusError = require('../../../../../lib/errors/ConsensusError');
-const InvalidIdentityPublicKeyType = require('../../../../../lib/errors/InvalidIdentityPublicKeyType');
+const InvalidIdentityPublicKeyTypeError = require('../../../../../lib/errors/InvalidIdentityPublicKeyTypeError');
 
 const IdentityPublicKey = require('../../../../../lib/identity/IdentityPublicKey');
 
@@ -160,7 +160,7 @@ describe('validateDataContractSTDataFactory', () => {
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.false();
 
-    expectValidationError(result, InvalidIdentityPublicKeyType);
+    expectValidationError(result, InvalidIdentityPublicKeyTypeError);
 
     const [error] = result.getErrors();
 
