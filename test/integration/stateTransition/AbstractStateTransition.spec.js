@@ -7,13 +7,15 @@ const InvalidSignaturePublicKeyError = require('../../../lib/stateTransition/err
 
 describe('AbstractStateTransition', () => {
   let stateTransition;
-  let privateKey;
+  let privateKeyHex;
+  let privateKeyBuffer;
   let publicKeyId;
   let identityPublicKey;
 
   beforeEach(() => {
-    const privateKeyModel = new PrivateKey();
-    privateKey = privateKeyModel.toBuffer().toString('hex');
+    const privateKeyModel = new PrivateKey('68b2afb485924f37f9189d4ac7a06bf7a6face4247e4667f662e3158712998b2');
+    privateKeyBuffer = privateKeyModel.toBuffer();
+    privateKeyHex = privateKeyModel.toBuffer().toString('hex');
     const publicKey = privateKeyModel.toPublicKey().toBuffer().toString('base64');
 
     stateTransition = new StateTransitionMock();
@@ -44,8 +46,16 @@ describe('AbstractStateTransition', () => {
     });
   });
 
-  it('should sign data and validate signature', () => {
-    stateTransition.sign(identityPublicKey, privateKey);
+  it('should sign data and validate signature if private key is a hex string', () => {
+    stateTransition.sign(identityPublicKey, privateKeyHex);
+
+    const isValid = stateTransition.verifySignature(identityPublicKey);
+
+    expect(isValid).to.be.true();
+  });
+
+  it('should sign data and validate signature if private key is a buffer', () => {
+    stateTransition.sign(identityPublicKey, privateKeyBuffer);
 
     const isValid = stateTransition.verifySignature(identityPublicKey);
 
@@ -56,7 +66,7 @@ describe('AbstractStateTransition', () => {
     identityPublicKey.setType(30000);
 
     try {
-      stateTransition.sign(identityPublicKey, privateKey);
+      stateTransition.sign(identityPublicKey, privateKeyHex);
 
       expect.fail('Should throw InvalidSignatureTypeError');
     } catch (e) {
@@ -66,7 +76,7 @@ describe('AbstractStateTransition', () => {
   });
 
   it('should not verify signature with incorrect public key', () => {
-    stateTransition.sign(identityPublicKey, privateKey);
+    stateTransition.sign(identityPublicKey, privateKeyHex);
 
     identityPublicKey.setData('someKey');
 
@@ -76,7 +86,7 @@ describe('AbstractStateTransition', () => {
   });
 
   it('should not verify signature with wrong public key', () => {
-    stateTransition.sign(identityPublicKey, privateKey);
+    stateTransition.sign(identityPublicKey, privateKeyHex);
     const publicKey = new PrivateKey()
       .toPublicKey()
       .toBuffer()
@@ -114,7 +124,7 @@ describe('AbstractStateTransition', () => {
   });
 
   it('should return key ID', () => {
-    stateTransition.sign(identityPublicKey, privateKey);
+    stateTransition.sign(identityPublicKey, privateKeyHex);
 
     const keyId = stateTransition.getSignaturePublicKeyId();
 
@@ -136,7 +146,7 @@ describe('AbstractStateTransition', () => {
     identityPublicKey.setData(publicKey);
 
     try {
-      stateTransition.sign(identityPublicKey, privateKey);
+      stateTransition.sign(identityPublicKey, privateKeyHex);
 
       expect.fail('Should throw InvalidSignaturePublicKeyError');
     } catch (e) {
@@ -146,9 +156,9 @@ describe('AbstractStateTransition', () => {
   });
 
   it('should sign with only private key and validate with only public key', () => {
-    privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
+    privateKeyHex = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
 
-    stateTransition.signByPrivateKey(privateKey);
+    stateTransition.signByPrivateKey(privateKeyHex);
 
     const signature = stateTransition.getSignature();
 
@@ -156,10 +166,10 @@ describe('AbstractStateTransition', () => {
   });
 
   it('should validate sign by only public key', () => {
-    privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
+    privateKeyHex = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
     const publicKey = 'A1eUrJ7lM6F1m6dbIyk+vXimKfzki+QRMHMwoAmggt6L';
 
-    stateTransition.signByPrivateKey(privateKey);
+    stateTransition.signByPrivateKey(privateKeyHex);
 
     const isValid = stateTransition.verifySignatureByPublicKey(publicKey);
 
@@ -167,10 +177,10 @@ describe('AbstractStateTransition', () => {
   });
 
   it('should return false if validate sign by only wrong public key', async () => {
-    privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
+    privateKeyHex = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
     const publicKey = 'wrongKey';
 
-    stateTransition.signByPrivateKey(privateKey);
+    stateTransition.signByPrivateKey(privateKeyHex);
 
     const isValid = stateTransition.verifySignatureByPublicKey(publicKey);
 
