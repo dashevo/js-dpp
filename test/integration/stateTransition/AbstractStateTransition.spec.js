@@ -13,7 +13,7 @@ describe('AbstractStateTransition', () => {
   let identityPublicKey;
 
   beforeEach(() => {
-    const privateKeyModel = new PrivateKey('68b2afb485924f37f9189d4ac7a06bf7a6face4247e4667f662e3158712998b2');
+    const privateKeyModel = new PrivateKey();
     privateKeyBuffer = privateKeyModel.toBuffer();
     privateKeyHex = privateKeyModel.toBuffer().toString('hex');
     const publicKey = privateKeyModel.toPublicKey().toBuffer().toString('base64');
@@ -73,16 +73,6 @@ describe('AbstractStateTransition', () => {
       expect(e).to.be.instanceOf(InvalidSignatureTypeError);
       expect(e.getSignatureType()).to.be.equal(identityPublicKey.getType());
     }
-  });
-
-  it('should not verify signature with incorrect public key', () => {
-    stateTransition.sign(identityPublicKey, privateKeyHex);
-
-    identityPublicKey.setData('someKey');
-
-    const isValid = stateTransition.verifySignature(identityPublicKey);
-
-    expect(isValid).to.be.false();
   });
 
   it('should not verify signature with wrong public key', () => {
@@ -171,20 +161,9 @@ describe('AbstractStateTransition', () => {
 
     stateTransition.signByPrivateKey(privateKeyHex);
 
-    const isValid = stateTransition.verifySignatureByPublicKey(publicKey);
+    const isValid = stateTransition.verifySignatureByPublicKey(Buffer.from(publicKey, 'base64'));
 
     expect(isValid).to.be.true();
-  });
-
-  it('should return false if validate sign by only wrong public key', async () => {
-    privateKeyHex = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
-    const publicKey = 'wrongKey';
-
-    stateTransition.signByPrivateKey(privateKeyHex);
-
-    const isValid = stateTransition.verifySignatureByPublicKey(publicKey);
-
-    expect(isValid).to.be.false();
   });
 
   it('should set signature', () => {
