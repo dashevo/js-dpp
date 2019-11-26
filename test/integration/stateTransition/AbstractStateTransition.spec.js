@@ -65,16 +65,6 @@ describe('AbstractStateTransition', () => {
     }
   });
 
-  it('should not verify signature with incorrect public key', () => {
-    stateTransition.sign(identityPublicKey, privateKey);
-
-    identityPublicKey.setData('someKey');
-
-    const isValid = stateTransition.verifySignature(identityPublicKey);
-
-    expect(isValid).to.be.false();
-  });
-
   it('should not verify signature with wrong public key', () => {
     stateTransition.sign(identityPublicKey, privateKey);
     const publicKey = new PrivateKey()
@@ -161,20 +151,9 @@ describe('AbstractStateTransition', () => {
 
     stateTransition.signByPrivateKey(privateKey);
 
-    const isValid = stateTransition.verifySignatureByPublicKey(publicKey);
+    const isValid = stateTransition.verifySignatureByPublicKey(Buffer.from(publicKey, 'base64'));
 
     expect(isValid).to.be.true();
-  });
-
-  it('should return false if validate sign by only wrong public key', async () => {
-    privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
-    const publicKey = 'wrongKey';
-
-    stateTransition.signByPrivateKey(privateKey);
-
-    const isValid = stateTransition.verifySignatureByPublicKey(publicKey);
-
-    expect(isValid).to.be.false();
   });
 
   it('should set signature', () => {
