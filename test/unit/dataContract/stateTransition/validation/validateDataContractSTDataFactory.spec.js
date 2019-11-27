@@ -14,7 +14,6 @@ const ValidationResult = require('../../../../../lib/validation/ValidationResult
 
 const DataContractAlreadyPresentError = require('../../../../../lib/errors/DataContractAlreadyPresentError');
 const InvalidStateTransitionSignatureError = require('../../../../../lib/errors/InvalidStateTransitionSignatureError');
-const SignatureVerificationError = require('../../../../../lib/errors/SignatureVerificationError');
 const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 const InvalidIdentityPublicKeyType = require('../../../../../lib/errors/InvalidIdentityPublicKeyType');
 
@@ -141,20 +140,17 @@ describe('validateDataContractSTDataFactory', () => {
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.false();
 
-    expectValidationError(result, ConsensusError, 2);
+    expectValidationError(result);
 
-    const [firstError, secondError] = result.getErrors();
+    const [error] = result.getErrors();
 
     expect(dataProviderMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
     expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
       stateTransition.getSignaturePublicKeyId(),
     );
 
-    expect(firstError).to.be.an.instanceof(SignatureVerificationError);
-    expect(firstError.getSignature()).to.equal(stateTransition.signature);
-
-    expect(secondError).to.be.an.instanceof(InvalidStateTransitionSignatureError);
-    expect(secondError.getRawStateTransition()).to.equal(stateTransition);
+    expect(error).to.be.an.instanceof(InvalidStateTransitionSignatureError);
+    expect(error.getRawStateTransition()).to.equal(stateTransition);
   });
 
   it('should return invalid result if public key has wrong type', async () => {
