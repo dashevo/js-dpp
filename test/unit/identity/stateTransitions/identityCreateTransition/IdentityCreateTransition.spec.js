@@ -11,7 +11,7 @@ describe('IdentityCreateTransition', () => {
   let rawStateTransition;
   let stateTransition;
   let hashMock;
-  let hashSignerMock;
+  let signerMock;
   let IdentityCreateTransition;
 
   beforeEach(function beforeEach() {
@@ -31,9 +31,9 @@ describe('IdentityCreateTransition', () => {
     hashMock = this.sinonSandbox.stub();
     hashMock.returns(Buffer.alloc(32));
 
-    hashSignerMock = {
-      signData: this.sinonSandbox.stub(),
-      verifyDataSignature: this.sinonSandbox.stub(),
+    signerMock = {
+      sign: this.sinonSandbox.stub(),
+      verifySignature: this.sinonSandbox.stub(),
     };
 
     IdentityCreateTransition = rewiremock.proxy(
@@ -41,7 +41,7 @@ describe('IdentityCreateTransition', () => {
       {
         '../../../../../lib/util/hash': hashMock,
         '../../../../../node_modules/@dashevo/dashcore-lib': {
-          HashSigner: hashSignerMock,
+          Signer: signerMock,
         },
       },
     );
