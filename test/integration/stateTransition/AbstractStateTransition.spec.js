@@ -89,12 +89,6 @@ describe('AbstractStateTransition', () => {
     expect(isValid).to.be.false();
   });
 
-  it('should not verify signature before sign was made', () => {
-    const isValid = stateTransition.verifySignature(publicKeyId);
-
-    expect(isValid).to.be.false();
-  });
-
   it('should return serialized hash', () => {
     const hash = stateTransition.hash();
 
