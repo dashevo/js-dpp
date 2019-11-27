@@ -15,9 +15,6 @@
     },
     "publicKeys": {
       "type": "array",
-      "items": {
-        "$ref": "https://schema.dash.org/dpp-0-4-0/identity/public-key"
-      },
       "minItems": 1,
       "maxItems": 10
     }
