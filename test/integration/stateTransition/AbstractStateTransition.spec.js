@@ -4,6 +4,8 @@ const StateTransitionMock = require('../../../lib/test/mocks/StateTransitionMock
 const IdentityPublicKey = require('../../../lib/identity/IdentityPublicKey');
 const InvalidSignatureTypeError = require('../../../lib/stateTransition/errors/InvalidSignatureTypeError');
 const InvalidSignaturePublicKeyError = require('../../../lib/stateTransition/errors/InvalidSignaturePublicKeyError');
+const StateTransitionIsNotSignedError = require('../../../lib/stateTransition/errors/StateTransitionIsNotSignedError');
+const PublicKeyMismatchError = require('../../../lib/stateTransition/errors/PublicKeyMismatchError');
 
 describe('AbstractStateTransition', () => {
   let stateTransition;
@@ -89,6 +91,32 @@ describe('AbstractStateTransition', () => {
     expect(isValid).to.be.false();
   });
 
+  it('should throw an StateTransitionIsNotSignedError error if transition is not signed', () => {
+    try {
+      stateTransition.verifySignature(identityPublicKey);
+
+      expect.fail('should throw StateTransitionIsNotSignedError');
+    } catch (e) {
+      expect(e).to.be.instanceOf(StateTransitionIsNotSignedError);
+      expect(e.getStateTransition()).to.equal(stateTransition);
+    }
+  });
+
+  it('should throw an PublicKeyMismatchError error if public key id not equals public key id in state transition', () => {
+    stateTransition.sign(identityPublicKey, privateKeyHex);
+
+    identityPublicKey.setId(identityPublicKey.getId() + 1);
+
+    try {
+      stateTransition.verifySignature(identityPublicKey);
+
+      expect.fail('should throw PublicKeyMismatchError');
+    } catch (e) {
+      expect(e).to.be.instanceOf(PublicKeyMismatchError);
+      expect(e.getPublicKey()).to.equal(identityPublicKey);
+    }
+  });
+
   it('should return serialized hash', () => {
     const hash = stateTransition.hash();
 
@@ -158,6 +186,18 @@ describe('AbstractStateTransition', () => {
     const isValid = stateTransition.verifySignatureByPublicKey(Buffer.from(publicKey, 'base64'));
 
     expect(isValid).to.be.true();
+  });
+
+  it('should throw an StateTransitionIsNotSignedError error if transition is not signed', () => {
+    const publicKey = 'A1eUrJ7lM6F1m6dbIyk+vXimKfzki+QRMHMwoAmggt6L';
+    try {
+      stateTransition.verifySignatureByPublicKey(Buffer.from(publicKey, 'base64'));
+
+      expect.fail('should throw StateTransitionIsNotSignedError');
+    } catch (e) {
+      expect(e).to.be.instanceOf(StateTransitionIsNotSignedError);
+      expect(e.getStateTransition()).to.equal(stateTransition);
+    }
   });
 
   it('should set signature', () => {
