@@ -27,19 +27,19 @@ describe('validateIdentityCreateSTStructureFactory', () => {
   let rawStateTransition;
   let stateTransition;
   let validateIdentityTypeMock;
-  let validateDuplicatePublicKeysMock;
+  let validatePublicKeysMock;
 
   beforeEach(function beforeEach() {
     const ajv = new Ajv();
     const validator = new JsonSchemaValidator(ajv);
 
     validateIdentityTypeMock = this.sinonSandbox.stub().returns(new ValidationResult());
-    validateDuplicatePublicKeysMock = this.sinonSandbox.stub().returns(new ValidationResult());
+    validatePublicKeysMock = this.sinonSandbox.stub().returns(new ValidationResult());
 
     validateIdentityCreateST = validateIdentityCreateSTStructureFactory(
       validator,
       validateIdentityTypeMock,
-      validateDuplicatePublicKeysMock,
+      validatePublicKeysMock,
     );
 
     stateTransition = getIdentityCreateSTFixture();
@@ -62,7 +62,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       expect(error.keyword).to.equal('required');
 
       expect(validateIdentityTypeMock).to.not.be.called();
-      expect(validateDuplicatePublicKeysMock).to.not.be.called();
+      expect(validatePublicKeysMock).to.not.be.called();
     });
 
     it('should not be less than 48 characters in length', () => {
@@ -78,7 +78,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       expect(error.dataPath).to.equal('.lockedOutPoint');
 
       expect(validateIdentityTypeMock).to.not.be.called();
-      expect(validateDuplicatePublicKeysMock).to.not.be.called();
+      expect(validatePublicKeysMock).to.not.be.called();
     });
 
     it('should not be more than 48 characters in length', () => {
@@ -94,7 +94,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       expect(error.dataPath).to.equal('.lockedOutPoint');
 
       expect(validateIdentityTypeMock).to.not.be.called();
-      expect(validateDuplicatePublicKeysMock).to.not.be.called();
+      expect(validatePublicKeysMock).to.not.be.called();
     });
 
     it('should be base64 encoded', () => {
@@ -110,7 +110,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       expect(error.dataPath).to.equal('.lockedOutPoint');
 
       expect(validateIdentityTypeMock).to.not.be.called();
-      expect(validateDuplicatePublicKeysMock).to.not.be.called();
+      expect(validatePublicKeysMock).to.not.be.called();
     });
   });
 
@@ -129,7 +129,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       expect(error.keyword).to.equal('required');
 
       expect(validateIdentityTypeMock).to.not.be.called();
-      expect(validateDuplicatePublicKeysMock).to.not.be.called();
+      expect(validatePublicKeysMock).to.not.be.called();
     });
 
     it('should be an integer', () => {
@@ -145,7 +145,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       expect(error.dataPath).to.equal('.type');
 
       expect(validateIdentityTypeMock).to.not.be.called();
-      expect(validateDuplicatePublicKeysMock).to.not.be.called();
+      expect(validatePublicKeysMock).to.not.be.called();
     });
 
     it('should not be less than 0', () => {
@@ -161,7 +161,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       expect(error.dataPath).to.equal('.type');
 
       expect(validateIdentityTypeMock).to.not.be.called();
-      expect(validateDuplicatePublicKeysMock).to.not.be.called();
+      expect(validatePublicKeysMock).to.not.be.called();
     });
 
     it('should not be more than 65535', () => {
@@ -177,7 +177,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       expect(error.dataPath).to.equal('.type');
 
       expect(validateIdentityTypeMock).to.not.be.called();
-      expect(validateDuplicatePublicKeysMock).to.not.be.called();
+      expect(validatePublicKeysMock).to.not.be.called();
     });
   });
 
@@ -196,7 +196,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       expect(error.keyword).to.equal('required');
 
       expect(validateIdentityTypeMock).to.not.be.called();
-      expect(validateDuplicatePublicKeysMock).to.not.be.called();
+      expect(validatePublicKeysMock).to.not.be.called();
     });
 
     it('should not be empty', () => {
@@ -212,7 +212,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       expect(error.dataPath).to.equal('.publicKeys');
 
       expect(validateIdentityTypeMock).to.not.be.called();
-      expect(validateDuplicatePublicKeysMock).to.not.be.called();
+      expect(validatePublicKeysMock).to.not.be.called();
     });
 
     it('should not have more than 10 items', () => {
@@ -232,245 +232,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       expect(error.dataPath).to.equal('.publicKeys');
 
       expect(validateIdentityTypeMock).to.not.be.called();
-      expect(validateDuplicatePublicKeysMock).to.not.be.called();
-    });
-
-    describe('publicKey', () => {
-      describe('id', () => {
-        it('should be present', () => {
-          delete rawStateTransition.publicKeys[0].id;
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.publicKeys[0]');
-          expect(error.params.missingProperty).to.equal('id');
-          expect(error.keyword).to.equal('required');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-
-        it('should be a number', () => {
-          rawStateTransition.publicKeys[0].id = 'abc';
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.publicKeys[0].id');
-          expect(error.keyword).to.equal('type');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-
-        it('should be an integer', () => {
-          rawStateTransition.publicKeys[0].id = 1.2;
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.keyword).to.equal('multipleOf');
-          expect(error.dataPath).to.equal('.publicKeys[0].id');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-
-        it('should be greater than 0', () => {
-          rawStateTransition.publicKeys[0].id = -1;
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.keyword).to.equal('minimum');
-          expect(error.dataPath).to.equal('.publicKeys[0].id');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-      });
-
-      describe('type', () => {
-        it('should be present', () => {
-          delete rawStateTransition.publicKeys[0].type;
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.publicKeys[0]');
-          expect(error.params.missingProperty).to.equal('type');
-          expect(error.keyword).to.equal('required');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-
-        it('should be a number', () => {
-          rawStateTransition.publicKeys[0].type = 'abc';
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.publicKeys[0].type');
-          expect(error.keyword).to.equal('type');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-
-        it('should be a part of enum', () => {
-          rawStateTransition.publicKeys[0].type = 2;
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.publicKeys[0].type');
-          expect(error.keyword).to.equal('enum');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-      });
-
-      describe('data', () => {
-        it('should be present', () => {
-          delete rawStateTransition.publicKeys[0].data;
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.publicKeys[0]');
-          expect(error.params.missingProperty).to.equal('data');
-          expect(error.keyword).to.equal('required');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-
-        it('should be a string', () => {
-          rawStateTransition.publicKeys[0].data = 1;
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.publicKeys[0].data');
-          expect(error.keyword).to.equal('type');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-
-        it('should be longer than 0', () => {
-          rawStateTransition.publicKeys[0].data = '';
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.publicKeys[0].data');
-          expect(error.keyword).to.equal('minLength');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-
-        it('should be shorter than 2048', () => {
-          rawStateTransition.publicKeys[0].data = '1'.repeat(2049);
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.publicKeys[0].data');
-          expect(error.keyword).to.equal('maxLength');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-
-        it('should be base64 encoded', () => {
-          rawStateTransition.publicKeys[0].data = '12345cxzcijsn';
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.publicKeys[0].data');
-          expect(error.keyword).to.equal('pattern');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-      });
-
-      describe('isEnabled', () => {
-        it('should be present', () => {
-          delete rawStateTransition.publicKeys[0].isEnabled;
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.publicKeys[0]');
-          expect(error.params.missingProperty).to.equal('isEnabled');
-          expect(error.keyword).to.equal('required');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-
-        it('should be a boolean', () => {
-          rawStateTransition.publicKeys[0].isEnabled = 'abc';
-
-          const result = validateIdentityCreateST(rawStateTransition);
-
-          expectJsonSchemaError(result);
-
-          const [error] = result.getErrors();
-
-          expect(error.dataPath).to.equal('.publicKeys[0].isEnabled');
-          expect(error.keyword).to.equal('type');
-
-          expect(validateIdentityTypeMock).to.not.be.called();
-          expect(validateDuplicatePublicKeysMock).to.not.be.called();
-        });
-      });
+      expect(validatePublicKeysMock).to.not.be.called();
     });
   });
 
@@ -488,7 +250,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     expect(error).to.equal(consensusError);
 
     expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(rawStateTransition.identityType);
-    expect(validateDuplicatePublicKeysMock).to.be.calledOnceWithExactly(
+    expect(validatePublicKeysMock).to.be.calledOnceWithExactly(
       rawStateTransition.publicKeys,
     );
   });
@@ -496,7 +258,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
   it('should return invalid result if identity type is unknown', () => {
     const consensusError = new ConsensusError('error');
 
-    validateDuplicatePublicKeysMock.returns(new ValidationResult([consensusError]));
+    validatePublicKeysMock.returns(new ValidationResult([consensusError]));
 
     const result = validateIdentityCreateST(rawStateTransition);
 
@@ -507,7 +269,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     expect(error).to.equal(consensusError);
 
     expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(rawStateTransition.identityType);
-    expect(validateDuplicatePublicKeysMock).to.be.calledOnceWithExactly(
+    expect(validatePublicKeysMock).to.be.calledOnceWithExactly(
       rawStateTransition.publicKeys,
     );
   });
@@ -518,7 +280,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     expect(result.isValid()).to.be.true();
 
     expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(rawStateTransition.identityType);
-    expect(validateDuplicatePublicKeysMock).to.be.calledOnceWithExactly(
+    expect(validatePublicKeysMock).to.be.calledOnceWithExactly(
       rawStateTransition.publicKeys,
     );
   });
@@ -529,7 +291,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     expect(result.isValid()).to.be.true();
 
     expect(validateIdentityTypeMock).to.be.calledOnceWithExactly(rawStateTransition.identityType);
-    expect(validateDuplicatePublicKeysMock).to.be.calledOnceWithExactly(
+    expect(validatePublicKeysMock).to.be.calledOnceWithExactly(
       rawStateTransition.publicKeys,
     );
   });
