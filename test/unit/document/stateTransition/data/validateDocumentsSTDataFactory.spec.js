@@ -473,27 +473,6 @@ describe('validateDocumentsSTDataFactory', () => {
 
     const result = await validateDocumentsSTData(stateTransition);
 
-    expect(result).to.be.an.instanceOf(ValidationResult);
-    expect(result.isValid()).to.be.false();
-
-    expectValidationError(result, InvalidStateTransitionSignatureError);
-
-    const [error] = result.getErrors();
-
-    expect(error.getRawStateTransition()).to.equal(stateTransition);
-    expect(rawIdentity.getPublicKeyById).to.be.calledOnceWithExactly(
-      stateTransition.getSignaturePublicKeyId(),
-    );
-  });
-
-  it('should return invalid result if state transition is not signed', async () => {
-    stateTransition = new DocumentsStateTransition(documents);
-
-    const result = await validateDocumentsSTData(stateTransition);
-
-    expect(result).to.be.an.instanceOf(ValidationResult);
-    expect(result.isValid()).to.be.false();
-
     expectValidationError(result, InvalidStateTransitionSignatureError);
 
     const [error] = result.getErrors();

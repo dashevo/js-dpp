@@ -207,27 +207,12 @@ describe('validateStateTransitionStructureFactory', () => {
     });
 
     describe('signaturePublicKeyId', () => {
-      it('should fail if not integer', async () => {
+      it('should be an integer', async () => {
         rawStateTransition.signaturePublicKeyId = 1.4;
 
         const result = await validateStateTransitionStructure(rawStateTransition);
 
-        expectJsonSchemaError(result, 3);
-
-        const [error] = result.getErrors();
-
-        expect(error.dataPath).to.equal('.signaturePublicKeyId');
-        expect(error.keyword).to.equal('multipleOf');
-
-        expect(extensionFunctionMock).to.not.be.called();
-      });
-
-      it('should fail if not number', async () => {
-        rawStateTransition.signaturePublicKeyId = 'aaaaa';
-
-        const result = await validateStateTransitionStructure(rawStateTransition);
-
-        expectJsonSchemaError(result, 3);
+        expectJsonSchemaError(result, 1);
 
         const [error] = result.getErrors();
 
@@ -237,12 +222,27 @@ describe('validateStateTransitionStructureFactory', () => {
         expect(extensionFunctionMock).to.not.be.called();
       });
 
+      it('should be a nullable', async () => {
+        const extensionResult = new ValidationResult();
+
+        extensionFunctionMock.returns(extensionResult);
+
+        rawStateTransition.signaturePublicKeyId = null;
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expect(result).to.be.an.instanceOf(ValidationResult);
+        expect(result.isValid()).to.be.true();
+
+        expect(extensionFunctionMock).to.be.calledOnceWith(rawStateTransition);
+      });
+
       it('should not be < 1', async () => {
         rawStateTransition.signaturePublicKeyId = 0;
 
         const result = await validateStateTransitionStructure(rawStateTransition);
 
-        expectJsonSchemaError(result, 3);
+        expectJsonSchemaError(result, 1);
 
         const [error] = result.getErrors();
 
