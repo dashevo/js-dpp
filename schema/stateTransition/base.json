@@ -11,7 +11,7 @@
     },
     "signaturePublicKeyId": [
       "integer",
-      null
+      "null"
     ],
     "signature": {
       "type": "string",
