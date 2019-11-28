@@ -9,18 +9,10 @@
       "type": "number",
       "enum": [1, 2]
     },
-    "signaturePublicKeyId": {
-      "anyOf": [
-        {
-          "type": "number",
-          "multipleOf": 1.0,
-          "minimum": 1
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
+    "signaturePublicKeyId": [
+      "integer",
+      null
+    ],
     "signature": {
       "type": "string",
       "minLength": 86,
