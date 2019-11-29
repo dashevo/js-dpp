@@ -28,18 +28,6 @@ describe('validateDataContractSTDataFactory', () => {
       new ValidationResult(),
     );
 
-    rawIdentity = {
-      id: 'iTYF+bWBA4MYRURcsBpBkgfwiqV7sYVnTDPR4uQ/KLU=',
-      identityType: Identity.TYPES.APPLICATION,
-      publicKeys: [
-        {
-          id: 1,
-          publicKey: 'z3HAPrJkpgffXX0b3w0lb/PZs6A5IXzHj1p8Fnzmgmk=',
-          isEnabled: true,
-        },
-      ],
-    };
-
     dataContract = getDataContractFixture();
     stateTransition = new DataContractStateTransition(dataContract);
 
@@ -68,6 +56,7 @@ describe('validateDataContractSTDataFactory', () => {
       dataContract.getId(), [Identity.TYPES.APPLICATION],
     );
     expect(dataProviderMock.fetchDataContract).to.not.be.called();
+    expect(dataProviderMock.fetchIdentity).to.not.be.called();
   });
 
   it('should return invalid result if Data Contract with specified contractId is already exist', async () => {

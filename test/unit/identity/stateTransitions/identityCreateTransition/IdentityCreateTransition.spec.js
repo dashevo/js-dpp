@@ -11,7 +11,7 @@ describe('IdentityCreateTransition', () => {
   let rawStateTransition;
   let stateTransition;
   let hashMock;
-  let hashSignerMock;
+  let signerMock;
   let IdentityCreateTransition;
 
   beforeEach(function beforeEach() {
@@ -31,9 +31,9 @@ describe('IdentityCreateTransition', () => {
     hashMock = this.sinonSandbox.stub();
     hashMock.returns(Buffer.alloc(32));
 
-    hashSignerMock = {
-      signData: this.sinonSandbox.stub(),
-      verifyDataSignature: this.sinonSandbox.stub(),
+    signerMock = {
+      sign: this.sinonSandbox.stub(),
+      verifySignature: this.sinonSandbox.stub(),
     };
 
     IdentityCreateTransition = rewiremock.proxy(
@@ -41,7 +41,7 @@ describe('IdentityCreateTransition', () => {
       {
         '../../../../../lib/util/hash': hashMock,
         '../../../../../node_modules/@dashevo/dashcore-lib': {
-          HashSigner: hashSignerMock,
+          Signer: signerMock,
         },
       },
     );
@@ -151,9 +151,21 @@ describe('IdentityCreateTransition', () => {
 
   describe('#toJSON', () => {
     it('should return JSON representation of the object', () => {
-      const json = stateTransition.toJSON();
+      const jsonWithASig = stateTransition.toJSON();
 
-      expect(json).to.deep.equal({
+      expect(jsonWithASig).to.deep.equal({
+        protocolVersion: 0,
+        type: stateTransitionTypes.IDENTITY_CREATE,
+        identityType: Identity.TYPES.USER,
+        lockedOutPoint: rawStateTransition.lockedOutPoint,
+        publicKeys: rawStateTransition.publicKeys,
+        signature: null,
+        signaturePublicKeyId: null,
+      });
+
+      const jsonWithSig = stateTransition.toJSON({ skipSignature: true });
+
+      expect(jsonWithSig).to.deep.equal({
         protocolVersion: 0,
         type: stateTransitionTypes.IDENTITY_CREATE,
         identityType: Identity.TYPES.USER,

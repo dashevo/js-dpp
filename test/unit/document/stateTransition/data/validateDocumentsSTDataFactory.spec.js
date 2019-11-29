@@ -297,8 +297,6 @@ describe('validateDocumentsSTDataFactory', () => {
       documents,
       dataContract,
     );
-
-    expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
   it('should return invalid result if data triggers execution failed', async () => {
@@ -369,7 +367,6 @@ describe('validateDocumentsSTDataFactory', () => {
     executeDataTriggersMock.resolves([
       new DataTriggerExecutionResult(),
     ]);
-
 
     const result = await validateDocumentsSTData(stateTransition);
 

@@ -1,6 +1,6 @@
 {
   "name": "@dashevo/dpp",
-  "version": "0.10.0-dev.1",
+  "version": "0.10.0-dev.2",
   "description": "The JavaScript implementation of the Dash Platform Protocol",
   "scripts": {
     "lint": "eslint .",
@@ -53,10 +53,10 @@
     "sinon": "^7.2.7",
     "sinon-chai": "^3.2.0",
     "webpack": "^4.27.1",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "@dashevo/dashcore-lib": "^0.17.11",
+    "@dashevo/dashcore-lib": "0.18.0",
     "ajv": "^6.5.4",
     "bs58": "^4.0.1",
     "cbor": "^4.1.1",
