@@ -10,16 +10,8 @@
       "enum": [1, 2]
     },
     "signaturePublicKeyId": {
-      "anyOf": [
-        {
-          "type": "number",
-          "multipleOf": 1.0,
-          "minimum": 1
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "type": ["integer", "null"],
+      "minimum": 1
     },
     "signature": {
       "type": "string",
