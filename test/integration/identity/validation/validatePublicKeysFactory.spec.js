@@ -22,16 +22,9 @@ const DuplicatedIdentityPublicKeyIdError = require(
   '../../../../lib/errors/DuplicatedIdentityPublicKeyIdError',
 );
 
-const InvalidIdentityPublicKeyTypeError = require(
-  '../../../../lib/errors/InvalidIdentityPublicKeyTypeError',
-);
 const InvalidIdentityPublicKeyDataError = require(
   '../../../../lib/errors/InvalidIdentityPublicKeyDataError',
 );
-
-const ConsensusError = require('../../../../lib/errors/ConsensusError');
-
-const JsonSchemaError = require('../../../../lib/errors/JsonSchemaError');
 
 describe('validatePublicKeysFactory', () => {
   let publicKeys;
@@ -108,7 +101,7 @@ describe('validatePublicKeysFactory', () => {
 
       const result = validatePublicKeys(publicKeys);
 
-      expectValidationError(result, ConsensusError, 2);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
@@ -122,7 +115,7 @@ describe('validatePublicKeysFactory', () => {
 
       const result = validatePublicKeys(publicKeys);
 
-      expectValidationError(result, ConsensusError, 2);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
@@ -164,7 +157,7 @@ describe('validatePublicKeysFactory', () => {
 
       const result = validatePublicKeys(publicKeys);
 
-      expectValidationError(result, ConsensusError, 2);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
@@ -177,7 +170,7 @@ describe('validatePublicKeysFactory', () => {
 
       const result = validatePublicKeys(publicKeys);
 
-      expectValidationError(result, ConsensusError, 2);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
@@ -190,7 +183,7 @@ describe('validatePublicKeysFactory', () => {
 
       const result = validatePublicKeys(publicKeys);
 
-      expectValidationError(result, ConsensusError, 2);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
@@ -250,24 +243,6 @@ describe('validatePublicKeysFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.getRawPublicKeys()).to.equal(publicKeys);
-  });
-
-  it('should return invalid result if key type is not ECDSA', () => {
-    publicKeys[1].type = 2;
-
-    const result = validatePublicKeys(publicKeys);
-
-    expectValidationError(result, ConsensusError, 2);
-
-    const [schemaError, validationError] = result.getErrors();
-
-    expect(schemaError.keyword).to.equal('enum');
-    expect(schemaError.dataPath).to.equal('.type');
-
-    expect(schemaError).to.be.an.instanceOf(JsonSchemaError);
-
-    expect(validationError).to.be.an.instanceOf(InvalidIdentityPublicKeyTypeError);
-    expect(validationError.getType()).to.equal(2);
   });
 
   it('should return invalid result if key data is not a valid DER', () => {
