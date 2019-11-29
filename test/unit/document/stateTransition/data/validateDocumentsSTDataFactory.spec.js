@@ -35,7 +35,6 @@ describe('validateDocumentsSTDataFactory', () => {
   let executeDataTriggersMock;
   let fetchAndValidateDataContractMock;
 
-
   beforeEach(function beforeEach() {
     ({ userId } = getDocumentsFixture);
 
