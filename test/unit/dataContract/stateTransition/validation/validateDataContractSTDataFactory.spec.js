@@ -18,7 +18,6 @@ describe('validateDataContractSTDataFactory', () => {
   let dataContract;
   let stateTransition;
   let dataProviderMock;
-  let rawIdentity;
   let validateIdentityExistenceAndTypeMock;
 
   beforeEach(function beforeEach() {
@@ -56,11 +55,9 @@ describe('validateDataContractSTDataFactory', () => {
       dataContract.getId(), [Identity.TYPES.APPLICATION],
     );
     expect(dataProviderMock.fetchDataContract).to.not.be.called();
-    expect(dataProviderMock.fetchIdentity).to.not.be.called();
   });
 
   it('should return invalid result if Data Contract with specified contractId is already exist', async () => {
-    dataProviderMock.fetchIdentity.resolves(rawIdentity);
     dataProviderMock.fetchDataContract.resolves(dataContract);
 
     const result = await validateDataContractSTData(stateTransition);
@@ -78,8 +75,6 @@ describe('validateDataContractSTDataFactory', () => {
   });
 
   it('should return valid result', async () => {
-    dataProviderMock.fetchIdentity.resolves(rawIdentity);
-
     const result = await validateDataContractSTData(stateTransition);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
