@@ -29,21 +29,29 @@ describe('StateTransitionFacade', () => {
     const privateKeyModel = new PrivateKey();
     const privateKey = privateKeyModel.toBuffer();
     const publicKey = privateKeyModel.toPublicKey().toBuffer().toString('base64');
+    const publicKeyId = 1;
+
+    identityPublicKey = new IdentityPublicKey()
+      .setId(publicKeyId)
+      .setType(IdentityPublicKey.TYPES.ECDSA_SECP256K1)
+      .setData(publicKey);
 
     dataContract = getDataContractFixture();
     dataContractStateTransition = new DataContractStateTransition(dataContract);
-    dataContractStateTransition.signByPrivateKey(privateKey);
-
-    identityPublicKey = new IdentityPublicKey()
-      .setId(1)
-      .setType(IdentityPublicKey.TYPES.ECDSA_SECP256K1)
-      .setData(publicKey);
+    dataContractStateTransition.sign(identityPublicKey, privateKey);
 
     const documents = getDocumentsFixture();
     documentsStateTransition = new DocumentsStateTransition(documents);
     documentsStateTransition.sign(identityPublicKey, privateKey);
 
+    const getPublicKeyById = this.sinonSandbox.stub().returns(identityPublicKey);
+
+    const identity = {
+      getPublicKeyById,
+    };
+
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
+    dataProviderMock.fetchIdentity.resolves(identity);
 
     dpp = new DashPlatformProtocol({
       dataProvider: dataProviderMock,
@@ -146,7 +154,6 @@ describe('StateTransitionFacade', () => {
 
     it('should validate Documents ST structure and data', async function it() {
       dataProviderMock.fetchDocuments.resolves([]);
-
 
       dataProviderMock.fetchDataContract.resolves(dataContract);
       dataProviderMock.fetchIdentity.resolves({
