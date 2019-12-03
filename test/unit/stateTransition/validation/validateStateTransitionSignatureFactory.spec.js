@@ -110,4 +110,25 @@ describe('validateStateTransitionSignatureFactory', () => {
     expect(stateTransition.getSignaturePublicKeyId).to.be.calledOnce();
     expect(stateTransition.verifySignature).to.be.calledOnceWithExactly(identityPublicKey);
   });
+
+  it('should return proper result if identity is not found', async () => {
+    dataProviderMock.fetchIdentity.resolves(null);
+
+    const result = await validateStateTransitionSignature(
+      stateTransition,
+      userId,
+    );
+
+    expect(result).to.be.instanceOf(ValidationResult);
+
+    expect(result.isValid()).to.be.true();
+    expect(result.getErrors()).to.be.an('array');
+    expect(result.getErrors()).to.be.empty();
+
+    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(userId);
+    expect(identity.getPublicKeyById).to.be.not.called();
+    expect(identityPublicKey.getType).to.be.not.called();
+    expect(stateTransition.getSignaturePublicKeyId).to.be.not.called();
+    expect(stateTransition.verifySignature).to.be.not.called();
+  });
 });
