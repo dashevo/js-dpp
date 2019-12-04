@@ -125,7 +125,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.dataPath).to.equal('');
-      expect(error.params.missingProperty).to.equal('.identityType');
+      expect(error.params.missingProperty).to.equal('identityType');
       expect(error.keyword).to.equal('required');
 
       expect(validateIdentityTypeMock).to.not.be.called();
@@ -133,7 +133,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
     });
 
     it('should be an integer', () => {
-      rawStateTransition.type = 1.2;
+      rawStateTransition.identityType = 1.2;
 
       const result = validateIdentityCreateST(rawStateTransition);
 
@@ -142,14 +142,14 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('multipleOf');
-      expect(error.dataPath).to.equal('.type');
+      expect(error.dataPath).to.equal('.identityType');
 
       expect(validateIdentityTypeMock).to.not.be.called();
       expect(validatePublicKeysMock).to.not.be.called();
     });
 
     it('should not be less than 0', () => {
-      rawStateTransition.type = -1;
+      rawStateTransition.identityType = -1;
 
       const result = validateIdentityCreateST(rawStateTransition);
 
@@ -158,14 +158,14 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('minimum');
-      expect(error.dataPath).to.equal('.type');
+      expect(error.dataPath).to.equal('.identityType');
 
       expect(validateIdentityTypeMock).to.not.be.called();
       expect(validatePublicKeysMock).to.not.be.called();
     });
 
     it('should not be more than 65535', () => {
-      rawStateTransition.type = 100000;
+      rawStateTransition.identityType = 100000;
 
       const result = validateIdentityCreateST(rawStateTransition);
 
@@ -174,7 +174,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('maximum');
-      expect(error.dataPath).to.equal('.type');
+      expect(error.dataPath).to.equal('.identityType');
 
       expect(validateIdentityTypeMock).to.not.be.called();
       expect(validatePublicKeysMock).to.not.be.called();
