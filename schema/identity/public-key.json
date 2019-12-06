@@ -6,7 +6,7 @@
     "id": {
       "type": "number",
       "multipleOf": 1.0,
-      "minimum": 0
+      "minimum": 1
     },
     "type": {
       "type": "number",
