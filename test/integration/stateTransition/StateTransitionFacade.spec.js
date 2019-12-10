@@ -48,6 +48,7 @@ describe('StateTransitionFacade', () => {
 
     const identity = {
       getPublicKeyById,
+      type: 2,
     };
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
@@ -146,7 +147,7 @@ describe('StateTransitionFacade', () => {
       );
 
       expect(result).to.be.an.instanceOf(ValidationResult);
-      expect(result.isValid()).to.be.false();
+      expect(result.isValid()).to.be.true();
 
       expect(validateStructureSpy).to.be.calledOnceWith(dataContractStateTransition);
       expect(validateDataSpy).to.be.calledOnceWith(dataContractStateTransition);
@@ -231,7 +232,7 @@ describe('StateTransitionFacade', () => {
       );
 
       expect(result).to.be.an.instanceOf(ValidationResult);
-      expect(result.isValid()).to.be.false();
+      expect(result.isValid()).to.be.true();
     });
   });
 });

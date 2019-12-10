@@ -42,7 +42,7 @@ describe('IdentityFacade', () => {
   });
 
   describe('#createFromSerialized', () => {
-    it('should create Document from string', () => {
+    it('should create Identity from string', () => {
       const result = dpp.identity.createFromSerialized(identity.serialize());
 
       expect(result).to.be.an.instanceOf(Identity);

@@ -18,6 +18,8 @@ const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 const STContainsDocumentsForDifferentDataContractsError = require('../../../../../lib/errors/STContainsDocumentsForDifferentDataContractsError');
 const InvalidIdentityPublicKeyTypeError = require('../../../../../lib/errors/InvalidIdentityPublicKeyTypeError');
 
+const Identity = require('../../../../../lib/identity/Identity');
+
 describe('validateDocumentsSTStructureFactory', () => {
   let dataContract;
   let documents;
@@ -30,6 +32,7 @@ describe('validateDocumentsSTStructureFactory', () => {
   let stateTransition;
   let validateStateTransitionSignatureMock;
   let userId;
+  let validateIdentityExistenceAndTypeMock;
 
   beforeEach(function beforeEach() {
     dataContract = getContractFixture();
@@ -54,13 +57,40 @@ describe('validateDocumentsSTStructureFactory', () => {
 
     ([{ userId }] = documents);
 
+    validateIdentityExistenceAndTypeMock = this.sinonSandbox.stub().resolves(
+      new ValidationResult(),
+    );
+
     validateDocumentsSTStructure = validateDocumentsSTStructureFactory(
       validateDocumentMock,
       findDuplicateDocumentsByIdMock,
       findDuplicateDocumentsByIndicesMock,
       fetchAndValidateDataContractMock,
       validateStateTransitionSignatureMock,
+      validateIdentityExistenceAndTypeMock,
     );
+  });
+
+  it('should return invalid result if userId is not valid', async () => {
+    const userError = new ConsensusError('error');
+
+    validateIdentityExistenceAndTypeMock.resolves(new ValidationResult([userError]));
+
+    const result = await validateDocumentsSTStructure(rawStateTransition);
+
+    expectValidationError(result);
+
+    const [error] = result.getErrors();
+
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
+      userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
+    );
+
+    expect(error).to.equal(userError);
+
+    expect(findDuplicateDocumentsByIdMock).to.be.called(documents);
+    expect(findDuplicateDocumentsByIndicesMock).to.be.calledOnceWith(documents, dataContract);
+    expect(validateStateTransitionSignatureMock).to.be.not.called(stateTransition, userId);
   });
 
   it('should return invalid result if actions and documents count are not equal', async () => {
@@ -78,6 +108,7 @@ describe('validateDocumentsSTStructureFactory', () => {
     expect(findDuplicateDocumentsByIdMock).to.not.be.called();
     expect(findDuplicateDocumentsByIndicesMock).to.not.be.called();
     expect(validateStateTransitionSignatureMock).to.not.be.called();
+    expect(validateIdentityExistenceAndTypeMock).to.not.be.called();
   });
 
   it('should return invalid result if there are documents with different $contractId', async () => {
@@ -103,6 +134,7 @@ describe('validateDocumentsSTStructureFactory', () => {
     expect(findDuplicateDocumentsByIdMock).to.not.be.called();
     expect(findDuplicateDocumentsByIndicesMock).to.not.be.called();
     expect(validateStateTransitionSignatureMock).to.not.be.called();
+    expect(validateIdentityExistenceAndTypeMock).to.not.be.called();
   });
 
   it('should return invalid result if Documents are invalid', async () => {
@@ -126,6 +158,7 @@ describe('validateDocumentsSTStructureFactory', () => {
     expect(findDuplicateDocumentsByIdMock).to.not.be.called();
     expect(findDuplicateDocumentsByIndicesMock).to.not.be.called();
     expect(validateStateTransitionSignatureMock).to.not.be.called();
+    expect(validateIdentityExistenceAndTypeMock).to.not.be.called();
   });
 
   it('should return invalid result if Documents are invalid', async () => {
@@ -157,6 +190,7 @@ describe('validateDocumentsSTStructureFactory', () => {
     expect(findDuplicateDocumentsByIdMock).to.not.be.called();
     expect(findDuplicateDocumentsByIndicesMock).to.not.be.called();
     expect(validateStateTransitionSignatureMock).to.not.be.called();
+    expect(validateIdentityExistenceAndTypeMock).to.not.be.called();
   });
 
   it('should return invalid result if there are duplicate Documents with the same ID', async () => {
@@ -185,7 +219,10 @@ describe('validateDocumentsSTStructureFactory', () => {
 
     expect(findDuplicateDocumentsByIdMock).to.be.called(documents);
     expect(findDuplicateDocumentsByIndicesMock).to.be.calledOnceWith(documents, dataContract);
-    expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(stateTransition, userId);
+    expect(validateStateTransitionSignatureMock).to.be.not.called(stateTransition, userId);
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWith(
+      userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
+    );
   });
 
   it('should return invalid result if there are duplicate unique index values', async () => {
@@ -214,7 +251,10 @@ describe('validateDocumentsSTStructureFactory', () => {
 
     expect(findDuplicateDocumentsByIdMock).to.have.been.calledOnceWith(documents);
     expect(findDuplicateDocumentsByIndicesMock).to.be.calledOnceWith(documents, dataContract);
-    expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(stateTransition, userId);
+    expect(validateStateTransitionSignatureMock).to.be.not.called(stateTransition, userId);
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWith(
+      userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
+    );
   });
 
   it('should return invalid result if there are documents with different User IDs', async () => {
@@ -249,9 +289,9 @@ describe('validateDocumentsSTStructureFactory', () => {
 
     expect(findDuplicateDocumentsByIdMock).to.have.been.calledOnceWith(documents);
     expect(findDuplicateDocumentsByIndicesMock).to.be.calledOnceWith(documents, dataContract);
-    expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(
-      stateTransition,
-      differentUserId,
+    expect(validateStateTransitionSignatureMock).to.be.not.called();
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWith(
+      differentUserId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
     );
   });
 
@@ -286,6 +326,9 @@ describe('validateDocumentsSTStructureFactory', () => {
     expect(findDuplicateDocumentsByIdMock).to.have.been.calledOnceWith(documents);
     expect(findDuplicateDocumentsByIndicesMock).to.be.calledOnceWith(documents, dataContract);
     expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(stateTransition, userId);
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWith(
+      userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
+    );
   });
 
   it('should return valid result', async () => {
@@ -308,5 +351,8 @@ describe('validateDocumentsSTStructureFactory', () => {
     expect(findDuplicateDocumentsByIdMock).to.have.been.calledOnceWith(documents);
     expect(findDuplicateDocumentsByIndicesMock).to.be.calledOnceWith(documents, dataContract);
     expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(stateTransition, userId);
+    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWith(
+      userId, [Identity.TYPES.USER, Identity.TYPES.APPLICATION],
+    );
   });
 });
