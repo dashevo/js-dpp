@@ -49,16 +49,6 @@ describe('IdentityFacade', () => {
 
       expect(result).to.deep.equal(identity);
     });
-
-    it('should create Identity from string twice', async () => {
-      dpp.identity.createFromSerialized(identity.serialize());
-
-      const result = dpp.identity.createFromSerialized(identity.serialize());
-
-      expect(result).to.be.an.instanceOf(Identity);
-
-      expect(result).to.deep.equal(identity);
-    });
   });
 
   describe('#validate', () => {

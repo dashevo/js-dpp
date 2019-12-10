@@ -50,15 +50,6 @@ describe('DataContractFacade', () => {
 
       expect(result.toJSON()).to.deep.equal(dataContract.toJSON());
     });
-
-    it('should create DataContract from string twice', () => {
-      dpp.dataContract.createFromSerialized(dataContract.serialize());
-      const result = dpp.dataContract.createFromSerialized(dataContract.serialize());
-
-      expect(result).to.be.an.instanceOf(DataContract);
-
-      expect(result.toJSON()).to.deep.equal(dataContract.toJSON());
-    });
   });
 
   describe('createStateTransition', () => {

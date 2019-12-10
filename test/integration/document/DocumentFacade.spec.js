@@ -97,15 +97,6 @@ describe('DocumentFacade', () => {
 
       expect(result.toJSON()).to.deep.equal(document.toJSON());
     });
-
-    it('should create Document from string twice', async () => {
-      await dpp.document.createFromSerialized(document.serialize());
-      const result = await dpp.document.createFromSerialized(document.serialize());
-
-      expect(result).to.be.an.instanceOf(Document);
-
-      expect(result.toJSON()).to.deep.equal(document.toJSON());
-    });
   });
 
   describe('createStatTransition', () => {
