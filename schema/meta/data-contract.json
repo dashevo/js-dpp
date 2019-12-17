@@ -43,7 +43,7 @@
                     "items": {
                       "type": "object",
                       "patternProperties": {
-                        "^((?!-|_)[a-zA-Z0-9-\\._$]{0,62}[a-zA-Z0-9])$": {
+                        "^((?!-|_|\\.)[a-zA-Z0-9-\\._$]{0,62}[a-zA-Z0-9])$": {
                           "type": "string",
                           "enum": ["asc", "desc"]
                         }
