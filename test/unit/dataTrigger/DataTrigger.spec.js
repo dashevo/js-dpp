@@ -87,7 +87,7 @@ describe('DataTrigger', () => {
         triggerStub,
       );
 
-      const result = await trigger.execute(context);
+      const result = await trigger.execute(document, context);
 
       expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
       expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerExecutionError);
@@ -104,7 +104,7 @@ describe('DataTrigger', () => {
         triggerStub,
       );
 
-      const result = await trigger.execute(context);
+      const result = await trigger.execute(document, context);
 
       expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
       expect(result.getErrors()[0]).to.be.an.instanceOf(DataTriggerInvalidResultError);
