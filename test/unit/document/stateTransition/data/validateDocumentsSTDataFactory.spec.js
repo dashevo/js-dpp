@@ -248,7 +248,8 @@ describe('validateDocumentsSTDataFactory', () => {
 
     const dataTriggerExecutionError = new DataTriggerExecutionError(
       documents[0],
-      dataTriggersExecutionContext,
+      dataTriggersExecutionContext.getDataContract(),
+      dataTriggersExecutionContext.getUserId(),
       new Error('error'),
     );
 
