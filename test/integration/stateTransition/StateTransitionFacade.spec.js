@@ -75,6 +75,15 @@ describe('StateTransitionFacade', () => {
       }
     });
 
+    it('should skip checking for data provider if skipValidation is set', async () => {
+      dpp = new DashPlatformProtocol();
+
+      await dpp.stateTransition.createFromObject(
+        dataContractStateTransition.toJSON(),
+        { skipValidation: true },
+      );
+    });
+
     it('should create State Transition from plain object', async () => {
       const result = await dpp.stateTransition.createFromObject(
         dataContractStateTransition.toJSON(),
@@ -100,6 +109,15 @@ describe('StateTransitionFacade', () => {
         expect(e).to.be.an.instanceOf(MissingOptionError);
         expect(e.getOptionName()).to.equal('dataProvider');
       }
+    });
+
+    it('should skip checking for data provider if skipValidation is set', async () => {
+      dpp = new DashPlatformProtocol();
+
+      await dpp.stateTransition.createFromSerialized(
+        dataContractStateTransition.serialize(),
+        { skipValidation: true },
+      );
     });
 
     it('should create State Transition from string', async () => {
