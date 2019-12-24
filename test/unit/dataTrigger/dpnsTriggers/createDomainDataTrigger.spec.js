@@ -231,10 +231,6 @@ describe('createDomainDataTrigger', () => {
       'Parent domain name is not normalized (e.g. contains non-lowercase letter)',
     );
   });
-  //
-  // it('should ', async () => {
-  //
-  // });
 
   it('should fail with identity can\'t create top level domain', async () => {
     childDocument.normalizedParentDomainName = '';
