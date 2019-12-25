@@ -315,7 +315,7 @@ describe('validateDocumentsSTDataFactory', () => {
     expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.been.calledOnceWithExactly(
-      documents,
+      documents.filter(d => d.getAction() !== Document.ACTIONS.DELETE),
       dataContract,
     );
 
