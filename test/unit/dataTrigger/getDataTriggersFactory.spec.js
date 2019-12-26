@@ -23,6 +23,7 @@ describe('getDataTriggers', () => {
   let deleteTrigger;
 
   let dataContractId;
+  let topLevelIdentity;
 
   beforeEach(function beforeEach() {
     createDocument = getChildDocumentFixture();
@@ -36,19 +37,21 @@ describe('getDataTriggers', () => {
     deleteDocument.setAction(Document.ACTIONS.DELETE);
 
     dataContractId = generateRandomId();
+    topLevelIdentity = generateRandomId();
 
     createTrigger = new DataTrigger(
-      dataContractId, 'domain', Document.ACTIONS.CREATE, createDomainDataTrigger,
+      dataContractId, 'domain', Document.ACTIONS.CREATE, createDomainDataTrigger, topLevelIdentity,
     );
     updateTrigger = new DataTrigger(
-      dataContractId, 'domain', Document.ACTIONS.REPLACE, updateDomainDataTrigger,
+      dataContractId, 'domain', Document.ACTIONS.REPLACE, updateDomainDataTrigger, topLevelIdentity,
     );
     deleteTrigger = new DataTrigger(
-      dataContractId, 'domain', Document.ACTIONS.DELETE, deleteDomainDataTrigger,
+      dataContractId, 'domain', Document.ACTIONS.DELETE, deleteDomainDataTrigger, topLevelIdentity,
     );
 
     this.sinonSandbox.stub(process, 'env').value({
       DPNS_CONTRACT_ID: dataContractId,
+      DPNS_TOP_LEVEL_IDENTITY: topLevelIdentity,
     });
 
     getDataTriggers = getDataTriggersFactory();
