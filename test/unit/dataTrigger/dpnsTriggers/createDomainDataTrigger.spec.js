@@ -1,3 +1,5 @@
+const bs58 = require('bs58');
+
 const createDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
 
 const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
@@ -46,7 +48,14 @@ describe('createDomainDataTrigger', () => {
       )
       .resolves([parentDocument.toJSON()]);
 
-    const saltedDomainHash = multihash.hash(Buffer.from(preorderSalt + nameHash, 'hex')).toString('hex');
+    const saltedDomainHashBuffer = Buffer.concat([
+      bs58.decode(preorderSalt),
+      Buffer.from(nameHash, 'hex'),
+    ]);
+
+    const saltedDomainHash = multihash.hash(
+      saltedDomainHashBuffer,
+    ).toString('hex');
 
     dataProviderMock.fetchDocuments
       .withArgs(
@@ -165,7 +174,7 @@ describe('createDomainDataTrigger', () => {
 
   it('should fail with preorder document was not found', async () => {
     childDocument = getChildDocumentFixture({
-      preorderSalt: Buffer.alloc(256, '012fd').toString('hex'),
+      preorderSalt: bs58.encode(Buffer.alloc(256, '012fd')),
     });
 
     const result = await createDomainDataTrigger(childDocument, context, topLevelIdentity);
@@ -233,7 +242,8 @@ describe('createDomainDataTrigger', () => {
   });
 
   it('should fail with identity can\'t create top level domain', async () => {
-    childDocument.normalizedParentDomainName = '';
+    parentDocument.data.normalizedParentDomainName = '';
+    parentDocument.data.nameHash = multihash.hash(Buffer.from('parent')).toString('hex');
 
     topLevelIdentity = 'someIdentity';
 
@@ -246,7 +256,7 @@ describe('createDomainDataTrigger', () => {
 
     expect(error).to.be.an.instanceOf(DataTriggerConditionError);
     expect(error.message).to.equal(
-      'Can\'t create domain fot this identity',
+      'Can\'t create top level domain for this identity',
     );
   });
 });
