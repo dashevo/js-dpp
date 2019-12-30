@@ -15,7 +15,7 @@ const UndefinedIndexPropertyError = require('../../../lib/errors/UndefinedIndexP
 const InvalidIndexPropertyTypeError = require('../../../lib/errors/InvalidIndexPropertyTypeError');
 const SystemPropertyIndexAlreadyPresentError = require('../../../lib/errors/SystemPropertyIndexAlreadyPresentError');
 
-const originalEnv = Object.assign({}, process.env);
+const originalEnv = { ...process.env };
 
 describe('validateDataContractFactory', () => {
   let rawDataContract;
@@ -29,7 +29,7 @@ describe('validateDataContractFactory', () => {
     const validator = new JsonSchemaValidator(ajv);
 
     allowedIdentities = ['1'.repeat(42), '2'.repeat(42)].join(',');
-    process.env = Object.assign({}, originalEnv);
+    process.env = { ...originalEnv };
 
     validateDataContract = validateDataContractFactory(validator);
   });
@@ -743,8 +743,7 @@ describe('validateDataContractFactory', () => {
   });
 
   it('should return invalid result if there are duplicated indices', () => {
-    const indexDefinition = Object.assign({},
-      rawDataContract.documents.indexedDocument.indices[0]);
+    const indexDefinition = { ...rawDataContract.documents.indexedDocument.indices[0] };
 
     rawDataContract.documents.indexedDocument.indices.push(indexDefinition);
 

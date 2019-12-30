@@ -57,7 +57,7 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "@dashevo/dashcore-lib": "^0.18.0",
+    "@dashevo/dashcore-lib": "0.18.0",
     "ajv": "^6.10.2",
     "bs58": "^4.0.1",
     "cbor": "^5.0.1",

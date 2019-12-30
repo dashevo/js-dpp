@@ -54,7 +54,7 @@ describe('Identity', () => {
       expect(instance.id).to.equal(rawIdentity.id);
       expect(instance.type).to.equal(rawIdentity.type);
       expect(instance.publicKeys).to.deep.equal(
-        rawIdentity.publicKeys.map(rawPublicKey => new IdentityPublicKey(rawPublicKey)),
+        rawIdentity.publicKeys.map((rawPublicKey) => new IdentityPublicKey(rawPublicKey)),
       );
     });
   });
@@ -75,7 +75,7 @@ describe('Identity', () => {
   describe('#getPublicKeys', () => {
     it('should return set public keys', () => {
       expect(identity.getPublicKeys()).to.deep.equal(
-        rawIdentity.publicKeys.map(rawPublicKey => new IdentityPublicKey(rawPublicKey)),
+        rawIdentity.publicKeys.map((rawPublicKey) => new IdentityPublicKey(rawPublicKey)),
       );
     });
   });
