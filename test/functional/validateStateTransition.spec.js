@@ -34,7 +34,7 @@ async function registerUser(coreApi) {
   await coreApi.generate(10);
 
   const { result: unspent } = await coreApi.listUnspent();
-  const inputs = unspent.filter(input => input.address === addressString);
+  const inputs = unspent.filter((input) => input.address === addressString);
 
   const transactionPayload = new Transaction.Payload.SubTxRegisterPayload();
 
@@ -265,7 +265,7 @@ describe.skip('validateStateTransition', function main() {
         .concat(indexedDocuments),
     ).to.have.deep.members(
       documents
-        .map(d => d.toJSON()),
+        .map((d) => d.toJSON()),
     );
   });
 

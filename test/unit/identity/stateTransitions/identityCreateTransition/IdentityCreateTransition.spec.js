@@ -126,7 +126,7 @@ describe('IdentityCreateTransition', () => {
   describe('#getPublicKeys', () => {
     it('should return set public keys', () => {
       expect(stateTransition.getPublicKeys()).to.deep.equal(
-        rawStateTransition.publicKeys.map(rawPublicKey => new IdentityPublicKey(rawPublicKey)),
+        rawStateTransition.publicKeys.map((rawPublicKey) => new IdentityPublicKey(rawPublicKey)),
       );
     });
   });
