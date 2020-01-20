@@ -47,7 +47,7 @@ describe('validateDocumentFactory', () => {
       enrichDataContractWithBaseDocument,
     );
 
-    rawDocuments = getDocumentsFixture().map(o => o.toJSON());
+    rawDocuments = getDocumentsFixture().map((o) => o.toJSON());
     [rawDocument] = rawDocuments;
 
     documentBaseSchema = JSON.parse(
