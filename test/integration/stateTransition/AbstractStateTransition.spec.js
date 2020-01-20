@@ -19,6 +19,7 @@ describe('AbstractStateTransition', () => {
     privateKeyBuffer = privateKeyModel.toBuffer();
     privateKeyHex = privateKeyModel.toBuffer().toString('hex');
     const publicKey = privateKeyModel.toPublicKey().toBuffer().toString('base64');
+    publicKeyId = 1;
 
     stateTransition = new StateTransitionMock();
 
@@ -77,7 +78,6 @@ describe('AbstractStateTransition', () => {
       stateTransition.sign(identityPublicKey, privateKeyHex);
 
       const keyId = stateTransition.getSignaturePublicKeyId();
-
       expect(keyId).to.be.equal(publicKeyId);
     });
   });
