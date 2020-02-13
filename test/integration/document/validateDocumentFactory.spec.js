@@ -1,4 +1,4 @@
-const Ajv = require('ajv');
+const createAjv = require('../../../lib/validation/createAjv');
 
 const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
@@ -35,9 +35,7 @@ describe('validateDocumentFactory', () => {
   let documentBaseSchema;
 
   beforeEach(function beforeEach() {
-    const ajv = new Ajv();
-
-    validator = new JsonSchemaValidator(ajv);
+    validator = new JsonSchemaValidator(createAjv());
     this.sinonSandbox.spy(validator, 'validate');
 
     dataContract = getDataContractFixture();
@@ -47,7 +45,7 @@ describe('validateDocumentFactory', () => {
       enrichDataContractWithBaseDocument,
     );
 
-    rawDocuments = getDocumentsFixture().map((o) => o.toJSON());
+    rawDocuments = getDocumentsFixture().map(o => o.toJSON());
     [rawDocument] = rawDocuments;
 
     documentBaseSchema = JSON.parse(

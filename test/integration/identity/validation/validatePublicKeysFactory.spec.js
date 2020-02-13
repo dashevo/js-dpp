@@ -1,4 +1,4 @@
-const Ajv = require('ajv');
+const createAjv = require('../../../../lib/validation/createAjv');
 
 const JsonSchemaValidator = require(
   '../../../../lib/validation/JsonSchemaValidator',
@@ -33,7 +33,7 @@ describe('validatePublicKeysFactory', () => {
   beforeEach(() => {
     ({ publicKeys } = getIdentityFixture().toJSON());
 
-    const validator = new JsonSchemaValidator(new Ajv());
+    const validator = new JsonSchemaValidator(createAjv());
 
     validatePublicKeys = validatePublicKeysFactory(
       validator,

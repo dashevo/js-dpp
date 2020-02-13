@@ -1,4 +1,4 @@
-const Ajv = require('ajv');
+const createAjv = require('../../../../lib/validation/createAjv');
 
 const validateStateTransitionStructureFactory = require('../../../../lib/stateTransition/validation/validateStateTransitionStructureFactory');
 
@@ -55,8 +55,7 @@ describe('validateStateTransitionStructureFactory', () => {
       },
     };
 
-    const ajv = new Ajv();
-    validator = new JsonSchemaValidator(ajv);
+    validator = new JsonSchemaValidator(createAjv());
 
     validateStateTransitionStructure = validateStateTransitionStructureFactory(
       validator,

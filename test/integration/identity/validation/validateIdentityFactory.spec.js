@@ -1,4 +1,4 @@
-const Ajv = require('ajv');
+const createAjv = require('../../../../lib/validation/createAjv');
 
 const getIdentityFixture = require('../../../../lib/test/fixtures/getIdentityFixture');
 
@@ -31,7 +31,7 @@ describe('validateIdentityFactory', () => {
   let validatePublicKeysMock;
 
   beforeEach(function beforeEach() {
-    const schemaValidator = new JsonSchemaValidator(new Ajv());
+    const schemaValidator = new JsonSchemaValidator(createAjv());
 
     validateIdentityTypeMock = this.sinonSandbox.stub().returns(new ValidationResult());
     validatePublicKeysMock = this.sinonSandbox.stub().returns(new ValidationResult());
