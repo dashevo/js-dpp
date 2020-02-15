@@ -352,7 +352,23 @@
             "not": {
               "$ref": "#/definitions/documentSchema"
             }
-          }
+          },
+          "if": {
+            "properties": {
+              "type": {
+                "const": "object"
+              }
+            },
+            "not": {
+              "required": ["$ref"]
+            }
+          },
+          "then": {
+            "required": ["properties", "additionalProperties"]
+          },
+          "minProperties": 1,
+          "maxProperties": 100,
+          "additionalProperties": false
         }
       },
       "propertyNames": {
