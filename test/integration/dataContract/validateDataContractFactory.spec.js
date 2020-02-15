@@ -794,7 +794,7 @@ describe('validateDataContractFactory', () => {
         expect(error.keyword).to.equal('additionalProperties');
       });
 
-      it('should return invalid result if remote ref is used', () => {
+      it('should return invalid result if remote $ref is used', () => {
         rawDataContract.documents.indexedDocument = {
           $ref: 'http://remote.com/schema#',
         };
@@ -861,6 +861,22 @@ describe('validateDataContractFactory', () => {
 
       expect(error.dataPath).to.equal('.documents[\'indexedDocument\'].indices');
       expect(error.keyword).to.equal('minItems');
+    });
+
+    it('should return invalid result if there are duplicated indices', () => {
+      const indexDefinition = { ...rawDataContract.documents.indexedDocument.indices[0] };
+
+      rawDataContract.documents.indexedDocument.indices.push(indexDefinition);
+
+      const result = validateDataContract(rawDataContract);
+
+      expectValidationError(result, DuplicateIndexError);
+
+      const [error] = result.getErrors();
+
+      expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
+      expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
+      expect(error.getDocumentType()).to.deep.equal('indexedDocument');
     });
 
     describe('index', () => {
@@ -1241,22 +1257,6 @@ describe('validateDataContractFactory', () => {
         expect(error.getDocumentType()).to.deep.equal('indexedDocument');
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
-    });
-
-    it('should return invalid result if there are duplicated indices', () => {
-      const indexDefinition = { ...rawDataContract.documents.indexedDocument.indices[0] };
-
-      rawDataContract.documents.indexedDocument.indices.push(indexDefinition);
-
-      const result = validateDataContract(rawDataContract);
-
-      expectValidationError(result, DuplicateIndexError);
-
-      const [error] = result.getErrors();
-
-      expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
-      expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
-      expect(error.getDocumentType()).to.deep.equal('indexedDocument');
     });
   });
 
