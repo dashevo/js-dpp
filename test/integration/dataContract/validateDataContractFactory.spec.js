@@ -857,7 +857,7 @@ describe('validateDataContractFactory', () => {
         expect(error.params.missingProperty).to.equal('maxItems');
       });
 
-      it('should have mixItems no bigger than 1000 if uniqueItems is used', () => {
+      it('should have maxItems no bigger than 1000 if uniqueItems is used', () => {
         rawDataContract.documents.indexedDocument = {
           type: 'object',
           properties: {
