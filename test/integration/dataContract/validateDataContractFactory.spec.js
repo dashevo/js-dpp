@@ -834,7 +834,7 @@ describe('validateDataContractFactory', () => {
         expect(error.params.additionalProperty).to.equal('propertyNames');
       });
 
-      it('should have mixItems if uniqueItems is used', () => {
+      it('should have maxItems if uniqueItems is used', () => {
         rawDataContract.documents.indexedDocument = {
           type: 'object',
           properties: {
