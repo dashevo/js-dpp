@@ -834,7 +834,7 @@ describe('validateDataContractFactory', () => {
         expect(error.params.additionalProperty).to.equal('propertyNames');
       });
 
-      it('should have `mixItems` if `uniqueItems` is used', () => {
+      it('should have `maxItems` if `uniqueItems` is used', () => {
         rawDataContract.documents.indexedDocument = {
           type: 'object',
           properties: {
@@ -857,7 +857,7 @@ describe('validateDataContractFactory', () => {
         expect(error.params.missingProperty).to.equal('maxItems');
       });
 
-      it('should have `mixItems` no bigger than 10000 if `uniqueItems` is used', () => {
+      it('should have `maxItems` no bigger than 10000 if `uniqueItems` is used', () => {
         rawDataContract.documents.indexedDocument = {
           type: 'object',
           properties: {
@@ -880,7 +880,7 @@ describe('validateDataContractFactory', () => {
         expect(error.keyword).to.equal('maximum');
       });
 
-      it('should have `mixLength` if `pattern` is used', () => {
+      it('should have `maxLength` if `pattern` is used', () => {
         rawDataContract.documents.indexedDocument = {
           type: 'object',
           properties: {
@@ -903,7 +903,7 @@ describe('validateDataContractFactory', () => {
         expect(error.params.missingProperty).to.equal('maxLength');
       });
 
-      it('should have `mixLength` no bigger than 50000 if `pattern` is used', () => {
+      it('should have `maxLength` no bigger than 50000 if `pattern` is used', () => {
         rawDataContract.documents.indexedDocument = {
           type: 'object',
           properties: {
@@ -926,7 +926,7 @@ describe('validateDataContractFactory', () => {
         expect(error.keyword).to.equal('maximum');
       });
 
-      it('should have `mixLength` if `format` is used', () => {
+      it('should have `maxLength` if `format` is used', () => {
         rawDataContract.documents.indexedDocument = {
           type: 'object',
           properties: {
@@ -949,7 +949,7 @@ describe('validateDataContractFactory', () => {
         expect(error.params.missingProperty).to.equal('maxLength');
       });
 
-      it('should have `mixLength` no bigger than 50000 if `format` is used', () => {
+      it('should have `maxLength` no bigger than 50000 if `format` is used', () => {
         rawDataContract.documents.indexedDocument = {
           type: 'object',
           properties: {
