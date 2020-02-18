@@ -12,6 +12,8 @@ const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 
 const InvalidIdentityPublicKeyTypeError = require('../../../../../lib/errors/InvalidIdentityPublicKeyTypeError');
 
+const DataContractMaxDepthExceedError = require('../../../../../lib/errors/DataContractMaxDepthExceedError');
+
 const Identity = require('../../../../../lib/identity/Identity');
 
 describe('validateDataContractSTStructureFactory', () => {
@@ -24,6 +26,7 @@ describe('validateDataContractSTStructureFactory', () => {
   let stateTransition;
   let dataContract;
   let validateIdentityExistenceAndTypeMock;
+  let validateDataContractMaxDepthMock;
 
   beforeEach(function beforeEach() {
     validateDataContract = this.sinonSandbox.stub();
@@ -44,11 +47,16 @@ describe('validateDataContractSTStructureFactory', () => {
       new ValidationResult(),
     );
 
+    validateDataContractMaxDepthMock = this.sinonSandbox.stub().resolves(
+      new ValidationResult(),
+    );
+
     validateDataContractSTStructure = validateDataContractSTStructureFactory(
       validateDataContract,
       validateStateTransitionSignatureMock,
       createDataContractMock,
       validateIdentityExistenceAndTypeMock,
+      validateDataContractMaxDepthMock,
     );
   });
 
@@ -75,6 +83,10 @@ describe('validateDataContractSTStructureFactory', () => {
 
     expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       dataContract.getId(), [Identity.TYPES.APPLICATION],
+    );
+
+    expect(validateDataContractMaxDepthMock).to.be.calledOnceWithExactly(
+      rawDataContract,
     );
   });
 
@@ -103,6 +115,10 @@ describe('validateDataContractSTStructureFactory', () => {
 
     expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       dataContract.getId(), [Identity.TYPES.APPLICATION],
+    );
+
+    expect(validateDataContractMaxDepthMock).to.be.calledOnceWithExactly(
+      rawDataContract,
     );
   });
 
@@ -136,6 +152,10 @@ describe('validateDataContractSTStructureFactory', () => {
     expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       dataContract.getId(), [Identity.TYPES.APPLICATION],
     );
+
+    expect(validateDataContractMaxDepthMock).to.be.calledOnceWithExactly(
+      rawDataContract,
+    );
   });
 
   it('should return valid result', async () => {
@@ -160,6 +180,41 @@ describe('validateDataContractSTStructureFactory', () => {
 
     expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
       dataContract.getId(), [Identity.TYPES.APPLICATION],
+    );
+
+    expect(validateDataContractMaxDepthMock).to.be.calledOnceWithExactly(
+      rawDataContract,
+    );
+  });
+
+  it('should return invalid result if dataContract has invalid depth', async () => {
+    const dataContractResult = new ValidationResult();
+
+    validateDataContract.returns(dataContractResult);
+
+    const validationError = new DataContractMaxDepthExceedError();
+
+    const validateDataContractMaxDepthResult = new ValidationResult();
+    validateDataContractMaxDepthResult.addError(validationError);
+
+    validateDataContractMaxDepthMock.resolves(validateDataContractMaxDepthResult);
+
+    const result = await validateDataContractSTStructure(rawStateTransition);
+
+    expectValidationError(result);
+
+    const [error] = result.getErrors();
+
+    expect(error).to.equal(validationError);
+
+    expect(validateStateTransitionSignatureMock).to.be.not.called();
+
+    expect(validateIdentityExistenceAndTypeMock).to.be.not.called();
+
+    expect(validateDataContract).to.be.not.called();
+
+    expect(validateDataContractMaxDepthMock).to.be.calledOnceWithExactly(
+      rawDataContract,
     );
   });
 });
