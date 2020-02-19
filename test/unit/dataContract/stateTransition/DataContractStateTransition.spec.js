@@ -60,12 +60,12 @@ describe('DataContractStateTransition', () => {
   });
 
   describe('#serialize', () => {
-    it('should return serialized State Transition', () => {
+    it('should return serialized State Transition', async () => {
       const serializedStateTransition = '123';
 
       encodeMock.returns(serializedStateTransition);
 
-      const result = stateTransition.serialize();
+      const result = await stateTransition.serialize();
 
       expect(result).to.equal(serializedStateTransition);
 
@@ -74,14 +74,14 @@ describe('DataContractStateTransition', () => {
   });
 
   describe('#hash', () => {
-    it('should return State Transition hash as hex', () => {
+    it('should return State Transition hash as hex', async () => {
       const serializedDocument = '123';
       const hashedDocument = '456';
 
       encodeMock.returns(serializedDocument);
       hashMock.returns(hashedDocument);
 
-      const result = stateTransition.hash();
+      const result = await stateTransition.hash();
 
       expect(result).to.equal(hashedDocument);
 

@@ -94,14 +94,14 @@ describe('IdentityFactory', () => {
       this.sinonSandbox.stub(factory, 'createFromObject');
     });
 
-    it('should return new Identity from serialized one', () => {
+    it('should return new Identity from serialized one', async () => {
       const serializedIdentity = identity.serialize();
 
       decodeMock.returns(identity.toJSON());
 
       factory.createFromObject.returns(identity);
 
-      const result = factory.createFromSerialized(serializedIdentity);
+      const result = await factory.createFromSerialized(serializedIdentity);
 
       expect(result).to.equal(identity);
 

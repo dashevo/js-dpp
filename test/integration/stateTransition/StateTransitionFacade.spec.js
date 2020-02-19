@@ -115,14 +115,14 @@ describe('StateTransitionFacade', () => {
       dpp = new DashPlatformProtocol();
 
       await dpp.stateTransition.createFromSerialized(
-        dataContractStateTransition.serialize(),
+        (await dataContractStateTransition.serialize()),
         { skipValidation: true },
       );
     });
 
     it('should create State Transition from string', async () => {
       const result = await dpp.stateTransition.createFromSerialized(
-        dataContractStateTransition.serialize(),
+        (await dataContractStateTransition.serialize()),
       );
 
       expect(result).to.be.an.instanceOf(DataContractStateTransition);

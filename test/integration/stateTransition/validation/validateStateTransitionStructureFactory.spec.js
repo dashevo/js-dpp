@@ -257,7 +257,7 @@ describe('validateStateTransitionStructureFactory', () => {
   });
 
   describe('Data Contract Schema', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       const typeExtensions = {
         [stateTransitionTypes.DATA_CONTRACT]: {
           validationFunction: extensionFunctionMock,
@@ -271,7 +271,7 @@ describe('validateStateTransitionStructureFactory', () => {
       );
 
       const stateTransition = new DataContractStateTransition(dataContract);
-      stateTransition.signByPrivateKey(privateKey);
+      await stateTransition.signByPrivateKey(privateKey);
 
       rawStateTransition = stateTransition.toJSON();
     });
@@ -306,7 +306,7 @@ describe('validateStateTransitionStructureFactory', () => {
   });
 
   describe('Documents Schema', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       const typeExtensions = {
         [stateTransitionTypes.DOCUMENTS]: {
           validationFunction: extensionFunctionMock,
@@ -322,7 +322,7 @@ describe('validateStateTransitionStructureFactory', () => {
       const documents = getDocumentsFixture();
 
       const stateTransition = new DocumentsStateTransition(documents);
-      stateTransition.signByPrivateKey(privateKey);
+      await stateTransition.signByPrivateKey(privateKey);
 
       rawStateTransition = stateTransition.toJSON();
     });
@@ -518,7 +518,7 @@ describe('validateStateTransitionStructureFactory', () => {
   });
 
   describe('Identity schema', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       const typeExtensions = {
         [stateTransitionTypes.IDENTITY_CREATE]: {
           validationFunction: extensionFunctionMock,
@@ -532,7 +532,7 @@ describe('validateStateTransitionStructureFactory', () => {
       );
 
       const stateTransition = getIdentityCreateSTFixture();
-      stateTransition.signByPrivateKey(privateKey);
+      await stateTransition.signByPrivateKey(privateKey);
 
       rawStateTransition = stateTransition.toJSON();
     });

@@ -329,12 +329,12 @@ describe('Document', () => {
   });
 
   describe('#serialize', () => {
-    it('should return serialized Document', () => {
+    it('should return serialized Document', async () => {
       const serializedDocument = '123';
 
       encodeMock.returns(serializedDocument);
 
-      const result = document.serialize();
+      const result = await document.serialize();
 
       expect(result).to.equal(serializedDocument);
 
@@ -347,7 +347,7 @@ describe('Document', () => {
       Document.prototype.serialize = this.sinonSandbox.stub();
     });
 
-    it('should return Document hash', () => {
+    it('should return Document hash', async () => {
       const serializedDocument = '123';
       const hashedDocument = '456';
 
@@ -355,7 +355,7 @@ describe('Document', () => {
 
       hashMock.returns(hashedDocument);
 
-      const result = document.hash();
+      const result = await document.hash();
 
       expect(result).to.equal(hashedDocument);
 

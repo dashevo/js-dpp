@@ -112,14 +112,14 @@ describe('DataContractFactory', () => {
       this.sinonSandbox.stub(factory, 'createFromObject');
     });
 
-    it('should return new Data Contract from serialized contract', () => {
-      const serializedDataContract = dataContract.serialize();
+    it('should return new Data Contract from serialized contract', async () => {
+      const serializedDataContract = await dataContract.serialize();
 
       decodeMock.returns(rawDataContract);
 
       factory.createFromObject.returns(dataContract);
 
-      const result = factory.createFromSerialized(serializedDataContract);
+      const result = await factory.createFromSerialized(serializedDataContract);
 
       expect(result).to.equal(dataContract);
 

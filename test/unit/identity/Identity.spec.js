@@ -101,9 +101,9 @@ describe('Identity', () => {
   });
 
   describe('#serialize', () => {
-    it('should return encoded json object', () => {
+    it('should return encoded json object', async () => {
       encodeMock.returns(42); // for example
-      const result = identity.serialize();
+      const result = await identity.serialize();
 
       expect(encodeMock).to.have.been.calledOnceWith(identity.toJSON());
       expect(result).to.equal(42);
@@ -111,14 +111,14 @@ describe('Identity', () => {
   });
 
   describe('#hash', () => {
-    it('should return hex string of a buffer return by serialize', () => {
+    it('should return hex string of a buffer return by serialize', async () => {
       const buffer = Buffer.from('someString');
       const bufferHex = buffer.toString('hex');
 
       encodeMock.returns(buffer);
       hashMock.returns(buffer);
 
-      const result = identity.hash();
+      const result = await identity.hash();
 
       expect(encodeMock).to.have.been.calledOnceWith(identity.toJSON());
       expect(hashMock).to.have.been.calledOnceWith(buffer);

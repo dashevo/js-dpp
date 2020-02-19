@@ -255,12 +255,12 @@ describe('DataContract', () => {
   });
 
   describe('#serialize', () => {
-    it('should return serialized DataContract', () => {
+    it('should return serialized DataContract', async () => {
       const serializedDocument = '123';
 
       encodeMock.returns(serializedDocument);
 
-      const result = dataContract.serialize();
+      const result = await dataContract.serialize();
 
       expect(result).to.equal(serializedDocument);
 
@@ -273,7 +273,7 @@ describe('DataContract', () => {
       DataContract.prototype.serialize = this.sinonSandbox.stub();
     });
 
-    it('should return DataContract hash', () => {
+    it('should return DataContract hash', async () => {
       const serializedDataContract = '123';
       const hashedDocument = '456';
 
@@ -281,7 +281,7 @@ describe('DataContract', () => {
 
       hashMock.returns(hashedDocument);
 
-      const result = dataContract.hash();
+      const result = await dataContract.hash();
 
       expect(result).to.equal(hashedDocument);
 

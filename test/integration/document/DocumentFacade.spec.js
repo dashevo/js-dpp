@@ -99,11 +99,14 @@ describe('DocumentFacade', () => {
     it('should skip checking for data provider if skipValidation is set', async () => {
       dpp = new DashPlatformProtocol();
 
-      await dpp.document.createFromSerialized(document.serialize(), { skipValidation: true });
+      await dpp.document.createFromSerialized(
+        (await document.serialize()),
+        { skipValidation: true },
+      );
     });
 
     it('should create Document from string', async () => {
-      const result = await dpp.document.createFromSerialized(document.serialize());
+      const result = await dpp.document.createFromSerialized((await document.serialize()));
 
       expect(result).to.be.an.instanceOf(Document);
 
