@@ -10,7 +10,7 @@ const getDataContractFixture = require('../../../lib/test/fixtures/getDataContra
 
 const { expectJsonSchemaError, expectValidationError } = require('../../../lib/test/expect/expectError');
 
-const enrichDataContractWithBaseDocument = require('../../../lib/document/enrichDataContractWithBaseDocument');
+const enrichDataContractWithBaseDocument = require('../../../lib/dataContract/enrichDataContractWithBaseDocument');
 const createDataContract = require('../../../lib/dataContract/createDataContract');
 
 const DuplicateIndexError = require('../../../lib/errors/DuplicateIndexError');
