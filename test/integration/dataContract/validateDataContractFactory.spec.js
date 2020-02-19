@@ -1431,7 +1431,7 @@ describe('validateDataContractFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.message).to.be.a('string').and.satisfy(msg => msg.startsWith('Circular $ref pointer'));
+    expect(error.message).to.be.a('string').and.satisfy((msg) => msg.startsWith('Circular $ref pointer'));
   });
 
   it('should return valid result if Data Contract is valid', async () => {
