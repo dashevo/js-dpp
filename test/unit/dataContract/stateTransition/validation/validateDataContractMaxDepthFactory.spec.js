@@ -3,20 +3,7 @@ const ValidationResult = require('../../../../../lib/validation/ValidationResult
 const { expectValidationError } = require('../../../../../lib/test/expect/expectError');
 const DataContractMaxDepthExceedError = require('../../../../../lib/errors/DataContractMaxDepthExceedError');
 const JsonSchemaError = require('../../../../../lib/errors/JsonSchemaError');
-
-function generateDeepJson(depth) {
-  const result = {};
-
-  if (depth === 1) {
-    return {
-      depth,
-    };
-  }
-
-  result[depth] = generateDeepJson(depth - 1);
-
-  return result;
-}
+const generateDeepJson = require('../../../../../lib/test/utils/generateDeepJson');
 
 describe('validateDataContractMaxDepthFactory', () => {
   let refParserMock;
