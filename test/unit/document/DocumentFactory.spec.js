@@ -11,6 +11,7 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 const InvalidDocumentError = require('../../../lib/document/errors/InvalidDocumentError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
+const SerializedObjectParsingError = require('../../../lib/errors/SerializedObjectParsingError');
 
 describe('DocumentFactory', () => {
   let decodeMock;
@@ -201,6 +202,26 @@ describe('DocumentFactory', () => {
       expect(factory.createFromObject).to.have.been.calledOnceWith(rawDocument);
 
       expect(decodeMock).to.have.been.calledOnceWith(serializedDocument);
+    });
+
+    it('should throw consensus error if `decode` fails', () => {
+      const parsingError = new Error('Something failed during parsing');
+
+      const serializedDocument = document.serialize();
+
+      decodeMock.throws(parsingError);
+
+      try {
+        factory.createFromSerialized(serializedDocument);
+        expect.fail('Error was not thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(SerializedObjectParsingError);
+        expect(e.getObjectType()).to.equal(
+          SerializedObjectParsingError.OBJECT_TYPE.DOCUMENT,
+        );
+        expect(e.getPayload()).to.deep.equal(serializedDocument);
+        expect(e.getParsingError()).to.deep.equal(parsingError);
+      }
     });
   });
 

@@ -8,6 +8,7 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const InvalidDataContractError = require('../../../lib/dataContract/errors/InvalidDataContractError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
+const SerializedObjectParsingError = require('../../../lib/errors/SerializedObjectParsingError');
 
 describe('DataContractFactory', () => {
   let DataContractFactory;
@@ -126,6 +127,26 @@ describe('DataContractFactory', () => {
       expect(factory.createFromObject).to.have.been.calledOnceWith(rawDataContract);
 
       expect(decodeMock).to.have.been.calledOnceWith(serializedDataContract);
+    });
+
+    it('should throw consensus error if `decode` fails', () => {
+      const parsingError = new Error('Something failed during parsing');
+
+      const serializedDataContract = dataContract.serialize();
+
+      decodeMock.throws(parsingError);
+
+      try {
+        factory.createFromSerialized(serializedDataContract);
+        expect.fail('Error was not thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(SerializedObjectParsingError);
+        expect(e.getObjectType()).to.equal(
+          SerializedObjectParsingError.OBJECT_TYPE.DATA_CONTRACT,
+        );
+        expect(e.getPayload()).to.deep.equal(serializedDataContract);
+        expect(e.getParsingError()).to.deep.equal(parsingError);
+      }
     });
   });
 
