@@ -36,24 +36,6 @@ describe('validateDataContractFactory', () => {
     validateDataContract = validateDataContractFactory(validator);
   });
 
-  describe('byte size limit', () => {
-    it('should limit data contract byte size to 15 Kb', () => {
-      const hugeDataContract = {};
-      for (let i = 0; i < 2200; i++) {
-        hugeDataContract[i] = i;
-      }
-
-      const result = validateDataContract(hugeDataContract);
-
-      expectValidationError(result, DataContractMaxByteSizeExceededError);
-
-      const [error] = result.getErrors();
-
-      expect(error.getDataContract()).to.deep.equal(hugeDataContract);
-      expect(error.getSizeLimit()).to.equal(15 * 1024);
-    });
-  });
-
   describe('$schema', () => {
     it('should be present', () => {
       delete rawDataContract.$schema;
@@ -1415,6 +1397,22 @@ describe('validateDataContractFactory', () => {
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
     });
+  });
+
+  it('should return an invalid result if data contract byte size is bigger than 15 Kb', () => {
+    const hugeDataContract = {};
+    for (let i = 0; i < 2200; i++) {
+      hugeDataContract[i] = i;
+    }
+
+    const result = validateDataContract(hugeDataContract);
+
+    expectValidationError(result, DataContractMaxByteSizeExceededError);
+
+    const [error] = result.getErrors();
+
+    expect(error.getDataContract()).to.deep.equal(hugeDataContract);
+    expect(error.getSizeLimit()).to.equal(15 * 1024);
   });
 
   it('should return valid result if Data Contract is valid', () => {
