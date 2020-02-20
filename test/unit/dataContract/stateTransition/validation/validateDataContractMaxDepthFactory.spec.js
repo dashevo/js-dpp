@@ -31,7 +31,6 @@ describe('validateDataContractMaxDepthFactory', () => {
 
     const [error] = result.getErrors();
     expect(error).to.be.an.instanceOf(DataContractMaxDepthExceedError);
-    expect(error.message).to.equal(`Data Contract depth is greater than ${DataContractMaxDepthExceedError.MAX_DEPTH}`);
   });
 
   it('should return valid result if depth = MAX_DEPTH', async () => {
@@ -62,7 +61,6 @@ describe('validateDataContractMaxDepthFactory', () => {
 
     const [error] = result.getErrors();
     expect(error).to.be.an.instanceOf(DataContractMaxDepthExceedError);
-    expect(error.message).to.equal(`Data Contract depth is greater than ${DataContractMaxDepthExceedError.MAX_DEPTH}`);
   });
 
   it('should return error if refParser throws an error', async () => {
@@ -86,7 +84,5 @@ describe('validateDataContractMaxDepthFactory', () => {
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
-    expect(result.getErrors()).to.be.an('Array');
-    expect(result.getErrors()).to.be.empty();
   });
 });
