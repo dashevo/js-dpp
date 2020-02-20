@@ -129,7 +129,7 @@ describe('DataContractFactory', () => {
       expect(decodeMock).to.have.been.calledOnceWith(serializedDataContract);
     });
 
-    it('should throw consensus error if `decode` fails', () => {
+    it('should throw consensus error if `decode` fails', async () => {
       const parsingError = new Error('Something failed during parsing');
 
       const serializedDataContract = dataContract.serialize();
@@ -137,7 +137,7 @@ describe('DataContractFactory', () => {
       decodeMock.throws(parsingError);
 
       try {
-        factory.createFromSerialized(serializedDataContract);
+        await factory.createFromSerialized(serializedDataContract);
         expect.fail('Error was not thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(SerializedObjectParsingError);
