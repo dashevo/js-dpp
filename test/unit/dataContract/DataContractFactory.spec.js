@@ -59,10 +59,10 @@ describe('DataContractFactory', () => {
   });
 
   describe('createFromObject', () => {
-    it('should return new Data Contract with data from passed object', () => {
+    it('should return new Data Contract with data from passed object', async () => {
       validateDataContractMock.returns(new ValidationResult());
 
-      const result = factory.createFromObject(rawDataContract);
+      const result = await factory.createFromObject(rawDataContract);
 
       expect(result).to.equal(dataContract);
 
@@ -71,8 +71,8 @@ describe('DataContractFactory', () => {
       expect(createDataContractMock).to.have.been.calledOnceWith(rawDataContract);
     });
 
-    it('should return new Data Contract without validation if "skipValidation" option is passed', () => {
-      const result = factory.createFromObject(rawDataContract, { skipValidation: true });
+    it('should return new Data Contract without validation if "skipValidation" option is passed', async () => {
+      const result = await factory.createFromObject(rawDataContract, { skipValidation: true });
 
       expect(result).to.equal(dataContract);
 
@@ -81,14 +81,14 @@ describe('DataContractFactory', () => {
       expect(createDataContractMock).to.have.been.calledOnceWith(rawDataContract);
     });
 
-    it('should throw an error if passed object is not valid', () => {
+    it('should throw an error if passed object is not valid', async () => {
       const validationError = new ConsensusError('test');
 
       validateDataContractMock.returns(new ValidationResult([validationError]));
 
       let error;
       try {
-        factory.createFromObject(rawDataContract);
+        await factory.createFromObject(rawDataContract);
       } catch (e) {
         error = e;
       }
@@ -113,14 +113,14 @@ describe('DataContractFactory', () => {
       this.sinonSandbox.stub(factory, 'createFromObject');
     });
 
-    it('should return new Data Contract from serialized contract', () => {
+    it('should return new Data Contract from serialized contract', async () => {
       const serializedDataContract = dataContract.serialize();
 
       decodeMock.returns(rawDataContract);
 
       factory.createFromObject.returns(dataContract);
 
-      const result = factory.createFromSerialized(serializedDataContract);
+      const result = await factory.createFromSerialized(serializedDataContract);
 
       expect(result).to.equal(dataContract);
 

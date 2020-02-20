@@ -1,6 +1,6 @@
 {
   "name": "@dashevo/dpp",
-  "version": "0.11.0-dev.1",
+  "version": "0.11.0-dev.3",
   "description": "The JavaScript implementation of the Dash Platform Protocol",
   "scripts": {
     "lint": "eslint .",
@@ -61,6 +61,7 @@
     "ajv": "^6.10.2",
     "bs58": "^4.0.1",
     "cbor": "^5.0.1",
+    "json-schema-ref-parser": "^7.1.3",
     "lodash.get": "^4.4.2",
     "lodash.mergewith": "^4.6.2",
     "lodash.set": "^4.3.2",
