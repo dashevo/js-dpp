@@ -15,6 +15,7 @@ const UndefinedIndexPropertyError = require('../../../lib/errors/UndefinedIndexP
 const InvalidIndexPropertyTypeError = require('../../../lib/errors/InvalidIndexPropertyTypeError');
 const SystemPropertyIndexAlreadyPresentError = require('../../../lib/errors/SystemPropertyIndexAlreadyPresentError');
 const UniqueIndicesLimitReached = require('../../../lib/errors/UniqueIndicesLimitReached');
+const DataContractMaxByteSizeExceededError = require('../../../lib/errors/DataContractMaxByteSizeExceededError');
 
 const originalEnv = { ...process.env };
 
@@ -33,6 +34,24 @@ describe('validateDataContractFactory', () => {
     process.env = { ...originalEnv };
 
     validateDataContract = validateDataContractFactory(validator);
+  });
+
+  describe('byte size limit', () => {
+    it('should limit data contract byte size to 15 Kb', () => {
+      const hugeDataContract = {};
+      for (let i = 0; i < 2200; i++) {
+        hugeDataContract[i] = i;
+      }
+
+      const result = validateDataContract(hugeDataContract);
+
+      expectValidationError(result, DataContractMaxByteSizeExceededError);
+
+      const [error] = result.getErrors();
+
+      expect(error.getDataContract()).to.deep.equal(hugeDataContract);
+      expect(error.getSizeLimit()).to.equal(15 * 1024);
+    });
   });
 
   describe('$schema', () => {
