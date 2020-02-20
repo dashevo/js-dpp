@@ -7,6 +7,8 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const validateDataContractFactory = require('../../../lib/dataContract/validateDataContractFactory');
 const validateDataContractMaxDepthFactory = require('../../../lib/dataContract/stateTransition/validation/validateDataContractMaxDepthFactory');
+const enrichDataContractWithBaseDocument = require('../../../lib/dataContract/enrichDataContractWithBaseDocument');
+const createDataContract = require('../../../lib/dataContract/createDataContract');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
@@ -16,7 +18,7 @@ const DuplicateIndexError = require('../../../lib/errors/DuplicateIndexError');
 const UndefinedIndexPropertyError = require('../../../lib/errors/UndefinedIndexPropertyError');
 const InvalidIndexPropertyTypeError = require('../../../lib/errors/InvalidIndexPropertyTypeError');
 const SystemPropertyIndexAlreadyPresentError = require('../../../lib/errors/SystemPropertyIndexAlreadyPresentError');
-const UniqueIndicesLimitReached = require('../../../lib/errors/UniqueIndicesLimitReached');
+const UniqueIndicesLimitReachedError = require('../../../lib/errors/UniqueIndicesLimitReachedError');
 
 const originalEnv = { ...process.env };
 
@@ -39,6 +41,8 @@ describe('validateDataContractFactory', () => {
     validateDataContract = validateDataContractFactory(
       jsonSchemaValidator,
       validateDataContractMaxDepth,
+      enrichDataContractWithBaseDocument,
+      createDataContract,
     );
   });
 
@@ -904,6 +908,31 @@ describe('validateDataContractFactory', () => {
         expect(error.keyword).to.equal('maximum');
       });
 
+      it('should return invalid result if document JSON Schema is not valid', async () => {
+        rawDataContract.documents.indexedDocument = {
+          type: 'object',
+          properties: {
+            something: {
+              type: 'string',
+              format: 'lalala',
+              maxLength: 100,
+            },
+          },
+          additionalProperties: false,
+        };
+
+        const result = await validateDataContract(rawDataContract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.message).to.equal(
+          'unknown format "lalala" is used in '
+          + 'schema at path "dataContract#/documents/indexedDocument/properties/something"',
+        );
+      });
+
       it('should have `maxLength` if `pattern` is used', async () => {
         rawDataContract.documents.indexedDocument = {
           type: 'object',
@@ -1239,7 +1268,7 @@ describe('validateDataContractFactory', () => {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectValidationError(result, UniqueIndicesLimitReached);
+        expectValidationError(result, UniqueIndicesLimitReachedError);
 
         const [error] = result.getErrors();
 
