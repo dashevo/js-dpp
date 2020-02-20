@@ -1412,7 +1412,6 @@ describe('validateDataContractFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.getDataContract()).to.deep.equal(hugeDataContract);
-    expect(error.getSizeLimit()).to.equal(15 * 1024);
   });
 
   it('should return valid result if Data Contract is valid', () => {
