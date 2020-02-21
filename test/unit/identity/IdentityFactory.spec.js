@@ -122,12 +122,15 @@ describe('IdentityFactory', () => {
         factory.createFromSerialized(serializedIdentity);
         expect.fail('Error was not thrown');
       } catch (e) {
-        expect(e).to.be.an.instanceOf(SerializedObjectParsingError);
-        expect(e.getObjectType()).to.equal(
+        expect(e).to.be.an.instanceOf(InvalidIdentityError);
+
+        const [innerError] = e.getErrors();
+        expect(innerError).to.be.an.instanceOf(SerializedObjectParsingError);
+        expect(innerError.getObjectType()).to.equal(
           SerializedObjectParsingError.OBJECT_TYPE.IDENTITY,
         );
-        expect(e.getPayload()).to.deep.equal(serializedIdentity);
-        expect(e.getParsingError()).to.deep.equal(parsingError);
+        expect(innerError.getPayload()).to.deep.equal(serializedIdentity);
+        expect(innerError.getParsingError()).to.deep.equal(parsingError);
       }
     });
   });
