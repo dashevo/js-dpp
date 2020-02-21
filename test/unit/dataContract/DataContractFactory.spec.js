@@ -145,9 +145,6 @@ describe('DataContractFactory', () => {
         const [innerError] = e.getErrors();
 
         expect(innerError).to.be.an.instanceOf(SerializedObjectParsingError);
-        expect(innerError.getObjectType()).to.equal(
-          SerializedObjectParsingError.OBJECT_TYPE.DATA_CONTRACT,
-        );
         expect(innerError.getPayload()).to.deep.equal(serializedDataContract);
         expect(innerError.getParsingError()).to.deep.equal(parsingError);
       }

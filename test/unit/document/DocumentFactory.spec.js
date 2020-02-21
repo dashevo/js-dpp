@@ -220,9 +220,6 @@ describe('DocumentFactory', () => {
         const [innerError] = e.getErrors();
 
         expect(innerError).to.be.an.instanceOf(SerializedObjectParsingError);
-        expect(innerError.getObjectType()).to.equal(
-          SerializedObjectParsingError.OBJECT_TYPE.DOCUMENT,
-        );
         expect(innerError.getPayload()).to.deep.equal(serializedDocument);
         expect(innerError.getParsingError()).to.deep.equal(parsingError);
       }

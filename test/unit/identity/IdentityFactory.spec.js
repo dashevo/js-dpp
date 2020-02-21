@@ -126,9 +126,6 @@ describe('IdentityFactory', () => {
 
         const [innerError] = e.getErrors();
         expect(innerError).to.be.an.instanceOf(SerializedObjectParsingError);
-        expect(innerError.getObjectType()).to.equal(
-          SerializedObjectParsingError.OBJECT_TYPE.IDENTITY,
-        );
         expect(innerError.getPayload()).to.deep.equal(serializedIdentity);
         expect(innerError.getParsingError()).to.deep.equal(parsingError);
       }
