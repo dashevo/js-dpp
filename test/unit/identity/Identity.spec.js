@@ -21,6 +21,7 @@ describe('Identity', () => {
           isEnabled: true,
         },
       ],
+      balance: 0,
     };
 
     hashMock = this.sinonSandbox.stub();
@@ -131,6 +132,13 @@ describe('Identity', () => {
       const json = identity.toJSON();
 
       expect(json).to.deep.equal(rawIdentity);
+    });
+  });
+
+  describe('#getBalance', () => {
+    it('should return set identity balance', () => {
+      identity.balance = 42;
+      expect(identity.getBalance()).to.equal(42);
     });
   });
 });
