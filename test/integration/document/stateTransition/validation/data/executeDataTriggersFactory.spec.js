@@ -59,7 +59,7 @@ describe('executeDataTriggersFactory', () => {
     const userId = 'userId';
 
     context = new DataTriggerExecutionContext(
-      null, userId, contractMock, stateTransitionHeaderMock,
+      null, userId, contractMock,
     );
 
     documents = [childDocument];

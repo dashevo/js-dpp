@@ -15,7 +15,7 @@ describe('findDuplicateDocumentsByIndices', () => {
       indices: [
         {
           properties: {
-            $userId: 'asc',
+            $ownerId: 'asc',
             lastName: 'asc',
           },
           unique: false,
@@ -37,7 +37,7 @@ describe('findDuplicateDocumentsByIndices', () => {
       indices: [
         {
           properties: {
-            $userId: 'asc',
+            $ownerId: 'asc',
             lastName: 'asc',
           },
           unique: true,

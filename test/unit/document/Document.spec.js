@@ -31,7 +31,7 @@ describe('Document', () => {
     rawDocument = {
       $type: 'test',
       $contractId: generateRandomId(),
-      $userId: generateRandomId(),
+      $ownerId: generateRandomId(),
       $entropy: 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh',
       $rev: Document.DEFAULTS.REVISION,
     };
@@ -78,19 +78,19 @@ describe('Document', () => {
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
-    it('should create Document with $userId and data if present', () => {
+    it('should create Document with $ownerId and data if present', () => {
       const data = {
         test: 1,
       };
 
       rawDocument = {
-        $userId: generateRandomId(),
+        $ownerId: generateRandomId(),
         ...data,
       };
 
       document = new Document(rawDocument);
 
-      expect(document.userId).to.equal(rawDocument.$userId);
+      expect(document.ownerId).to.equal(rawDocument.$ownerId);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
@@ -153,7 +153,7 @@ describe('Document', () => {
 
       expect(hashMock).to.have.been.calledOnceWith(
         rawDocument.$contractId
-        + rawDocument.$userId
+        + rawDocument.$ownerId
         + rawDocument.$type
         + rawDocument.$entropy,
       );
@@ -180,15 +180,15 @@ describe('Document', () => {
     });
   });
 
-  describe('#getUserId', () => {
-    it('should return $userId', () => {
-      expect(document.getUserId()).to.equal(rawDocument.$userId);
+  describe('#getOwnerId', () => {
+    it('should return $ownerId', () => {
+      expect(document.getOwnerId()).to.equal(rawDocument.$ownerId);
     });
   });
 
   describe('#getContractId', () => {
     it('should return $contractId', () => {
-      expect(document.getUserId()).to.equal(rawDocument.$userId);
+      expect(document.getOwnerId()).to.equal(rawDocument.$ownerId);
     });
   });
 

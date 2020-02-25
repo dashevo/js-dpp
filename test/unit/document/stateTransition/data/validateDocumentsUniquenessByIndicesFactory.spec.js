@@ -15,10 +15,10 @@ describe('validateDocumentsUniquenessByIndices', () => {
   let validateDocumentsUniquenessByIndices;
   let documents;
   let dataContract;
-  let userId;
+  let ownerId;
 
   beforeEach(function beforeEach() {
-    ({ userId } = getDocumentsFixture);
+    ({ ownerId } = getDocumentsFixture);
 
     documents = getDocumentsFixture();
     dataContract = getContractFixture();
@@ -42,7 +42,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
         william.getType(),
         {
           where: [
-            ['$userId', '==', userId],
+            ['$ownerId', '==', ownerId],
             ['firstName', '==', william.get('firstName')],
           ],
         },
@@ -55,7 +55,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
         william.getType(),
         {
           where: [
-            ['$userId', '==', userId],
+            ['$ownerId', '==', ownerId],
             ['lastName', '==', william.get('lastName')],
           ],
         },
@@ -79,7 +79,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
         william.getType(),
         {
           where: [
-            ['$userId', '==', userId],
+            ['$ownerId', '==', ownerId],
             ['firstName', '==', william.get('firstName')],
           ],
         },
@@ -92,7 +92,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
         william.getType(),
         {
           where: [
-            ['$userId', '==', userId],
+            ['$ownerId', '==', ownerId],
             ['lastName', '==', william.get('lastName')],
           ],
         },
@@ -105,7 +105,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
         leon.getType(),
         {
           where: [
-            ['$userId', '==', userId],
+            ['$ownerId', '==', ownerId],
             ['firstName', '==', leon.get('firstName')],
           ],
         },
@@ -118,7 +118,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
         leon.getType(),
         {
           where: [
-            ['$userId', '==', userId],
+            ['$ownerId', '==', ownerId],
             ['lastName', '==', leon.get('lastName')],
           ],
         },

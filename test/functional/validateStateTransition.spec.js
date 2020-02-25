@@ -207,7 +207,7 @@ describe.skip('validateStateTransition', function main() {
         expect(error.indexDefinition).to.deep.equal({
           unique: true,
           properties: [
-            { $userId: 'asc' },
+            { $ownerId: 'asc' },
             { lastName: 'desc' },
           ],
         });

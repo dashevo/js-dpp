@@ -27,14 +27,14 @@ describe('validateDocumentsSTDataFactory', () => {
   let stateTransition;
   let documents;
   let dataContract;
-  let userId;
+  let ownerId;
   let validateDocumentsUniquenessByIndicesMock;
   let dataProviderMock;
   let executeDataTriggersMock;
   let fetchAndValidateDataContractMock;
 
   beforeEach(function beforeEach() {
-    ({ userId } = getDocumentsFixture);
+    ({ ownerId } = getDocumentsFixture);
 
     documents = getDocumentsFixture();
     dataContract = getContractFixture();
@@ -242,7 +242,7 @@ describe('validateDocumentsSTDataFactory', () => {
   it('should return invalid result if data triggers execution failed', async () => {
     const dataTriggersExecutionContext = new DataTriggerExecutionContext(
       dataProviderMock,
-      userId,
+      ownerId,
       dataContract,
     );
 
@@ -297,7 +297,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
     const dataTriggersExecutionContext = new DataTriggerExecutionContext(
       dataProviderMock,
-      userId,
+      ownerId,
       dataContract,
     );
 
