@@ -12,7 +12,6 @@ const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixt
 
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 
-const Identity = require('../../../lib/identity/Identity');
 const IdentityPublicKey = require('../../../lib/identity/IdentityPublicKey');
 
 const MissingOptionError = require('../../../lib/errors/MissingOptionError');
@@ -176,7 +175,6 @@ describe('StateTransitionFacade', () => {
 
       dataProviderMock.fetchDataContract.resolves(dataContract);
       dataProviderMock.fetchIdentity.resolves({
-        type: Identity.TYPES.USER,
         getPublicKeyById: this.sinonSandbox.stub().returns(identityPublicKey),
       });
 

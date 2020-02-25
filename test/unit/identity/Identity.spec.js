@@ -12,7 +12,6 @@ describe('Identity', () => {
   beforeEach(function beforeEach() {
     rawIdentity = {
       id: 'someId',
-      type: 0,
       publicKeys: [
         {
           id: 1,
@@ -62,13 +61,6 @@ describe('Identity', () => {
   describe('#getId', () => {
     it('should return set id', () => {
       expect(identity.getId()).to.equal(rawIdentity.id);
-    });
-  });
-
-  describe('#getType', () => {
-    it('should return set identity type', () => {
-      identity.type = 42;
-      expect(identity.getType()).to.equal(42);
     });
   });
 
