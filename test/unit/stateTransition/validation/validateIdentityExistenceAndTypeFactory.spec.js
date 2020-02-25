@@ -17,7 +17,7 @@ const UnexpectedIdentityTypeError = require('../../../../lib/errors/UnexpectedId
 describe('validateIdentityExistenceAndType', () => {
   let validateIdentityExistenceAndType;
   let dataProviderMock;
-  let userId;
+  let ownerId;
   let rawIdentityUser;
 
   beforeEach(function beforeEach() {
@@ -27,10 +27,10 @@ describe('validateIdentityExistenceAndType', () => {
       dataProviderMock,
     );
 
-    userId = generateRandomId();
+    ownerId = generateRandomId();
 
     rawIdentityUser = {
-      id: userId,
+      id: ownerId,
       type: Identity.TYPES.USER,
       publicKeys: [
         {
@@ -44,19 +44,19 @@ describe('validateIdentityExistenceAndType', () => {
   });
 
   it('should return invalid result if identity is not found', async () => {
-    const result = await validateIdentityExistenceAndType(userId, [Identity.TYPES.USER]);
+    const result = await validateIdentityExistenceAndType(ownerId, [Identity.TYPES.USER]);
 
     expectValidationError(result, IdentityNotFoundError);
 
     const [error] = result.getErrors();
 
-    expect(error.getIdentityId()).to.equal(userId);
+    expect(error.getIdentityId()).to.equal(ownerId);
   });
 
   it('should return invalid result if the identity has the wrong type', async () => {
     dataProviderMock.fetchIdentity.resolves(rawIdentityUser);
 
-    const result = await validateIdentityExistenceAndType(userId, [Identity.TYPES.APPLICATION]);
+    const result = await validateIdentityExistenceAndType(ownerId, [Identity.TYPES.APPLICATION]);
 
     expectValidationError(result, UnexpectedIdentityTypeError);
 
@@ -65,13 +65,13 @@ describe('validateIdentityExistenceAndType', () => {
     expect(error.getIdentity()).to.equal(rawIdentityUser);
     expect(error.getExpectedIdentityTypes()).to.deep.equal([Identity.TYPES.APPLICATION]);
 
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWith(userId);
+    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWith(ownerId);
   });
 
   it('should return valid result', async () => {
     dataProviderMock.fetchIdentity.resolves(rawIdentityUser);
 
-    const result = await validateIdentityExistenceAndType(userId, [Identity.TYPES.USER]);
+    const result = await validateIdentityExistenceAndType(ownerId, [Identity.TYPES.USER]);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();

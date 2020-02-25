@@ -249,7 +249,7 @@ describe('validateDocumentsSTDataFactory', () => {
     const dataTriggerExecutionError = new DataTriggerExecutionError(
       documents[0],
       dataTriggersExecutionContext.getDataContract(),
-      dataTriggersExecutionContext.getUserId(),
+      dataTriggersExecutionContext.getOwnerId(),
       new Error('error'),
     );
 
