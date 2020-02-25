@@ -49,6 +49,7 @@ describe('IdentityFactory', () => {
       const result = factory.create(
         identity.getId(),
         identity.getType(),
+        identity.getBalance(),
         identity.getPublicKeys(),
       );
 
