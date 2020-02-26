@@ -56,9 +56,9 @@ async function registerUser(coreApi) {
     .fee(668)
     .sign(privateKey);
 
-  const { result: userId } = await coreApi.sendrawtransaction(transaction.serialize());
+  const { result } = await coreApi.sendrawtransaction(transaction.serialize());
 
-  return userId;
+  return result;
 }
 
 describe.skip('validateStateTransition', function main() {
@@ -104,15 +104,15 @@ describe.skip('validateStateTransition', function main() {
     dataContract = getDataContractFixture();
     documents = getDocumentsFixture();
 
-    const userId = await registerUser(coreApi);
+    const ownerId = await registerUser(coreApi);
 
-    dataContract.contractId = userId;
+    dataContract.contractId = ownerId;
 
     documents.forEach((d) => {
       // eslint-disable-next-line
-      d.contractId = userId;
+      d.contractId = ownerId;
       // eslint-disable-next-line
-      d.userId = userId;
+      d.ownerId = ownerId;
     });
   });
 
@@ -207,7 +207,7 @@ describe.skip('validateStateTransition', function main() {
         expect(error.indexDefinition).to.deep.equal({
           unique: true,
           properties: [
-            { $userId: 'asc' },
+            { $ownerId: 'asc' },
             { lastName: 'desc' },
           ],
         });

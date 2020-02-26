@@ -1173,7 +1173,7 @@ describe('validateDataContractFactory', () => {
 
           it('should have property values only "asc" or "desc"', async () => {
             rawDataContract.documents.indexedDocument.indices[0]
-              .properties[0].$userId = 'wrong';
+              .properties[0].$ownerId = 'wrong';
 
             const result = await validateDataContract(rawDataContract);
 
@@ -1182,7 +1182,7 @@ describe('validateDataContractFactory', () => {
             const [error] = result.getErrors();
 
             expect(error.dataPath).to.equal(
-              '.documents[\'indexedDocument\'].indices[0].properties[0][\'$userId\']',
+              '.documents[\'indexedDocument\'].indices[0].properties[0][\'$ownerId\']',
             );
             expect(error.keyword).to.equal('enum');
           });

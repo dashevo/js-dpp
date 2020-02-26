@@ -15,7 +15,7 @@ const IdentityNotFoundError = require('../../../../lib/errors/IdentityNotFoundEr
 describe('validateIdentityExistence', () => {
   let validateIdentityExistence;
   let dataProviderMock;
-  let userId;
+  let ownerId;
   let rawIdentityUser;
 
   beforeEach(function beforeEach() {
@@ -25,10 +25,10 @@ describe('validateIdentityExistence', () => {
       dataProviderMock,
     );
 
-    userId = generateRandomId();
+    ownerId = generateRandomId();
 
     rawIdentityUser = {
-      id: userId,
+      id: ownerId,
       publicKeys: [
         {
           id: 1,
@@ -41,19 +41,19 @@ describe('validateIdentityExistence', () => {
   });
 
   it('should return invalid result if identity is not found', async () => {
-    const result = await validateIdentityExistence(userId);
+    const result = await validateIdentityExistence(ownerId);
 
     expectValidationError(result, IdentityNotFoundError);
 
     const [error] = result.getErrors();
 
-    expect(error.getIdentityId()).to.equal(userId);
+    expect(error.getIdentityId()).to.equal(ownerId);
   });
 
   it('should return valid result', async () => {
     dataProviderMock.fetchIdentity.resolves(rawIdentityUser);
 
-    const result = await validateIdentityExistence(userId);
+    const result = await validateIdentityExistence(ownerId);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
