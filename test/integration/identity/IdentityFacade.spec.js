@@ -19,10 +19,11 @@ describe('IdentityFacade', () => {
 
   describe('#create', () => {
     it('should create Identity', () => {
+      identity.balance = 0;
+
       const result = dpp.identity.create(
         identity.getId(),
         identity.getType(),
-        identity.getBalance(),
         identity.getPublicKeys(),
       );
 
