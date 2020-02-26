@@ -19,7 +19,7 @@ describe('DocumentFactory', () => {
   let validateDocumentMock;
   let fetchAndValidateDataContractMock;
   let DocumentFactory;
-  let userId;
+  let ownerId;
   let dataContract;
   let document;
   let documents;
@@ -27,7 +27,7 @@ describe('DocumentFactory', () => {
   let factory;
 
   beforeEach(function beforeEach() {
-    ({ userId } = getDocumentsFixture);
+    ({ ownerId } = getDocumentsFixture);
     dataContract = getDataContractFixture();
 
     documents = getDocumentsFixture();
@@ -66,7 +66,7 @@ describe('DocumentFactory', () => {
 
       const newDocument = factory.create(
         dataContract,
-        userId,
+        ownerId,
         rawDocument.$type,
         { name },
       );
@@ -78,7 +78,7 @@ describe('DocumentFactory', () => {
       expect(newDocument.get('name')).to.equal(name);
 
       expect(newDocument.contractId).to.equal(contractId);
-      expect(newDocument.userId).to.equal(userId);
+      expect(newDocument.ownerId).to.equal(ownerId);
 
       expect(generateMock).to.have.been.calledOnce();
       expect(newDocument.entropy).to.equal(entropy);
@@ -92,7 +92,7 @@ describe('DocumentFactory', () => {
       const type = 'wrong';
 
       try {
-        factory.create(dataContract, userId, type);
+        factory.create(dataContract, ownerId, type);
 
         expect.fail('InvalidDocumentTypeError should be thrown');
       } catch (e) {

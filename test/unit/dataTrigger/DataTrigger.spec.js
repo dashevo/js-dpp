@@ -25,7 +25,7 @@ describe('DataTrigger', () => {
       dataContractMock,
     );
 
-    topLevelIdentity = context.getUserId();
+    topLevelIdentity = context.getOwnerId();
   });
 
   it('should check trigger fields', () => {
