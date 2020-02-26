@@ -1,4 +1,3 @@
-const bs58 = require('bs58');
 const rewiremock = require('rewiremock/node');
 
 const generateRandomId = require('../../../lib/test/utils/generateRandomId');
@@ -29,6 +28,7 @@ describe('Document', () => {
     });
 
     rawDocument = {
+      $id: 'D3AT6rBtyTqx3hXFckwtP81ncu49y5ndE7ot9JkuNSeB',
       $type: 'test',
       $contractId: generateRandomId(),
       $ownerId: generateRandomId(),
@@ -44,6 +44,22 @@ describe('Document', () => {
   describe('constructor', () => {
     beforeEach(function beforeEach() {
       Document.prototype.setData = this.sinonSandbox.stub();
+    });
+
+    it('should create Document with $id and data if present', () => {
+      const data = {
+        test: 1,
+      };
+
+      rawDocument = {
+        $id: 'id',
+        ...data,
+      };
+
+      document = new Document(rawDocument);
+
+      expect(document.id).to.equal(rawDocument.$id);
+      expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
     it('should create Document with $type and data if present', () => {
@@ -143,25 +159,7 @@ describe('Document', () => {
   });
 
   describe('#getId', () => {
-    it('should calculate and return ID', () => {
-      const idBuffer = Buffer.from('123');
-      const id = bs58.encode(idBuffer);
-
-      hashMock.returns(idBuffer);
-
-      const actualId = document.getId();
-
-      expect(hashMock).to.have.been.calledOnceWith(
-        rawDocument.$contractId
-        + rawDocument.$ownerId
-        + rawDocument.$type
-        + rawDocument.$entropy,
-      );
-
-      expect(id).to.equal(actualId);
-    });
-
-    it('should return already calculated ID', () => {
+    it('should ID', () => {
       const id = '123';
 
       document.id = id;
