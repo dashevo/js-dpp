@@ -1,5 +1,4 @@
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
-const getContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 
 const fetchDocumentsByDocumentsFactory = require('../../../../../lib/document/stateTransition/validation/data/fetchDocumentsFactory');
 
@@ -17,7 +16,7 @@ describe('fetchDocumentsFactory', () => {
     fetchDocuments = fetchDocumentsByDocumentsFactory(dataProviderMock);
 
     documents = getDocumentsFixture();
-    dataContract = getContractFixture();
+    dataContract = getDocumentsFixture.dataContract;
   });
 
   it('should fetch specified Documents using DataProvider', async () => {

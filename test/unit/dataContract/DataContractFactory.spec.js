@@ -18,6 +18,7 @@ describe('DataContractFactory', () => {
   let factory;
   let dataContract;
   let rawDataContract;
+  let entropyMock;
 
   beforeEach(function beforeEach() {
     dataContract = getDataContractFixture();
@@ -26,6 +27,9 @@ describe('DataContractFactory', () => {
     decodeMock = this.sinonSandbox.stub();
     validateDataContractMock = this.sinonSandbox.stub();
     createDataContractMock = this.sinonSandbox.stub().returns(dataContract);
+    entropyMock = {
+      generate: this.sinonSandbox.stub(),
+    };
 
     // Require Factory module for webpack
     // eslint-disable-next-line global-require
@@ -33,6 +37,7 @@ describe('DataContractFactory', () => {
 
     DataContractFactory = rewiremock.proxy('../../../lib/dataContract/DataContractFactory', {
       '../../../lib/util/serializer': { decode: decodeMock },
+      '../../../lib/util/entropy': entropyMock,
       '../../../lib/dataContract/stateTransition/DataContractStateTransition': DataContractStateTransition,
     });
 
@@ -44,15 +49,17 @@ describe('DataContractFactory', () => {
 
   describe('create', () => {
     it('should return new Data Contract with specified name and documents definition', () => {
+      entropyMock.generate.returns(rawDataContract.$entropy);
       const result = factory.create(
-        rawDataContract.contractId,
+        rawDataContract.$ownerId,
         rawDataContract.documents,
       );
 
       expect(result).to.equal(dataContract);
 
       expect(createDataContractMock).to.have.been.calledOnceWith({
-        contractId: rawDataContract.contractId,
+        $ownerId: rawDataContract.$ownerId,
+        $entropy: rawDataContract.$entropy,
         documents: rawDataContract.documents,
       });
     });

@@ -1,3 +1,5 @@
+const bs58 = require('bs58');
+
 const rewiremock = require('rewiremock/node');
 
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
@@ -12,7 +14,8 @@ describe('DataContract', () => {
   let documentSchema;
   let documents;
   let dataContract;
-  let contractId;
+  let ownerId;
+  let entropy;
 
   beforeEach(function beforeEach() {
     hashMock = this.sinonSandbox.stub();
@@ -38,14 +41,15 @@ describe('DataContract', () => {
       [documentType]: documentSchema,
     };
 
-    contractId = generateRandomId();
+    ownerId = generateRandomId();
+    entropy = 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh';
 
-    dataContract = new DataContract(contractId, documents);
+    dataContract = new DataContract(ownerId, entropy, documents);
   });
 
   describe('constructor', () => {
     it('should create new DataContract', () => {
-      dataContract = new DataContract(contractId, documents);
+      dataContract = new DataContract(ownerId, entropy, documents);
 
       expect(dataContract.version).to.equal(DataContract.DEFAULTS.VERSION);
       expect(dataContract.schema).to.equal(DataContract.DEFAULTS.SCHEMA);
@@ -55,9 +59,14 @@ describe('DataContract', () => {
 
   describe('#getId', () => {
     it('should return base58 encoded DataContract ID', () => {
+      const hashed = Buffer.from(ownerId + entropy);
+      hashMock.returns(hashed);
+
+      const id = bs58.encode(hashed);
+
       const result = dataContract.getId();
 
-      expect(result).to.equal(contractId);
+      expect(result).to.equal(id);
     });
   });
 
@@ -229,7 +238,8 @@ describe('DataContract', () => {
 
       expect(result).to.deep.equal({
         $schema: DataContract.DEFAULTS.SCHEMA,
-        contractId,
+        $ownerId: ownerId,
+        $entropy: entropy,
         version: DataContract.DEFAULTS.VERSION,
         documents,
       });
@@ -246,7 +256,8 @@ describe('DataContract', () => {
 
       expect(result).to.deep.equal({
         $schema: DataContract.DEFAULTS.SCHEMA,
-        contractId,
+        $ownerId: ownerId,
+        $entropy: entropy,
         version: DataContract.DEFAULTS.VERSION,
         documents,
         definitions,

@@ -20,6 +20,7 @@ const InvalidIndexPropertyTypeError = require('../../../lib/errors/InvalidIndexP
 const SystemPropertyIndexAlreadyPresentError = require('../../../lib/errors/SystemPropertyIndexAlreadyPresentError');
 const UniqueIndicesLimitReachedError = require('../../../lib/errors/UniqueIndicesLimitReachedError');
 const DataContractMaxByteSizeExceededError = require('../../../lib/errors/DataContractMaxByteSizeExceededError');
+const InvalidDataContractEntropyError = require('../../../lib/errors/InvalidDataContractEntropyError');
 
 describe('validateDataContractFactory', () => {
   let rawDataContract;
@@ -83,9 +84,9 @@ describe('validateDataContractFactory', () => {
     });
   });
 
-  describe('contractId', () => {
+  describe('ownerId', () => {
     it('should be present', async () => {
-      delete rawDataContract.contractId;
+      delete rawDataContract.$ownerId;
 
       const result = await validateDataContract(rawDataContract);
 
@@ -95,11 +96,11 @@ describe('validateDataContractFactory', () => {
 
       expect(error.dataPath).to.equal('');
       expect(error.keyword).to.equal('required');
-      expect(error.params.missingProperty).to.equal('contractId');
+      expect(error.params.missingProperty).to.equal('$ownerId');
     });
 
     it('should be a string', async () => {
-      rawDataContract.contractId = 1;
+      rawDataContract.$ownerId = 1;
 
       const result = await validateDataContract(rawDataContract);
 
@@ -107,12 +108,12 @@ describe('validateDataContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.contractId');
+      expect(error.dataPath).to.equal('.$ownerId');
       expect(error.keyword).to.equal('type');
     });
 
     it('should be no less than 42 chars', async () => {
-      rawDataContract.contractId = '1'.repeat(41);
+      rawDataContract.$ownerId = '1'.repeat(41);
 
       const result = await validateDataContract(rawDataContract);
 
@@ -120,12 +121,12 @@ describe('validateDataContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.contractId');
+      expect(error.dataPath).to.equal('.$ownerId');
       expect(error.keyword).to.equal('minLength');
     });
 
     it('should be no longer than 44 chars', async () => {
-      rawDataContract.contractId = '1'.repeat(45);
+      rawDataContract.$ownerId = '1'.repeat(45);
 
       const result = await validateDataContract(rawDataContract);
 
@@ -133,12 +134,12 @@ describe('validateDataContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.contractId');
+      expect(error.dataPath).to.equal('.$ownerId');
       expect(error.keyword).to.equal('maxLength');
     });
 
     it('should be base58 encoded', async () => {
-      rawDataContract.contractId = '&'.repeat(44);
+      rawDataContract.$ownerId = '&'.repeat(44);
 
       const result = await validateDataContract(rawDataContract);
 
@@ -147,7 +148,75 @@ describe('validateDataContractFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('pattern');
-      expect(error.dataPath).to.equal('.contractId');
+      expect(error.dataPath).to.equal('.$ownerId');
+    });
+  });
+
+  describe('$entropy', () => {
+    it('should be present', async () => {
+      delete rawDataContract.$entropy;
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('$entropy');
+    });
+
+    it('should be a string', async () => {
+      rawDataContract.$entropy = 1;
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.$entropy');
+      expect(error.keyword).to.equal('type');
+    });
+
+    it('should be no less than 34 chars', async () => {
+      rawDataContract.$entropy = '86b273ff';
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.$entropy');
+      expect(error.keyword).to.equal('minLength');
+    });
+
+    it('should be no longer than 34 chars', async () => {
+      rawDataContract.$entropy = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.$entropy');
+      expect(error.keyword).to.equal('maxLength');
+    });
+
+    it('should be valid entropy', async () => {
+      rawDataContract.$entropy = '86b273ff86b273ff86b273ff86b273ff86';
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectValidationError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error).to.be.an.instanceOf(InvalidDataContractEntropyError);
+      expect(error.getRawDataContract()).to.equal(rawDataContract);
     });
   });
 

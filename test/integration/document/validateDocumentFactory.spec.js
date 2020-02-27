@@ -7,7 +7,6 @@ const Document = require('../../../lib/document/Document');
 const validateDocumentFactory = require('../../../lib/document/validateDocumentFactory');
 const enrichDataContractWithBaseDocument = require('../../../lib/dataContract/enrichDataContractWithBaseDocument');
 
-const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
 const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTypeError');
@@ -40,7 +39,7 @@ describe('validateDocumentFactory', () => {
     validator = new JsonSchemaValidator(ajv);
     this.sinonSandbox.spy(validator, 'validate');
 
-    dataContract = getDataContractFixture();
+    dataContract = getDocumentsFixture.dataContract;
 
     validateDocument = validateDocumentFactory(
       validator,
