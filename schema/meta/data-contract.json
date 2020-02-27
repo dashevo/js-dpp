@@ -300,11 +300,16 @@
       "type": "string",
       "const": "https://schema.dash.org/dpp-0-4-0/meta/data-contract"
     },
-    "contractId":{
+    "$ownerId":{
       "type": "string",
       "minLength": 42,
       "maxLength": 44,
       "pattern": "^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$"
+    },
+    "$entropy": {
+      "type": "string",
+      "minLength": 34,
+      "maxLength": 34
     },
     "version": {
       "type": "number",
@@ -455,7 +460,8 @@
   },
   "required": [
     "$schema",
-    "contractId",
+    "$ownerId",
+    "$entropy",
     "version",
     "documents"
   ],
