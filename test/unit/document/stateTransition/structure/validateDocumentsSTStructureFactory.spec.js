@@ -217,7 +217,7 @@ describe('validateDocumentsSTStructureFactory', () => {
 
     expect(findDuplicateDocumentsByIdMock).to.be.called(documents);
     expect(findDuplicateDocumentsByIndicesMock).to.be.calledOnceWith(documents, dataContract);
-    expect(validateStateTransitionSignatureMock).to.be.not.called(stateTransition, userId);
+    expect(validateStateTransitionSignatureMock).to.be.not.called(stateTransition, ownerId);
     expect(validateIdentityExistenceMock).to.be.calledOnceWith(
       ownerId,
     );
@@ -249,7 +249,7 @@ describe('validateDocumentsSTStructureFactory', () => {
 
     expect(findDuplicateDocumentsByIdMock).to.have.been.calledOnceWith(documents);
     expect(findDuplicateDocumentsByIndicesMock).to.be.calledOnceWith(documents, dataContract);
-    expect(validateStateTransitionSignatureMock).to.be.not.called(stateTransition, userId);
+    expect(validateStateTransitionSignatureMock).to.be.not.called(stateTransition, ownerId);
     expect(validateIdentityExistenceMock).to.be.calledOnceWith(
       ownerId,
     );
@@ -323,7 +323,7 @@ describe('validateDocumentsSTStructureFactory', () => {
 
     expect(findDuplicateDocumentsByIdMock).to.have.been.calledOnceWith(documents);
     expect(findDuplicateDocumentsByIndicesMock).to.be.calledOnceWith(documents, dataContract);
-    expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(stateTransition, userId);
+    expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(stateTransition, ownerId);
     expect(validateIdentityExistenceMock).to.be.calledOnceWith(
       ownerId,
     );
@@ -348,7 +348,7 @@ describe('validateDocumentsSTStructureFactory', () => {
 
     expect(findDuplicateDocumentsByIdMock).to.have.been.calledOnceWith(documents);
     expect(findDuplicateDocumentsByIndicesMock).to.be.calledOnceWith(documents, dataContract);
-    expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(stateTransition, userId);
+    expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(stateTransition, ownerId);
     expect(validateIdentityExistenceMock).to.be.calledOnceWith(
       ownerId,
     );
