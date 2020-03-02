@@ -90,7 +90,7 @@ describe('DocumentFactory', () => {
 
       expect(newDocument.getRevision()).to.equal(Document.DEFAULTS.REVISION);
 
-      expect(newDocument.getId()).to.equal('C4n6nGfbvem2oN8kLrsubU8xjX1GQpx3uaSiLaXGsKtZ');
+      expect(newDocument.getId()).to.equal('2M7DcR6SXR8ZnpDWB1JhrVTmsx6oxwEpcrujJCGKnayh');
     });
 
     it('should throw an error if type is not defined', () => {

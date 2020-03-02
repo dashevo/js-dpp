@@ -1,4 +1,5 @@
 const Ajv = require('ajv');
+const bs58 = require('bs58');
 
 const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
@@ -13,12 +14,15 @@ const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixt
 const MissingDocumentIdError = require('../../../lib/errors/MissingDocumentIdError');
 const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTypeError');
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
+const InvalidDocumentIdError = require('../../../lib/errors/InvalidDocumentIdError');
 const InvalidDocumentEntropyError = require('../../../lib/errors/InvalidDocumentEntropyError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 const JsonSchemaError = require('../../../lib/errors/JsonSchemaError');
 const MismatchDocumentContractIdAndDataContractError = require('../../../lib/errors/MismatchDocumentContractIdAndDataContractError');
 
 const originalDocumentBaseSchema = require('../../../schema/base/document');
+
+const hash = require('../../../lib/util/hash');
 
 const {
   expectValidationError,
@@ -123,6 +127,27 @@ describe('validateDocumentFactory', () => {
 
         expect(error.keyword).to.equal('pattern');
         expect(error.dataPath).to.equal('.$id');
+      });
+
+      it('should be valid', async () => {
+        rawDocument.$id = bs58.encode(
+          hash(Buffer.concat([
+            bs58.decode(rawDocument.$contractId),
+            bs58.decode(rawDocument.$ownerId),
+            Buffer.from(rawDocument.$type),
+          ])),
+        );
+
+        const result = validateDocument(rawDocument, dataContract);
+
+        expectValidationError(
+          result,
+          InvalidDocumentIdError,
+        );
+
+        const [error] = result.getErrors();
+
+        expect(error.getRawDocument()).to.equal(rawDocument);
       });
     });
 
