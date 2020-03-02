@@ -11,7 +11,6 @@ const enrichDataContractWithBaseDocument = require('../../../lib/dataContract/en
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
-const MissingDocumentIdError = require('../../../lib/errors/MissingDocumentIdError');
 const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTypeError');
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 const InvalidDocumentIdError = require('../../../lib/errors/InvalidDocumentIdError');
@@ -67,14 +66,13 @@ describe('validateDocumentFactory', () => {
 
         const result = validateDocument(rawDocument, dataContract);
 
-        expectValidationError(
-          result,
-          MissingDocumentIdError,
-        );
+        expectJsonSchemaError(result);
 
         const [error] = result.getErrors();
 
-        expect(error.getRawDocument()).to.equal(rawDocument);
+        expect(error.dataPath).to.equal('');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('$id');
       });
 
       it('should be a string', () => {
