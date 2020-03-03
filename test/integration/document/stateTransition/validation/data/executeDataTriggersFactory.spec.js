@@ -56,10 +56,10 @@ describe('executeDataTriggersFactory', () => {
     dpnsDeleteDomainDataTriggerMock
       .execute.resolves(new DataTriggerExecutionResult());
 
-    const userId = 'userId';
+    const ownerId = 'ownerId';
 
     context = new DataTriggerExecutionContext(
-      null, userId, contractMock, stateTransitionHeaderMock,
+      null, ownerId, contractMock,
     );
 
     documents = [childDocument];

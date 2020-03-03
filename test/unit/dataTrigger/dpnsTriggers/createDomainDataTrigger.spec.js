@@ -79,7 +79,7 @@ describe('createDomainDataTrigger', () => {
       dataContract,
     );
 
-    topLevelIdentity = context.getUserId();
+    topLevelIdentity = context.getOwnerId();
   });
 
   it('should successfully execute if document is valid', async () => {
@@ -154,7 +154,7 @@ describe('createDomainDataTrigger', () => {
     expect(error.message).to.equal('Can\'t find parent domain matching parent hash');
   });
 
-  it('should fail with invalid userId', async () => {
+  it('should fail with invalid ownerId', async () => {
     childDocument = getChildDocumentFixture({
       records: {
         dashIdentity: 'invalidHash',
@@ -169,7 +169,7 @@ describe('createDomainDataTrigger', () => {
     const [error] = result.getErrors();
 
     expect(error).to.be.an.instanceOf(DataTriggerConditionError);
-    expect(error.message).to.equal('userId doesn\'t match dashIdentity');
+    expect(error.message).to.equal('ownerId doesn\'t match dashIdentity');
   });
 
   it('should fail with preorder document was not found', async () => {

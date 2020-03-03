@@ -228,9 +228,9 @@ describe('validateDocumentFactory', () => {
       });
     });
 
-    describe('$userId', () => {
+    describe('$ownerId', () => {
       it('should be present', () => {
-        delete rawDocument.$userId;
+        delete rawDocument.$ownerId;
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -240,11 +240,11 @@ describe('validateDocumentFactory', () => {
 
         expect(error.dataPath).to.equal('');
         expect(error.keyword).to.equal('required');
-        expect(error.params.missingProperty).to.equal('$userId');
+        expect(error.params.missingProperty).to.equal('$ownerId');
       });
 
       it('should be a string', () => {
-        rawDocument.$userId = 1;
+        rawDocument.$ownerId = 1;
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -252,12 +252,12 @@ describe('validateDocumentFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.$userId');
+        expect(error.dataPath).to.equal('.$ownerId');
         expect(error.keyword).to.equal('type');
       });
 
       it('should be no less than 42 chars', () => {
-        rawDocument.$userId = '1'.repeat(41);
+        rawDocument.$ownerId = '1'.repeat(41);
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -265,12 +265,12 @@ describe('validateDocumentFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.$userId');
+        expect(error.dataPath).to.equal('.$ownerId');
         expect(error.keyword).to.equal('minLength');
       });
 
       it('should be no longer than 44 chars', () => {
-        rawDocument.$userId = '1'.repeat(45);
+        rawDocument.$ownerId = '1'.repeat(45);
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -278,12 +278,12 @@ describe('validateDocumentFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.$userId');
+        expect(error.dataPath).to.equal('.$ownerId');
         expect(error.keyword).to.equal('maxLength');
       });
 
       it('should be base58 encoded', () => {
-        rawDocument.$userId = '&'.repeat(44);
+        rawDocument.$ownerId = '&'.repeat(44);
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -292,7 +292,7 @@ describe('validateDocumentFactory', () => {
         const [error] = result.getErrors();
 
         expect(error.keyword).to.equal('pattern');
-        expect(error.dataPath).to.equal('.$userId');
+        expect(error.dataPath).to.equal('.$ownerId');
       });
     });
 

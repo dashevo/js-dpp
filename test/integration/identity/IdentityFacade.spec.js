@@ -23,7 +23,6 @@ describe('IdentityFacade', () => {
 
       const result = dpp.identity.create(
         identity.getId(),
-        identity.getType(),
         identity.getPublicKeys(),
       );
 

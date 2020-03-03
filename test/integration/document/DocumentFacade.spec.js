@@ -18,12 +18,12 @@ describe('DocumentFacade', () => {
   let document;
   let documents;
   let dataContract;
-  let userId;
+  let ownerId;
   let dataProviderMock;
 
   beforeEach(function beforeEach() {
     dataContract = getDataContractFixture();
-    userId = '6b74011f5d2ad1a8d45b71b9702f54205ce75253593c3cfbba3fdadeca278288';
+    ownerId = '6b74011f5d2ad1a8d45b71b9702f54205ce75253593c3cfbba3fdadeca278288';
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
@@ -41,7 +41,7 @@ describe('DocumentFacade', () => {
     it('should create Document', () => {
       const result = dpp.document.create(
         dataContract,
-        userId,
+        ownerId,
         document.getType(),
         document.getData(),
       );
