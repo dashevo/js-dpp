@@ -23,7 +23,7 @@ describe('DocumentFacade', () => {
 
   beforeEach(function beforeEach() {
     dataContract = getDataContractFixture();
-    ownerId = '6b74011f5d2ad1a8d45b71b9702f54205ce75253593c3cfbba3fdadeca278288';
+    ownerId = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 

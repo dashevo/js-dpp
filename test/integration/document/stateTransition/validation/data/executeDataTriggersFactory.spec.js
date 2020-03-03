@@ -56,7 +56,7 @@ describe('executeDataTriggersFactory', () => {
     dpnsDeleteDomainDataTriggerMock
       .execute.resolves(new DataTriggerExecutionResult());
 
-    const ownerId = 'ownerId';
+    const ownerId = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
 
     context = new DataTriggerExecutionContext(
       null, ownerId, contractMock,
