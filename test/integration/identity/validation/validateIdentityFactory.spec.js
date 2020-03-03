@@ -135,7 +135,6 @@ describe('validateIdentityFactory', () => {
       expect(error.params.missingProperty).to.equal('balance');
       expect(error.keyword).to.equal('required');
 
-      expect(validateIdentityTypeMock).to.not.be.called();
       expect(validatePublicKeysMock).to.not.be.called();
     });
 
@@ -151,7 +150,6 @@ describe('validateIdentityFactory', () => {
       expect(error.keyword).to.equal('type');
       expect(error.dataPath).to.equal('.balance');
 
-      expect(validateIdentityTypeMock).to.not.be.called();
       expect(validatePublicKeysMock).to.not.be.called();
     });
 
@@ -167,7 +165,6 @@ describe('validateIdentityFactory', () => {
       expect(error.keyword).to.equal('minimum');
       expect(error.dataPath).to.equal('.balance');
 
-      expect(validateIdentityTypeMock).to.not.be.called();
       expect(validatePublicKeysMock).to.not.be.called();
 
       rawIdentity.balance = 0;
