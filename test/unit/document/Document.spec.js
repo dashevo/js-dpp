@@ -159,7 +159,7 @@ describe('Document', () => {
   });
 
   describe('#getId', () => {
-    it('should ID', () => {
+    it('should return ID', () => {
       const id = '123';
 
       document.id = id;

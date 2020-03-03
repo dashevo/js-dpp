@@ -127,7 +127,7 @@ describe('validateDocumentFactory', () => {
         expect(error.dataPath).to.equal('.$id');
       });
 
-      it('should be valid', async () => {
+      it('should be a concatenation of contractId, ownerId, type and entropy', async () => {
         rawDocument.$id = bs58.encode(
           hash(Buffer.concat([
             bs58.decode(rawDocument.$contractId),
