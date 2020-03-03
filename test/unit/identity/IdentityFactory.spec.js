@@ -48,7 +48,6 @@ describe('IdentityFactory', () => {
     it('should create Identity with specified id, type and public keys', () => {
       const result = factory.create(
         identity.getId(),
-        identity.getType(),
         identity.getPublicKeys(),
       );
 

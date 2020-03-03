@@ -7,12 +7,6 @@
       "maxLength": 44,
       "pattern": "^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$"
     },
-    "type": {
-      "type": "number",
-      "multipleOf": 1.0,
-      "minimum": 0,
-      "maximum": 65535
-    },
     "publicKeys": {
       "type": "array",
       "minItems": 1,
@@ -21,7 +15,6 @@
   },
   "required": [
     "id",
-    "type",
     "publicKeys"
   ]
 }

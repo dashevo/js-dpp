@@ -1,6 +1,5 @@
 const rewiremock = require('rewiremock/node');
 
-const Identity = require('../../../../../lib/identity/Identity');
 const IdentityPublicKey = require('../../../../../lib/identity/IdentityPublicKey');
 
 const stateTransitionTypes = require(
@@ -17,7 +16,6 @@ describe('IdentityCreateTransition', () => {
   beforeEach(function beforeEach() {
     rawStateTransition = {
       lockedOutPoint: 'c3BlY2lhbEJ1ZmZlcg==',
-      identityType: Identity.TYPES.USER,
       publicKeys: [
         {
           id: 1,
@@ -53,12 +51,10 @@ describe('IdentityCreateTransition', () => {
     it('should create an instance with default values if nothing specified', () => {
       stateTransition = new IdentityCreateTransition();
 
-      expect(stateTransition.identityType).to.be.undefined();
       expect(stateTransition.publicKeys).to.deep.equal([]);
     });
 
     it('should create an instance with specified data from specified raw transition', () => {
-      expect(stateTransition.identityType).to.equal(1);
       expect(stateTransition.lockedOutPoint).to.deep.equal(
         rawStateTransition.lockedOutPoint,
       );
@@ -97,19 +93,6 @@ describe('IdentityCreateTransition', () => {
       expect(stateTransition.getLockedOutPoint()).to.deep.equal(
         rawStateTransition.lockedOutPoint,
       );
-    });
-  });
-
-  describe('#setIdentityType', () => {
-    it('should set identity type', () => {
-      stateTransition.setIdentityType(42);
-      expect(stateTransition.identityType).to.equal(42);
-    });
-  });
-
-  describe('#getIdentityType', () => {
-    it('should return identity type', () => {
-      expect(stateTransition.getIdentityType()).to.equal(1);
     });
   });
 
@@ -156,7 +139,6 @@ describe('IdentityCreateTransition', () => {
       expect(jsonWithASig).to.deep.equal({
         protocolVersion: 0,
         type: stateTransitionTypes.IDENTITY_CREATE,
-        identityType: Identity.TYPES.USER,
         lockedOutPoint: rawStateTransition.lockedOutPoint,
         publicKeys: rawStateTransition.publicKeys,
         signature: null,
@@ -168,7 +150,6 @@ describe('IdentityCreateTransition', () => {
       expect(jsonWithSig).to.deep.equal({
         protocolVersion: 0,
         type: stateTransitionTypes.IDENTITY_CREATE,
-        identityType: Identity.TYPES.USER,
         lockedOutPoint: rawStateTransition.lockedOutPoint,
         publicKeys: rawStateTransition.publicKeys,
       });

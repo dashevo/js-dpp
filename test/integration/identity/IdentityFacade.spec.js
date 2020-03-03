@@ -21,7 +21,6 @@ describe('IdentityFacade', () => {
     it('should create Identity', () => {
       const result = dpp.identity.create(
         identity.getId(),
-        identity.getType(),
         identity.getPublicKeys(),
       );
 
