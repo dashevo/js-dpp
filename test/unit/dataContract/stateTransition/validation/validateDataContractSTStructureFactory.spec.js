@@ -12,8 +12,6 @@ const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 
 const InvalidIdentityPublicKeyTypeError = require('../../../../../lib/errors/InvalidIdentityPublicKeyTypeError');
 
-const Identity = require('../../../../../lib/identity/Identity');
-
 describe('validateDataContractSTStructureFactory', () => {
   let validateDataContract;
   let validateDataContractSTStructure;
@@ -23,7 +21,7 @@ describe('validateDataContractSTStructureFactory', () => {
   let createDataContractMock;
   let stateTransition;
   let dataContract;
-  let validateIdentityExistenceAndTypeMock;
+  let validateIdentityExistenceMock;
 
   beforeEach(function beforeEach() {
     validateDataContract = this.sinonSandbox.stub();
@@ -40,7 +38,7 @@ describe('validateDataContractSTStructureFactory', () => {
 
     validateStateTransitionSignatureMock = this.sinonSandbox.stub();
 
-    validateIdentityExistenceAndTypeMock = this.sinonSandbox.stub().resolves(
+    validateIdentityExistenceMock = this.sinonSandbox.stub().resolves(
       new ValidationResult(),
     );
 
@@ -48,7 +46,7 @@ describe('validateDataContractSTStructureFactory', () => {
       validateDataContract,
       validateStateTransitionSignatureMock,
       createDataContractMock,
-      validateIdentityExistenceAndTypeMock,
+      validateIdentityExistenceMock,
     );
   });
 
@@ -61,7 +59,7 @@ describe('validateDataContractSTStructureFactory', () => {
 
     const blockchainUserError = new ConsensusError('error');
 
-    validateIdentityExistenceAndTypeMock.resolves(
+    validateIdentityExistenceMock.resolves(
       new ValidationResult([blockchainUserError]),
     );
 
@@ -73,8 +71,8 @@ describe('validateDataContractSTStructureFactory', () => {
 
     expect(error).to.equal(blockchainUserError);
 
-    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
-      dataContract.getId(), [Identity.TYPES.APPLICATION],
+    expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(
+      dataContract.getId(),
     );
   });
 
@@ -101,7 +99,7 @@ describe('validateDataContractSTStructureFactory', () => {
 
     expect(validateStateTransitionSignatureMock).to.be.not.called();
 
-    expect(validateIdentityExistenceAndTypeMock).to.be.not.called();
+    expect(validateIdentityExistenceMock).to.be.not.called();
   });
 
   it('should return invalid result on invalid signature', async () => {
@@ -131,8 +129,8 @@ describe('validateDataContractSTStructureFactory', () => {
       dataContract.getId(),
     );
 
-    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
-      dataContract.getId(), [Identity.TYPES.APPLICATION],
+    expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(
+      dataContract.getId(),
     );
   });
 
@@ -156,8 +154,8 @@ describe('validateDataContractSTStructureFactory', () => {
       dataContract.getId(),
     );
 
-    expect(validateIdentityExistenceAndTypeMock).to.be.calledOnceWithExactly(
-      dataContract.getId(), [Identity.TYPES.APPLICATION],
+    expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(
+      dataContract.getId(),
     );
   });
 });

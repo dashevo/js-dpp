@@ -32,7 +32,6 @@ describe('applyIdentityStateTransition', () => {
       const identity = applyIdentityStateTransition(createStateTransition, null);
 
       expect(identity.getId()).to.equal(createStateTransition.getIdentityId());
-      expect(identity.getType()).to.equal(createStateTransition.getIdentityType());
       expect(identity.getPublicKeys()).to.deep.equal(createStateTransition.getPublicKeys());
     });
   });
