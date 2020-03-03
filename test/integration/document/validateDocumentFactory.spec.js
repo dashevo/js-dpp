@@ -1,5 +1,4 @@
 const Ajv = require('ajv');
-const bs58 = require('bs58');
 
 const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
@@ -21,7 +20,7 @@ const MismatchDocumentContractIdAndDataContractError = require('../../../lib/err
 
 const originalDocumentBaseSchema = require('../../../schema/base/document');
 
-const hash = require('../../../lib/util/hash');
+const generateDocumentId = require('../../../lib/document/generateDocumentId');
 
 const {
   expectValidationError,
@@ -128,12 +127,11 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be a concatenation of contractId, ownerId, type and entropy', async () => {
-        rawDocument.$id = bs58.encode(
-          hash(Buffer.concat([
-            bs58.decode(rawDocument.$contractId),
-            bs58.decode(rawDocument.$ownerId),
-            Buffer.from(rawDocument.$type),
-          ])),
+        rawDocument.$id = generateDocumentId(
+          rawDocument.$contractId,
+          rawDocument.$ownerId,
+          rawDocument.$type,
+          '',
         );
 
         const result = validateDocument(rawDocument, dataContract);
