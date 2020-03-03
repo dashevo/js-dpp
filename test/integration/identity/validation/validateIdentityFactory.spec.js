@@ -121,6 +121,60 @@ describe('validateIdentityFactory', () => {
     });
   });
 
+  describe('balance', () => {
+    it('should be present', async () => {
+      rawIdentity.balance = undefined;
+
+      const result = validateIdentity(rawIdentity);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('');
+      expect(error.params.missingProperty).to.equal('balance');
+      expect(error.keyword).to.equal('required');
+
+      expect(validatePublicKeysMock).to.not.be.called();
+    });
+
+    it('should be an integer', async () => {
+      rawIdentity.balance = 1.2;
+
+      const result = validateIdentity(rawIdentity);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('type');
+      expect(error.dataPath).to.equal('.balance');
+
+      expect(validatePublicKeysMock).to.not.be.called();
+    });
+
+    it('should be greater or equal 0', async () => {
+      rawIdentity.balance = -1;
+
+      let result = validateIdentity(rawIdentity);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('minimum');
+      expect(error.dataPath).to.equal('.balance');
+
+      expect(validatePublicKeysMock).to.not.be.called();
+
+      rawIdentity.balance = 0;
+
+      result = validateIdentity(rawIdentity);
+
+      expect(result.isValid()).to.be.true();
+    });
+  });
+
   describe('publicKeys', () => {
     it('should be present', () => {
       rawIdentity.publicKeys = undefined;
