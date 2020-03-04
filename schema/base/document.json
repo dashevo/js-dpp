@@ -3,6 +3,12 @@
   "$id": "https://schema.dash.org/dpp-0-4-0/base/document",
   "type": "object",
   "properties": {
+    "$id": {
+      "type": "string",
+      "minLength": 42,
+      "maxLength": 44,
+      "pattern": "^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$"
+    },
     "$type": {
       "type": "string"
     },
@@ -30,6 +36,7 @@
     }
   },
   "required": [
+    "$id",
     "$type",
     "$rev",
     "$contractId",

@@ -12,7 +12,6 @@ describe('Identity', () => {
   beforeEach(function beforeEach() {
     rawIdentity = {
       id: 'someId',
-      type: 0,
       publicKeys: [
         {
           id: 1,
@@ -21,6 +20,7 @@ describe('Identity', () => {
           isEnabled: true,
         },
       ],
+      balance: 0,
     };
 
     hashMock = this.sinonSandbox.stub();
@@ -62,13 +62,6 @@ describe('Identity', () => {
   describe('#getId', () => {
     it('should return set id', () => {
       expect(identity.getId()).to.equal(rawIdentity.id);
-    });
-  });
-
-  describe('#getType', () => {
-    it('should return set identity type', () => {
-      identity.type = 42;
-      expect(identity.getType()).to.equal(42);
     });
   });
 
@@ -131,6 +124,13 @@ describe('Identity', () => {
       const json = identity.toJSON();
 
       expect(json).to.deep.equal(rawIdentity);
+    });
+  });
+
+  describe('#getBalance', () => {
+    it('should return set identity balance', () => {
+      identity.balance = 42;
+      expect(identity.getBalance()).to.equal(42);
     });
   });
 });

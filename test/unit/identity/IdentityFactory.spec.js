@@ -46,9 +46,10 @@ describe('IdentityFactory', () => {
 
   describe('#create', () => {
     it('should create Identity with specified id, type and public keys', () => {
+      identity.balance = 0;
+
       const result = factory.create(
         identity.getId(),
-        identity.getType(),
         identity.getPublicKeys(),
       );
 
