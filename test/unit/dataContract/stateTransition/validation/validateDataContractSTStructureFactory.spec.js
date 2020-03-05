@@ -18,7 +18,6 @@ describe('validateDataContractSTStructureFactory', () => {
   let rawDataContract;
   let rawStateTransition;
   let validateStateTransitionSignatureMock;
-  let createDataContractMock;
   let stateTransition;
   let dataContract;
   let validateIdentityExistenceMock;
@@ -34,8 +33,6 @@ describe('validateDataContractSTStructureFactory', () => {
 
     rawStateTransition = stateTransition.toJSON();
 
-    createDataContractMock = this.sinonSandbox.stub().returns(dataContract);
-
     validateStateTransitionSignatureMock = this.sinonSandbox.stub();
 
     validateIdentityExistenceMock = this.sinonSandbox.stub().resolves(
@@ -45,7 +42,6 @@ describe('validateDataContractSTStructureFactory', () => {
     validateDataContractSTStructure = validateDataContractSTStructureFactory(
       validateDataContract,
       validateStateTransitionSignatureMock,
-      createDataContractMock,
       validateIdentityExistenceMock,
     );
   });

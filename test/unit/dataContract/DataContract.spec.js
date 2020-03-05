@@ -44,12 +44,23 @@ describe('DataContract', () => {
     ownerId = generateRandomId();
     entropy = 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh';
 
-    dataContract = new DataContract(ownerId, entropy, documents);
+    const hashed = Buffer.from(ownerId + entropy);
+    hashMock.returns(hashed);
+
+    dataContract = new DataContract({
+      $ownerId: ownerId,
+      $entropy: entropy,
+      documents,
+    });
   });
 
   describe('constructor', () => {
     it('should create new DataContract', () => {
-      dataContract = new DataContract(ownerId, entropy, documents);
+      dataContract = new DataContract({
+        $ownerId: ownerId,
+        $entropy: entropy,
+        documents,
+      });
 
       expect(dataContract.version).to.equal(DataContract.DEFAULTS.VERSION);
       expect(dataContract.schema).to.equal(DataContract.DEFAULTS.SCHEMA);

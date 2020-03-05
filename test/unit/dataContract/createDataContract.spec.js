@@ -1,4 +1,3 @@
-const createDataContract = require('../../../lib/dataContract/createDataContract');
 const DataContract = require('../../../lib/dataContract/DataContract');
 
 const generateRandomId = require('../../../lib/test/utils/generateRandomId');
@@ -18,7 +17,7 @@ describe('createDataContract', () => {
   });
 
   it('should return new DataContract with "dataContractId" and documents', () => {
-    const dataContract = createDataContract(rawDataContract);
+    const dataContract = new DataContract(rawDataContract);
 
     expect(dataContract).to.be.an.instanceOf(DataContract);
 
@@ -29,7 +28,7 @@ describe('createDataContract', () => {
   it('should return new DataContract with "$schema" if present', () => {
     rawDataContract.$schema = 'http://test.com/schema';
 
-    const dataContract = createDataContract(rawDataContract);
+    const dataContract = new DataContract(rawDataContract);
 
     expect(dataContract).to.be.an.instanceOf(DataContract);
 
@@ -42,7 +41,7 @@ describe('createDataContract', () => {
   it('should return new DataContract with "version" if present', () => {
     rawDataContract.version = 1;
 
-    const dataContract = createDataContract(rawDataContract);
+    const dataContract = new DataContract(rawDataContract);
 
     expect(dataContract).to.be.an.instanceOf(DataContract);
 
@@ -57,7 +56,7 @@ describe('createDataContract', () => {
       subSchema: { type: 'object' },
     };
 
-    const dataContract = createDataContract(rawDataContract);
+    const dataContract = new DataContract(rawDataContract);
 
     expect(dataContract).to.be.an.instanceOf(DataContract);
 

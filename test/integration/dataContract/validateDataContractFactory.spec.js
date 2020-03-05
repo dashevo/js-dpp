@@ -8,7 +8,6 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 const validateDataContractFactory = require('../../../lib/dataContract/validateDataContractFactory');
 const validateDataContractMaxDepthFactory = require('../../../lib/dataContract/stateTransition/validation/validateDataContractMaxDepthFactory');
 const enrichDataContractWithBaseDocument = require('../../../lib/dataContract/enrichDataContractWithBaseDocument');
-const createDataContract = require('../../../lib/dataContract/createDataContract');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
@@ -40,7 +39,6 @@ describe('validateDataContractFactory', () => {
       jsonSchemaValidator,
       validateDataContractMaxDepth,
       enrichDataContractWithBaseDocument,
-      createDataContract,
     );
   });
 

@@ -14,7 +14,7 @@ describe('DataContractFactory', () => {
   let DataContractFactory;
   let decodeMock;
   let validateDataContractMock;
-  let createDataContractMock;
+  let DataContractMock;
   let factory;
   let dataContract;
   let rawDataContract;
@@ -26,7 +26,7 @@ describe('DataContractFactory', () => {
 
     decodeMock = this.sinonSandbox.stub();
     validateDataContractMock = this.sinonSandbox.stub();
-    createDataContractMock = this.sinonSandbox.stub().returns(dataContract);
+    DataContractMock = this.sinonSandbox.stub().returns(dataContract);
     entropyMock = {
       generate: this.sinonSandbox.stub(),
     };
@@ -39,10 +39,10 @@ describe('DataContractFactory', () => {
       '../../../lib/util/serializer': { decode: decodeMock },
       '../../../lib/util/entropy': entropyMock,
       '../../../lib/dataContract/stateTransition/DataContractStateTransition': DataContractStateTransition,
+      '../../../lib/dataContract/DataContract': DataContractMock,
     });
 
     factory = new DataContractFactory(
-      createDataContractMock,
       validateDataContractMock,
     );
   });
@@ -57,7 +57,7 @@ describe('DataContractFactory', () => {
 
       expect(result).to.equal(dataContract);
 
-      expect(createDataContractMock).to.have.been.calledOnceWith({
+      expect(DataContractMock).to.have.been.calledOnceWith({
         $ownerId: rawDataContract.$ownerId,
         $entropy: rawDataContract.$entropy,
         documents: rawDataContract.documents,
@@ -75,7 +75,7 @@ describe('DataContractFactory', () => {
 
       expect(validateDataContractMock).to.have.been.calledOnceWith(rawDataContract);
 
-      expect(createDataContractMock).to.have.been.calledOnceWith(rawDataContract);
+      expect(DataContractMock).to.have.been.calledOnceWith(rawDataContract);
     });
 
     it('should return new Data Contract without validation if "skipValidation" option is passed', async () => {
@@ -85,7 +85,7 @@ describe('DataContractFactory', () => {
 
       expect(validateDataContractMock).to.have.not.been.called();
 
-      expect(createDataContractMock).to.have.been.calledOnceWith(rawDataContract);
+      expect(DataContractMock).to.have.been.calledOnceWith(rawDataContract);
     });
 
     it('should throw an error if passed object is not valid', async () => {
@@ -111,7 +111,7 @@ describe('DataContractFactory', () => {
 
       expect(validateDataContractMock).to.have.been.calledOnceWith(rawDataContract);
 
-      expect(createDataContractMock).to.have.not.been.called();
+      expect(DataContractMock).to.have.not.been.called();
     });
   });
 
