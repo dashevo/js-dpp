@@ -20,6 +20,7 @@ const SystemPropertyIndexAlreadyPresentError = require('../../../lib/errors/Syst
 const UniqueIndicesLimitReachedError = require('../../../lib/errors/UniqueIndicesLimitReachedError');
 const DataContractMaxByteSizeExceededError = require('../../../lib/errors/DataContractMaxByteSizeExceededError');
 const InvalidDataContractEntropyError = require('../../../lib/errors/InvalidDataContractEntropyError');
+const InvalidDataContractIdError = require('../../../lib/errors/InvalidDataContractIdError');
 
 describe('validateDataContractFactory', () => {
   let dataContract;
@@ -149,6 +150,87 @@ describe('validateDataContractFactory', () => {
 
       expect(error.keyword).to.equal('pattern');
       expect(error.dataPath).to.equal('.$ownerId');
+    });
+  });
+
+  describe('$id', () => {
+    it('should be present', async () => {
+      delete rawDataContract.$id;
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('$id');
+    });
+
+    it('should be a string', async () => {
+      rawDataContract.$id = 1;
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.$id');
+      expect(error.keyword).to.equal('type');
+    });
+
+    it('should be no less than 42 chars', async () => {
+      rawDataContract.$id = '1'.repeat(41);
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.$id');
+      expect(error.keyword).to.equal('minLength');
+    });
+
+    it('should be no longer than 44 chars', async () => {
+      rawDataContract.$id = '1'.repeat(45);
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.$id');
+      expect(error.keyword).to.equal('maxLength');
+    });
+
+    it('should be base58 encoded', async () => {
+      rawDataContract.$id = '&'.repeat(44);
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('pattern');
+      expect(error.dataPath).to.equal('.$id');
+    });
+
+    it('should be generated from $ownerId and $entropy', async () => {
+      rawDataContract.$id = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectValidationError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error).to.be.an.instanceOf(InvalidDataContractIdError);
+      expect(error.getRawDataContract()).to.equal(rawDataContract);
     });
   });
 
