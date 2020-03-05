@@ -1,5 +1,3 @@
-const bs58 = require('bs58');
-
 const rewiremock = require('rewiremock/node');
 
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
@@ -16,6 +14,7 @@ describe('DataContract', () => {
   let dataContract;
   let ownerId;
   let entropy;
+  let contractId;
 
   beforeEach(function beforeEach() {
     hashMock = this.sinonSandbox.stub();
@@ -43,11 +42,10 @@ describe('DataContract', () => {
 
     ownerId = generateRandomId();
     entropy = 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh';
-
-    const hashed = Buffer.from(ownerId + entropy);
-    hashMock.returns(hashed);
+    contractId = 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgza';
 
     dataContract = new DataContract({
+      $id: contractId,
       $ownerId: ownerId,
       $entropy: entropy,
       documents,
@@ -70,14 +68,9 @@ describe('DataContract', () => {
 
   describe('#getId', () => {
     it('should return base58 encoded DataContract ID', () => {
-      const hashed = Buffer.from(ownerId + entropy);
-      hashMock.returns(hashed);
-
-      const id = bs58.encode(hashed);
-
       const result = dataContract.getId();
 
-      expect(result).to.equal(id);
+      expect(result).to.equal(contractId);
     });
   });
 
@@ -254,6 +247,7 @@ describe('DataContract', () => {
       const result = dataContract.toJSON();
 
       expect(result).to.deep.equal({
+        $id: contractId,
         $schema: DataContract.DEFAULTS.SCHEMA,
         $ownerId: ownerId,
         $entropy: entropy,
@@ -272,6 +266,7 @@ describe('DataContract', () => {
       const result = dataContract.toJSON();
 
       expect(result).to.deep.equal({
+        $id: contractId,
         $schema: DataContract.DEFAULTS.SCHEMA,
         $ownerId: ownerId,
         $entropy: entropy,

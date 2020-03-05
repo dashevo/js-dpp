@@ -58,6 +58,7 @@ describe('DataContractFactory', () => {
       expect(result).to.equal(dataContract);
 
       expect(DataContractMock).to.have.been.calledOnceWith({
+        $id: rawDataContract.$id,
         $ownerId: rawDataContract.$ownerId,
         $entropy: rawDataContract.$entropy,
         documents: rawDataContract.documents,

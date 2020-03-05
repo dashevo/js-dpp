@@ -63,8 +63,7 @@ describe('DocumentFactory', () => {
       const name = 'Cutie';
 
       ownerId = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
-      dataContract.ownerId = ownerId;
-      dataContract.entropy = entropy;
+      dataContract.id = contractId;
 
       generateMock.returns(entropy);
 
