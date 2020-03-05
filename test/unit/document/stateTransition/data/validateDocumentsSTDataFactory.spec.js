@@ -20,6 +20,7 @@ const DocumentNotFoundError = require('../../../../../lib/errors/DocumentNotFoun
 const InvalidDocumentRevisionError = require('../../../../../lib/errors/InvalidDocumentRevisionError');
 const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 const InvalidDocumentActionError = require('../../../../../lib/document/errors/InvalidDocumentActionError');
+const DocumentIdComponentsMismatchError = require('../../../../../lib/errors/DocumentIdComponentsMismatchError');
 
 describe('validateDocumentsSTDataFactory', () => {
   let validateDocumentsSTData;
@@ -168,6 +169,34 @@ describe('validateDocumentsSTDataFactory', () => {
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
     expect(executeDataTriggersMock).to.have.not.been.called();
+  });
+
+  ['entropy', 'ownerId', 'contractId'].forEach((component) => {
+    it(`should return invalid result if Document with action "update" has mismatch among components of the $id (${component})`, async () => {
+      documents[0].setAction(Document.ACTIONS.REPLACE);
+
+      const fetchedDocument = new Document(documents[0].toJSON());
+      fetchedDocument.revision -= 1;
+      fetchedDocument[component] = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
+
+      fetchDocumentsMock.resolves([fetchedDocument]);
+
+      const result = await validateDocumentsSTData(stateTransition);
+
+      expectValidationError(result, DocumentIdComponentsMismatchError);
+
+      const [error] = result.getErrors();
+
+      expect(error.getDocument()).to.equal(documents[0]);
+      expect(error.getFetchedDocument()).to.equal(fetchedDocument);
+
+      expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
+
+      expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
+
+      expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
+      expect(executeDataTriggersMock).to.have.not.been.called();
+    });
   });
 
   it('should return invalid result if Document with action "delete" has wrong revision', async () => {
