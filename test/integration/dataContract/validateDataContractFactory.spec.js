@@ -23,11 +23,13 @@ const DataContractMaxByteSizeExceededError = require('../../../lib/errors/DataCo
 const InvalidDataContractEntropyError = require('../../../lib/errors/InvalidDataContractEntropyError');
 
 describe('validateDataContractFactory', () => {
+  let dataContract;
   let rawDataContract;
   let validateDataContract;
 
   beforeEach(() => {
-    rawDataContract = getDataContractFixture().toJSON();
+    dataContract = getDataContractFixture();
+    rawDataContract = dataContract.toJSON();
 
     const ajv = new Ajv();
     const jsonSchemaValidator = new JsonSchemaValidator(ajv);
@@ -969,7 +971,7 @@ describe('validateDataContractFactory', () => {
 
         expect(error.message).to.equal(
           'unknown format "lalala" is used in '
-          + 'schema at path "dataContract#/documents/indexedDocument/properties/something"',
+          + `schema at path "${dataContract.getJsonSchemaId()}#/documents/indexedDocument/properties/something"`,
         );
       });
 

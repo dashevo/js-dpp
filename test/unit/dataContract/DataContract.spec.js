@@ -72,9 +72,12 @@ describe('DataContract', () => {
 
   describe('#getJsonSchemaId', () => {
     it('should return JSON Schema $contractId', () => {
+      const hashed = Buffer.from(ownerId + entropy);
+      hashMock.returns(hashed);
+
       const result = dataContract.getJsonSchemaId();
 
-      expect(result).to.equal('dataContract');
+      expect(result).to.equal(dataContract.getId());
     });
   });
 
@@ -205,10 +208,13 @@ describe('DataContract', () => {
     });
 
     it('should return schema with $ref to Document schema', () => {
+      const hashed = Buffer.from(ownerId + entropy);
+      hashMock.returns(hashed);
+
       const result = dataContract.getDocumentSchemaRef(documentType);
 
       expect(result).to.deep.equal({
-        $ref: 'dataContract#/documents/niceDocument',
+        $ref: `${dataContract.getJsonSchemaId()}#/documents/niceDocument`,
       });
     });
   });
