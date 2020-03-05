@@ -58,12 +58,13 @@ describe('DocumentFactory', () => {
 
   describe('create', () => {
     it('should return new Document with specified type and data', () => {
-      const contractId = 'G8QqfBuLDjdTQSLQWsGSDPsP84hpHaYn7iTYcFmWou1E';
+      const contractId = 'FQco85WbwNgb5ix8QQAH6wurMcgEC5ENSCv5ixG9cj12';
       const entropy = '789';
       const name = 'Cutie';
 
-      dataContract.contractId = contractId;
       ownerId = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
+      dataContract.ownerId = ownerId;
+      dataContract.entropy = entropy;
 
       generateMock.returns(entropy);
 
@@ -90,7 +91,7 @@ describe('DocumentFactory', () => {
 
       expect(newDocument.getRevision()).to.equal(Document.DEFAULTS.REVISION);
 
-      expect(newDocument.getId()).to.equal('2M7DcR6SXR8ZnpDWB1JhrVTmsx6oxwEpcrujJCGKnayh');
+      expect(newDocument.getId()).to.equal('E9QpjZMD7CPAGa7x2ABuLFPvBLZjhPji4TMrUfSP3Hk9');
     });
 
     it('should throw an error if type is not defined', () => {
