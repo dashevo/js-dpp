@@ -8,7 +8,6 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
-const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
 const MissingDocumentContractIdError = require('../../../lib/errors/MissingDocumentContractIdError');
 const MissingOptionError = require('../../../lib/errors/MissingOptionError');
@@ -22,7 +21,7 @@ describe('DocumentFacade', () => {
   let dataProviderMock;
 
   beforeEach(function beforeEach() {
-    dataContract = getDataContractFixture();
+    dataContract = getDocumentsFixture.dataContract;
     ownerId = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);

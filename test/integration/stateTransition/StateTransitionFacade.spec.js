@@ -7,7 +7,6 @@ const DocumentsStateTransition = require('../../../lib/document/stateTransition/
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
@@ -35,7 +34,7 @@ describe('StateTransitionFacade', () => {
       .setType(IdentityPublicKey.TYPES.ECDSA_SECP256K1)
       .setData(publicKey);
 
-    dataContract = getDataContractFixture();
+    dataContract = getDocumentsFixture.dataContract;
     dataContractStateTransition = new DataContractStateTransition(dataContract);
     dataContractStateTransition.sign(identityPublicKey, privateKey);
 

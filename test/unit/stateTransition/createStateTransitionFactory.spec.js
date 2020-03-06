@@ -9,15 +9,10 @@ const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixt
 const InvalidStateTransitionTypeError = require('../../../lib/errors/InvalidStateTransitionTypeError');
 
 describe('createStateTransitionFactory', () => {
-  let createDataContractMock;
   let createStateTransition;
 
-  beforeEach(function beforeEach() {
-    createDataContractMock = this.sinonSandbox.stub();
-
-    createStateTransition = createStateTransitionFactory(
-      createDataContractMock,
-    );
+  beforeEach(() => {
+    createStateTransition = createStateTransitionFactory();
   });
 
   it('should return DataContractStateTransition if type is DATA_CONTRACT', () => {
@@ -25,14 +20,10 @@ describe('createStateTransitionFactory', () => {
 
     const stateTransition = new DataContractStateTransition(dataContract);
 
-    createDataContractMock.returns(dataContract);
-
     const result = createStateTransition(stateTransition.toJSON());
 
     expect(result).to.be.instanceOf(DataContractStateTransition);
-    expect(result.getDataContract()).to.equal(dataContract);
-
-    expect(createDataContractMock).to.be.calledOnceWith(dataContract.toJSON());
+    expect(result.getDataContract().toJSON()).to.deep.equal(dataContract.toJSON());
   });
 
   it('should return DocumentsStateTransition if type is DOCUMENTS', () => {

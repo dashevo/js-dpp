@@ -21,13 +21,13 @@ describe('DataContractFacade', () => {
   describe('create', () => {
     it('should create DataContract', () => {
       const result = dpp.dataContract.create(
-        dataContract.getId(),
+        dataContract.getOwnerId(),
         dataContract.getDocuments(),
       );
 
       expect(result).to.be.an.instanceOf(DataContract);
 
-      expect(result.getId()).to.equal(dataContract.getId());
+      expect(result.getOwnerId()).to.equal(dataContract.getOwnerId());
       expect(result.getDocuments()).to.equal(dataContract.getDocuments());
     });
   });

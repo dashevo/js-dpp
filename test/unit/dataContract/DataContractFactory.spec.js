@@ -2,6 +2,8 @@ const rewiremock = require('rewiremock/node');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
+const DataContract = require('../../../lib/dataContract/DataContract');
+
 const DataContractStateTransition = require('../../../lib/dataContract/stateTransition/DataContractStateTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
@@ -14,10 +16,11 @@ describe('DataContractFactory', () => {
   let DataContractFactory;
   let decodeMock;
   let validateDataContractMock;
-  let createDataContractMock;
+  let DataContractMock;
   let factory;
   let dataContract;
   let rawDataContract;
+  let entropyMock;
 
   beforeEach(function beforeEach() {
     dataContract = getDataContractFixture();
@@ -25,7 +28,11 @@ describe('DataContractFactory', () => {
 
     decodeMock = this.sinonSandbox.stub();
     validateDataContractMock = this.sinonSandbox.stub();
-    createDataContractMock = this.sinonSandbox.stub().returns(dataContract);
+    DataContractMock = this.sinonSandbox.stub().returns(dataContract);
+    DataContractMock.DEFAULTS = DataContract.DEFAULTS;
+    entropyMock = {
+      generate: this.sinonSandbox.stub(),
+    };
 
     // Require Factory module for webpack
     // eslint-disable-next-line global-require
@@ -33,27 +40,34 @@ describe('DataContractFactory', () => {
 
     DataContractFactory = rewiremock.proxy('../../../lib/dataContract/DataContractFactory', {
       '../../../lib/util/serializer': { decode: decodeMock },
+      '../../../lib/util/entropy': entropyMock,
       '../../../lib/dataContract/stateTransition/DataContractStateTransition': DataContractStateTransition,
+      '../../../lib/dataContract/DataContract': DataContractMock,
     });
 
     factory = new DataContractFactory(
-      createDataContractMock,
       validateDataContractMock,
     );
   });
 
   describe('create', () => {
     it('should return new Data Contract with specified name and documents definition', () => {
+      entropyMock.generate.returns(rawDataContract.$entropy);
       const result = factory.create(
-        rawDataContract.contractId,
+        rawDataContract.$ownerId,
         rawDataContract.documents,
       );
 
       expect(result).to.equal(dataContract);
 
-      expect(createDataContractMock).to.have.been.calledOnceWith({
-        contractId: rawDataContract.contractId,
+      expect(DataContractMock).to.have.been.calledOnceWith({
+        $id: rawDataContract.$id,
+        $ownerId: rawDataContract.$ownerId,
+        $entropy: rawDataContract.$entropy,
+        $schema: DataContract.DEFAULTS.SCHEMA,
+        version: DataContract.DEFAULTS.VERSION,
         documents: rawDataContract.documents,
+        definitions: {},
       });
     });
   });
@@ -68,7 +82,7 @@ describe('DataContractFactory', () => {
 
       expect(validateDataContractMock).to.have.been.calledOnceWith(rawDataContract);
 
-      expect(createDataContractMock).to.have.been.calledOnceWith(rawDataContract);
+      expect(DataContractMock).to.have.been.calledOnceWith(rawDataContract);
     });
 
     it('should return new Data Contract without validation if "skipValidation" option is passed', async () => {
@@ -78,7 +92,7 @@ describe('DataContractFactory', () => {
 
       expect(validateDataContractMock).to.have.not.been.called();
 
-      expect(createDataContractMock).to.have.been.calledOnceWith(rawDataContract);
+      expect(DataContractMock).to.have.been.calledOnceWith(rawDataContract);
     });
 
     it('should throw an error if passed object is not valid', async () => {
@@ -104,7 +118,7 @@ describe('DataContractFactory', () => {
 
       expect(validateDataContractMock).to.have.been.calledOnceWith(rawDataContract);
 
-      expect(createDataContractMock).to.have.not.been.called();
+      expect(DataContractMock).to.have.not.been.called();
     });
   });
 
