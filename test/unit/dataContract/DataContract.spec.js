@@ -48,21 +48,34 @@ describe('DataContract', () => {
       $id: contractId,
       $ownerId: ownerId,
       $entropy: entropy,
+      $schema: DataContract.DEFAULTS.SCHEMA,
+      version: DataContract.DEFAULTS.VERSION,
       documents,
+      definitions: {},
     });
   });
 
   describe('constructor', () => {
     it('should create new DataContract', () => {
+      const id = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
+
       dataContract = new DataContract({
+        $id: id,
         $ownerId: ownerId,
         $entropy: entropy,
+        $schema: DataContract.DEFAULTS.SCHEMA,
+        version: DataContract.DEFAULTS.VERSION,
         documents,
+        definitions: {},
       });
 
+      expect(dataContract.id).to.equal(id);
+      expect(dataContract.ownerId).to.equal(ownerId);
+      expect(dataContract.entropy).to.equal(entropy);
       expect(dataContract.version).to.equal(DataContract.DEFAULTS.VERSION);
       expect(dataContract.schema).to.equal(DataContract.DEFAULTS.SCHEMA);
       expect(dataContract.documents).to.equal(documents);
+      expect(dataContract.definitions).to.deep.equal({});
     });
   });
 

@@ -2,6 +2,8 @@ const rewiremock = require('rewiremock/node');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
+const DataContract = require('../../../lib/dataContract/DataContract');
+
 const DataContractStateTransition = require('../../../lib/dataContract/stateTransition/DataContractStateTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
@@ -27,6 +29,7 @@ describe('DataContractFactory', () => {
     decodeMock = this.sinonSandbox.stub();
     validateDataContractMock = this.sinonSandbox.stub();
     DataContractMock = this.sinonSandbox.stub().returns(dataContract);
+    DataContractMock.DEFAULTS = DataContract.DEFAULTS;
     entropyMock = {
       generate: this.sinonSandbox.stub(),
     };
@@ -61,7 +64,10 @@ describe('DataContractFactory', () => {
         $id: rawDataContract.$id,
         $ownerId: rawDataContract.$ownerId,
         $entropy: rawDataContract.$entropy,
+        $schema: DataContract.DEFAULTS.SCHEMA,
+        version: DataContract.DEFAULTS.VERSION,
         documents: rawDataContract.documents,
+        definitions: {},
       });
     });
   });
