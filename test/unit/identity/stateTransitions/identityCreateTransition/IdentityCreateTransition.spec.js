@@ -142,7 +142,6 @@ describe('IdentityCreateTransition', () => {
         lockedOutPoint: rawStateTransition.lockedOutPoint,
         publicKeys: rawStateTransition.publicKeys,
         signature: null,
-        signaturePublicKeyId: null,
       });
 
       const jsonWithSig = stateTransition.toJSON({ skipSignature: true });
