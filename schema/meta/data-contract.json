@@ -317,11 +317,6 @@
       "minLength": 34,
       "maxLength": 34
     },
-    "version": {
-      "type": "number",
-      "multipleOf": 1.0,
-      "minimum": 1
-    },
     "documents": {
       "type": "object",
       "patternProperties": {
@@ -469,7 +464,6 @@
     "$schema",
     "$ownerId",
     "$entropy",
-    "version",
     "documents"
   ],
   "additionalProperties": false

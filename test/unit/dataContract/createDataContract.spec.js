@@ -38,19 +38,6 @@ describe('createDataContract', () => {
     expect(dataContract.getDocuments()).to.equal(rawDataContract.documents);
   });
 
-  it('should return new DataContract with "version" if present', () => {
-    rawDataContract.version = 1;
-
-    const dataContract = new DataContract(rawDataContract);
-
-    expect(dataContract).to.be.an.instanceOf(DataContract);
-
-    expect(dataContract.getVersion()).to.equal(rawDataContract.version);
-
-    expect(dataContract.getOwnerId()).to.equal(rawDataContract.$ownerId);
-    expect(dataContract.getDocuments()).to.equal(rawDataContract.documents);
-  });
-
   it('should return new DataContract with "definitions" if present', () => {
     rawDataContract.definitions = {
       subSchema: { type: 'object' },

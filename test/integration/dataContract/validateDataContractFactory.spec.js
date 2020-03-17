@@ -302,61 +302,6 @@ describe('validateDataContractFactory', () => {
     });
   });
 
-  describe('version', () => {
-    it('should be present', async () => {
-      delete rawDataContract.version;
-
-      const result = await validateDataContract(rawDataContract);
-
-      expectJsonSchemaError(result);
-
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.equal('');
-      expect(error.keyword).to.equal('required');
-      expect(error.params.missingProperty).to.equal('version');
-    });
-
-    it('should be a number', async () => {
-      rawDataContract.version = 'wrong';
-
-      const result = await validateDataContract(rawDataContract);
-
-      expectJsonSchemaError(result);
-
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.equal('.version');
-      expect(error.keyword).to.equal('type');
-    });
-
-    it('should be an integer', async () => {
-      rawDataContract.version = 1.2;
-
-      const result = await validateDataContract(rawDataContract);
-
-      expectJsonSchemaError(result);
-
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.equal('.version');
-      expect(error.keyword).to.equal('multipleOf');
-    });
-
-    it('should be greater or equal to one', async () => {
-      rawDataContract.version = 0;
-
-      const result = await validateDataContract(rawDataContract);
-
-      expectJsonSchemaError(result);
-
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.equal('.version');
-      expect(error.keyword).to.equal('minimum');
-    });
-  });
-
   describe('definitions', () => {
     it('may not be present', async () => {
       delete rawDataContract.definitions;
