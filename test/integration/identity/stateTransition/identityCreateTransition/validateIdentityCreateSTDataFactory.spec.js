@@ -13,8 +13,8 @@ const IdentityAlreadyExistsError = require(
   '../../../../../lib/errors/IdentityAlreadyExistsError',
 );
 
-const IdentityLockTransactionNotFound = require(
-  '../../../../../lib/errors/IdentityLockTransactionNotFound',
+const IdentityLockTransactionNotFoundError = require(
+  '../../../../../lib/errors/IdentityLockTransactionNotFoundError',
 );
 
 const InvalidStateTransitionSignatureError = require(
@@ -87,7 +87,7 @@ describe('validateIdentityCreateSTDataFactory', () => {
     const result = await validateIdentityCreateSTData(stateTransition);
 
     const [error] = result.getErrors();
-    expect(error).to.be.an.instanceOf(IdentityLockTransactionNotFound);
+    expect(error).to.be.an.instanceOf(IdentityLockTransactionNotFoundError);
     expect(error.getTransactionHash()).to.deep.equal('6b35b55200620740a676984dea87f80db4fdd6dd17bf7fdcdd8515e029e857f9');
   });
 

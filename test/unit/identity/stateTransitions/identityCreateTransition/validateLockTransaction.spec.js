@@ -1,6 +1,6 @@
 const validateLockTransaction = require('../../../../../lib/identity/stateTransitions/identityCreateTransition/validateLockTransaction');
 
-const InvalidIdentityLockTransaction = require('../../../../../lib/errors/InvalidIdentityLockTransaction');
+const InvalidIdentityLockTransactionError = require('../../../../../lib/errors/InvalidIdentityLockTransactionError');
 
 describe('validateLockTransaction', () => {
   let transactionMock;
@@ -34,7 +34,7 @@ describe('validateLockTransaction', () => {
     const result = validateLockTransaction(transactionMock, outputIndex);
 
     const [error] = result.getErrors();
-    expect(error).to.be.an.instanceOf(InvalidIdentityLockTransaction);
+    expect(error).to.be.an.instanceOf(InvalidIdentityLockTransactionError);
     expect(error.getTransaction()).to.deep.equal(transactionMock);
   });
 
@@ -43,7 +43,7 @@ describe('validateLockTransaction', () => {
     const result = validateLockTransaction(transactionMock, outputIndex);
 
     const [error] = result.getErrors();
-    expect(error).to.be.an.instanceOf(InvalidIdentityLockTransaction);
+    expect(error).to.be.an.instanceOf(InvalidIdentityLockTransactionError);
     expect(error.getTransaction()).to.deep.equal(transactionMock);
   });
 
@@ -53,7 +53,7 @@ describe('validateLockTransaction', () => {
     const result = validateLockTransaction(transactionMock, outputIndex);
 
     const [error] = result.getErrors();
-    expect(error).to.be.an.instanceOf(InvalidIdentityLockTransaction);
+    expect(error).to.be.an.instanceOf(InvalidIdentityLockTransactionError);
     expect(error.getTransaction()).to.deep.equal(transactionMock);
   });
 
@@ -63,7 +63,7 @@ describe('validateLockTransaction', () => {
     const result = validateLockTransaction(transactionMock, outputIndex);
 
     const [error] = result.getErrors();
-    expect(error).to.be.an.instanceOf(InvalidIdentityLockTransaction);
+    expect(error).to.be.an.instanceOf(InvalidIdentityLockTransactionError);
     expect(error.getTransaction()).to.deep.equal(transactionMock);
   });
 });
