@@ -18,7 +18,6 @@ const UndefinedIndexPropertyError = require('../../../lib/errors/UndefinedIndexP
 const InvalidIndexPropertyTypeError = require('../../../lib/errors/InvalidIndexPropertyTypeError');
 const SystemPropertyIndexAlreadyPresentError = require('../../../lib/errors/SystemPropertyIndexAlreadyPresentError');
 const UniqueIndicesLimitReachedError = require('../../../lib/errors/UniqueIndicesLimitReachedError');
-const DataContractMaxByteSizeExceededError = require('../../../lib/errors/DataContractMaxByteSizeExceededError');
 const InvalidDataContractEntropyError = require('../../../lib/errors/InvalidDataContractEntropyError');
 const InvalidDataContractIdError = require('../../../lib/errors/InvalidDataContractIdError');
 
@@ -1516,21 +1515,6 @@ describe('validateDataContractFactory', () => {
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
     });
-  });
-
-  it('should return an invalid result if data contract byte size is bigger than 15 Kb', async () => {
-    const hugeDataContract = {};
-    for (let i = 0; i < 2200; i++) {
-      hugeDataContract[i] = i;
-    }
-
-    const result = await validateDataContract(hugeDataContract);
-
-    expectValidationError(result, DataContractMaxByteSizeExceededError);
-
-    const [error] = result.getErrors();
-
-    expect(error.getDataContract()).to.deep.equal(hugeDataContract);
   });
 
   it('should return invalid result with circular $ref pointer', async () => {
