@@ -51,7 +51,7 @@ describe('validateStateTransitionFeeFactory', () => {
     const result = await validateStateTransitionFee(stateTransition);
 
     expect(result.isValid()).to.be.true();
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(dataContract.getId());
+    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(dataContract.getOwnerId());
   });
 
   it('should return valid result for DocumentsStateTransition', async () => {
