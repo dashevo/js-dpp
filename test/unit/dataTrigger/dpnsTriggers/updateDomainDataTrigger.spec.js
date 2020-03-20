@@ -1,4 +1,4 @@
-const AbstractDocumentTransition = require('../../../../lib/document/stateTransition/actionTransition/AbstractDocumentTransition');
+const AbstractDocumentTransition = require('../../../../lib/document/stateTransition/documentTransition/AbstractDocumentTransition');
 const domainUpdateDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/updateDomainDataTrigger');
 const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
 const { getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');

@@ -3,7 +3,7 @@ const Ajv = require('ajv');
 const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const AbstractDocumentTransition = require('../../../lib/document/stateTransition/actionTransition/AbstractDocumentTransition');
+const AbstractDocumentTransition = require('../../../lib/document/stateTransition/documentTransition/AbstractDocumentTransition');
 
 const validateDocumentFactory = require('../../../lib/document/validateDocumentFactory');
 const enrichDataContractWithBaseDocument = require('../../../lib/dataContract/enrichDataContractWithBaseDocument');
