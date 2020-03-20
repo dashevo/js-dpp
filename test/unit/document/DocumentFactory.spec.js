@@ -88,8 +88,6 @@ describe('DocumentFactory', () => {
       expect(generateMock).to.have.been.calledOnce();
       expect(newDocument.entropy).to.equal(entropy);
 
-      expect(newDocument.getAction()).to.equal(Document.DEFAULTS.ACTION);
-
       expect(newDocument.getRevision()).to.equal(DocumentCreateTransition.INITIAL_REVISION);
 
       expect(newDocument.getId()).to.equal('E9QpjZMD7CPAGa7x2ABuLFPvBLZjhPji4TMrUfSP3Hk9');
@@ -235,10 +233,7 @@ describe('DocumentFactory', () => {
 
   describe('createStateTransition', () => {
     it('should create DocumentsStateTransition with passed documents', () => {
-      const result = factory.createStateTransition(documents);
-
-      expect(result).to.be.instanceOf(DocumentsStateTransition);
-      expect(result.getDocuments()).to.equal(documents);
+      throw new Error('implement me!');
     });
   });
 });
