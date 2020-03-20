@@ -1,3 +1,5 @@
+const AbstractDocumentTransition = require('../../../../../lib/document/stateTransition/actionTransition/AbstractDocumentTransition');
+
 const validateDocumentsSTDataFactory = require('../../../../../lib/document/stateTransition/validation/data/validateDocumentsSTDataFactory');
 
 const Document = require('../../../../../lib/document/Document');
@@ -21,7 +23,6 @@ const InvalidDocumentRevisionError = require('../../../../../lib/errors/InvalidD
 const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 const InvalidDocumentActionError = require('../../../../../lib/document/errors/InvalidDocumentActionError');
 const DocumentOwnerIdMismatchError = require('../../../../../lib/errors/DocumentOwnerIdMismatchError');
-const DocumentEntropyMismatchError = require('../../../../../lib/errors/DocumentEntropyMismatchError');
 
 describe('validateDocumentsSTDataFactory', () => {
   let validateDocumentsSTData;
@@ -112,7 +113,7 @@ describe('validateDocumentsSTDataFactory', () => {
   });
 
   it('should return invalid result if Document with action "update" is not present', async () => {
-    documents[0].setAction(Document.ACTIONS.REPLACE);
+    documents[0].setAction(AbstractDocumentTransition.ACTIONS.REPLACE);
 
     const result = await validateDocumentsSTData(stateTransition);
 
@@ -132,7 +133,7 @@ describe('validateDocumentsSTDataFactory', () => {
 
   it('should return invalid result if Document with action "delete" is not present', async () => {
     documents[0].setData({});
-    documents[0].setAction(Document.ACTIONS.DELETE);
+    documents[0].setAction(AbstractDocumentTransition.ACTIONS.DELETE);
 
     const result = await validateDocumentsSTData(stateTransition);
 
@@ -151,7 +152,7 @@ describe('validateDocumentsSTDataFactory', () => {
   });
 
   it('should return invalid result if Document with action "update" has wrong revision', async () => {
-    documents[0].setAction(Document.ACTIONS.REPLACE);
+    documents[0].setAction(AbstractDocumentTransition.ACTIONS.REPLACE);
 
     fetchDocumentsMock.resolves([documents[0]]);
 
@@ -173,7 +174,7 @@ describe('validateDocumentsSTDataFactory', () => {
   });
 
   it('should return invalid result if Document with action "update" has mismatch of ownerId with previous revision', async () => {
-    documents[0].setAction(Document.ACTIONS.REPLACE);
+    documents[0].setAction(AbstractDocumentTransition.ACTIONS.REPLACE);
 
     const fetchedDocument = new Document(documents[0].toJSON());
     fetchedDocument.revision -= 1;
@@ -198,35 +199,9 @@ describe('validateDocumentsSTDataFactory', () => {
     expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
-  it('should return invalid result if Document with action "update" has mismatch of entropy with previous revision', async () => {
-    documents[0].setAction(Document.ACTIONS.REPLACE);
-
-    const fetchedDocument = new Document(documents[0].toJSON());
-    fetchedDocument.revision -= 1;
-    fetchedDocument.entropy = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
-
-    fetchDocumentsMock.resolves([fetchedDocument]);
-
-    const result = await validateDocumentsSTData(stateTransition);
-
-    expectValidationError(result, DocumentEntropyMismatchError);
-
-    const [error] = result.getErrors();
-
-    expect(error.getDocument()).to.equal(documents[0]);
-    expect(error.getFetchedDocument()).to.equal(fetchedDocument);
-
-    expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
-
-    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
-
-    expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
-    expect(executeDataTriggersMock).to.have.not.been.called();
-  });
-
   it('should return invalid result if Document with action "delete" has wrong revision', async () => {
     documents[0].setData({});
-    documents[0].setAction(Document.ACTIONS.DELETE);
+    documents[0].setAction(AbstractDocumentTransition.ACTIONS.DELETE);
 
     fetchDocumentsMock.resolves([documents[0]]);
 
@@ -342,11 +317,11 @@ describe('validateDocumentsSTDataFactory', () => {
 
     fetchDocumentsMock.resolves(fetchedDocuments);
 
-    documents[1].setAction(Document.ACTIONS.REPLACE);
+    documents[1].setAction(AbstractDocumentTransition.ACTIONS.REPLACE);
     documents[1].setRevision(2);
 
     documents[2].setData({});
-    documents[2].setAction(Document.ACTIONS.DELETE);
+    documents[2].setAction(AbstractDocumentTransition.ACTIONS.DELETE);
     documents[2].setRevision(2);
 
     const dataTriggersExecutionContext = new DataTriggerExecutionContext(
@@ -369,7 +344,7 @@ describe('validateDocumentsSTDataFactory', () => {
     expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.been.calledOnceWithExactly(
-      documents.filter((d) => d.getAction() !== Document.ACTIONS.DELETE),
+      documents.filter((d) => d.getAction() !== AbstractDocumentTransition.ACTIONS.DELETE),
       dataContract,
     );
 

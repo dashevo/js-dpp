@@ -1,8 +1,9 @@
+const AbstractDocumentTransition = require('../../../lib/document/stateTransition/actionTransition/AbstractDocumentTransition');
+
 const getDataTriggersFactory = require('../../../lib/dataTrigger/getDataTriggersFactory');
 
 const getDpnsDocumentFixture = require('../../../lib/test/fixtures/getDpnsDocumentFixture');
 
-const Document = require('../../../lib/document/Document');
 const DataTrigger = require('../../../lib/dataTrigger/DataTrigger');
 
 const createDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
@@ -27,26 +28,26 @@ describe('getDataTriggers', () => {
 
   beforeEach(function beforeEach() {
     createDocument = getDpnsDocumentFixture.getChildDocumentFixture();
-    createDocument.setAction(Document.ACTIONS.CREATE);
+    createDocument.setAction(AbstractDocumentTransition.ACTIONS.CREATE);
 
     updateDocument = getDpnsDocumentFixture.getChildDocumentFixture();
-    updateDocument.setAction(Document.ACTIONS.REPLACE);
+    updateDocument.setAction(AbstractDocumentTransition.ACTIONS.REPLACE);
 
     deleteDocument = getDpnsDocumentFixture.getChildDocumentFixture();
     deleteDocument.data = {};
-    deleteDocument.setAction(Document.ACTIONS.DELETE);
+    deleteDocument.setAction(AbstractDocumentTransition.ACTIONS.DELETE);
 
     dataContractId = getDpnsDocumentFixture.dataContract.getId();
     topLevelIdentity = generateRandomId();
 
     createTrigger = new DataTrigger(
-      dataContractId, 'domain', Document.ACTIONS.CREATE, createDomainDataTrigger, topLevelIdentity,
+      dataContractId, 'domain', AbstractDocumentTransition.ACTIONS.CREATE, createDomainDataTrigger, topLevelIdentity,
     );
     updateTrigger = new DataTrigger(
-      dataContractId, 'domain', Document.ACTIONS.REPLACE, updateDomainDataTrigger, topLevelIdentity,
+      dataContractId, 'domain', AbstractDocumentTransition.ACTIONS.REPLACE, updateDomainDataTrigger, topLevelIdentity,
     );
     deleteTrigger = new DataTrigger(
-      dataContractId, 'domain', Document.ACTIONS.DELETE, deleteDomainDataTrigger, topLevelIdentity,
+      dataContractId, 'domain', AbstractDocumentTransition.ACTIONS.DELETE, deleteDomainDataTrigger, topLevelIdentity,
     );
 
     this.sinonSandbox.stub(process, 'env').value({
@@ -79,7 +80,7 @@ describe('getDataTriggers', () => {
 
   it('should return empty trigger array for any other type except `domain`', () => {
     const result = getDataTriggers(
-      dataContractId, 'otherType', Document.ACTIONS.CREATE,
+      dataContractId, 'otherType', AbstractDocumentTransition.ACTIONS.CREATE,
     );
 
     expect(result).to.deep.equal([]);

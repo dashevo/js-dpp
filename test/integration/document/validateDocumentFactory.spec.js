@@ -3,7 +3,8 @@ const Ajv = require('ajv');
 const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const Document = require('../../../lib/document/Document');
+const AbstractDocumentTransition = require('../../../lib/document/stateTransition/actionTransition/AbstractDocumentTransition');
+
 const validateDocumentFactory = require('../../../lib/document/validateDocumentFactory');
 const enrichDataContractWithBaseDocument = require('../../../lib/dataContract/enrichDataContractWithBaseDocument');
 
@@ -505,7 +506,7 @@ describe('validateDocumentFactory', () => {
     const result = validateDocument(
       rawDocument,
       dataContract,
-      { action: Document.ACTIONS.DELETE },
+      { action: AbstractDocumentTransition.ACTIONS.DELETE },
     );
 
     expect(validator.validate).to.have.been.calledOnceWith(documentBaseSchema, rawDocument);
@@ -516,7 +517,7 @@ describe('validateDocumentFactory', () => {
     const result = validateDocument(
       rawDocument,
       dataContract,
-      { action: Document.ACTIONS.DELETE },
+      { action: AbstractDocumentTransition.ACTIONS.DELETE },
     );
 
     const [error] = result.getErrors();
