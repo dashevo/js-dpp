@@ -2,6 +2,8 @@ const rewiremock = require('rewiremock/node');
 
 const generateRandomId = require('../../../lib/test/utils/generateRandomId');
 
+const DocumentCreateTransition = require('../../../lib/document/stateTransition/documentTransition/DocumentCreateTransition');
+
 describe('Document', () => {
   let lodashGetMock;
   let lodashSetMock;
@@ -30,13 +32,10 @@ describe('Document', () => {
       $type: 'test',
       $contractId: generateRandomId(),
       $ownerId: generateRandomId(),
-      $entropy: 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh',
-      $rev: Document.DEFAULTS.REVISION,
+      $rev: DocumentCreateTransition.INITIAL_REVISION,
     };
 
     document = new Document(rawDocument);
-
-    document.setAction(Document.DEFAULTS.ACTION);
   });
 
   describe('constructor', () => {
@@ -105,22 +104,6 @@ describe('Document', () => {
       document = new Document(rawDocument);
 
       expect(document.ownerId).to.equal(rawDocument.$ownerId);
-      expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
-    });
-
-    it('should create Document with $entropy and data if present', () => {
-      const data = {
-        test: 1,
-      };
-
-      rawDocument = {
-        $entropy: 'test',
-        ...data,
-      };
-
-      document = new Document(rawDocument);
-
-      expect(document.entropy).to.equal(rawDocument.$entropy);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
