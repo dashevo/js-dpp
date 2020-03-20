@@ -532,7 +532,7 @@ describe('validateStateTransitionStructureFactory', () => {
       );
 
       const stateTransition = getIdentityCreateSTFixture();
-      stateTransition.sign(privateKey);
+      stateTransition.signByPrivateKey(privateKey);
 
       rawStateTransition = stateTransition.toJSON();
     });

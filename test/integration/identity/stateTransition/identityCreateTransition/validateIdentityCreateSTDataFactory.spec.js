@@ -13,14 +13,6 @@ const IdentityAlreadyExistsError = require(
   '../../../../../lib/errors/IdentityAlreadyExistsError',
 );
 
-const IdentityLockTransactionNotFoundError = require(
-  '../../../../../lib/errors/IdentityLockTransactionNotFoundError',
-);
-
-const InvalidStateTransitionSignatureError = require(
-  '../../../../../lib/errors/InvalidStateTransitionSignatureError',
-);
-
 const ValidationResult = require('../../../../../lib/validation/ValidationResult');
 
 const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
@@ -54,7 +46,7 @@ describe('validateIdentityCreateSTDataFactory', () => {
         },
       ],
     });
-    stateTransition.sign(privateKey);
+    stateTransition.signByPrivateKey(privateKey);
 
 
     const rawTransaction = '030000000137feb5676d0851337ea3c9a992496aab7a0b3eee60aeeb9774000b7f4bababa5000000006b483045022100d91557de37645c641b948c6cd03b4ae3791a63a650db3e2fee1dcf5185d1b10402200e8bd410bf516ca61715867666d31e44495428ce5c1090bf2294a829ebcfa4ef0121025c3cc7fbfc52f710c941497fd01876c189171ea227458f501afcb38a297d65b4ffffffff021027000000000000166a14152073ca2300a86b510fa2f123d3ea7da3af68dcf77cb0090a0000001976a914152073ca2300a86b510fa2f123d3ea7da3af68dc88ac00000000';
@@ -81,15 +73,6 @@ describe('validateIdentityCreateSTDataFactory', () => {
     expect(result.isValid()).to.be.true();
   });
 
-  it('should return invalid result if lock transaction is not found', async () => {
-    dataProviderMock.fetchTransaction.resolves(null);
-
-    const result = await validateIdentityCreateSTData(stateTransition);
-
-    const [error] = result.getErrors();
-    expect(error).to.be.an.instanceOf(IdentityLockTransactionNotFoundError);
-    expect(error.getTransactionHash()).to.deep.equal('6b35b55200620740a676984dea87f80db4fdd6dd17bf7fdcdd8515e029e857f9');
-  });
 
   it('should return invalid result if lock transaction is invalid', async () => {
     const validationError = new Error('Some error');
@@ -104,15 +87,5 @@ describe('validateIdentityCreateSTDataFactory', () => {
 
     const [error] = result.getErrors();
     expect(error).to.deep.equal(validationError);
-  });
-
-  it('should return invalid result if state transition has wrong signature', async () => {
-    stateTransition.sign('17bc80e9cc3d9082925502342acd2e308ab391c45f753f619b05029b4a487d8f');
-
-    const result = await validateIdentityCreateSTData(stateTransition);
-
-    const [error] = result.getErrors();
-    expect(error).to.be.an.instanceOf(InvalidStateTransitionSignatureError);
-    expect(error.getRawStateTransition()).to.deep.equal(stateTransition);
   });
 });
