@@ -2,8 +2,6 @@ const rewiremock = require('rewiremock/node');
 
 const generateRandomId = require('../../../lib/test/utils/generateRandomId');
 
-const DataIsNotAllowedWithActionDeleteError = require('../../../lib/document/errors/DataIsNotAllowedWithActionDeleteError');
-
 describe('Document', () => {
   let lodashGetMock;
   let lodashSetMock;
@@ -190,37 +188,6 @@ describe('Document', () => {
     });
   });
 
-  describe('#setAction', () => {
-    it('should set $action', () => {
-      const result = document.setAction(Document.ACTIONS.DELETE);
-
-      expect(result).to.equal(document);
-
-      expect(document.action).to.equal(Document.ACTIONS.DELETE);
-    });
-
-    it('should throw an error if data is set and the $action is DELETE', () => {
-      document.data = {
-        test: 1,
-      };
-
-      try {
-        document.setAction(Document.ACTIONS.DELETE);
-      } catch (e) {
-        expect(e).to.be.an.instanceOf(DataIsNotAllowedWithActionDeleteError);
-        expect(e.getDocument()).to.deep.equal(document);
-      }
-    });
-  });
-
-  describe('#getAction', () => {
-    it('should return $action', () => {
-      document.action = Document.ACTIONS.DELETE;
-
-      expect(document.getAction()).to.equal(Document.ACTIONS.DELETE);
-    });
-  });
-
   describe('#setRevision', () => {
     it('should set $rev', () => {
       const revision = 5;
@@ -288,20 +255,6 @@ describe('Document', () => {
       expect(result).to.equal(document);
 
       expect(lodashSetMock).to.have.been.calledOnceWith(document.data, path, value);
-    });
-
-    it('should throw an error if $action is already set to DELETE', () => {
-      document.setAction(Document.ACTIONS.DELETE);
-
-      const path = 'test[0].$my';
-      const value = 2;
-
-      try {
-        document.set(path, value);
-      } catch (e) {
-        expect(e).to.be.an.instanceOf(DataIsNotAllowedWithActionDeleteError);
-        expect(e.getDocument()).to.deep.equal(document);
-      }
     });
   });
 

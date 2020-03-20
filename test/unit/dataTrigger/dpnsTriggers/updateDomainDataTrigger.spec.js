@@ -1,7 +1,7 @@
+const AbstractDocumentTransition = require('../../../../lib/document/stateTransition/actionTransition/AbstractDocumentTransition');
 const domainUpdateDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/updateDomainDataTrigger');
 const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
 const { getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
-const Document = require('../../../../lib/document/Document');
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
 const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
@@ -24,7 +24,7 @@ describe('updateDomainDataTrigger', () => {
   });
 
   it('should always fail', async () => {
-    document.setAction(Document.ACTIONS.REPLACE);
+    document.setAction(AbstractDocumentTransition.ACTIONS.REPLACE);
 
     const result = await domainUpdateDataTrigger(document, context);
 

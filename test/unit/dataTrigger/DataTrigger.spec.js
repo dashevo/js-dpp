@@ -39,7 +39,7 @@ describe('DataTrigger', () => {
 
     expect(trigger.dataContractId).to.equal(dataContractMock.getId());
     expect(trigger.documentType).to.equal(document.getType());
-    expect(trigger.documentAction).to.equal(document.getAction());
+    expect(trigger.transitionAction).to.equal(document.getAction());
     expect(trigger.trigger).to.equal(triggerStub);
     expect(trigger.topLevelIdentity).to.equal(topLevelIdentity);
   });
