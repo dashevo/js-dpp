@@ -3,6 +3,8 @@ const rewiremock = require('rewiremock/node');
 const Document = require('../../../lib/document/Document');
 const DocumentsStateTransition = require('../../../lib/document/stateTransition/DocumentsStateTransition');
 
+const DocumentCreateTransition = require('../../../lib/document/stateTransition/documentTransition/DocumentCreateTransition');
+
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
@@ -86,9 +88,7 @@ describe('DocumentFactory', () => {
       expect(generateMock).to.have.been.calledOnce();
       expect(newDocument.entropy).to.equal(entropy);
 
-      expect(newDocument.getAction()).to.equal(Document.DEFAULTS.ACTION);
-
-      expect(newDocument.getRevision()).to.equal(Document.DEFAULTS.REVISION);
+      expect(newDocument.getRevision()).to.equal(DocumentCreateTransition.INITIAL_REVISION);
 
       expect(newDocument.getId()).to.equal('E9QpjZMD7CPAGa7x2ABuLFPvBLZjhPji4TMrUfSP3Hk9');
     });
@@ -233,10 +233,7 @@ describe('DocumentFactory', () => {
 
   describe('createStateTransition', () => {
     it('should create DocumentsStateTransition with passed documents', () => {
-      const result = factory.createStateTransition(documents);
-
-      expect(result).to.be.instanceOf(DocumentsStateTransition);
-      expect(result.getDocuments()).to.equal(documents);
+      throw new Error('implement me!');
     });
   });
 });
