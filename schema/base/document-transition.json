@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://schema.dash.org/dpp-0-4-0/base/document-transition",
+  "type": "object",
+  "properties": {
+    "$id": {
+      "type": "string",
+      "minLength": 42,
+      "maxLength": 44,
+      "pattern": "^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$"
+    },
+    "$type": {
+      "type": "string"
+    },
+    "$rev": {
+      "type": "number",
+      "multipleOf": 1.0,
+      "minimum": 1
+    }
+  },
+  "required": [
+    "$id",
+    "$type",
+    "$rev"
+  ],
+  "additionalProperties": false
+}
