@@ -1,7 +1,7 @@
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
 const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
-const fetchDocumentsByDocumentsFactory = require('../../../../../lib/document/stateTransition/validation/data/fetchDocumentsFactory');
+const fetchDocumentsFactory = require('../../../../../lib/document/stateTransition/validation/data/fetchDocumentsFactory');
 
 const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
 
@@ -15,7 +15,7 @@ describe('fetchDocumentsFactory', () => {
   beforeEach(function beforeEach() {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
-    fetchDocuments = fetchDocumentsByDocumentsFactory(dataProviderMock);
+    fetchDocuments = fetchDocumentsFactory(dataProviderMock);
 
     documents = getDocumentsFixture();
     transitions = getDocumentTransitionsFixture({
