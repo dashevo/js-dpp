@@ -2,6 +2,7 @@ const verifyDocumentsUniquenessByIndicesFactory = require('../../../../../lib/do
 
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
 const getContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
+const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
 const { expectValidationError } = require('../../../../../lib/test/expect/expectError');
 const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
@@ -14,6 +15,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
   let dataProviderMock;
   let validateDocumentsUniquenessByIndices;
   let documents;
+  let transitions;
   let dataContract;
   let ownerId;
 
@@ -21,6 +23,9 @@ describe('validateDocumentsUniquenessByIndices', () => {
     ({ ownerId } = getDocumentsFixture);
 
     documents = getDocumentsFixture();
+    transitions = getDocumentTransitionsFixture({
+      create: documents,
+    });
     dataContract = getContractFixture();
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
@@ -62,7 +67,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
       )
       .resolves([william]);
 
-    const result = await validateDocumentsUniquenessByIndices(documents, dataContract);
+    const result = await validateDocumentsUniquenessByIndices(ownerId, transitions, dataContract);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
@@ -125,17 +130,17 @@ describe('validateDocumentsUniquenessByIndices', () => {
       )
       .resolves([william]);
 
-    const result = await validateDocumentsUniquenessByIndices(documents, dataContract);
+    const result = await validateDocumentsUniquenessByIndices(ownerId, transitions, dataContract);
 
     expectValidationError(result, DuplicateDocumentError, 4);
 
     const errors = result.getErrors();
 
-    expect(errors.map((e) => e.getDocument())).to.have.deep.members([
-      william,
-      william,
-      leon,
-      leon,
+    expect(errors.map((e) => e.getActionTransition())).to.have.deep.members([
+      transitions[3],
+      transitions[3],
+      transitions[4],
+      transitions[4],
     ]);
 
     expect(errors.map((e) => e.getIndexDefinition())).to.have.deep.members([

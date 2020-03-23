@@ -1,4 +1,5 @@
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
+const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
 const fetchDocumentsByDocumentsFactory = require('../../../../../lib/document/stateTransition/validation/data/fetchDocumentsFactory');
 
@@ -7,6 +8,7 @@ const createDataProviderMock = require('../../../../../lib/test/mocks/createData
 describe('fetchDocumentsFactory', () => {
   let fetchDocuments;
   let dataProviderMock;
+  let transitions;
   let documents;
   let dataContract;
 
@@ -16,26 +18,29 @@ describe('fetchDocumentsFactory', () => {
     fetchDocuments = fetchDocumentsByDocumentsFactory(dataProviderMock);
 
     documents = getDocumentsFixture();
+    transitions = getDocumentTransitionsFixture({
+      create: documents,
+    });
     dataContract = getDocumentsFixture.dataContract;
   });
 
   it('should fetch specified Documents using DataProvider', async () => {
     dataProviderMock.fetchDocuments.withArgs(
       dataContract.getId(),
-      documents[0].getType(),
+      transitions[0].getType(),
     ).resolves([documents[0]]);
 
     dataProviderMock.fetchDocuments.withArgs(
       dataContract.getId(),
-      documents[1].getType(),
+      transitions[1].getType(),
     ).resolves([documents[1], documents[2]]);
 
     dataProviderMock.fetchDocuments.withArgs(
       dataContract.getId(),
-      documents[3].getType(),
+      transitions[3].getType(),
     ).resolves([documents[3], documents[4]]);
 
-    const fetchedDocuments = await fetchDocuments(documents);
+    const fetchedDocuments = await fetchDocuments(dataContract.getId(), transitions);
 
     expect(dataProviderMock.fetchDocuments).to.have.been.calledThrice();
 
