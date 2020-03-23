@@ -1,6 +1,6 @@
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
 
-const fetchDocumentsByDocumentsFactory = require('../../../../../lib/document/stateTransition/validation/data/fetchDocumentsFactory');
+const fetchDocumentsFactory = require('../../../../../lib/document/stateTransition/validation/data/fetchDocumentsFactory');
 
 const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
 
@@ -13,7 +13,7 @@ describe('fetchDocumentsFactory', () => {
   beforeEach(function beforeEach() {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
-    fetchDocuments = fetchDocumentsByDocumentsFactory(dataProviderMock);
+    fetchDocuments = fetchDocumentsFactory(dataProviderMock);
 
     documents = getDocumentsFixture();
     dataContract = getDocumentsFixture.dataContract;
@@ -35,7 +35,7 @@ describe('fetchDocumentsFactory', () => {
       documents[3].getType(),
     ).resolves([documents[3], documents[4]]);
 
-    const fetchedDocuments = await fetchDocuments(documents);
+    const fetchedDocuments = await fetchDocuments(dataContract.getId(), documents);
 
     expect(dataProviderMock.fetchDocuments).to.have.been.calledThrice();
 
