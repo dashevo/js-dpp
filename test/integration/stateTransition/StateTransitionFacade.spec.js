@@ -8,6 +8,7 @@ const DocumentsStateTransition = require('../../../lib/document/stateTransition/
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
+const getDocumentTransitionsFixture = require('../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 
@@ -38,8 +39,15 @@ describe('StateTransitionFacade', () => {
     dataContractStateTransition = new DataContractStateTransition(dataContract);
     dataContractStateTransition.sign(identityPublicKey, privateKey);
 
-    const documents = getDocumentsFixture();
-    documentsStateTransition = new DocumentsStateTransition(documents);
+    const transitions = getDocumentTransitionsFixture({
+      create: getDocumentsFixture(),
+    });
+
+    documentsStateTransition = new DocumentsStateTransition({
+      ownerId: getDocumentsFixture.ownerId,
+      contractId: dataContract.getId(),
+      transitions: transitions.map((t) => t.toJSON()),
+    });
     documentsStateTransition.sign(identityPublicKey, privateKey);
 
     const getPublicKeyById = this.sinonSandbox.stub().returns(identityPublicKey);

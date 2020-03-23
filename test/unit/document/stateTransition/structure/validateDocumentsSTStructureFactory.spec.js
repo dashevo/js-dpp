@@ -11,6 +11,8 @@ const validateDocumentsSTStructureFactory = require('../../../../../lib/document
 
 const { expectValidationError } = require('../../../../../lib/test/expect/expectError');
 
+const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
+
 const DuplicateDocumentsError = require('../../../../../lib/errors/STDuplicateDocumentsError');
 const MismatchSTDocumentsAndActionsError = require('../../../../../lib/errors/MismatchSTDocumentsAndActionsError');
 const STContainsDocumentsFromDifferentUsersError = require('../../../../../lib/errors/STContainsDocumentsFromDifferentUsersError');
@@ -31,6 +33,7 @@ describe('validateDocumentsSTStructureFactory', () => {
   let validateStateTransitionSignatureMock;
   let ownerId;
   let validateIdentityExistenceMock;
+  let dataProviderMock;
 
   beforeEach(function beforeEach() {
     dataContract = getContractFixture();
@@ -59,6 +62,8 @@ describe('validateDocumentsSTStructureFactory', () => {
       new ValidationResult(),
     );
 
+    dataProviderMock = createDataProviderMock(this.sinonSandbox);
+
     validateDocumentsSTStructure = validateDocumentsSTStructureFactory(
       validateDocumentMock,
       findDuplicateDocumentsByIdMock,
@@ -66,6 +71,9 @@ describe('validateDocumentsSTStructureFactory', () => {
       fetchAndValidateDataContractMock,
       validateStateTransitionSignatureMock,
       validateIdentityExistenceMock,
+      dataProviderMock,
+      validatorMock,
+      enrichDataContractWithBaseSchema,
     );
   });
 
