@@ -30,8 +30,8 @@ describe('IdentityCreateTransition', () => {
     hashMock.returns(Buffer.alloc(32));
 
     signerMock = {
-      sign: this.sinonSandbox.stub(),
-      verifySignature: this.sinonSandbox.stub(),
+      signByPrivateKey: this.sinonSandbox.stub(),
+      verifySignatureByPublicKey: this.sinonSandbox.stub(),
     };
 
     IdentityCreateTransition = rewiremock.proxy(
@@ -142,7 +142,6 @@ describe('IdentityCreateTransition', () => {
         lockedOutPoint: rawStateTransition.lockedOutPoint,
         publicKeys: rawStateTransition.publicKeys,
         signature: null,
-        signaturePublicKeyId: null,
       });
 
       const jsonWithSig = stateTransition.toJSON({ skipSignature: true });
