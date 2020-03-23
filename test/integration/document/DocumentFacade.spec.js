@@ -2,12 +2,14 @@ const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
 const Document = require('../../../lib/document/Document');
 const DocumentsStateTransition = require('../../../lib/document/stateTransition/DocumentsStateTransition');
+const AbstractDocumentTransition = require('../../../lib/document/stateTransition/documentTransition/AbstractDocumentTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
+const getDocumentTransitionsFixture = require('../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
 const MissingDocumentContractIdError = require('../../../lib/errors/MissingDocumentContractIdError');
 const MissingOptionError = require('../../../lib/errors/MissingOptionError');
@@ -112,10 +114,14 @@ describe('DocumentFacade', () => {
 
   describe('createStatTransition', () => {
     it('should create DocumentsStateTransition with passed documents', () => {
-      const result = dpp.document.createStateTransition(documents);
+      const result = dpp.document.createStateTransition({
+        [AbstractDocumentTransition.ACTION_NAMES.CREATE]: documents,
+      });
 
       expect(result).to.be.instanceOf(DocumentsStateTransition);
-      expect(result.getDocuments()).to.equal(documents);
+      expect(result.getTransitions()).to.deep.equal(getDocumentTransitionsFixture({
+        create: documents,
+      }));
     });
   });
 

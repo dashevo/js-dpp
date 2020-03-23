@@ -5,6 +5,7 @@ const DocumentsStateTransition = require('../../../lib/document/stateTransition/
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
+const getDocumentTranstionsFixture = require('../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
 const InvalidStateTransitionTypeError = require('../../../lib/errors/InvalidStateTransitionTypeError');
 
@@ -27,13 +28,18 @@ describe('createStateTransitionFactory', () => {
   });
 
   it('should return DocumentsStateTransition if type is DOCUMENTS', () => {
-    const documents = getDocumentsFixture();
-    const stateTransition = new DocumentsStateTransition(documents);
+    const transitions = getDocumentTranstionsFixture();
+
+    const stateTransition = new DocumentsStateTransition({
+      ownerId: getDocumentsFixture.ownerId,
+      contractId: getDocumentsFixture.dataContract.getId(),
+      transitions: transitions.map((t) => t.toJSON()),
+    });
 
     const result = createStateTransition(stateTransition.toJSON());
 
     expect(result).to.be.instanceOf(DocumentsStateTransition);
-    expect(result.getDocuments()).to.deep.equal(documents);
+    expect(result.getTransitions()).to.deep.equal(transitions);
   });
 
   it('should throw InvalidStateTransitionTypeError if type is invalid', () => {
