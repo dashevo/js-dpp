@@ -28,14 +28,9 @@ describe('getDataTriggers', () => {
 
   beforeEach(function beforeEach() {
     createDocument = getDpnsDocumentFixture.getChildDocumentFixture();
-    createDocument.setAction(AbstractDocumentTransition.ACTIONS.CREATE);
-
     updateDocument = getDpnsDocumentFixture.getChildDocumentFixture();
-    updateDocument.setAction(AbstractDocumentTransition.ACTIONS.REPLACE);
-
     deleteDocument = getDpnsDocumentFixture.getChildDocumentFixture();
     deleteDocument.data = {};
-    deleteDocument.setAction(AbstractDocumentTransition.ACTIONS.DELETE);
 
     dataContractId = getDpnsDocumentFixture.dataContract.getId();
     topLevelIdentity = generateRandomId();
@@ -60,19 +55,19 @@ describe('getDataTriggers', () => {
 
   it('should return matching triggers', () => {
     let result = getDataTriggers(
-      dataContractId, createDocument.getType(), createDocument.getAction(),
+      dataContractId, createDocument.getType(), AbstractDocumentTransition.ACTIONS.CREATE,
     );
 
     expect(result).to.deep.equal([createTrigger]);
 
     result = getDataTriggers(
-      dataContractId, updateDocument.getType(), updateDocument.getAction(),
+      dataContractId, updateDocument.getType(), AbstractDocumentTransition.ACTIONS.REPLACE,
     );
 
     expect(result).to.deep.equal([updateTrigger]);
 
     result = getDataTriggers(
-      dataContractId, deleteDocument.getType(), deleteDocument.getAction(),
+      dataContractId, deleteDocument.getType(), AbstractDocumentTransition.ACTIONS.DELETE,
     );
 
     expect(result).to.deep.equal([deleteTrigger]);
