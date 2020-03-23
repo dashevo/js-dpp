@@ -1,8 +1,8 @@
-const findDuplicateDocuments = require('../../../../../lib/document/stateTransition/validation/structure/findDuplicateDocumentsById');
+const findDuplicateDocuments = require('../../../../../lib/document/stateTransition/validation/structure/findDuplicatesById');
 
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
 
-describe('findDuplicateDocumentsById', () => {
+describe('findDuplicatesById', () => {
   let documents;
 
   beforeEach(() => {
