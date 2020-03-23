@@ -13,9 +13,6 @@ const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixt
 const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTypeError');
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 const InvalidDocumentIdError = require('../../../lib/errors/InvalidDocumentIdError');
-const InvalidDocumentEntropyError = require('../../../lib/errors/InvalidDocumentEntropyError');
-const ConsensusError = require('../../../lib/errors/ConsensusError');
-const JsonSchemaError = require('../../../lib/errors/JsonSchemaError');
 const MismatchDocumentContractIdAndDataContractError = require('../../../lib/errors/MismatchDocumentContractIdAndDataContractError');
 
 const originalDocumentBaseSchema = require('../../../schema/base/document');

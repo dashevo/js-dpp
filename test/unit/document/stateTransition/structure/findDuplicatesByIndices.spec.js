@@ -77,7 +77,7 @@ describe('findDuplicatesByIndices', () => {
   });
 
   it('should return duplicate documents if they are present', () => {
-    const [, , , william, leon] = documents;
+    const [, , , , leon] = documents;
 
     leon.set('lastName', 'Birkin');
 
