@@ -7,6 +7,7 @@ const DocumentCreateTransition = require('../../../lib/document/stateTransition/
 
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
+const getDocumentTransitionsFixture = require('../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
@@ -233,7 +234,15 @@ describe('DocumentFactory', () => {
 
   describe('createStateTransition', () => {
     it('should create DocumentsStateTransition with passed documents', () => {
-      throw new Error('implement me!');
+      const stateTransition = factory.createStateTransition({
+        create: documents,
+      });
+
+      expect(stateTransition.getTransitions()).to.deep.equal(
+        getDocumentTransitionsFixture({
+          create: documents,
+        }),
+      );
     });
   });
 });
