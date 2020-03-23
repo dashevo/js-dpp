@@ -11,7 +11,7 @@ const DocumentsStateTransition = require('../../../../lib/document/stateTransiti
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 
-const IdentityBalanceIsNotEnoughError = require('../../../../lib/errors/IdentityBalanceIsNotEnoughError');
+const IdentityBalanceIsNotEnoughError = require('../../../../lib/errors/BalanceIsNotEnoughError');
 const InvalidStateTransitionTypeError = require('../../../../lib/errors/InvalidStateTransitionTypeError');
 
 describe('validateStateTransitionFeeFactory', () => {
