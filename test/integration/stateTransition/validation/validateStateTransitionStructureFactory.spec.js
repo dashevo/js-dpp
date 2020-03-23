@@ -15,6 +15,7 @@ const identitySTSchema = require('../../../../schema/identity/state-transitions/
 
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
+const getDocumentTransitionsFixture = require('../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
 const {
@@ -320,8 +321,15 @@ describe('validateStateTransitionStructureFactory', () => {
       );
 
       const documents = getDocumentsFixture();
+      const transitions = getDocumentTransitionsFixture({
+        create: documents,
+      });
 
-      const stateTransition = new DocumentsStateTransition(documents);
+      const stateTransition = new DocumentsStateTransition({
+        ownerId: getDocumentsFixture.ownerId,
+        contractId: getDocumentsFixture.dataContract.getId(),
+        transitions: transitions.map((t) => t.toJSON()),
+      });
       stateTransition.signByPrivateKey(privateKey);
 
       rawStateTransition = stateTransition.toJSON();

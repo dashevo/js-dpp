@@ -12,25 +12,14 @@
     "$type": {
       "type": "string"
     },
-    "$rev": {
-      "type": "number",
-      "multipleOf": 1.0,
-      "minimum": 1
-    },
     "$action": {
       "type": "number",
       "enum": [1, 2, 4]
-    },
-    "$entropy": {
-      "type": "string",
-      "minLength": 34,
-      "maxLength": 34
     }
   },
   "required": [
     "$id",
     "$type",
-    "$rev",
     "$action"
   ],
   "additionalProperties": false
