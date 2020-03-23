@@ -4,10 +4,12 @@ const findDuplicateDocumentsByIndices = require('../../../../../lib/document/sta
 
 const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
+const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
 describe('findDuplicatesByIndices', () => {
   let documents;
   let contract;
+  let transitions;
 
   beforeEach(() => {
     contract = getDataContractFixture();
@@ -68,6 +70,10 @@ describe('findDuplicatesByIndices', () => {
       ...william.toJSON(),
       $type: 'singleDocument',
     }));
+
+    transitions = getDocumentTransitionsFixture({
+      create: documents,
+    }).map((t) => t.toJSON());
   });
 
   it('should return duplicate documents if they are present', () => {
@@ -75,17 +81,21 @@ describe('findDuplicatesByIndices', () => {
 
     leon.set('lastName', 'Birkin');
 
-    const duplicates = findDuplicateDocumentsByIndices(documents, contract);
-    expect(duplicates).to.deep.equal(
+    transitions = getDocumentTransitionsFixture({
+      create: documents,
+    }).map((t) => t.toJSON());
+
+    const duplicates = findDuplicateDocumentsByIndices(transitions, contract);
+    expect(duplicates).to.have.deep.members(
       [
-        leon.toJSON(),
-        william.toJSON(),
+        transitions[3],
+        transitions[4],
       ],
     );
   });
 
   it('should return an empty array of there are no duplicates', () => {
-    const duplicates = findDuplicateDocumentsByIndices(documents, contract);
+    const duplicates = findDuplicateDocumentsByIndices(transitions, contract);
 
     expect(duplicates.length).to.equal(0);
   });
