@@ -3,8 +3,6 @@ const Ajv = require('ajv');
 const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const AbstractDocumentTransition = require('../../../lib/document/stateTransition/documentTransition/AbstractDocumentTransition');
-
 const validateDocumentFactory = require('../../../lib/document/validateDocumentFactory');
 const enrichDataContractWithBaseSchema = require('../../../lib/dataContract/enrichDataContractWithBaseSchema');
 
@@ -14,8 +12,6 @@ const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTyp
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 const InvalidDocumentIdError = require('../../../lib/errors/InvalidDocumentIdError');
 const MismatchDocumentContractIdAndDataContractError = require('../../../lib/errors/MismatchDocumentContractIdAndDataContractError');
-
-const originalDocumentBaseSchema = require('../../../schema/base/document');
 
 const generateDocumentId = require('../../../lib/document/generateDocumentId');
 
