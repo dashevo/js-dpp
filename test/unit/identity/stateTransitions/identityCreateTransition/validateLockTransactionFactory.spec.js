@@ -121,11 +121,11 @@ describe('validateLockTransactionFactory', () => {
 
     const result = await validateLockTransaction(stateTransition);
 
-    expectValidationError(result, InvalidIdentityLockTransactionError);
+    expectValidationError(result, InvalidIdentityOutPointError);
 
     const [error] = result.getErrors();
 
-    expect(error.message).to.equal(`Invalid identity lock transaction: Output with index ${outputIndex} not found`);
+    expect(error.message).to.equal(`Invalid Identity out point: Output with index ${outputIndex} not found`);
 
     expect(parseOutPointBufferMock).to.be.calledOnceWithExactly(lockedOutPointBuffer);
     expect(dataProviderMock.fetchTransaction).to.be.calledOnceWithExactly(transactionHash);
