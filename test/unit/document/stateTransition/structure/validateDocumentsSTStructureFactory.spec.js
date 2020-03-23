@@ -1,6 +1,6 @@
 const generateRandomId = require('../../../../../lib/test/utils/generateRandomId');
 
-const DocumentsStateTransition = require('../../../../../lib/document/stateTransition/DocumentsStateTransition');
+const DocumentsBatchTransition = require('../../../../../lib/document/stateTransition/DocumentsBatchTransition');
 
 const getContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
@@ -38,7 +38,7 @@ describe('validateDocumentsSTStructureFactory', () => {
   beforeEach(function beforeEach() {
     dataContract = getContractFixture();
     documents = getDocumentsFixture();
-    stateTransition = new DocumentsStateTransition(documents);
+    stateTransition = new DocumentsBatchTransition(documents);
     rawStateTransition = stateTransition.toJSON();
 
     findDuplicateDocumentsByIdMock = this.sinonSandbox.stub().returns([]);
@@ -269,7 +269,7 @@ describe('validateDocumentsSTStructureFactory', () => {
     documents[0].ownerId = differentOwnerId;
     rawStateTransition.documents[0].$ownerId = differentOwnerId;
 
-    stateTransition = new DocumentsStateTransition(documents);
+    stateTransition = new DocumentsBatchTransition(documents);
 
     const result = await validateDocumentsSTStructure(rawStateTransition);
 

@@ -3,7 +3,7 @@ const { PrivateKey } = require('@dashevo/dashcore-lib');
 const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
 const DataContractStateTransition = require('../../../lib/dataContract/stateTransition/DataContractStateTransition');
-const DocumentsStateTransition = require('../../../lib/document/stateTransition/DocumentsStateTransition');
+const DocumentsBatchTransition = require('../../../lib/document/stateTransition/DocumentsBatchTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
@@ -43,7 +43,7 @@ describe('StateTransitionFacade', () => {
       create: getDocumentsFixture(),
     });
 
-    documentsStateTransition = new DocumentsStateTransition({
+    documentsStateTransition = new DocumentsBatchTransition({
       ownerId: getDocumentsFixture.ownerId,
       contractId: dataContract.getId(),
       transitions: transitions.map((t) => t.toJSON()),

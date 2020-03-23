@@ -1,7 +1,7 @@
 const createStateTransitionFactory = require('../../../lib/stateTransition/createStateTransitionFactory');
 
 const DataContractStateTransition = require('../../../lib/dataContract/stateTransition/DataContractStateTransition');
-const DocumentsStateTransition = require('../../../lib/document/stateTransition/DocumentsStateTransition');
+const DocumentsBatchTransition = require('../../../lib/document/stateTransition/DocumentsBatchTransition');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
@@ -27,10 +27,10 @@ describe('createStateTransitionFactory', () => {
     expect(result.getDataContract().toJSON()).to.deep.equal(dataContract.toJSON());
   });
 
-  it('should return DocumentsStateTransition if type is DOCUMENTS', () => {
+  it('should return DocumentsBatchTransition if type is DOCUMENTS', () => {
     const transitions = getDocumentTranstionsFixture();
 
-    const stateTransition = new DocumentsStateTransition({
+    const stateTransition = new DocumentsBatchTransition({
       ownerId: getDocumentsFixture.ownerId,
       contractId: getDocumentsFixture.dataContract.getId(),
       transitions: transitions.map((t) => t.toJSON()),
@@ -38,7 +38,7 @@ describe('createStateTransitionFactory', () => {
 
     const result = createStateTransition(stateTransition.toJSON());
 
-    expect(result).to.be.instanceOf(DocumentsStateTransition);
+    expect(result).to.be.instanceOf(DocumentsBatchTransition);
     expect(result.getTransitions()).to.deep.equal(transitions);
   });
 

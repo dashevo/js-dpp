@@ -4,7 +4,7 @@ const validateStateTransitionStructureFactory = require('../../../../lib/stateTr
 
 const JsonSchemaValidator = require('../../../../lib/validation/JsonSchemaValidator');
 
-const DocumentsStateTransition = require('../../../../lib/document/stateTransition/DocumentsStateTransition');
+const DocumentsBatchTransition = require('../../../../lib/document/stateTransition/DocumentsBatchTransition');
 const DataContractStateTransition = require('../../../../lib/dataContract/stateTransition/DataContractStateTransition');
 
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
@@ -325,7 +325,7 @@ describe('validateStateTransitionStructureFactory', () => {
         create: documents,
       });
 
-      const stateTransition = new DocumentsStateTransition({
+      const stateTransition = new DocumentsBatchTransition({
         ownerId: getDocumentsFixture.ownerId,
         contractId: getDocumentsFixture.dataContract.getId(),
         transitions: transitions.map((t) => t.toJSON()),

@@ -1,7 +1,7 @@
 const rewiremock = require('rewiremock/node');
 
 const Document = require('../../../lib/document/Document');
-const DocumentsStateTransition = require('../../../lib/document/stateTransition/DocumentsStateTransition');
+const DocumentsBatchTransition = require('../../../lib/document/stateTransition/DocumentsBatchTransition');
 
 const DocumentCreateTransition = require('../../../lib/document/stateTransition/documentTransition/DocumentCreateTransition');
 
@@ -50,7 +50,7 @@ describe('DocumentFactory', () => {
       '../../../lib/util/serializer': { decode: decodeMock },
       '../../../lib/util/entropy': { generate: generateMock },
       '../../../lib/document/Document': Document,
-      '../../../lib/document/stateTransition/DocumentsStateTransition': DocumentsStateTransition,
+      '../../../lib/document/stateTransition/DocumentsBatchTransition': DocumentsBatchTransition,
     });
 
     factory = new DocumentFactory(
@@ -233,7 +233,7 @@ describe('DocumentFactory', () => {
   });
 
   describe('createStateTransition', () => {
-    it('should create DocumentsStateTransition with passed documents', () => {
+    it('should create DocumentsBatchTransition with passed documents', () => {
       const stateTransition = factory.createStateTransition({
         create: documents,
       });

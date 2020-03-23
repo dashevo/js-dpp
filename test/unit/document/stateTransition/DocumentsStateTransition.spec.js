@@ -3,7 +3,7 @@ const rewiremock = require('rewiremock/node');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
-describe('DocumentsStateTransition', () => {
+describe('DocumentsBatchTransition', () => {
   let stateTransition;
   let documents;
   let hashMock;

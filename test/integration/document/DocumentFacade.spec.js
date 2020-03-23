@@ -1,7 +1,7 @@
 const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
 const Document = require('../../../lib/document/Document');
-const DocumentsStateTransition = require('../../../lib/document/stateTransition/DocumentsStateTransition');
+const DocumentsBatchTransition = require('../../../lib/document/stateTransition/DocumentsBatchTransition');
 const AbstractDocumentTransition = require('../../../lib/document/stateTransition/documentTransition/AbstractDocumentTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
@@ -113,12 +113,12 @@ describe('DocumentFacade', () => {
   });
 
   describe('createStatTransition', () => {
-    it('should create DocumentsStateTransition with passed documents', () => {
+    it('should create DocumentsBatchTransition with passed documents', () => {
       const result = dpp.document.createStateTransition({
         [AbstractDocumentTransition.ACTION_NAMES.CREATE]: documents,
       });
 
-      expect(result).to.be.instanceOf(DocumentsStateTransition);
+      expect(result).to.be.instanceOf(DocumentsBatchTransition);
       expect(result.getTransitions()).to.deep.equal(getDocumentTransitionsFixture({
         create: documents,
       }));

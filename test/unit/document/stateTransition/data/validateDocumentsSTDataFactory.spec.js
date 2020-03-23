@@ -3,7 +3,7 @@ const AbstractDocumentTransition = require('../../../../../lib/document/stateTra
 const validateDocumentsSTDataFactory = require('../../../../../lib/document/stateTransition/validation/data/validateDocumentsSTDataFactory');
 
 const Document = require('../../../../../lib/document/Document');
-const DocumentsStateTransition = require('../../../../../lib/document/stateTransition/DocumentsStateTransition');
+const DocumentsBatchTransition = require('../../../../../lib/document/stateTransition/DocumentsBatchTransition');
 
 const DataTriggerExecutionContext = require('../../../../../lib/dataTrigger/DataTriggerExecutionContext');
 const DataTriggerExecutionError = require('../../../../../lib/errors/DataTriggerExecutionError');
@@ -42,7 +42,7 @@ describe('validateDocumentsSTDataFactory', () => {
     documents = getDocumentsFixture();
     dataContract = getContractFixture();
 
-    stateTransition = new DocumentsStateTransition(documents);
+    stateTransition = new DocumentsBatchTransition(documents);
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchDataContract.resolves(dataContract);

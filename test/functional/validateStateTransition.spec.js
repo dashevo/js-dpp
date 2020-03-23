@@ -14,8 +14,8 @@ const {
 const DataContractStateTransition = require(
   '../../lib/dataContract/stateTransition/DataContractStateTransition',
 );
-const DocumentsStateTransition = require(
-  '../../lib/document/stateTransition/DocumentsStateTransition',
+const DocumentsBatchTransition = require(
+  '../../lib/document/stateTransition/DocumentsBatchTransition',
 );
 
 const getDataContractFixture = require('../../lib/test/fixtures/getDataContractFixture');
@@ -181,9 +181,9 @@ describe.skip('validateStateTransition', function main() {
       await driveUpdateStateApi.applyStateTransition(request);
     });
 
-    const documentsStateTransition = new DocumentsStateTransition([indexDocument]);
+    const documentsStateTransition = new DocumentsBatchTransition([indexDocument]);
 
-    const duplicateStateTransition = new DocumentsStateTransition([anotherDocument]);
+    const duplicateStateTransition = new DocumentsBatchTransition([anotherDocument]);
 
     await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
@@ -227,7 +227,7 @@ describe.skip('validateStateTransition', function main() {
       await driveUpdateStateApi.applyStateTransition(request);
     });
 
-    const documentsStateTransition = new DocumentsStateTransition(documents);
+    const documentsStateTransition = new DocumentsBatchTransition(documents);
 
     await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
