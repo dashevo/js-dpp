@@ -1,5 +1,3 @@
-const AbstractDocumentTransition = require('../../../../lib/document/stateTransition/documentTransition/AbstractDocumentTransition');
-
 const deleteDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/deleteDomainDataTrigger');
 const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
 const { getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
@@ -26,8 +24,6 @@ describe('deleteDomainDataTrigger', () => {
   });
 
   it('should always fail', async () => {
-    document.setData({}).setAction(AbstractDocumentTransition.ACTIONS.DELETE);
-
     const result = await deleteDomainDataTrigger(document, context);
 
     expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
