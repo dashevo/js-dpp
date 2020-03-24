@@ -14,7 +14,6 @@ const { expectValidationError } = require('../../../../../lib/test/expect/expect
 const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
 
 const DuplicateDocumentsError = require('../../../../../lib/errors/STDuplicateDocumentsError');
-const MismatchSTDocumentsAndActionsError = require('../../../../../lib/errors/MismatchSTDocumentsAndActionsError');
 const STContainsDocumentsFromDifferentUsersError = require('../../../../../lib/errors/STContainsDocumentsFromDifferentUsersError');
 const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 const STContainsDocumentsForDifferentDataContractsError = require('../../../../../lib/errors/STContainsDocumentsForDifferentDataContractsError');

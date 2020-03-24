@@ -10,7 +10,7 @@ const DataContractStateTransition = require('../../../../lib/dataContract/stateT
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
 const dataContractSTSchema = require('../../../../schema/stateTransition/data-contract');
-const documentsSTSchema = require('../../../../schema/stateTransition/documents');
+const documentsBatchSTSchema = require('../../../../schema/stateTransition/documents-batch');
 const identitySTSchema = require('../../../../schema/identity/state-transitions/identity-create');
 
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
@@ -311,7 +311,7 @@ describe('validateStateTransitionStructureFactory', () => {
       const typeExtensions = {
         [stateTransitionTypes.DOCUMENTS]: {
           validationFunction: extensionFunctionMock,
-          schema: documentsSTSchema,
+          schema: documentsBatchSTSchema,
         },
       };
 
