@@ -89,4 +89,12 @@ describe('DataContractStateTransition', () => {
       expect(hashMock).to.have.been.calledOnceWith(serializedDocument);
     });
   });
+
+  describe('#getOwnerId', () => {
+    it('should return owner id', async () => {
+      const result = stateTransition.getOwnerId();
+
+      expect(result).to.equal(stateTransition.getDataContract().getOwnerId());
+    });
+  });
 });

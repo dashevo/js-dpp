@@ -51,10 +51,12 @@ describe('StateTransitionFacade', () => {
     documentsBatchTransition.sign(identityPublicKey, privateKey);
 
     const getPublicKeyById = this.sinonSandbox.stub().returns(identityPublicKey);
+    const getBalance = this.sinonSandbox.stub().returns(10000);
 
     const identity = {
       getPublicKeyById,
       type: 2,
+      getBalance,
     };
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
@@ -262,6 +264,41 @@ describe('StateTransitionFacade', () => {
       const rawStateTransition = dataContractStateTransition.toJSON();
 
       const result = await dpp.stateTransition.validateData(rawStateTransition);
+
+      expect(result).to.be.an.instanceOf(ValidationResult);
+      expect(result.isValid()).to.be.true();
+    });
+  });
+
+  describe('validateFee', () => {
+    it('should throw MissingOption if dataProvider is not set', async () => {
+      dpp = new DashPlatformProtocol();
+
+      try {
+        await dpp.stateTransition.validateFee(
+          dataContractStateTransition,
+        );
+
+        expect.fail('MissingOption should be thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(MissingOptionError);
+        expect(e.getOptionName()).to.equal('dataProvider');
+      }
+    });
+
+    it('should validate State Transition', async () => {
+      const result = await dpp.stateTransition.validateFee(
+        dataContractStateTransition,
+      );
+
+      expect(result).to.be.an.instanceOf(ValidationResult);
+      expect(result.isValid()).to.be.true();
+    });
+
+    it('should validate raw state transition data', async () => {
+      const rawStateTransition = dataContractStateTransition.toJSON();
+
+      const result = await dpp.stateTransition.validateFee(rawStateTransition);
 
       expect(result).to.be.an.instanceOf(ValidationResult);
       expect(result.isValid()).to.be.true();
