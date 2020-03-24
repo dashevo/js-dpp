@@ -86,6 +86,10 @@ describe('validateLockTransactionFactory', () => {
     const output = new Transaction(rawTransaction).outputs[outputIndex];
 
     // Dirty hack
+    // after we use "script" getter inside of validateLockTransaction,
+    // there will be a _script property, and the objects will be different
+    // so we need to call this getter here, to make the objects equal
+
     // eslint-disable-next-line no-unused-vars
     const { script } = output;
 
