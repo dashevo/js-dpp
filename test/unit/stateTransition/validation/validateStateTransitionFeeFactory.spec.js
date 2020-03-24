@@ -16,7 +16,7 @@ const IdentityBalanceIsNotEnoughError = require('../../../../lib/errors/BalanceI
 const InvalidStateTransitionTypeError = require('../../../../lib/errors/InvalidStateTransitionTypeError');
 
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
-const { convertCreditsToSatoshi } = require('../../../../lib/identity/creditsConverter');
+const { RATIO } = require('../../../../lib/identity/creditsConverter');
 
 describe('validateStateTransitionFeeFactory', () => {
   let dataProviderMock;
@@ -33,13 +33,9 @@ describe('validateStateTransitionFeeFactory', () => {
     identityCreateST = getIdentityCreateSTFixture();
 
     const stSize = Buffer.byteLength(identityCreateST.serialize({ skipSignature: true }));
-    let satoshis = convertCreditsToSatoshi(stSize);
-    if (satoshis === 0) {
-      satoshis = 1; // we need min 1 satoshi
-    }
 
     output = {
-      satoshis,
+      satoshis: Math.ceil(stSize / RATIO),
     };
 
     const validateLockTransactionResult = new ValidationResult();
