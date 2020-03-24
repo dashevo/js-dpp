@@ -1,7 +1,7 @@
 const {
   convertSatoshiToCredits,
   convertCreditsToSatoshi,
-  CONVERT_RATIO,
+  RATIO,
 } = require('../../../lib/identity/creditsConverter');
 
 describe('creditsConverter', () => {
@@ -11,7 +11,7 @@ describe('creditsConverter', () => {
 
       const convertedAmount = convertSatoshiToCredits(amount);
 
-      expect(convertedAmount).to.equal(amount * CONVERT_RATIO);
+      expect(convertedAmount).to.equal(amount * RATIO);
     });
   });
   describe('convertCreditsToSatoshi', () => {
@@ -20,7 +20,7 @@ describe('creditsConverter', () => {
 
       const convertedAmount = convertCreditsToSatoshi(amount);
 
-      expect(convertedAmount).to.equal(Math.ceil(amount / CONVERT_RATIO));
+      expect(convertedAmount).to.equal(Math.ceil(amount / RATIO));
     });
   });
 });
