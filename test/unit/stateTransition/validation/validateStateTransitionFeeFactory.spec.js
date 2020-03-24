@@ -33,9 +33,13 @@ describe('validateStateTransitionFeeFactory', () => {
     identityCreateST = getIdentityCreateSTFixture();
 
     const stSize = Buffer.byteLength(identityCreateST.serialize({ skipSignature: true }));
+    let satoshis = convertCreditsToSatoshi(stSize);
+    if (satoshis === 0) {
+      satoshis = 1; // we need min 1 satoshi
+    }
 
     output = {
-      satoshis: convertCreditsToSatoshi(stSize),
+      satoshis,
     };
 
     const validateLockTransactionResult = new ValidationResult();
@@ -89,7 +93,7 @@ describe('validateStateTransitionFeeFactory', () => {
 
   it('should return valid result for IdentityCreateStateTransition', async () => {
     const result = await validateStateTransitionFee(identityCreateST);
-
+console.log(result);
     expect(result.isValid()).to.be.true();
     expect(validateLockTransactionMock).to.be.calledOnceWithExactly(identityCreateST);
   });
