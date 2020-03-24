@@ -416,7 +416,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.been.calledOnceWithExactly(
       ownerId,
-      transitions,
+      [transitions[0]],
       dataContract,
     );
 
