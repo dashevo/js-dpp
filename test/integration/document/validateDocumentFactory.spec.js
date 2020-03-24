@@ -10,10 +10,7 @@ const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixt
 
 const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTypeError');
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
-const InvalidDocumentIdError = require('../../../lib/errors/InvalidDocumentIdError');
 const MismatchDocumentContractIdAndDataContractError = require('../../../lib/errors/MismatchDocumentContractIdAndDataContractError');
-
-const generateDocumentId = require('../../../lib/document/generateDocumentId');
 
 const {
   expectValidationError,
