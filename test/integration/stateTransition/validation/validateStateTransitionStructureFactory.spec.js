@@ -10,16 +10,16 @@ const DataContractStateTransition = require('../../../../lib/dataContract/stateT
 
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
-const dataContractSTSchema = require('../../../../schema/stateTransition/data-contract');
-const documentsBatchSTSchema = require('../../../../schema/stateTransition/documents-batch');
-const identitySTSchema = require('../../../../schema/identity/state-transitions/identity-create');
+const dataContractSTSchema = require('../../../../schema/dataContract/stateTransition/dataContract');
+const documentsBatchSTSchema = require('../../../../schema/document/stateTransition/documentsBatch');
+const identitySTSchema = require('../../../../schema/identity/stateTransition/identityCreate');
 
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentTransitionsFixture = require('../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
-const dataContractExtensionSchema = require('../../../../schema/stateTransition/data-contract');
+const dataContractExtensionSchema = require('../../../../schema/dataContract/stateTransition/dataContract');
 
 const StateTransitionMaxSizeExceededError = require('../../../../lib/errors/StateTransitionMaxSizeExceededError');
 
