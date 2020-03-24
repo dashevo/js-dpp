@@ -136,7 +136,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
 
     const errors = result.getErrors();
 
-    expect(errors.map((e) => e.getActionTransition())).to.have.deep.members([
+    expect(errors.map((e) => e.getDocumentTransition())).to.have.deep.members([
       transitions[3],
       transitions[3],
       transitions[4],

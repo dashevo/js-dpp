@@ -10,13 +10,14 @@ const DataTriggerExecutionError = require('../../../../../lib/errors/DataTrigger
 const DataTriggerExecutionResult = require('../../../../../lib/dataTrigger/DataTriggerExecutionResult');
 
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
-const getContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
+const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
 
 const ValidationResult = require('../../../../../lib/validation/ValidationResult');
 
 const { expectValidationError } = require('../../../../../lib/test/expect/expectError');
 
+const DataContractNotPresentError = require('../../../../../lib/errors/DataContractNotPresentError');
 const DocumentAlreadyPresentError = require('../../../../../lib/errors/DocumentAlreadyPresentError');
 const DocumentNotFoundError = require('../../../../../lib/errors/DocumentNotFoundError');
 const InvalidDocumentRevisionError = require('../../../../../lib/errors/InvalidDocumentRevisionError');
@@ -24,8 +25,10 @@ const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 const InvalidDocumentActionError = require('../../../../../lib/document/errors/InvalidDocumentActionError');
 const DocumentOwnerIdMismatchError = require('../../../../../lib/errors/DocumentOwnerIdMismatchError');
 
+const generateRandomId = require('../../../../../lib/test/utils/generateRandomId');
+
 describe('validateDocumentsBatchTransitionDataFactory', () => {
-  let validateDocumentsSTData;
+  let validateData;
   let fetchDocumentsMock;
   let stateTransition;
   let documents;
@@ -34,15 +37,22 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
   let validateDocumentsUniquenessByIndicesMock;
   let dataProviderMock;
   let executeDataTriggersMock;
-  let fetchAndValidateDataContractMock;
+  let transitions;
 
   beforeEach(function beforeEach() {
-    ({ ownerId } = getDocumentsFixture);
-
     documents = getDocumentsFixture();
-    dataContract = getContractFixture();
+    dataContract = getDocumentsFixture.dataContract;
+    ownerId = getDocumentsFixture.ownerId;
 
-    stateTransition = new DocumentsBatchTransition(documents);
+    transitions = getDocumentTransitionsFixture({
+      create: documents,
+    });
+
+    stateTransition = new DocumentsBatchTransition({
+      ownerId,
+      contractId: dataContract.getId(),
+      transitions: transitions.map((t) => t.toJSON()),
+    });
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchDataContract.resolves(dataContract);
@@ -54,189 +64,229 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     validateDocumentsUniquenessByIndicesMock = this.sinonSandbox.stub();
     validateDocumentsUniquenessByIndicesMock.resolves(new ValidationResult());
 
-    const dataContractValidationResult = new ValidationResult();
-    dataContractValidationResult.setData(dataContract);
-
-    fetchAndValidateDataContractMock = this.sinonSandbox.stub()
-      .resolves(dataContractValidationResult);
-
-    validateDocumentsSTData = validateDocumentsBatchTransitionDataFactory(
+    validateData = validateDocumentsBatchTransitionDataFactory(
       dataProviderMock,
       fetchDocumentsMock,
       validateDocumentsUniquenessByIndicesMock,
       executeDataTriggersMock,
-      fetchAndValidateDataContractMock,
     );
   });
 
-  it('should return invalid result if Data Contract is not present', async () => {
-    const dataContractError = new ConsensusError('error');
-    const dataContractValidationResult = new ValidationResult([
-      dataContractError,
-    ]);
+  it('should return invalid result if data contract was not found', async () => {
+    dataProviderMock.fetchDataContract.resolves(undefined);
 
-    fetchAndValidateDataContractMock.resolves(dataContractValidationResult);
+    const result = await validateData(stateTransition);
 
-    const result = await validateDocumentsSTData(stateTransition);
-
-    expectValidationError(result);
+    expectValidationError(result, DataContractNotPresentError);
 
     const [error] = result.getErrors();
 
-    expect(error).to.equal(dataContractError);
+    expect(error.getDataContractId()).to.equal(dataContract.getId());
 
-    expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
+    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+      dataContract.getId(),
+    );
 
     expect(fetchDocumentsMock).to.have.not.been.called();
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
     expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
-  it('should return invalid result if Document with action "create" is already present', async () => {
+  it('should return invalid result if document transition with action "create" is already present', async () => {
     fetchDocumentsMock.resolves([documents[0]]);
 
-    const result = await validateDocumentsSTData(stateTransition);
+    const result = await validateData(stateTransition);
 
     expectValidationError(result, DocumentAlreadyPresentError);
 
     const [error] = result.getErrors();
 
-    expect(error.getDocument()).to.equal(documents[0]);
-    expect(error.getFetchedDocument()).to.equal(documents[0]);
+    expect(error.getDocumentTransition()).to.deep.equal(transitions[0]);
+    expect(error.getFetchedDocument()).to.deep.equal(documents[0]);
 
-    expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
+    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+      dataContract.getId(),
+    );
 
-    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
-
-    expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
-    expect(executeDataTriggersMock).to.have.not.been.called();
-  });
-
-  it('should return invalid result if Document with action "update" is not present', async () => {
-    documents[0].setAction(AbstractDocumentTransition.ACTIONS.REPLACE);
-
-    const result = await validateDocumentsSTData(stateTransition);
-
-    expectValidationError(result, DocumentNotFoundError);
-
-    const [error] = result.getErrors();
-
-    expect(error.getDocument()).to.equal(documents[0]);
-
-    expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
-
-    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
+    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(
+      dataContract.getId(), transitions,
+    );
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
     expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
-  it('should return invalid result if Document with action "delete" is not present', async () => {
-    documents[0].setData({});
-    documents[0].setAction(AbstractDocumentTransition.ACTIONS.DELETE);
+  it('should return invalid result if document transition with action "update" is not present', async () => {
+    transitions = getDocumentTransitionsFixture({
+      create: [],
+      replace: [documents[0]],
+    });
 
-    const result = await validateDocumentsSTData(stateTransition);
+    stateTransition = new DocumentsBatchTransition({
+      ownerId,
+      contractId: dataContract.getId(),
+      transitions: transitions.map((t) => t.toJSON()),
+    });
+
+    const result = await validateData(stateTransition);
 
     expectValidationError(result, DocumentNotFoundError);
 
     const [error] = result.getErrors();
 
-    expect(error.getDocument()).to.equal(documents[0]);
+    expect(error.getDocumentTransition()).to.deep.equal(transitions[0]);
 
-    expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
+    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+      dataContract.getId(),
+    );
 
-    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
+    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(
+      dataContract.getId(), transitions,
+    );
+
+    expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
+    expect(executeDataTriggersMock).to.have.not.been.called();
+  });
+
+  it('should return invalid result if document transition with action "delete" is not present', async () => {
+    transitions = getDocumentTransitionsFixture({
+      create: [],
+      delete: [documents[0]],
+    });
+
+    stateTransition = new DocumentsBatchTransition({
+      ownerId,
+      contractId: dataContract.getId(),
+      transitions: transitions.map((t) => t.toJSON()),
+    });
+
+    const result = await validateData(stateTransition);
+
+    expectValidationError(result, DocumentNotFoundError);
+
+    const [error] = result.getErrors();
+
+    expect(error.getDocumentTransition()).to.deep.equal(transitions[0]);
+
+    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+      dataContract.getId(),
+    );
+
+    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(
+      dataContract.getId(), transitions,
+    );
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
     expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
   it('should return invalid result if Document with action "update" has wrong revision', async () => {
-    documents[0].setAction(AbstractDocumentTransition.ACTIONS.REPLACE);
+    const replaceDocument = new Document(documents[0].toJSON());
+    replaceDocument.setRevision(3);
+
+    transitions = getDocumentTransitionsFixture({
+      create: [],
+      replace: [replaceDocument],
+    });
+
+    stateTransition = new DocumentsBatchTransition({
+      ownerId,
+      contractId: dataContract.getId(),
+      transitions: transitions.map((t) => t.toJSON()),
+    });
 
     fetchDocumentsMock.resolves([documents[0]]);
 
-    const result = await validateDocumentsSTData(stateTransition);
+    const result = await validateData(stateTransition);
 
     expectValidationError(result, InvalidDocumentRevisionError);
 
     const [error] = result.getErrors();
 
-    expect(error.getDocument()).to.equal(documents[0]);
-    expect(error.getFetchedDocument()).to.equal(documents[0]);
+    expect(error.getDocumentTransition()).to.deep.equal(transitions[0]);
+    expect(error.getFetchedDocument()).to.deep.equal(documents[0]);
 
-    expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
+    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+      dataContract.getId(),
+    );
 
-    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
+    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(
+      dataContract.getId(), transitions,
+    );
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
     expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
   it('should return invalid result if Document with action "update" has mismatch of ownerId with previous revision', async () => {
-    documents[0].setAction(AbstractDocumentTransition.ACTIONS.REPLACE);
+    const replaceDocument = new Document(documents[0].toJSON());
+    replaceDocument.setRevision(2);
 
     const fetchedDocument = new Document(documents[0].toJSON());
-    fetchedDocument.revision -= 1;
-    fetchedDocument.ownerId = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
+    fetchedDocument.ownerId = generateRandomId();
+
+    transitions = getDocumentTransitionsFixture({
+      create: [],
+      replace: [replaceDocument],
+    });
+
+    stateTransition = new DocumentsBatchTransition({
+      ownerId,
+      contractId: dataContract.getId(),
+      transitions: transitions.map((t) => t.toJSON()),
+    });
 
     fetchDocumentsMock.resolves([fetchedDocument]);
 
-    const result = await validateDocumentsSTData(stateTransition);
+    const result = await validateData(stateTransition);
 
     expectValidationError(result, DocumentOwnerIdMismatchError);
 
     const [error] = result.getErrors();
 
-    expect(error.getDocument()).to.equal(documents[0]);
-    expect(error.getFetchedDocument()).to.equal(fetchedDocument);
+    expect(error.getDocumentTransition()).to.deep.equal(transitions[0]);
+    expect(error.getFetchedDocument()).to.deep.equal(documents[0]);
 
-    expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
+    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+      dataContract.getId(),
+    );
 
-    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
-
-    expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
-    expect(executeDataTriggersMock).to.have.not.been.called();
-  });
-
-  it('should return invalid result if Document with action "delete" has wrong revision', async () => {
-    documents[0].setData({});
-    documents[0].setAction(AbstractDocumentTransition.ACTIONS.DELETE);
-
-    fetchDocumentsMock.resolves([documents[0]]);
-
-    const result = await validateDocumentsSTData(stateTransition);
-
-    expectValidationError(result, InvalidDocumentRevisionError);
-
-    const [error] = result.getErrors();
-
-    expect(error.getDocument()).to.equal(documents[0]);
-
-    expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
-
-    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
+    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(
+      dataContract.getId(), transitions,
+    );
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
     expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
   it('should throw an error if Document has invalid action', async () => {
-    documents[0].setAction(5);
+    stateTransition = new DocumentsBatchTransition({
+      ownerId,
+      contractId: dataContract.getId(),
+      transitions: transitions.map((t) => t.toJSON()),
+    });
+
+    stateTransition.transitions[0].getAction = () => 5;
 
     fetchDocumentsMock.resolves([documents[0]]);
 
     try {
-      await validateDocumentsSTData(stateTransition);
+      await validateData(stateTransition);
 
       expect.fail('InvalidDocumentActionError should be thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(InvalidDocumentActionError);
-      expect(e.getDocument()).to.equal(documents[0]);
+      expect(e.getDocumentTransition().toJSON()).to.deep.equal(
+        stateTransition.transitions[0].toJSON(),
+      );
 
-      expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
+      expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+        dataContract.getId(),
+      );
 
-      expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
+      expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(
+        dataContract.getId(), stateTransition.transitions,
+      );
 
       expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
       expect(executeDataTriggersMock).to.have.not.been.called();
@@ -250,7 +300,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       new ValidationResult([duplicateDocumentsError]),
     );
 
-    const result = await validateDocumentsSTData(stateTransition);
+    const result = await validateData(stateTransition);
 
     expectValidationError(result);
 
@@ -258,14 +308,20 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
     expect(error).to.equal(duplicateDocumentsError);
 
-    expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
+    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+      dataContract.getId(),
+    );
 
-    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
+    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(
+      dataContract.getId(), stateTransition.transitions,
+    );
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.been.calledOnceWithExactly(
-      documents,
+      ownerId,
+      transitions,
       dataContract,
     );
+    expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
   it('should return invalid result if data triggers execution failed', async () => {
@@ -276,7 +332,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     );
 
     const dataTriggerExecutionError = new DataTriggerExecutionError(
-      documents[0],
+      transitions[0],
       dataTriggersExecutionContext.getDataContract(),
       dataTriggersExecutionContext.getOwnerId(),
       new Error('error'),
@@ -286,7 +342,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       new DataTriggerExecutionResult([dataTriggerExecutionError]),
     ]);
 
-    const result = await validateDocumentsSTData(stateTransition);
+    const result = await validateData(stateTransition);
 
     expectValidationError(result, DataTriggerExecutionError);
 
@@ -294,17 +350,22 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
     expect(error).to.equal(dataTriggerExecutionError);
 
-    expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
+    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+      dataContract.getId(),
+    );
 
-    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
+    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(
+      dataContract.getId(), stateTransition.transitions,
+    );
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.been.calledOnceWithExactly(
-      documents,
+      ownerId,
+      transitions,
       dataContract,
     );
 
     expect(executeDataTriggersMock).to.have.been.calledOnceWithExactly(
-      documents,
+      transitions,
       dataTriggersExecutionContext,
     );
   });
@@ -317,12 +378,20 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
     fetchDocumentsMock.resolves(fetchedDocuments);
 
-    documents[1].setAction(AbstractDocumentTransition.ACTIONS.REPLACE);
     documents[1].setRevision(2);
-
-    documents[2].setData({});
-    documents[2].setAction(AbstractDocumentTransition.ACTIONS.DELETE);
     documents[2].setRevision(2);
+
+    transitions = getDocumentTransitionsFixture({
+      create: [],
+      replace: [documents[1]],
+      delete: [documents[2]],
+    });
+
+    stateTransition = new DocumentsBatchTransition({
+      ownerId,
+      contractId: dataContract.getId(),
+      transitions: transitions.map((t) => t.toJSON()),
+    });
 
     const dataTriggersExecutionContext = new DataTriggerExecutionContext(
       dataProviderMock,
@@ -334,22 +403,27 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       new DataTriggerExecutionResult(),
     ]);
 
-    const result = await validateDocumentsSTData(stateTransition);
+    const result = await validateData(stateTransition);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
 
-    expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(documents[0]);
+    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+      dataContract.getId(),
+    );
 
-    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(documents);
+    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(
+      dataContract.getId(), stateTransition.transitions,
+    );
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.been.calledOnceWithExactly(
-      documents.filter((d) => d.getAction() !== AbstractDocumentTransition.ACTIONS.DELETE),
+      ownerId,
+      transitions,
       dataContract,
     );
 
     expect(executeDataTriggersMock).to.have.been.calledOnceWithExactly(
-      documents,
+      transitions,
       dataTriggersExecutionContext,
     );
   });
