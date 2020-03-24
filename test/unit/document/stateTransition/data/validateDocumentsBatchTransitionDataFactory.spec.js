@@ -1,5 +1,3 @@
-const AbstractDocumentTransition = require('../../../../../lib/document/stateTransition/documentTransition/AbstractDocumentTransition');
-
 const validateDocumentsBatchTransitionDataFactory = require('../../../../../lib/document/stateTransition/validation/data/validateDocumentsBatchTransitionDataFactory');
 
 const Document = require('../../../../../lib/document/Document');
