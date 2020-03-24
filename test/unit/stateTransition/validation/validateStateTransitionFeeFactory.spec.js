@@ -16,7 +16,7 @@ const IdentityBalanceIsNotEnoughError = require('../../../../lib/errors/BalanceI
 const InvalidStateTransitionTypeError = require('../../../../lib/errors/InvalidStateTransitionTypeError');
 
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
-const { convertCreditsToSatoshi } = require('../../../../lib/identity/convertBalance');
+const { convertCreditsToSatoshi } = require('../../../../lib/identity/creditsConverter');
 
 describe('validateStateTransitionFeeFactory', () => {
   let dataProviderMock;
