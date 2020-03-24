@@ -114,26 +114,6 @@ describe('validateDocumentFactory', () => {
         expect(error.keyword).to.equal('pattern');
         expect(error.dataPath).to.equal('.$id');
       });
-
-      it.skip('should be a concatenation of contractId, ownerId, type and entropy', async () => {
-        rawDocument.$id = generateDocumentId(
-          rawDocument.$contractId,
-          rawDocument.$ownerId,
-          rawDocument.$type,
-          '',
-        );
-
-        const result = validateDocument(rawDocument, dataContract);
-
-        expectValidationError(
-          result,
-          InvalidDocumentIdError,
-        );
-
-        const [error] = result.getErrors();
-
-        expect(error.getRawDocument()).to.equal(rawDocument);
-      });
     });
 
     describe('$type', () => {
