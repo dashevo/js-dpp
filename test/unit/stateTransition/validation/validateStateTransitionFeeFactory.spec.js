@@ -31,7 +31,7 @@ describe('validateStateTransitionFeeFactory', () => {
     identityCreateST = getIdentityCreateSTFixture();
 
     output = {
-      satoshis: Buffer.byteLength(identityCreateST.serialize({ skipSignature: true })),
+      satoshis: Buffer.byteLength(identityCreateST.serialize({ skipSignature: true })) / 1000,
     };
 
     const validateLockTransactionResult = new ValidationResult();
