@@ -5,6 +5,7 @@ const createDataProviderMock = require('../../../../lib/test/mocks/createDataPro
 const getIdentityFixture = require('../../../../lib/test/fixtures/getIdentityFixture');
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
+const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
 const DataContractStateTransition = require('../../../../lib/dataContract/stateTransition/DataContractStateTransition');
 const DocumentsStateTransition = require('../../../../lib/document/stateTransition/DocumentsStateTransition');
@@ -14,18 +15,36 @@ const { expectValidationError } = require('../../../../lib/test/expect/expectErr
 const IdentityBalanceIsNotEnoughError = require('../../../../lib/errors/BalanceIsNotEnoughError');
 const InvalidStateTransitionTypeError = require('../../../../lib/errors/InvalidStateTransitionTypeError');
 
+const ValidationResult = require('../../../../lib/validation/ValidationResult');
+
 describe('validateStateTransitionFeeFactory', () => {
   let dataProviderMock;
   let validateStateTransitionFee;
   let identity;
   let dataContract;
   let documents;
+  let identityCreateST;
+  let validateLockTransactionMock;
+  let output;
 
   beforeEach(function beforeEach() {
+    identityCreateST = getIdentityCreateSTFixture();
+
+    output = {
+      satoshis: Buffer.byteLength(identityCreateST.serialize({ skipSignature: true })),
+    };
+
+    const validateLockTransactionResult = new ValidationResult();
+    validateLockTransactionResult.setData(output);
+
+    validateLockTransactionMock = this.sinonSandbox.stub().resolves(validateLockTransactionResult);
     identity = getIdentityFixture();
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchIdentity.resolves(identity);
-    validateStateTransitionFee = validateStateTransitionFeeFactory(dataProviderMock);
+    validateStateTransitionFee = validateStateTransitionFeeFactory(
+      dataProviderMock,
+      validateLockTransactionMock,
+    );
     dataContract = getDataContractFixture();
     documents = getDocumentsFixture();
   });
@@ -62,6 +81,13 @@ describe('validateStateTransitionFeeFactory', () => {
 
     expect(result.isValid()).to.be.true();
     expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(documents[0].getOwnerId());
+  });
+
+  it('should return valid result for IdentityCreateStateTransition', async () => {
+    const result = await validateStateTransitionFee(identityCreateST);
+
+    expect(result.isValid()).to.be.true();
+    expect(validateLockTransactionMock).to.be.calledOnceWithExactly(identityCreateST);
   });
 
   it('should throw InvalidStateTransitionTypeError on invalid State Transition', async function it() {
