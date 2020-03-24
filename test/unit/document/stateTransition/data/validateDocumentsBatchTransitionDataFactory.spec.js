@@ -178,7 +178,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
-  it('should return invalid result if Document with action "update" has wrong revision', async () => {
+  it('should return invalid result if document transition with action "replace" has wrong revision', async () => {
     const replaceDocument = new Document(documents[0].toJSON());
     replaceDocument.setRevision(3);
 
@@ -216,7 +216,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
-  it('should return invalid result if Document with action "update" has mismatch of ownerId with previous revision', async () => {
+  it('should return invalid result if document transition with action "replace" has mismatch of ownerId with previous revision', async () => {
     const replaceDocument = new Document(documents[0].toJSON());
     replaceDocument.setRevision(1);
 
@@ -257,7 +257,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
-  it('should throw an error if Document has invalid action', async () => {
+  it('should throw an error if document transition has invalid action', async () => {
     stateTransition = new DocumentsBatchTransition({
       ownerId,
       contractId: dataContract.getId(),
@@ -291,7 +291,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     }
   });
 
-  it('should return invalid result if there are duplicate documents according to unique indices', async () => {
+  it('should return invalid result if there are duplicate document transitions according to unique indices', async () => {
     const duplicateDocumentsError = new ConsensusError('error');
 
     validateDocumentsUniquenessByIndicesMock.resolves(
@@ -368,7 +368,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     );
   });
 
-  it('should return valid result if Documents are valid', async () => {
+  it('should return valid result if document transitions are valid', async () => {
     const fetchedDocuments = [
       new Document(documents[1].toJSON()),
       new Document(documents[2].toJSON()),
