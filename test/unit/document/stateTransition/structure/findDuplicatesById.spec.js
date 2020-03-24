@@ -3,29 +3,29 @@ const findDuplicateDocuments = require('../../../../../lib/document/stateTransit
 const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
 describe('findDuplicatesById', () => {
-  let transitions;
+  let documentTransitions;
 
   beforeEach(() => {
-    transitions = getDocumentTransitionsFixture().map((t) => t.toJSON());
+    documentTransitions = getDocumentTransitionsFixture().map((t) => t.toJSON());
   });
 
   it('should return empty array if there are no duplicated Documents', () => {
-    const result = findDuplicateDocuments(transitions);
+    const result = findDuplicateDocuments(documentTransitions);
 
     expect(result).to.be.an('array');
     expect(result).to.have.lengthOf(0);
   });
 
   it('should return duplicated Documents', () => {
-    transitions.push(transitions[0]);
+    documentTransitions.push(documentTransitions[0]);
 
-    const result = findDuplicateDocuments(transitions);
+    const result = findDuplicateDocuments(documentTransitions);
 
     expect(result).to.be.an('array');
     expect(result).to.have.lengthOf(2);
     expect(result).to.have.deep.members([
-      transitions[0],
-      transitions[0],
+      documentTransitions[0],
+      documentTransitions[0],
     ]);
   });
 });

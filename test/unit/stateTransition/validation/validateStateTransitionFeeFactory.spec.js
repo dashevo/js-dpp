@@ -79,14 +79,14 @@ describe('validateStateTransitionFeeFactory', () => {
   });
 
   it('should return valid result for DocumentsBatchTransition', async () => {
-    const transitions = getDocumentTransitionsFixture({
+    const documentTransitions = getDocumentTransitionsFixture({
       create: documents,
     });
 
     const stateTransition = new DocumentsBatchTransition({
       ownerId: getDocumentsFixture.ownerId,
       contractId: dataContract.getId(),
-      transitions: transitions.map((t) => t.toJSON()),
+      transitions: documentTransitions.map((t) => t.toJSON()),
     });
     identity.balance = Buffer.byteLength(stateTransition.serialize({ skipSignature: true }));
 

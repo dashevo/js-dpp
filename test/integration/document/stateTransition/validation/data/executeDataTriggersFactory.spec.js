@@ -24,7 +24,7 @@ describe('executeDataTriggersFactory', () => {
 
   let stateTransitionHeaderMock;
   let context;
-  let transitions;
+  let documentTransitions;
   let dpnsCreateDomainDataTriggerMock;
   let dpnsUpdateDomainDataTriggerMock;
   let dpnsDeleteDomainDataTriggerMock;
@@ -64,7 +64,7 @@ describe('executeDataTriggersFactory', () => {
       null, ownerId, contractMock,
     );
 
-    transitions = getDocumentTransitionsFixture({
+    documentTransitions = getDocumentTransitionsFixture({
       create: [childDocument],
     });
 
@@ -79,7 +79,7 @@ describe('executeDataTriggersFactory', () => {
 
   it('should return an array of DataTriggerExecutionResult', async () => {
     const dataTriggerExecutionResults = await executeDataTriggers(
-      transitions, context,
+      documentTransitions, context,
     );
 
     expect(dataTriggerExecutionResults).to.have.a.lengthOf(1);
@@ -103,7 +103,7 @@ describe('executeDataTriggersFactory', () => {
     expect(dpnsTriggers.length).to.equal(expectedTriggersCount);
 
     const dataTriggerExecutionResults = await executeDataTriggers(
-      transitions, context,
+      documentTransitions, context,
     );
 
     expect(dataTriggerExecutionResults).to.have.a.lengthOf(expectedTriggersCount);
@@ -117,7 +117,7 @@ describe('executeDataTriggersFactory', () => {
     const doc1 = getDocumentsFixture()[0];
     const doc2 = getDocumentsFixture()[1];
 
-    transitions = getDocumentTransitionsFixture({
+    documentTransitions = getDocumentTransitionsFixture({
       create: [doc1, doc1],
       replace: [doc2],
     });
@@ -159,12 +159,12 @@ describe('executeDataTriggersFactory', () => {
     );
 
     const dataTriggerExecutionResults = await executeDataTriggers(
-      transitions, context,
+      documentTransitions, context,
     );
 
     const expectedResultsCount = 3;
 
-    expect(transitions.length).to.equal(expectedResultsCount);
+    expect(documentTransitions.length).to.equal(expectedResultsCount);
     expect(dataTriggerExecutionResults.length).to.equal(expectedResultsCount);
 
     const passingResults = dataTriggerExecutionResults.filter((result) => result.isOk());
@@ -202,7 +202,7 @@ describe('executeDataTriggersFactory', () => {
       )
       .returns([dpnsUpdateDomainDataTriggerMock]);
 
-    await executeDataTriggers(transitions, context);
+    await executeDataTriggers(documentTransitions, context);
 
     expect(dpnsDeleteDomainDataTriggerMock.execute).not.to.be.called();
     expect(dpnsUpdateDomainDataTriggerMock.execute).not.to.be.called();
@@ -212,7 +212,7 @@ describe('executeDataTriggersFactory', () => {
     childDocument.contractId = getDocumentsFixture.dataContract.getId();
     childDocument.ownerId = getDocumentsFixture.ownerId;
 
-    transitions = getDocumentTransitionsFixture({
+    documentTransitions = getDocumentTransitionsFixture({
       create: [childDocument].concat(getDocumentsFixture()),
     });
 
@@ -238,7 +238,7 @@ describe('executeDataTriggersFactory', () => {
       )
       .returns([dpnsUpdateDomainDataTriggerMock]);
 
-    await executeDataTriggers(transitions, context);
+    await executeDataTriggers(documentTransitions, context);
 
     expect(dpnsCreateDomainDataTriggerMock.execute).to.be.calledOnce();
     expect(dpnsDeleteDomainDataTriggerMock.execute).not.to.be.called();
@@ -246,7 +246,7 @@ describe('executeDataTriggersFactory', () => {
   });
 
   it("should not call any triggers if there's no triggers in the contract", async () => {
-    transitions = getDocumentTransitionsFixture({
+    documentTransitions = getDocumentTransitionsFixture({
       create: getDocumentsFixture(),
     });
 
@@ -272,7 +272,7 @@ describe('executeDataTriggersFactory', () => {
       )
       .returns([dpnsUpdateDomainDataTriggerMock]);
 
-    await executeDataTriggers(transitions, context);
+    await executeDataTriggers(documentTransitions, context);
 
     expect(dpnsCreateDomainDataTriggerMock.execute).not.to.be.called();
     expect(dpnsDeleteDomainDataTriggerMock.execute).not.to.be.called();

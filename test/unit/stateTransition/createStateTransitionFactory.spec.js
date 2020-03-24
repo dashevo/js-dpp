@@ -28,18 +28,18 @@ describe('createStateTransitionFactory', () => {
   });
 
   it('should return DocumentsBatchTransition if type is DOCUMENTS', () => {
-    const transitions = getDocumentTranstionsFixture();
+    const documentTransitions = getDocumentTranstionsFixture();
 
     const stateTransition = new DocumentsBatchTransition({
       ownerId: getDocumentsFixture.ownerId,
       contractId: getDocumentsFixture.dataContract.getId(),
-      transitions: transitions.map((t) => t.toJSON()),
+      transitions: documentTransitions.map((t) => t.toJSON()),
     });
 
     const result = createStateTransition(stateTransition.toJSON());
 
     expect(result).to.be.instanceOf(DocumentsBatchTransition);
-    expect(result.getTransitions()).to.deep.equal(transitions);
+    expect(result.getTransitions()).to.deep.equal(documentTransitions);
   });
 
   it('should throw InvalidStateTransitionTypeError if type is invalid', () => {

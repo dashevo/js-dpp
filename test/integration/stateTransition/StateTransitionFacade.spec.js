@@ -39,14 +39,14 @@ describe('StateTransitionFacade', () => {
     dataContractStateTransition = new DataContractStateTransition(dataContract);
     dataContractStateTransition.sign(identityPublicKey, privateKey);
 
-    const transitions = getDocumentTransitionsFixture({
+    const documentTransitions = getDocumentTransitionsFixture({
       create: getDocumentsFixture(),
     });
 
     documentsBatchTransition = new DocumentsBatchTransition({
       ownerId: getDocumentsFixture.ownerId,
       contractId: dataContract.getId(),
-      transitions: transitions.map((t) => t.toJSON()),
+      transitions: documentTransitions.map((t) => t.toJSON()),
     });
     documentsBatchTransition.sign(identityPublicKey, privateKey);
 

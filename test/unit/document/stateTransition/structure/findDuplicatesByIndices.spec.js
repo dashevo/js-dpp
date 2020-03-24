@@ -9,7 +9,7 @@ const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/
 describe('findDuplicatesByIndices', () => {
   let documents;
   let contract;
-  let transitions;
+  let documentTransitions;
 
   beforeEach(() => {
     contract = getDataContractFixture();
@@ -71,7 +71,7 @@ describe('findDuplicatesByIndices', () => {
       $type: 'singleDocument',
     }));
 
-    transitions = getDocumentTransitionsFixture({
+    documentTransitions = getDocumentTransitionsFixture({
       create: documents,
     }).map((t) => t.toJSON());
   });
@@ -81,21 +81,21 @@ describe('findDuplicatesByIndices', () => {
 
     leon.set('lastName', 'Birkin');
 
-    transitions = getDocumentTransitionsFixture({
+    documentTransitions = getDocumentTransitionsFixture({
       create: documents,
     }).map((t) => t.toJSON());
 
-    const duplicates = findDuplicateDocumentsByIndices(transitions, contract);
+    const duplicates = findDuplicateDocumentsByIndices(documentTransitions, contract);
     expect(duplicates).to.have.deep.members(
       [
-        transitions[3],
-        transitions[4],
+        documentTransitions[3],
+        documentTransitions[4],
       ],
     );
   });
 
   it('should return an empty array of there are no duplicates', () => {
-    const duplicates = findDuplicateDocumentsByIndices(transitions, contract);
+    const duplicates = findDuplicateDocumentsByIndices(documentTransitions, contract);
 
     expect(duplicates.length).to.equal(0);
   });

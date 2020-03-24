@@ -321,14 +321,14 @@ describe('validateStateTransitionStructureFactory', () => {
       );
 
       const documents = getDocumentsFixture();
-      const transitions = getDocumentTransitionsFixture({
+      const documentTransitions = getDocumentTransitionsFixture({
         create: documents,
       });
 
       const stateTransition = new DocumentsBatchTransition({
         ownerId: getDocumentsFixture.ownerId,
         contractId: getDocumentsFixture.dataContract.getId(),
-        transitions: transitions.map((t) => t.toJSON()),
+        transitions: documentTransitions.map((t) => t.toJSON()),
       });
       stateTransition.signByPrivateKey(privateKey);
 
