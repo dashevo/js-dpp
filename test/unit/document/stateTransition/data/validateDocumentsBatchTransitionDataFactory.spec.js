@@ -218,7 +218,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
   it('should return invalid result if Document with action "update" has mismatch of ownerId with previous revision', async () => {
     const replaceDocument = new Document(documents[0].toJSON());
-    replaceDocument.setRevision(2);
+    replaceDocument.setRevision(1);
 
     const fetchedDocument = new Document(documents[0].toJSON());
     fetchedDocument.ownerId = generateRandomId();
@@ -243,7 +243,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.getDocumentTransition()).to.deep.equal(transitions[0]);
-    expect(error.getFetchedDocument()).to.deep.equal(documents[0]);
+    expect(error.getFetchedDocument()).to.deep.equal(fetchedDocument);
 
     expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
@@ -376,8 +376,8 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
     fetchDocumentsMock.resolves(fetchedDocuments);
 
-    documents[1].setRevision(2);
-    documents[2].setRevision(2);
+    documents[1].setRevision(1);
+    documents[2].setRevision(1);
 
     transitions = getDocumentTransitionsFixture({
       create: [],
