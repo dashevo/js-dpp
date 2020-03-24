@@ -19,7 +19,7 @@ const MissingOptionError = require('../../../lib/errors/MissingOptionError');
 describe('StateTransitionFacade', () => {
   let dpp;
   let dataContractStateTransition;
-  let documentsStateTransition;
+  let documentsBatchTransition;
   let dataProviderMock;
   let dataContract;
   let identityPublicKey;
@@ -43,12 +43,12 @@ describe('StateTransitionFacade', () => {
       create: getDocumentsFixture(),
     });
 
-    documentsStateTransition = new DocumentsBatchTransition({
+    documentsBatchTransition = new DocumentsBatchTransition({
       ownerId: getDocumentsFixture.ownerId,
       contractId: dataContract.getId(),
       transitions: transitions.map((t) => t.toJSON()),
     });
-    documentsStateTransition.sign(identityPublicKey, privateKey);
+    documentsBatchTransition.sign(identityPublicKey, privateKey);
 
     const getPublicKeyById = this.sinonSandbox.stub().returns(identityPublicKey);
 
@@ -196,14 +196,14 @@ describe('StateTransitionFacade', () => {
       );
 
       const result = await dpp.stateTransition.validate(
-        documentsStateTransition,
+        documentsBatchTransition,
       );
 
       expect(result).to.be.an.instanceOf(ValidationResult);
       expect(result.isValid()).to.be.true();
 
-      expect(validateStructureSpy).to.be.calledOnceWith(documentsStateTransition);
-      expect(validateDataSpy).to.be.calledOnceWith(documentsStateTransition);
+      expect(validateStructureSpy).to.be.calledOnceWith(documentsBatchTransition);
+      expect(validateDataSpy).to.be.calledOnceWith(documentsBatchTransition);
     });
   });
 
