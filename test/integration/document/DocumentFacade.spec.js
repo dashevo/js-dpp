@@ -112,10 +112,10 @@ describe('DocumentFacade', () => {
     });
   });
 
-  describe('createStatTransition', () => {
+  describe('createStateTransition', () => {
     it('should create DocumentsBatchTransition with passed documents', () => {
       const result = dpp.document.createStateTransition({
-        [AbstractDocumentTransition.ACTION_NAMES.CREATE]: documents,
+        create: documents,
       });
 
       expect(result).to.be.instanceOf(DocumentsBatchTransition);

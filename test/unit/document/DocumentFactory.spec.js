@@ -13,8 +13,15 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 const InvalidDocumentError = require('../../../lib/document/errors/InvalidDocumentError');
+const InvalidActionNameError = require('../../../lib/document/errors/InvalidActionNameError');
+const NoDocumentsSuppliedError = require('../../../lib/document/errors/NoDocumentsSuppliedError');
+const MismatchContractIdsError = require('../../../lib/document/errors/MismatchContractIdsError');
+const MismatchOwnerIdsError = require('../../../lib/document/errors/MismatchOwnerIdsError');
+const InvalidInitialRevisionError = require('../../../lib/document/errors/InvalidInitialRevisionError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 const SerializedObjectParsingError = require('../../../lib/errors/SerializedObjectParsingError');
+
+const generateRandomId = require('../../../lib/test/utils/generateRandomId');
 
 describe('DocumentFactory', () => {
   let decodeMock;
@@ -233,6 +240,66 @@ describe('DocumentFactory', () => {
   });
 
   describe('createStateTransition', () => {
+    it('should throw and error if documents have unknown action', () => {
+      try {
+        factory.createStateTransition({
+          unknown: documents,
+        });
+        expect.fail('Error was not thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(InvalidActionNameError);
+        expect(e.getActions()).to.have.deep.members(['unknown']);
+      }
+    });
+
+    it('should throw and error if no documents were supplied', () => {
+      try {
+        factory.createStateTransition({});
+        expect.fail('Error was not thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(NoDocumentsSuppliedError);
+      }
+    });
+
+    it('should throw and error if documents have mixed contract ids', () => {
+      documents[0].contractId = generateRandomId();
+      try {
+        factory.createStateTransition({
+          create: documents,
+        });
+        expect.fail('Error was not thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(MismatchContractIdsError);
+        expect(e.getDocuments()).to.have.deep.members(documents);
+      }
+    });
+
+    it('should throw and error if documents have mixed owner ids', () => {
+      documents[0].ownerId = generateRandomId();
+      try {
+        factory.createStateTransition({
+          create: documents,
+        });
+        expect.fail('Error was not thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(MismatchOwnerIdsError);
+        expect(e.getDocuments()).to.have.deep.members(documents);
+      }
+    });
+
+    it('should throw and error if create documents have invalid initial version', () => {
+      documents[0].setRevision(3);
+      try {
+        factory.createStateTransition({
+          create: documents,
+        });
+        expect.fail('Error was not thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(InvalidInitialRevisionError);
+        expect(e.getDocument()).to.deep.equal(documents[0]);
+      }
+    });
+
     it('should create DocumentsBatchTransition with passed documents', () => {
       const stateTransition = factory.createStateTransition({
         create: documents,
