@@ -16,11 +16,19 @@ describe('creditsConverter', () => {
   });
   describe('convertCreditsToSatoshi', () => {
     it('should convert credits to satoshi', () => {
-      const amount = 4242;
+      const amount = 10000;
 
       const convertedAmount = convertCreditsToSatoshi(amount);
 
-      expect(convertedAmount).to.equal(Math.ceil(amount / RATIO));
+      expect(convertedAmount).to.equal(Math.floor(amount / RATIO));
+    });
+
+    it('should convert credits to 0 satoshi if amount < RATIO', () => {
+      const amount = RATIO - 1;
+
+      const convertedAmount = convertCreditsToSatoshi(amount);
+
+      expect(convertedAmount).to.equal(0);
     });
   });
 });
