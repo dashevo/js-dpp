@@ -1,6 +1,6 @@
 const AbstractDocumentTransition = require('../../../../../lib/document/stateTransition/documentTransition/AbstractDocumentTransition');
 
-const validateDocumentsSTDataFactory = require('../../../../../lib/document/stateTransition/validation/data/validateDocumentsSTDataFactory');
+const validateDocumentsBatchTransitionDataFactory = require('../../../../../lib/document/stateTransition/validation/data/validateDocumentsBatchTransitionDataFactory');
 
 const Document = require('../../../../../lib/document/Document');
 const DocumentsBatchTransition = require('../../../../../lib/document/stateTransition/DocumentsBatchTransition');
@@ -24,7 +24,7 @@ const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 const InvalidDocumentActionError = require('../../../../../lib/document/errors/InvalidDocumentActionError');
 const DocumentOwnerIdMismatchError = require('../../../../../lib/errors/DocumentOwnerIdMismatchError');
 
-describe('validateDocumentsSTDataFactory', () => {
+describe('validateDocumentsBatchTransitionDataFactory', () => {
   let validateDocumentsSTData;
   let fetchDocumentsMock;
   let stateTransition;
@@ -60,7 +60,7 @@ describe('validateDocumentsSTDataFactory', () => {
     fetchAndValidateDataContractMock = this.sinonSandbox.stub()
       .resolves(dataContractValidationResult);
 
-    validateDocumentsSTData = validateDocumentsSTDataFactory(
+    validateDocumentsSTData = validateDocumentsBatchTransitionDataFactory(
       dataProviderMock,
       fetchDocumentsMock,
       validateDocumentsUniquenessByIndicesMock,

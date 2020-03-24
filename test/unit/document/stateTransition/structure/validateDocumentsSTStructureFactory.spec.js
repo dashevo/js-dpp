@@ -7,7 +7,7 @@ const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumen
 
 const ValidationResult = require('../../../../../lib/validation/ValidationResult');
 
-const validateDocumentsSTStructureFactory = require('../../../../../lib/document/stateTransition/validation/structure/validateDocumentsSTStructureFactory');
+const validateDocumentsBatchTransitionStructure = require('../../../../../lib/document/stateTransition/validation/structure/validateDocumentsBatchTransitionStructure');
 
 const { expectValidationError } = require('../../../../../lib/test/expect/expectError');
 
@@ -20,7 +20,7 @@ const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 const STContainsDocumentsForDifferentDataContractsError = require('../../../../../lib/errors/STContainsDocumentsForDifferentDataContractsError');
 const InvalidIdentityPublicKeyTypeError = require('../../../../../lib/errors/InvalidIdentityPublicKeyTypeError');
 
-describe('validateDocumentsSTStructureFactory', () => {
+describe('validateDocumentsBatchTransitionStructure', () => {
   let dataContract;
   let documents;
   let rawStateTransition;
@@ -64,7 +64,7 @@ describe('validateDocumentsSTStructureFactory', () => {
 
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
-    validateDocumentsSTStructure = validateDocumentsSTStructureFactory(
+    validateDocumentsSTStructure = validateDocumentsBatchTransitionStructure(
       validateDocumentMock,
       findDuplicateDocumentsByIdMock,
       findDuplicateDocumentsByIndicesMock,
