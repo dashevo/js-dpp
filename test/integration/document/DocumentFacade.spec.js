@@ -2,7 +2,6 @@ const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
 const Document = require('../../../lib/document/Document');
 const DocumentsBatchTransition = require('../../../lib/document/stateTransition/DocumentsBatchTransition');
-const AbstractDocumentTransition = require('../../../lib/document/stateTransition/documentTransition/AbstractDocumentTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
