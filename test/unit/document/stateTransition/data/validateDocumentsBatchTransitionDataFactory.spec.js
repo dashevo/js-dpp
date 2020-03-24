@@ -114,7 +114,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
-  it('should return invalid result if document transition with action "update" is not present', async () => {
+  it('should return invalid result if document transition with action "replace" is not present', async () => {
     transitions = getDocumentTransitionsFixture({
       create: [],
       replace: [documents[0]],

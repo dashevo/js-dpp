@@ -181,13 +181,13 @@ describe.skip('validateStateTransition', function main() {
       await driveUpdateStateApi.applyStateTransition(request);
     });
 
-    const documentsStateTransition = new DocumentsBatchTransition([indexDocument]);
+    const documentsBatchTransition = new DocumentsBatchTransition([indexDocument]);
 
     const duplicateStateTransition = new DocumentsBatchTransition([anotherDocument]);
 
     await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
-      request.setStateTransition(documentsStateTransition.serialize());
+      request.setStateTransition(documentsBatchTransition.serialize());
       request.setBlockHeight(blockHeight);
       request.setBlockHash(blockHash);
 
@@ -227,11 +227,11 @@ describe.skip('validateStateTransition', function main() {
       await driveUpdateStateApi.applyStateTransition(request);
     });
 
-    const documentsStateTransition = new DocumentsBatchTransition(documents);
+    const documentsBatchTransition = new DocumentsBatchTransition(documents);
 
     await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
-      request.setStateTransition(documentsStateTransition.serialize());
+      request.setStateTransition(documentsBatchTransition.serialize());
       request.setBlockHeight(blockHeight);
       request.setBlockHash(blockHash);
 
