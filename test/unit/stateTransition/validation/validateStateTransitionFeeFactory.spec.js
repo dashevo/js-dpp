@@ -89,7 +89,7 @@ describe('validateStateTransitionFeeFactory', () => {
 
   it('should return valid result for IdentityCreateStateTransition', async () => {
     const result = await validateStateTransitionFee(identityCreateST);
-console.log(result);
+
     expect(result.isValid()).to.be.true();
     expect(validateLockTransactionMock).to.be.calledOnceWithExactly(identityCreateST);
   });
