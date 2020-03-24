@@ -1,6 +1,7 @@
 const Ajv = require('ajv');
 
 const validateStateTransitionStructureFactory = require('../../../../lib/stateTransition/validation/validateStateTransitionStructureFactory');
+const createStateTransitionFactory = require('../../../../lib/stateTransition/createStateTransitionFactory');
 
 const JsonSchemaValidator = require('../../../../lib/validation/JsonSchemaValidator');
 
@@ -17,6 +18,10 @@ const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsF
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentTransitionsFixture = require('../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
+
+const dataContractExtensionSchema = require('../../../../schema/stateTransition/data-contract');
+
+const StateTransitionMaxSizeExceededError = require('../../../../lib/errors/StateTransitionMaxSizeExceededError');
 
 const {
   expectValidationError,
@@ -36,44 +41,37 @@ describe('validateStateTransitionStructureFactory', () => {
   let rawStateTransition;
   let dataContract;
   let privateKey;
+  let createStateTransition;
 
   beforeEach(function beforeEach() {
     extensionFunctionMock = this.sinonSandbox.stub();
 
-    const extensionSchema = {
-      properties: {
-        extension: {
-          type: 'object',
-        },
-      },
-      required: ['extension'],
-    };
-
     const typeExtensions = {
       [stateTransitionTypes.DATA_CONTRACT]: {
         validationFunction: extensionFunctionMock,
-        schema: extensionSchema,
+        schema: dataContractExtensionSchema,
       },
     };
 
     const ajv = new Ajv();
     validator = new JsonSchemaValidator(ajv);
 
-    validateStateTransitionStructure = validateStateTransitionStructureFactory(
-      validator,
-      typeExtensions,
-    );
-
     dataContract = getDataContractFixture();
 
     privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
 
-    rawStateTransition = {
-      protocolVersion: 0,
-      type: stateTransitionTypes.DATA_CONTRACT,
-      extension: {},
-      signature: 'H8tcxA468bMRB5183MER6xud6olAXfxutwDQiv5vaiN8AXFkup6jkSXWQdmaVF5Wvw2ppkYxXAGsBI2N94OMxvw=',
-    };
+    const dataContractStateTransition = new DataContractStateTransition(dataContract);
+    dataContractStateTransition.signByPrivateKey(privateKey);
+
+    rawStateTransition = dataContractStateTransition.toJSON();
+
+    createStateTransition = createStateTransitionFactory();
+
+    validateStateTransitionStructure = validateStateTransitionStructureFactory(
+      validator,
+      typeExtensions,
+      createStateTransition,
+    );
   });
 
   describe('Base schema', () => {
@@ -269,6 +267,7 @@ describe('validateStateTransitionStructureFactory', () => {
       validateStateTransitionStructure = validateStateTransitionStructureFactory(
         validator,
         typeExtensions,
+        createStateTransition,
       );
 
       const stateTransition = new DataContractStateTransition(dataContract);
@@ -318,6 +317,7 @@ describe('validateStateTransitionStructureFactory', () => {
       validateStateTransitionStructure = validateStateTransitionStructureFactory(
         validator,
         typeExtensions,
+        createStateTransition,
       );
 
       const documents = getDocumentsFixture();
@@ -603,6 +603,7 @@ describe('validateStateTransitionStructureFactory', () => {
       validateStateTransitionStructure = validateStateTransitionStructureFactory(
         validator,
         typeExtensions,
+        createStateTransition,
       );
 
       const stateTransition = getIdentityCreateSTFixture();
@@ -755,7 +756,7 @@ describe('validateStateTransitionStructureFactory', () => {
   });
 
   it('should return invalid result if ST invalid against extension schema', async () => {
-    delete rawStateTransition.extension;
+    delete rawStateTransition.dataContract;
 
     const result = await validateStateTransitionStructure(rawStateTransition);
 
@@ -765,7 +766,7 @@ describe('validateStateTransitionStructureFactory', () => {
 
     expect(error.dataPath).to.equal('');
     expect(error.keyword).to.equal('required');
-    expect(error.params.missingProperty).to.equal('extension');
+    expect(error.params.missingProperty).to.equal('dataContract');
 
     expect(extensionFunctionMock).to.not.be.called();
   });
@@ -787,6 +788,23 @@ describe('validateStateTransitionStructureFactory', () => {
     expect(error).to.equal(extensionError);
 
     expect(extensionFunctionMock).to.be.calledOnceWith(rawStateTransition);
+  });
+
+  it('should return invalid result if ST size is more than 16 kb', async () => {
+    const extensionResult = new ValidationResult();
+
+    extensionFunctionMock.returns(extensionResult);
+
+    // generate big state transition
+    for (let i = 0; i < 500; i++) {
+      rawStateTransition.dataContract.documents[`anotherContract${i}`] = rawStateTransition.dataContract.documents.niceDocument;
+    }
+
+    const result = await validateStateTransitionStructure(
+      rawStateTransition,
+    );
+
+    expectValidationError(result, StateTransitionMaxSizeExceededError);
   });
 
   it('should return valid result', async () => {

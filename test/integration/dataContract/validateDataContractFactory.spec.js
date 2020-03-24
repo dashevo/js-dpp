@@ -18,7 +18,6 @@ const UndefinedIndexPropertyError = require('../../../lib/errors/UndefinedIndexP
 const InvalidIndexPropertyTypeError = require('../../../lib/errors/InvalidIndexPropertyTypeError');
 const SystemPropertyIndexAlreadyPresentError = require('../../../lib/errors/SystemPropertyIndexAlreadyPresentError');
 const UniqueIndicesLimitReachedError = require('../../../lib/errors/UniqueIndicesLimitReachedError');
-const DataContractMaxByteSizeExceededError = require('../../../lib/errors/DataContractMaxByteSizeExceededError');
 const InvalidDataContractEntropyError = require('../../../lib/errors/InvalidDataContractEntropyError');
 const InvalidDataContractIdError = require('../../../lib/errors/InvalidDataContractIdError');
 
@@ -299,61 +298,6 @@ describe('validateDataContractFactory', () => {
 
       expect(error).to.be.an.instanceOf(InvalidDataContractEntropyError);
       expect(error.getRawDataContract()).to.equal(rawDataContract);
-    });
-  });
-
-  describe('version', () => {
-    it('should be present', async () => {
-      delete rawDataContract.version;
-
-      const result = await validateDataContract(rawDataContract);
-
-      expectJsonSchemaError(result);
-
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.equal('');
-      expect(error.keyword).to.equal('required');
-      expect(error.params.missingProperty).to.equal('version');
-    });
-
-    it('should be a number', async () => {
-      rawDataContract.version = 'wrong';
-
-      const result = await validateDataContract(rawDataContract);
-
-      expectJsonSchemaError(result);
-
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.equal('.version');
-      expect(error.keyword).to.equal('type');
-    });
-
-    it('should be an integer', async () => {
-      rawDataContract.version = 1.2;
-
-      const result = await validateDataContract(rawDataContract);
-
-      expectJsonSchemaError(result);
-
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.equal('.version');
-      expect(error.keyword).to.equal('multipleOf');
-    });
-
-    it('should be greater or equal to one', async () => {
-      rawDataContract.version = 0;
-
-      const result = await validateDataContract(rawDataContract);
-
-      expectJsonSchemaError(result);
-
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.equal('.version');
-      expect(error.keyword).to.equal('minimum');
     });
   });
 
@@ -1571,21 +1515,6 @@ describe('validateDataContractFactory', () => {
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
     });
-  });
-
-  it('should return an invalid result if data contract byte size is bigger than 15 Kb', async () => {
-    const hugeDataContract = {};
-    for (let i = 0; i < 2200; i++) {
-      hugeDataContract[i] = i;
-    }
-
-    const result = await validateDataContract(hugeDataContract);
-
-    expectValidationError(result, DataContractMaxByteSizeExceededError);
-
-    const [error] = result.getErrors();
-
-    expect(error.getDataContract()).to.deep.equal(hugeDataContract);
   });
 
   it('should return invalid result with circular $ref pointer', async () => {

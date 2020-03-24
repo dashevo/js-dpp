@@ -7,7 +7,7 @@ const InvalidSignaturePublicKeyError = require('../../../lib/stateTransition/err
 const StateTransitionIsNotSignedError = require('../../../lib/stateTransition/errors/StateTransitionIsNotSignedError');
 const PublicKeyMismatchError = require('../../../lib/stateTransition/errors/PublicKeyMismatchError');
 
-describe('AbstractStateTransition', () => {
+describe('AbstractStateTransitionIdentitySigned', () => {
   let stateTransition;
   let privateKeyHex;
   let privateKeyBuffer;
