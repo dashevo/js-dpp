@@ -1,27 +1,31 @@
-const generateRandomId = require('../../../../../lib/test/utils/generateRandomId');
+const Ajv = require('ajv');
 
-const enrichDataContractWithBaseSchema = require('../../../../../lib/dataContract/enrichDataContractWithBaseSchema');
+const JsonSchemaValidator = require('../../../../../../lib/validation/JsonSchemaValidator');
 
-const DocumentsBatchTransition = require('../../../../../lib/document/stateTransition/DocumentsBatchTransition');
+const generateRandomId = require('../../../../../../lib/test/utils/generateRandomId');
 
-const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
-const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
+const enrichDataContractWithBaseSchema = require('../../../../../../lib/dataContract/enrichDataContractWithBaseSchema');
 
-const ValidationResult = require('../../../../../lib/validation/ValidationResult');
+const DocumentsBatchTransition = require('../../../../../../lib/document/stateTransition/DocumentsBatchTransition');
 
-const validateDocumentsBatchTransitionStructureFactory = require('../../../../../lib/document/stateTransition/validation/structure/validateDocumentsBatchTransitionStructureFactory');
+const getDocumentTransitionsFixture = require('../../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
+const getDocumentsFixture = require('../../../../../../lib/test/fixtures/getDocumentsFixture');
 
-const { expectValidationError } = require('../../../../../lib/test/expect/expectError');
+const ValidationResult = require('../../../../../../lib/validation/ValidationResult');
 
-const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
+const validateDocumentsBatchTransitionStructureFactory = require('../../../../../../lib/document/stateTransition/validation/structure/validateDocumentsBatchTransitionStructureFactory');
 
-const ConsensusError = require('../../../../../lib/errors/ConsensusError');
-const JsonSchemaError = require('../../../../../lib/errors/JsonSchemaError');
-const DuplicateDocumentTransitionsError = require('../../../../../lib/errors/DuplicateDocumentTransitionsError');
-const InvalidDocumentTransitionIdError = require('../../../../../lib/errors/InvalidDocumentTransitionIdError');
-const InvalidDocumentTransitionEntropyError = require('../../../../../lib/errors/InvalidDocumentTransitionEntropyError');
-const InvalidIdentityPublicKeyTypeError = require('../../../../../lib/errors/InvalidIdentityPublicKeyTypeError');
-const DataContractNotPresentError = require('../../../../../lib/errors/DataContractNotPresentError');
+const { expectValidationError } = require('../../../../../../lib/test/expect/expectError');
+
+const createDataProviderMock = require('../../../../../../lib/test/mocks/createDataProviderMock');
+
+const ConsensusError = require('../../../../../../lib/errors/ConsensusError');
+const JsonSchemaError = require('../../../../../../lib/errors/JsonSchemaError');
+const DuplicateDocumentTransitionsError = require('../../../../../../lib/errors/DuplicateDocumentTransitionsError');
+const InvalidDocumentTransitionIdError = require('../../../../../../lib/errors/InvalidDocumentTransitionIdError');
+const InvalidDocumentTransitionEntropyError = require('../../../../../../lib/errors/InvalidDocumentTransitionEntropyError');
+const InvalidIdentityPublicKeyTypeError = require('../../../../../../lib/errors/InvalidIdentityPublicKeyTypeError');
+const DataContractNotPresentError = require('../../../../../../lib/errors/DataContractNotPresentError');
 
 describe('validateDocumentsBatchTransitionStructureFactory', () => {
   let dataContract;
@@ -35,7 +39,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
   let ownerId;
   let validateIdentityExistenceMock;
   let dataProviderMock;
-  let validatorMock;
+  let validator;
   let enrichSpy;
   let documentTransitions;
 
@@ -74,10 +78,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchDataContract.resolves(dataContract);
 
-    validatorMock = {
-      validate: this.sinonSandbox.stub(),
-    };
-    validatorMock.validate.returns(new ValidationResult());
+    validator = new JsonSchemaValidator(new Ajv());
 
     enrichSpy = this.sinonSandbox.spy(enrichDataContractWithBaseSchema);
 
@@ -87,9 +88,79 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
       validateStateTransitionSignatureMock,
       validateIdentityExistenceMock,
       dataProviderMock,
-      validatorMock,
+      validator,
       enrichSpy,
     );
+  });
+
+  describe('create', () => {
+    it('should return invalid result if there are documents with wrong generated $id', async () => {
+      const [firstTransition] = rawStateTransition.transitions;
+
+      firstTransition.$id = generateRandomId();
+
+      const result = await validateStructure(rawStateTransition);
+
+      expectValidationError(result, InvalidDocumentTransitionIdError);
+
+      const [error] = result.getErrors();
+
+      expect(error.getRawDocumentTransition()).to.deep.equal(firstTransition);
+
+      expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+        dataContract.getId(),
+      );
+      expect(enrichSpy).to.have.been.calledThrice();
+      expect(findDuplicatesByIdMock).to.have.been.calledOnceWithExactly(
+        rawStateTransition.transitions,
+      );
+      expect(findDuplicatesByIndicesMock).to.have.been.calledOnceWithExactly(
+        rawStateTransition.transitions, dataContract,
+      );
+      expect(validateIdentityExistenceMock).to.have.not.been.called();
+      expect(validateStateTransitionSignatureMock).to.have.not.been.called();
+    });
+
+    it('should return invalid result if there are documents with wrong $entropy', async () => {
+      const [firstTransition] = rawStateTransition.transitions;
+
+      firstTransition.$entropy = generateRandomId();
+
+      const result = await validateStructure(rawStateTransition);
+
+      expect(result.isValid()).to.be.false();
+
+      const [, error] = result.getErrors();
+
+      expect(error).to.be.an.instanceOf(InvalidDocumentTransitionEntropyError);
+
+      expect(error.getRawDocumentTransition()).to.deep.equal(firstTransition);
+
+      expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+        dataContract.getId(),
+      );
+      expect(enrichSpy).to.have.been.calledThrice();
+      expect(findDuplicatesByIdMock).to.have.been.calledOnceWithExactly(
+        rawStateTransition.transitions,
+      );
+      expect(findDuplicatesByIndicesMock).to.have.been.calledOnceWithExactly(
+        rawStateTransition.transitions, dataContract,
+      );
+      expect(validateIdentityExistenceMock).to.have.not.been.called();
+      expect(validateStateTransitionSignatureMock).to.have.not.been.called();
+    });
+  });
+
+  describe('replace', () => {
+
+  });
+
+  describe('delete', () => {
+
+  });
+
+  describe('base schema', () => {
+
   });
 
   it('should return invalid result if data contract was not found', async () => {
@@ -107,98 +178,9 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
       dataContract.getId(),
     );
 
-    expect(validatorMock.validate).to.have.not.been.called();
     expect(enrichSpy).to.have.not.been.called();
     expect(findDuplicatesByIdMock).to.have.not.been.called();
     expect(findDuplicatesByIndicesMock).to.have.not.been.called();
-    expect(validateIdentityExistenceMock).to.have.not.been.called();
-    expect(validateStateTransitionSignatureMock).to.have.not.been.called();
-  });
-
-  it('should return invalid result if there are documents with wrong generated $id', async () => {
-    const [firstTransition] = rawStateTransition.transitions;
-
-    firstTransition.$id = generateRandomId();
-
-    const result = await validateStructure(rawStateTransition);
-
-    expectValidationError(result, InvalidDocumentTransitionIdError);
-
-    const [error] = result.getErrors();
-
-    expect(error.getRawDocumentTransition()).to.deep.equal(firstTransition);
-
-    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
-      dataContract.getId(),
-    );
-    expect(enrichSpy).to.have.been.calledThrice();
-    expect(findDuplicatesByIdMock).to.have.been.calledOnceWithExactly(
-      rawStateTransition.transitions,
-    );
-    expect(findDuplicatesByIndicesMock).to.have.been.calledOnceWithExactly(
-      rawStateTransition.transitions, dataContract,
-    );
-    expect(validatorMock.validate.callCount).to.equal(documentTransitions.length);
-    expect(validateIdentityExistenceMock).to.have.not.been.called();
-    expect(validateStateTransitionSignatureMock).to.have.not.been.called();
-  });
-
-  it('should return invalid result if there are documents with wrong $entropy', async () => {
-    const [firstTransition] = rawStateTransition.transitions;
-
-    firstTransition.$entropy = generateRandomId();
-
-    const result = await validateStructure(rawStateTransition);
-
-    expect(result.isValid()).to.be.false();
-
-    const [, error] = result.getErrors();
-
-    expect(error).to.be.an.instanceOf(InvalidDocumentTransitionEntropyError);
-
-    expect(error.getRawDocumentTransition()).to.deep.equal(firstTransition);
-
-    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
-      dataContract.getId(),
-    );
-    expect(enrichSpy).to.have.been.calledThrice();
-    expect(findDuplicatesByIdMock).to.have.been.calledOnceWithExactly(
-      rawStateTransition.transitions,
-    );
-    expect(findDuplicatesByIndicesMock).to.have.been.calledOnceWithExactly(
-      rawStateTransition.transitions, dataContract,
-    );
-    expect(validatorMock.validate.callCount).to.equal(documentTransitions.length);
-    expect(validateIdentityExistenceMock).to.have.not.been.called();
-    expect(validateStateTransitionSignatureMock).to.have.not.been.called();
-  });
-
-  it('should return invalid result if document documentTransitions schema invalid', async () => {
-    const schemaError = new JsonSchemaError(new Error('test'));
-
-    validatorMock.validate.onCall(0).returns(
-      new ValidationResult([schemaError]),
-    );
-
-    const result = await validateStructure(rawStateTransition);
-
-    expectValidationError(result, JsonSchemaError, 1);
-
-    const [error] = result.getErrors();
-
-    expect(error.message).to.equal('test');
-
-    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
-      dataContract.getId(),
-    );
-    expect(enrichSpy).to.have.been.calledThrice();
-    expect(findDuplicatesByIdMock).to.have.been.calledOnceWithExactly(
-      rawStateTransition.transitions,
-    );
-    expect(findDuplicatesByIndicesMock).to.have.been.calledOnceWithExactly(
-      rawStateTransition.transitions, dataContract,
-    );
-    expect(validatorMock.validate.callCount).to.equal(documentTransitions.length);
     expect(validateIdentityExistenceMock).to.have.not.been.called();
     expect(validateStateTransitionSignatureMock).to.have.not.been.called();
   });
@@ -226,7 +208,6 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     expect(findDuplicatesByIndicesMock).to.have.been.calledOnceWithExactly(
       rawStateTransition.transitions, dataContract,
     );
-    expect(validatorMock.validate.callCount).to.equal(documentTransitions.length);
     expect(validateIdentityExistenceMock).to.have.not.been.called();
     expect(validateStateTransitionSignatureMock).to.have.not.been.called();
   });
@@ -254,7 +235,6 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     expect(findDuplicatesByIndicesMock).to.have.been.calledOnceWithExactly(
       rawStateTransition.transitions, dataContract,
     );
-    expect(validatorMock.validate.callCount).to.equal(documentTransitions.length);
     expect(validateIdentityExistenceMock).to.have.not.been.called();
     expect(validateStateTransitionSignatureMock).to.have.not.been.called();
   });
@@ -284,7 +264,6 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     expect(findDuplicatesByIndicesMock).to.have.been.calledOnceWithExactly(
       rawStateTransition.transitions, dataContract,
     );
-    expect(validatorMock.validate.callCount).to.equal(documentTransitions.length);
     expect(validateIdentityExistenceMock).to.have.been.calledOnceWithExactly(ownerId);
     expect(validateStateTransitionSignatureMock).to.have.not.been.called();
   });
@@ -319,7 +298,6 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     expect(findDuplicatesByIndicesMock).to.have.been.calledOnceWithExactly(
       rawStateTransition.transitions, dataContract,
     );
-    expect(validatorMock.validate.callCount).to.equal(documentTransitions.length);
     expect(validateIdentityExistenceMock).to.have.been.calledOnceWithExactly(ownerId);
     expect(validateStateTransitionSignatureMock).to.have.been.calledOnceWithExactly(
       stateTransition, ownerId,
@@ -342,7 +320,6 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     expect(findDuplicatesByIndicesMock).to.have.been.calledOnceWithExactly(
       rawStateTransition.transitions, dataContract,
     );
-    expect(validatorMock.validate.callCount).to.equal(documentTransitions.length);
     expect(validateIdentityExistenceMock).to.have.been.calledOnceWithExactly(ownerId);
     expect(validateStateTransitionSignatureMock).to.have.been.calledOnceWithExactly(
       stateTransition, ownerId,
