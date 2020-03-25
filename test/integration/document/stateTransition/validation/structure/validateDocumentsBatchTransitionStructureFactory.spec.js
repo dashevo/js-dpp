@@ -124,7 +124,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     it('should return invalid result if there are documents with wrong $entropy', async () => {
       const [firstTransition] = rawStateTransition.transitions;
 
-      firstTransition.$entropy = generateRandomId();
+      firstTransition.$entropy = 'yVDZaFPD8c6wJeLR1DVDJEBAAtfezBntVx'; // invalid generated entropy
 
       const result = await validateStructure(rawStateTransition);
 
@@ -149,14 +149,152 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
       expect(validateIdentityExistenceMock).to.have.not.been.called();
       expect(validateStateTransitionSignatureMock).to.have.not.been.called();
     });
+
+    describe('schema', () => {
+      describe('$entropy', () => {
+        it('should be present', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          delete documentTransition.$entropy;
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('');
+          expect(error.keyword).to.equal('required');
+          expect(error.params.missingProperty).to.equal('$entropy');
+        });
+
+        it('should be a string', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          documentTransition.$entropy = 1;
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.$entropy');
+          expect(error.keyword).to.equal('type');
+        });
+
+        it('should be no less than 34 chars', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          documentTransition.$entropy = '1'.repeat(33);
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.$entropy');
+          expect(error.keyword).to.equal('minLength');
+        });
+
+        it('should be no longer than 34 chars', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          documentTransition.$entropy = '1'.repeat(35);
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.$entropy');
+          expect(error.keyword).to.equal('maxLength');
+        });
+      });
+    });
   });
 
   describe('replace', () => {
+    beforeEach(() => {
+      documentTransitions = getDocumentTransitionsFixture({
+        create: [],
+        replace: documents,
+      });
 
-  });
+      stateTransition = new DocumentsBatchTransition({
+        ownerId,
+        contractId: dataContract.getId(),
+        transitions: documentTransitions.map((t) => t.toJSON()),
+      });
 
-  describe('delete', () => {
+      rawStateTransition = stateTransition.toJSON();
+    });
 
+    describe('schema', () => {
+      describe('$rev', () => {
+        it('should be present', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          delete documentTransition.$rev;
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.params.missingProperty).to.equal('$rev');
+          expect(error.keyword).to.equal('required');
+        });
+
+        it('should be a number', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          documentTransition.$rev = '1';
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.$rev');
+          expect(error.keyword).to.equal('type');
+        });
+
+        it('should be multiple of 1.0', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          documentTransition.$rev = 1.2;
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.$rev');
+          expect(error.keyword).to.equal('multipleOf');
+        });
+
+        it('should have a minimum value of 1', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          documentTransition.$rev = 0;
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.$rev');
+          expect(error.keyword).to.equal('minimum');
+        });
+      });
+    });
   });
 
   describe('base schema', () => {
@@ -238,7 +376,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
       });
     });
 
-    describe('$type', () => {
+    describe.skip('$type', () => {
       it('should be present', async () => {
         const [documentTransition] = rawStateTransition.transitions;
 
@@ -271,7 +409,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
       });
     });
 
-    describe('$action', () => {
+    describe.skip('$action', () => {
       it('should be present', async () => {
         const [documentTransition] = rawStateTransition.transitions;
 
