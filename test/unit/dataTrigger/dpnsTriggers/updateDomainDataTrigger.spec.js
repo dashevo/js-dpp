@@ -1,7 +1,6 @@
 const domainUpdateDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/updateDomainDataTrigger');
 const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
 const { getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
-const Document = require('../../../../lib/document/Document');
 const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
 const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
 const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
@@ -24,8 +23,6 @@ describe('updateDomainDataTrigger', () => {
   });
 
   it('should always fail', async () => {
-    document.setAction(Document.ACTIONS.REPLACE);
-
     const result = await domainUpdateDataTrigger(document, context);
 
     expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);

@@ -1,13 +1,15 @@
 const Document = require('../../../../../lib/document/Document');
 
-const findDuplicateDocumentsByIndices = require('../../../../../lib/document/stateTransition/validation/structure/findDuplicateDocumentsByIndices');
+const findDuplicateDocumentsByIndices = require('../../../../../lib/document/stateTransition/validation/structure/findDuplicatesByIndices');
 
 const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
+const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
-describe('findDuplicateDocumentsByIndices', () => {
+describe('findDuplicatesByIndices', () => {
   let documents;
   let contract;
+  let documentTransitions;
 
   beforeEach(() => {
     contract = getDataContractFixture();
@@ -68,24 +70,32 @@ describe('findDuplicateDocumentsByIndices', () => {
       ...william.toJSON(),
       $type: 'singleDocument',
     }));
+
+    documentTransitions = getDocumentTransitionsFixture({
+      create: documents,
+    }).map((t) => t.toJSON());
   });
 
   it('should return duplicate documents if they are present', () => {
-    const [, , , william, leon] = documents;
+    const [, , , , leon] = documents;
 
     leon.set('lastName', 'Birkin');
 
-    const duplicates = findDuplicateDocumentsByIndices(documents, contract);
-    expect(duplicates).to.deep.equal(
+    documentTransitions = getDocumentTransitionsFixture({
+      create: documents,
+    }).map((t) => t.toJSON());
+
+    const duplicates = findDuplicateDocumentsByIndices(documentTransitions, contract);
+    expect(duplicates).to.have.deep.members(
       [
-        leon.toJSON(),
-        william.toJSON(),
+        documentTransitions[3],
+        documentTransitions[4],
       ],
     );
   });
 
   it('should return an empty array of there are no duplicates', () => {
-    const duplicates = findDuplicateDocumentsByIndices(documents, contract);
+    const duplicates = findDuplicateDocumentsByIndices(documentTransitions, contract);
 
     expect(duplicates.length).to.equal(0);
   });

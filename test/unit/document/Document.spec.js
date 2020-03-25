@@ -2,7 +2,7 @@ const rewiremock = require('rewiremock/node');
 
 const generateRandomId = require('../../../lib/test/utils/generateRandomId');
 
-const DataIsNotAllowedWithActionDeleteError = require('../../../lib/document/errors/DataIsNotAllowedWithActionDeleteError');
+const DocumentCreateTransition = require('../../../lib/document/stateTransition/documentTransition/DocumentCreateTransition');
 
 describe('Document', () => {
   let lodashGetMock;
@@ -32,13 +32,10 @@ describe('Document', () => {
       $type: 'test',
       $contractId: generateRandomId(),
       $ownerId: generateRandomId(),
-      $entropy: 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh',
-      $rev: Document.DEFAULTS.REVISION,
+      $rev: DocumentCreateTransition.INITIAL_REVISION,
     };
 
     document = new Document(rawDocument);
-
-    document.setAction(Document.DEFAULTS.ACTION);
   });
 
   describe('constructor', () => {
@@ -110,22 +107,6 @@ describe('Document', () => {
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
-    it('should create Document with $entropy and data if present', () => {
-      const data = {
-        test: 1,
-      };
-
-      rawDocument = {
-        $entropy: 'test',
-        ...data,
-      };
-
-      document = new Document(rawDocument);
-
-      expect(document.entropy).to.equal(rawDocument.$entropy);
-      expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
-    });
-
     it('should create Document with undefined action and data if present', () => {
       const data = {
         test: 1,
@@ -187,37 +168,6 @@ describe('Document', () => {
   describe('#getContractId', () => {
     it('should return $contractId', () => {
       expect(document.getOwnerId()).to.equal(rawDocument.$ownerId);
-    });
-  });
-
-  describe('#setAction', () => {
-    it('should set $action', () => {
-      const result = document.setAction(Document.ACTIONS.DELETE);
-
-      expect(result).to.equal(document);
-
-      expect(document.action).to.equal(Document.ACTIONS.DELETE);
-    });
-
-    it('should throw an error if data is set and the $action is DELETE', () => {
-      document.data = {
-        test: 1,
-      };
-
-      try {
-        document.setAction(Document.ACTIONS.DELETE);
-      } catch (e) {
-        expect(e).to.be.an.instanceOf(DataIsNotAllowedWithActionDeleteError);
-        expect(e.getDocument()).to.deep.equal(document);
-      }
-    });
-  });
-
-  describe('#getAction', () => {
-    it('should return $action', () => {
-      document.action = Document.ACTIONS.DELETE;
-
-      expect(document.getAction()).to.equal(Document.ACTIONS.DELETE);
     });
   });
 
@@ -288,20 +238,6 @@ describe('Document', () => {
       expect(result).to.equal(document);
 
       expect(lodashSetMock).to.have.been.calledOnceWith(document.data, path, value);
-    });
-
-    it('should throw an error if $action is already set to DELETE', () => {
-      document.setAction(Document.ACTIONS.DELETE);
-
-      const path = 'test[0].$my';
-      const value = 2;
-
-      try {
-        document.set(path, value);
-      } catch (e) {
-        expect(e).to.be.an.instanceOf(DataIsNotAllowedWithActionDeleteError);
-        expect(e.getDocument()).to.deep.equal(document);
-      }
     });
   });
 

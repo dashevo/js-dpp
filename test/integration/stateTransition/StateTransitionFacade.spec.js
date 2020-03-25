@@ -3,11 +3,12 @@ const { PrivateKey } = require('@dashevo/dashcore-lib');
 const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
 const DataContractStateTransition = require('../../../lib/dataContract/stateTransition/DataContractStateTransition');
-const DocumentsStateTransition = require('../../../lib/document/stateTransition/DocumentsStateTransition');
+const DocumentsBatchTransition = require('../../../lib/document/stateTransition/DocumentsBatchTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
+const getDocumentTransitionsFixture = require('../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
 const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
 
@@ -18,7 +19,7 @@ const MissingOptionError = require('../../../lib/errors/MissingOptionError');
 describe('StateTransitionFacade', () => {
   let dpp;
   let dataContractStateTransition;
-  let documentsStateTransition;
+  let documentsBatchTransition;
   let dataProviderMock;
   let dataContract;
   let identityPublicKey;
@@ -38,9 +39,16 @@ describe('StateTransitionFacade', () => {
     dataContractStateTransition = new DataContractStateTransition(dataContract);
     dataContractStateTransition.sign(identityPublicKey, privateKey);
 
-    const documents = getDocumentsFixture();
-    documentsStateTransition = new DocumentsStateTransition(documents);
-    documentsStateTransition.sign(identityPublicKey, privateKey);
+    const documentTransitions = getDocumentTransitionsFixture({
+      create: getDocumentsFixture(),
+    });
+
+    documentsBatchTransition = new DocumentsBatchTransition({
+      ownerId: getDocumentsFixture.ownerId,
+      contractId: dataContract.getId(),
+      transitions: documentTransitions.map((t) => t.toJSON()),
+    });
+    documentsBatchTransition.sign(identityPublicKey, privateKey);
 
     const getPublicKeyById = this.sinonSandbox.stub().returns(identityPublicKey);
     const getBalance = this.sinonSandbox.stub().returns(10000);
@@ -190,14 +198,14 @@ describe('StateTransitionFacade', () => {
       );
 
       const result = await dpp.stateTransition.validate(
-        documentsStateTransition,
+        documentsBatchTransition,
       );
 
       expect(result).to.be.an.instanceOf(ValidationResult);
       expect(result.isValid()).to.be.true();
 
-      expect(validateStructureSpy).to.be.calledOnceWith(documentsStateTransition);
-      expect(validateDataSpy).to.be.calledOnceWith(documentsStateTransition);
+      expect(validateStructureSpy).to.be.calledOnceWith(documentsBatchTransition);
+      expect(validateDataSpy).to.be.calledOnceWith(documentsBatchTransition);
     });
   });
 

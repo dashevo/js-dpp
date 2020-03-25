@@ -3,23 +3,14 @@ const Ajv = require('ajv');
 const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const Document = require('../../../lib/document/Document');
 const validateDocumentFactory = require('../../../lib/document/validateDocumentFactory');
-const enrichDataContractWithBaseDocument = require('../../../lib/dataContract/enrichDataContractWithBaseDocument');
+const enrichDataContractWithBaseSchema = require('../../../lib/dataContract/enrichDataContractWithBaseSchema');
 
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
 const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTypeError');
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
-const InvalidDocumentIdError = require('../../../lib/errors/InvalidDocumentIdError');
-const InvalidDocumentEntropyError = require('../../../lib/errors/InvalidDocumentEntropyError');
-const ConsensusError = require('../../../lib/errors/ConsensusError');
-const JsonSchemaError = require('../../../lib/errors/JsonSchemaError');
 const MismatchDocumentContractIdAndDataContractError = require('../../../lib/errors/MismatchDocumentContractIdAndDataContractError');
-
-const originalDocumentBaseSchema = require('../../../schema/base/document');
-
-const generateDocumentId = require('../../../lib/document/generateDocumentId');
 
 const {
   expectValidationError,
@@ -34,7 +25,6 @@ describe('validateDocumentFactory', () => {
   let rawDocument;
   let validateDocument;
   let validator;
-  let documentBaseSchema;
 
   beforeEach(function beforeEach() {
     const ajv = new Ajv();
@@ -46,15 +36,12 @@ describe('validateDocumentFactory', () => {
 
     validateDocument = validateDocumentFactory(
       validator,
-      enrichDataContractWithBaseDocument,
+      enrichDataContractWithBaseSchema,
     );
 
-    rawDocuments = getDocumentsFixture().map((o) => o.toJSON());
+    const documents = getDocumentsFixture();
+    rawDocuments = documents.map((o) => o.toJSON());
     [rawDocument] = rawDocuments;
-
-    documentBaseSchema = JSON.parse(
-      JSON.stringify(originalDocumentBaseSchema),
-    );
   });
 
   describe('Base schema', () => {
@@ -123,26 +110,6 @@ describe('validateDocumentFactory', () => {
 
         expect(error.keyword).to.equal('pattern');
         expect(error.dataPath).to.equal('.$id');
-      });
-
-      it('should be a concatenation of contractId, ownerId, type and entropy', async () => {
-        rawDocument.$id = generateDocumentId(
-          rawDocument.$contractId,
-          rawDocument.$ownerId,
-          rawDocument.$type,
-          '',
-        );
-
-        const result = validateDocument(rawDocument, dataContract);
-
-        expectValidationError(
-          result,
-          InvalidDocumentIdError,
-        );
-
-        const [error] = result.getErrors();
-
-        expect(error.getRawDocument()).to.equal(rawDocument);
       });
     });
 
@@ -385,90 +352,6 @@ describe('validateDocumentFactory', () => {
         expect(error.dataPath).to.equal('.$ownerId');
       });
     });
-
-    describe('$entropy', () => {
-      it('should be present', () => {
-        delete rawDocument.$entropy;
-
-        const result = validateDocument(rawDocument, dataContract);
-
-        expectValidationError(result, ConsensusError, 2);
-
-        const [jsonError, entropyError] = result.getErrors();
-
-        expect(jsonError).to.be.an.instanceOf(JsonSchemaError);
-        expect(jsonError.dataPath).to.equal('');
-        expect(jsonError.keyword).to.equal('required');
-        expect(jsonError.params.missingProperty).to.equal('$entropy');
-
-        expect(entropyError).to.be.an.instanceOf(InvalidDocumentEntropyError);
-        expect(entropyError.getRawDocument()).to.equal(rawDocument);
-      });
-
-      it('should be a string', () => {
-        rawDocument.$entropy = 1;
-
-        const result = validateDocument(rawDocument, dataContract);
-
-        expectValidationError(result, ConsensusError, 2);
-
-        const [jsonError, entropyError] = result.getErrors();
-
-        expect(jsonError).to.be.an.instanceOf(JsonSchemaError);
-        expect(jsonError.dataPath).to.equal('.$entropy');
-        expect(jsonError.keyword).to.equal('type');
-
-        expect(entropyError).to.be.an.instanceOf(InvalidDocumentEntropyError);
-        expect(entropyError.getRawDocument()).to.equal(rawDocument);
-      });
-
-      it('should be no less than 34 chars', () => {
-        rawDocument.$entropy = '86b273ff';
-
-        const result = validateDocument(rawDocument, dataContract);
-
-        expectValidationError(result, ConsensusError, 2);
-
-        const [jsonError, entropyError] = result.getErrors();
-
-        expect(jsonError).to.be.an.instanceOf(JsonSchemaError);
-        expect(jsonError.dataPath).to.equal('.$entropy');
-        expect(jsonError.keyword).to.equal('minLength');
-
-        expect(entropyError).to.be.an.instanceOf(InvalidDocumentEntropyError);
-        expect(entropyError.getRawDocument()).to.equal(rawDocument);
-      });
-
-      it('should be no longer than 34 chars', () => {
-        rawDocument.$entropy = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
-
-        const result = validateDocument(rawDocument, dataContract);
-
-        expectValidationError(result, ConsensusError, 2);
-
-        const [jsonError, entropyError] = result.getErrors();
-
-        expect(jsonError).to.be.an.instanceOf(JsonSchemaError);
-        expect(jsonError.dataPath).to.equal('.$entropy');
-        expect(jsonError.keyword).to.equal('maxLength');
-
-        expect(entropyError).to.be.an.instanceOf(InvalidDocumentEntropyError);
-        expect(entropyError.getRawDocument()).to.equal(rawDocument);
-      });
-
-      it('should be valid entropy', () => {
-        rawDocument.$entropy = '86b273ff86b273ff86b273ff86b273ff86';
-
-        const result = validateDocument(rawDocument, dataContract);
-
-        expectValidationError(result, InvalidDocumentEntropyError);
-
-        const [error] = result.getErrors();
-
-        expect(error).to.be.an.instanceOf(InvalidDocumentEntropyError);
-        expect(error.getRawDocument()).to.equal(rawDocument);
-      });
-    });
   });
 
   describe('Data Contract schema', () => {
@@ -497,32 +380,6 @@ describe('validateDocumentFactory', () => {
       expect(error.dataPath).to.equal('');
       expect(error.keyword).to.equal('additionalProperties');
     });
-  });
-
-  it('should validate against base Document schema if `action` option is DELETE', () => {
-    delete rawDocument.name;
-
-    const result = validateDocument(
-      rawDocument,
-      dataContract,
-      { action: Document.ACTIONS.DELETE },
-    );
-
-    expect(validator.validate).to.have.been.calledOnceWith(documentBaseSchema, rawDocument);
-    expect(result.getErrors().length).to.equal(0);
-  });
-
-  it('should throw validation error if additional fields are defined and `action` option is DELETE', () => {
-    const result = validateDocument(
-      rawDocument,
-      dataContract,
-      { action: Document.ACTIONS.DELETE },
-    );
-
-    const [error] = result.getErrors();
-
-    expect(error.dataPath).to.equal('');
-    expect(error.keyword).to.equal('additionalProperties');
   });
 
   it('should return invalid result if a document contractId is not equal to Data Contract ID', () => {

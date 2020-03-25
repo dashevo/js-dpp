@@ -1,17 +1,27 @@
 const rewiremock = require('rewiremock/node');
 
 const Document = require('../../../lib/document/Document');
-const DocumentsStateTransition = require('../../../lib/document/stateTransition/DocumentsStateTransition');
+const DocumentsBatchTransition = require('../../../lib/document/stateTransition/DocumentsBatchTransition');
+
+const DocumentCreateTransition = require('../../../lib/document/stateTransition/documentTransition/DocumentCreateTransition');
 
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
+const getDocumentTransitionsFixture = require('../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 const InvalidDocumentError = require('../../../lib/document/errors/InvalidDocumentError');
+const InvalidActionNameError = require('../../../lib/document/errors/InvalidActionNameError');
+const NoDocumentsSuppliedError = require('../../../lib/document/errors/NoDocumentsSuppliedError');
+const MismatchContractIdsError = require('../../../lib/document/errors/MismatchContractIdsError');
+const MismatchOwnerIdsError = require('../../../lib/document/errors/MismatchOwnerIdsError');
+const InvalidInitialRevisionError = require('../../../lib/document/errors/InvalidInitialRevisionError');
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 const SerializedObjectParsingError = require('../../../lib/errors/SerializedObjectParsingError');
+
+const generateRandomId = require('../../../lib/test/utils/generateRandomId');
 
 describe('DocumentFactory', () => {
   let decodeMock;
@@ -47,7 +57,7 @@ describe('DocumentFactory', () => {
       '../../../lib/util/serializer': { decode: decodeMock },
       '../../../lib/util/entropy': { generate: generateMock },
       '../../../lib/document/Document': Document,
-      '../../../lib/document/stateTransition/DocumentsStateTransition': DocumentsStateTransition,
+      '../../../lib/document/stateTransition/DocumentsBatchTransition': DocumentsBatchTransition,
     });
 
     factory = new DocumentFactory(
@@ -86,9 +96,7 @@ describe('DocumentFactory', () => {
       expect(generateMock).to.have.been.calledOnce();
       expect(newDocument.entropy).to.equal(entropy);
 
-      expect(newDocument.getAction()).to.equal(Document.DEFAULTS.ACTION);
-
-      expect(newDocument.getRevision()).to.equal(Document.DEFAULTS.REVISION);
+      expect(newDocument.getRevision()).to.equal(DocumentCreateTransition.INITIAL_REVISION);
 
       expect(newDocument.getId()).to.equal('E9QpjZMD7CPAGa7x2ABuLFPvBLZjhPji4TMrUfSP3Hk9');
     });
@@ -232,11 +240,76 @@ describe('DocumentFactory', () => {
   });
 
   describe('createStateTransition', () => {
-    it('should create DocumentsStateTransition with passed documents', () => {
-      const result = factory.createStateTransition(documents);
+    it('should throw and error if documents have unknown action', () => {
+      try {
+        factory.createStateTransition({
+          unknown: documents,
+        });
+        expect.fail('Error was not thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(InvalidActionNameError);
+        expect(e.getActions()).to.have.deep.members(['unknown']);
+      }
+    });
 
-      expect(result).to.be.instanceOf(DocumentsStateTransition);
-      expect(result.getDocuments()).to.equal(documents);
+    it('should throw and error if no documents were supplied', () => {
+      try {
+        factory.createStateTransition({});
+        expect.fail('Error was not thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(NoDocumentsSuppliedError);
+      }
+    });
+
+    it('should throw and error if documents have mixed contract ids', () => {
+      documents[0].contractId = generateRandomId();
+      try {
+        factory.createStateTransition({
+          create: documents,
+        });
+        expect.fail('Error was not thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(MismatchContractIdsError);
+        expect(e.getDocuments()).to.have.deep.members(documents);
+      }
+    });
+
+    it('should throw and error if documents have mixed owner ids', () => {
+      documents[0].ownerId = generateRandomId();
+      try {
+        factory.createStateTransition({
+          create: documents,
+        });
+        expect.fail('Error was not thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(MismatchOwnerIdsError);
+        expect(e.getDocuments()).to.have.deep.members(documents);
+      }
+    });
+
+    it('should throw and error if create documents have invalid initial version', () => {
+      documents[0].setRevision(3);
+      try {
+        factory.createStateTransition({
+          create: documents,
+        });
+        expect.fail('Error was not thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(InvalidInitialRevisionError);
+        expect(e.getDocument()).to.deep.equal(documents[0]);
+      }
+    });
+
+    it('should create DocumentsBatchTransition with passed documents', () => {
+      const stateTransition = factory.createStateTransition({
+        create: documents,
+      });
+
+      expect(stateTransition.getTransitions()).to.deep.equal(
+        getDocumentTransitionsFixture({
+          create: documents,
+        }),
+      );
     });
   });
 });

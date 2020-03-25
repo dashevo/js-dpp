@@ -3,25 +3,28 @@ const rewiremock = require('rewiremock/node');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
-describe('DocumentsStateTransition', () => {
+describe('DocumentsBatchTransition', () => {
   let stateTransition;
   let documents;
   let hashMock;
   let encodeMock;
-  let DocumentsStateTransition;
 
   beforeEach(function beforeEach() {
+    documents = getDocumentsFixture();
+
     hashMock = this.sinonSandbox.stub();
     const serializerMock = { encode: this.sinonSandbox.stub() };
     encodeMock = serializerMock.encode;
 
-    DocumentsStateTransition = rewiremock.proxy('../../../../lib/document/stateTransition/DocumentsStateTransition', {
+    const DocumentFactory = rewiremock.proxy('../../../../lib/document/DocumentFactory', {
       '../../../../lib/util/hash': hashMock,
       '../../../../lib/util/serializer': serializerMock,
     });
 
-    documents = getDocumentsFixture();
-    stateTransition = new DocumentsStateTransition(documents);
+    const factory = new DocumentFactory(undefined, undefined);
+    stateTransition = factory.createStateTransition({
+      create: documents,
+    });
   });
 
   describe('#getProtocolVersion', () => {
@@ -40,24 +43,11 @@ describe('DocumentsStateTransition', () => {
     });
   });
 
-  describe('#getDocuments', () => {
-    it('should return documents', () => {
-      const result = stateTransition.getDocuments();
+  describe('#getTransitions', () => {
+    it('should return document transitions', () => {
+      const result = stateTransition.getTransitions();
 
-      expect(result).to.equal(documents);
-    });
-  });
-
-  describe('#setDocuments', () => {
-    it('should set documents and actions', () => {
-      const result = stateTransition.setDocuments([]);
-
-      expect(result).to.be.an.instanceOf(DocumentsStateTransition);
-      expect(stateTransition.documents).to.deep.equal([]);
-
-      stateTransition.setDocuments(documents);
-
-      expect(stateTransition.documents).to.equal(documents);
+      expect(result).to.equal(stateTransition.transitions);
     });
   });
 
@@ -66,8 +56,9 @@ describe('DocumentsStateTransition', () => {
       expect(stateTransition.toJSON()).to.deep.equal({
         protocolVersion: 0,
         type: stateTransitionTypes.DOCUMENTS,
-        actions: documents.map((d) => d.getAction()),
-        documents: documents.map((d) => d.toJSON()),
+        contractId: documents[0].contractId,
+        ownerId: documents[0].ownerId,
+        transitions: stateTransition.getTransitions().map((d) => d.toJSON()),
         signaturePublicKeyId: null,
         signature: null,
       });
@@ -109,7 +100,7 @@ describe('DocumentsStateTransition', () => {
     it('should return owner id', async () => {
       const result = stateTransition.getOwnerId();
 
-      expect(result).to.equal(stateTransition.getDocuments()[0].getOwnerId());
+      expect(result).to.equal(getDocumentsFixture.ownerId);
     });
   });
 });
