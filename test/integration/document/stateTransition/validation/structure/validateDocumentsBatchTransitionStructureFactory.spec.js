@@ -20,7 +20,6 @@ const { expectValidationError, expectJsonSchemaError } = require('../../../../..
 const createDataProviderMock = require('../../../../../../lib/test/mocks/createDataProviderMock');
 
 const ConsensusError = require('../../../../../../lib/errors/ConsensusError');
-const JsonSchemaError = require('../../../../../../lib/errors/JsonSchemaError');
 const DuplicateDocumentTransitionsError = require('../../../../../../lib/errors/DuplicateDocumentTransitionsError');
 const InvalidDocumentTransitionIdError = require('../../../../../../lib/errors/InvalidDocumentTransitionIdError');
 const InvalidDocumentTransitionEntropyError = require('../../../../../../lib/errors/InvalidDocumentTransitionEntropyError');
