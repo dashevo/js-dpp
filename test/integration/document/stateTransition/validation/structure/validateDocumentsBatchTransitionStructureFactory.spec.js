@@ -15,7 +15,7 @@ const ValidationResult = require('../../../../../../lib/validation/ValidationRes
 
 const validateDocumentsBatchTransitionStructureFactory = require('../../../../../../lib/document/stateTransition/validation/structure/validateDocumentsBatchTransitionStructureFactory');
 
-const { expectValidationError } = require('../../../../../../lib/test/expect/expectError');
+const { expectValidationError, expectJsonSchemaError } = require('../../../../../../lib/test/expect/expectError');
 
 const createDataProviderMock = require('../../../../../../lib/test/mocks/createDataProviderMock');
 
@@ -160,7 +160,164 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
   });
 
   describe('base schema', () => {
+    describe('$id', () => {
+      it('should be present', async () => {
+        const [documentTransition] = rawStateTransition.transitions;
 
+        delete documentTransition.$id;
+
+        const result = await validateStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('$id');
+      });
+
+      it('should be a string', async () => {
+        const [documentTransition] = rawStateTransition.transitions;
+
+        documentTransition.$id = 1;
+
+        const result = await validateStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.$id');
+        expect(error.keyword).to.equal('type');
+      });
+
+      it('should be no less than 42 chars', async () => {
+        const [documentTransition] = rawStateTransition.transitions;
+
+        documentTransition.$id = '1'.repeat(41);
+
+        const result = await validateStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.$id');
+        expect(error.keyword).to.equal('minLength');
+      });
+
+      it('should be no longer than 44 chars', async () => {
+        const [documentTransition] = rawStateTransition.transitions;
+
+        documentTransition.$id = '1'.repeat(45);
+
+        const result = await validateStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.$id');
+        expect(error.keyword).to.equal('maxLength');
+      });
+
+      it('should be base58 encoded', async () => {
+        const [documentTransition] = rawStateTransition.transitions;
+
+        documentTransition.$id = '&'.repeat(44);
+
+        const result = await validateStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.keyword).to.equal('pattern');
+        expect(error.dataPath).to.equal('.$id');
+      });
+    });
+
+    describe('$type', () => {
+      it('should be present', async () => {
+        const [documentTransition] = rawStateTransition.transitions;
+
+        delete documentTransition.$type;
+
+        const result = await validateStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('$type');
+      });
+
+      it('should be a string', async () => {
+        const [documentTransition] = rawStateTransition.transitions;
+
+        documentTransition.$type = 1;
+
+        const result = await validateStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.$type');
+        expect(error.keyword).to.equal('type');
+      });
+    });
+
+    describe('$action', () => {
+      it('should be present', async () => {
+        const [documentTransition] = rawStateTransition.transitions;
+
+        delete documentTransition.$action;
+
+        const result = await validateStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('$action');
+      });
+
+      it('should be a number', async () => {
+        const [documentTransition] = rawStateTransition.transitions;
+
+        documentTransition.$action = '1';
+
+        const result = await validateStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.$action');
+        expect(error.keyword).to.equal('type');
+      });
+
+      it('should be within a range', async () => {
+        const [documentTransition] = rawStateTransition.transitions;
+
+        documentTransition.$action = 5;
+
+        const result = await validateStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.$action');
+        expect(error.keyword).to.equal('enum');
+      });
+    });
   });
 
   it('should return invalid result if data contract was not found', async () => {
