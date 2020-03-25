@@ -11,8 +11,8 @@ const {
   PrivateKey,
 } = require('@dashevo/dashcore-lib');
 
-const DataContractStateTransition = require(
-  '../../lib/dataContract/stateTransition/DataContractStateTransition',
+const DataContractCreateTransition = require(
+  '../../lib/dataContract/stateTransition/DataContractCreateTransition',
 );
 const DocumentsStateTransition = require(
   '../../lib/document/stateTransition/DocumentsStateTransition',
@@ -119,7 +119,9 @@ describe.skip('validateStateTransition', function main() {
   it('should validate contract state transition without a blockchain user', async () => {
     dataContract.contractId = Buffer.alloc(32).toString('hex');
 
-    const stateTransition = new DataContractStateTransition(dataContract);
+    const stateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+    });
 
     await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
@@ -139,7 +141,9 @@ describe.skip('validateStateTransition', function main() {
   });
 
   it('should validate contract state transition when it submitted twice', async () => {
-    const stateTransition = new DataContractStateTransition(dataContract);
+    const stateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+    });
 
     await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
@@ -170,7 +174,9 @@ describe.skip('validateStateTransition', function main() {
 
     anotherDocument.set('lastName', 'Birkin');
 
-    const stateTransition = new DataContractStateTransition(dataContract);
+    const stateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+    });
 
     await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();
@@ -216,7 +222,9 @@ describe.skip('validateStateTransition', function main() {
   });
 
   it('should successfully submit valid contract and documents', async () => {
-    const stateTransition = new DataContractStateTransition(dataContract);
+    const stateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+    });
 
     await withinBlock(async (blockHeight, blockHash) => {
       const request = new ApplyStateTransitionRequest();

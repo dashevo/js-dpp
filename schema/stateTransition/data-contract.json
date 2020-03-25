@@ -3,9 +3,16 @@
   "properties": {
     "dataContract": {
       "type": "object"
+    },
+    "entropy": {
+      "type": "string",
+      "minLength": 34,
+      "maxLength": 34,
+      "pattern": "^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$"
     }
   },
   "required": [
-    "dataContract"
+    "dataContract",
+    "entropy"
   ]
 }

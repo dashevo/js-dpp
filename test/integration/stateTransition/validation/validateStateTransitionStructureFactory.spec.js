@@ -6,7 +6,7 @@ const createStateTransitionFactory = require('../../../../lib/stateTransition/cr
 const JsonSchemaValidator = require('../../../../lib/validation/JsonSchemaValidator');
 
 const DocumentsStateTransition = require('../../../../lib/document/stateTransition/DocumentsStateTransition');
-const DataContractStateTransition = require('../../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const DataContractCreateTransition = require('../../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
@@ -59,7 +59,10 @@ describe('validateStateTransitionStructureFactory', () => {
 
     privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
 
-    const dataContractStateTransition = new DataContractStateTransition(dataContract);
+    const dataContractStateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
+    });
     dataContractStateTransition.signByPrivateKey(privateKey);
 
     rawStateTransition = dataContractStateTransition.toJSON();
@@ -269,7 +272,10 @@ describe('validateStateTransitionStructureFactory', () => {
         createStateTransition,
       );
 
-      const stateTransition = new DataContractStateTransition(dataContract);
+      const stateTransition = new DataContractCreateTransition({
+        dataContract: dataContract.toJSON(),
+        entropy: dataContract.getEntropy(),
+      });
       stateTransition.signByPrivateKey(privateKey);
 
       rawStateTransition = stateTransition.toJSON();
@@ -290,6 +296,61 @@ describe('validateStateTransitionStructureFactory', () => {
         expect(error.params.missingProperty).to.equal('dataContract');
 
         expect(extensionFunctionMock).to.not.be.called();
+      });
+    });
+
+    describe('entropy', () => {
+      it('should be present', async () => {
+        delete rawStateTransition.entropy;
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('entropy');
+      });
+
+      it('should be a string', async () => {
+        rawStateTransition.entropy = 1;
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.entropy');
+        expect(error.keyword).to.equal('type');
+      });
+
+      it('should be no less than 34 chars', async () => {
+        rawStateTransition.entropy = '86b273ff';
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.entropy');
+        expect(error.keyword).to.equal('minLength');
+      });
+
+      it('should be no longer than 34 chars', async () => {
+        rawStateTransition.entropy = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.entropy');
+        expect(error.keyword).to.equal('maxLength');
       });
     });
 

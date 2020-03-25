@@ -1,5 +1,5 @@
 const validateDataContractSTDataFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractSTDataFactory');
-const DataContractStateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const DataContractCreateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 
 
 const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
@@ -22,7 +22,9 @@ describe('validateDataContractSTDataFactory', () => {
 
 
     dataContract = getDataContractFixture();
-    stateTransition = new DataContractStateTransition(dataContract);
+    stateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+    });
 
     validateDataContractSTData = validateDataContractSTDataFactory(
       dataProviderMock,
@@ -38,7 +40,7 @@ describe('validateDataContractSTDataFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getDataContract()).to.equal(dataContract);
+    expect(error.getDataContract().toJSON()).to.deep.equal(dataContract.toJSON());
 
     expect(dataProviderMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
   });

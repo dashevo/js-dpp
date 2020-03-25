@@ -4,7 +4,7 @@ const getDataContractFixture = require('../../../lib/test/fixtures/getDataContra
 
 const DataContract = require('../../../lib/dataContract/DataContract');
 
-const DataContractStateTransition = require('../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
@@ -41,7 +41,7 @@ describe('DataContractFactory', () => {
     DataContractFactory = rewiremock.proxy('../../../lib/dataContract/DataContractFactory', {
       '../../../lib/util/serializer': { decode: decodeMock },
       '../../../lib/util/entropy': entropyMock,
-      '../../../lib/dataContract/stateTransition/DataContractStateTransition': DataContractStateTransition,
+      '../../../lib/dataContract/stateTransition/DataContractCreateTransition': DataContractCreateTransition,
       '../../../lib/dataContract/DataContract': DataContractMock,
     });
 
@@ -52,7 +52,7 @@ describe('DataContractFactory', () => {
 
   describe('create', () => {
     it('should return new Data Contract with specified name and documents definition', () => {
-      entropyMock.generate.returns(rawDataContract.$entropy);
+      entropyMock.generate.returns(dataContract.getEntropy());
       const result = factory.create(
         rawDataContract.$ownerId,
         rawDataContract.documents,
@@ -63,7 +63,6 @@ describe('DataContractFactory', () => {
       expect(DataContractMock).to.have.been.calledOnceWith({
         $id: rawDataContract.$id,
         $ownerId: rawDataContract.$ownerId,
-        $entropy: rawDataContract.$entropy,
         $schema: DataContract.DEFAULTS.SCHEMA,
         documents: rawDataContract.documents,
         definitions: {},
@@ -168,8 +167,8 @@ describe('DataContractFactory', () => {
     it('should return new DataContractStateTransition with passed DataContract', () => {
       const result = factory.createStateTransition(dataContract);
 
-      expect(result).to.be.an.instanceOf(DataContractStateTransition);
-      expect(result.getDataContract()).to.equal(dataContract);
+      expect(result).to.be.an.instanceOf(DataContractCreateTransition);
+      expect(result.getDataContract().toJSON()).to.deep.equal(dataContract.toJSON());
     });
   });
 });

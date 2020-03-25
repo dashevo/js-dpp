@@ -2,7 +2,7 @@ const { PrivateKey } = require('@dashevo/dashcore-lib');
 
 const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
-const DataContractStateTransition = require('../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 const DocumentsStateTransition = require('../../../lib/document/stateTransition/DocumentsStateTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
@@ -35,7 +35,11 @@ describe('StateTransitionFacade', () => {
       .setData(publicKey);
 
     dataContract = getDocumentsFixture.dataContract;
-    dataContractStateTransition = new DataContractStateTransition(dataContract);
+
+    dataContractStateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
+    });
     dataContractStateTransition.sign(identityPublicKey, privateKey);
 
     const documents = getDocumentsFixture();
@@ -89,7 +93,7 @@ describe('StateTransitionFacade', () => {
         dataContractStateTransition.toJSON(),
       );
 
-      expect(result).to.be.an.instanceOf(DataContractStateTransition);
+      expect(result).to.be.an.instanceOf(DataContractCreateTransition);
 
       expect(result.toJSON()).to.deep.equal(dataContractStateTransition.toJSON());
     });
@@ -125,7 +129,7 @@ describe('StateTransitionFacade', () => {
         dataContractStateTransition.serialize(),
       );
 
-      expect(result).to.be.an.instanceOf(DataContractStateTransition);
+      expect(result).to.be.an.instanceOf(DataContractCreateTransition);
 
       expect(result.toJSON()).to.deep.equal(dataContractStateTransition.toJSON());
     });

@@ -7,7 +7,7 @@ const getDataContractFixture = require('../../../../lib/test/fixtures/getDataCon
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
-const DataContractStateTransition = require('../../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const DataContractCreateTransition = require('../../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 const DocumentsStateTransition = require('../../../../lib/document/stateTransition/DocumentsStateTransition');
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
@@ -54,7 +54,9 @@ describe('validateStateTransitionFeeFactory', () => {
   });
 
   it('should return invalid result if balance is not enough', async () => {
-    const stateTransition = new DataContractStateTransition(dataContract);
+    const stateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+    });
 
     identity.balance = Buffer.byteLength(stateTransition.serialize({ skipSignature: true })) - 1;
 
@@ -68,7 +70,9 @@ describe('validateStateTransitionFeeFactory', () => {
   });
 
   it('should return valid result for DataContractStateTransition', async () => {
-    const stateTransition = new DataContractStateTransition(dataContract);
+    const stateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+    });
     identity.balance = Buffer.byteLength(stateTransition.serialize({ skipSignature: true }));
 
     const result = await validateStateTransitionFee(stateTransition);

@@ -1,6 +1,6 @@
 const validateDataContractSTStructureFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractSTStructureFactory');
 
-const DataContractStateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const DataContractCreateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 
 const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 
@@ -11,6 +11,8 @@ const ValidationResult = require('../../../../../lib/validation/ValidationResult
 const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 
 const InvalidIdentityPublicKeyTypeError = require('../../../../../lib/errors/InvalidIdentityPublicKeyTypeError');
+const InvalidDataContractIdError = require('../../../../../lib/errors/InvalidDataContractIdError');
+const InvalidDataContractEntropyError = require('../../../../../lib/errors/InvalidDataContractEntropyError');
 
 describe('validateDataContractSTStructureFactory', () => {
   let validateDataContract;
@@ -29,7 +31,10 @@ describe('validateDataContractSTStructureFactory', () => {
 
     rawDataContract = dataContract.toJSON();
 
-    stateTransition = new DataContractStateTransition(dataContract);
+    stateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
+    });
 
     rawStateTransition = stateTransition.toJSON();
 
@@ -128,6 +133,46 @@ describe('validateDataContractSTStructureFactory', () => {
     expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(
       dataContract.getId(),
     );
+  });
+
+  it('should return invalid result on invalid Data Contract id', async () => {
+    const dataContractResult = new ValidationResult();
+
+    validateDataContract.returns(dataContractResult);
+
+    const validateSignatureResult = new ValidationResult();
+    validateStateTransitionSignatureMock.resolves(validateSignatureResult);
+
+    rawStateTransition.dataContract.$id = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
+
+    const result = await validateDataContractSTStructure(rawStateTransition);
+
+    expectValidationError(result);
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(InvalidDataContractIdError);
+    expect(error.getRawDataContract()).to.equal(rawStateTransition.dataContract);
+  });
+
+  it('should return invalid result on invalid entropy', async () => {
+    const dataContractResult = new ValidationResult();
+
+    validateDataContract.returns(dataContractResult);
+
+    rawStateTransition.entropy = '86b273ff86b273ff86b273ff86b273ff86';
+
+    const validateSignatureResult = new ValidationResult();
+    validateStateTransitionSignatureMock.resolves(validateSignatureResult);
+
+    const result = await validateDataContractSTStructure(rawStateTransition);
+
+    expectValidationError(result);
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(InvalidDataContractEntropyError);
+    expect(error.getRawDataContract()).to.deep.equal(rawStateTransition.dataContract);
   });
 
   it('should return valid result', async () => {
