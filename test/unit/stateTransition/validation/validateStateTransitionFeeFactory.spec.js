@@ -6,9 +6,10 @@ const getIdentityFixture = require('../../../../lib/test/fixtures/getIdentityFix
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
+const getDocumentTransitionsFixture = require('../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
 const DataContractCreateTransition = require('../../../../lib/dataContract/stateTransition/DataContractCreateTransition');
-const DocumentsStateTransition = require('../../../../lib/document/stateTransition/DocumentsStateTransition');
+const DocumentsBatchTransition = require('../../../../lib/document/stateTransition/DocumentsBatchTransition');
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 
@@ -81,14 +82,22 @@ describe('validateStateTransitionFeeFactory', () => {
     expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(dataContract.getOwnerId());
   });
 
-  it('should return valid result for DocumentsStateTransition', async () => {
-    const stateTransition = new DocumentsStateTransition(documents);
+  it('should return valid result for DocumentsBatchTransition', async () => {
+    const documentTransitions = getDocumentTransitionsFixture({
+      create: documents,
+    });
+
+    const stateTransition = new DocumentsBatchTransition({
+      ownerId: getDocumentsFixture.ownerId,
+      contractId: dataContract.getId(),
+      transitions: documentTransitions.map((t) => t.toJSON()),
+    });
     identity.balance = Buffer.byteLength(stateTransition.serialize({ skipSignature: true }));
 
     const result = await validateStateTransitionFee(stateTransition);
 
     expect(result.isValid()).to.be.true();
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(documents[0].getOwnerId());
+    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(getDocumentsFixture.ownerId);
   });
 
   it('should return valid result for IdentityCreateStateTransition', async () => {

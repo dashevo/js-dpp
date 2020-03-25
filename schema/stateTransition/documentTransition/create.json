@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://schema.dash.org/dpp-0-4-0/base/document-create-transition",
+  "type": "object",
+  "properties": {
+    "$entropy": {
+      "type": "string",
+      "minLength": 34,
+      "maxLength": 34
+    }
+  },
+  "required": [
+    "$entropy"
+  ],
+  "additionalProperties": false
+}
