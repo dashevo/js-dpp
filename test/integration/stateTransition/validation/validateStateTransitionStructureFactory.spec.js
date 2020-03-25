@@ -10,16 +10,16 @@ const DataContractStateTransition = require('../../../../lib/dataContract/stateT
 
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
-const dataContractSTSchema = require('../../../../schema/dataContract/stateTransition/dataContract');
-const documentsBatchSTSchema = require('../../../../schema/document/stateTransition/documentsBatch');
-const identitySTSchema = require('../../../../schema/identity/stateTransition/identityCreate');
+const dataContractCreateTransitionSchema = require('../../../../schema/dataContract/stateTransition/dataContractCreate');
+const documentsBatchTransitionSchema = require('../../../../schema/document/stateTransition/documentsBatch');
+const identityCreateTransitionSchema = require('../../../../schema/identity/stateTransition/identityCreate');
 
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentTransitionsFixture = require('../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
-const dataContractExtensionSchema = require('../../../../schema/dataContract/stateTransition/dataContract');
+const dataContractExtensionSchema = require('../../../../schema/dataContract/stateTransition/dataContractCreate');
 
 const StateTransitionMaxSizeExceededError = require('../../../../lib/errors/StateTransitionMaxSizeExceededError');
 
@@ -260,7 +260,7 @@ describe('validateStateTransitionStructureFactory', () => {
       const typeExtensions = {
         [stateTransitionTypes.DATA_CONTRACT]: {
           validationFunction: extensionFunctionMock,
-          schema: dataContractSTSchema,
+          schema: dataContractCreateTransitionSchema,
         },
       };
 
@@ -310,7 +310,7 @@ describe('validateStateTransitionStructureFactory', () => {
       const typeExtensions = {
         [stateTransitionTypes.DOCUMENTS]: {
           validationFunction: extensionFunctionMock,
-          schema: documentsBatchSTSchema,
+          schema: documentsBatchTransitionSchema,
         },
       };
 
@@ -596,7 +596,7 @@ describe('validateStateTransitionStructureFactory', () => {
       const typeExtensions = {
         [stateTransitionTypes.IDENTITY_CREATE]: {
           validationFunction: extensionFunctionMock,
-          schema: identitySTSchema,
+          schema: identityCreateTransitionSchema,
         },
       };
 
