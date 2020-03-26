@@ -1,5 +1,5 @@
 {
-  "$id": "https://schema.dash.org/dpp-0-4-0/state-transition/documents",
+  "$schema": "http://json-schema.org/draft-07/schema",
   "properties": {
     "contractId": {
       "type": "string",
