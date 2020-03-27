@@ -16,7 +16,6 @@ const { expectValidationError } = require('../../../../lib/test/expect/expectErr
 const IdentityBalanceIsNotEnoughError = require('../../../../lib/errors/BalanceIsNotEnoughError');
 const InvalidStateTransitionTypeError = require('../../../../lib/errors/InvalidStateTransitionTypeError');
 
-const ValidationResult = require('../../../../lib/validation/ValidationResult');
 const { RATIO } = require('../../../../lib/identity/creditsConverter');
 
 describe('validateStateTransitionFeeFactory', () => {
@@ -27,7 +26,7 @@ describe('validateStateTransitionFeeFactory', () => {
   let dataContract;
   let documents;
   let identityCreateST;
-  let validateLockTransactionMock;
+  let getLockedTransactionOutputMock;
   let output;
 
   beforeEach(function beforeEach() {
@@ -39,16 +38,13 @@ describe('validateStateTransitionFeeFactory', () => {
       satoshis: Math.ceil(stSize / RATIO),
     };
 
-    const validateLockTransactionResult = new ValidationResult();
-    validateLockTransactionResult.setData(output);
-
-    validateLockTransactionMock = this.sinonSandbox.stub().resolves(validateLockTransactionResult);
+    getLockedTransactionOutputMock = this.sinonSandbox.stub().resolves(output);
     identity = getIdentityFixture();
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
     dataProviderMock.fetchIdentity.resolves(identity);
     validateStateTransitionFee = validateStateTransitionFeeFactory(
       dataProviderMock,
-      validateLockTransactionMock,
+      getLockedTransactionOutputMock,
     );
     dataContract = getDataContractFixture();
     documents = getDocumentsFixture();
@@ -100,7 +96,9 @@ describe('validateStateTransitionFeeFactory', () => {
     const result = await validateStateTransitionFee(identityCreateST);
 
     expect(result.isValid()).to.be.true();
-    expect(validateLockTransactionMock).to.be.calledOnceWithExactly(identityCreateST);
+    expect(getLockedTransactionOutputMock).to.be.calledOnceWithExactly(
+      identityCreateST.getLockedOutPoint(),
+    );
   });
 
   it('should throw InvalidStateTransitionTypeError on invalid State Transition', async function it() {

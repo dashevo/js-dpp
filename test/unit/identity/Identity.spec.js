@@ -133,4 +133,11 @@ describe('Identity', () => {
       expect(identity.getBalance()).to.equal(42);
     });
   });
+
+  describe('#setBalance', () => {
+    it('should set identity balance', () => {
+      identity.setBalance(42);
+      expect(identity.balance).to.equal(42);
+    });
+  });
 });
