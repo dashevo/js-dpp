@@ -1,4 +1,4 @@
-const validateDataContractSTDataFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractSTDataFactory');
+const validateDataContractCreateTransitionDataFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractCreateTransitionDataFactory');
 const DataContractCreateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 
 
@@ -11,8 +11,8 @@ const ValidationResult = require('../../../../../lib/validation/ValidationResult
 
 const DataContractAlreadyPresentError = require('../../../../../lib/errors/DataContractAlreadyPresentError');
 
-describe('validateDataContractSTDataFactory', () => {
-  let validateDataContractSTData;
+describe('validateDataContractCreateTransitionDataFactory', () => {
+  let validateDataContractCreateTransitionData;
   let dataContract;
   let stateTransition;
   let dataProviderMock;
@@ -26,7 +26,7 @@ describe('validateDataContractSTDataFactory', () => {
       dataContract: dataContract.toJSON(),
     });
 
-    validateDataContractSTData = validateDataContractSTDataFactory(
+    validateDataContractCreateTransitionData = validateDataContractCreateTransitionDataFactory(
       dataProviderMock,
     );
   });
@@ -34,7 +34,7 @@ describe('validateDataContractSTDataFactory', () => {
   it('should return invalid result if Data Contract with specified contractId is already exist', async () => {
     dataProviderMock.fetchDataContract.resolves(dataContract);
 
-    const result = await validateDataContractSTData(stateTransition);
+    const result = await validateDataContractCreateTransitionData(stateTransition);
 
     expectValidationError(result, DataContractAlreadyPresentError);
 
@@ -46,7 +46,7 @@ describe('validateDataContractSTDataFactory', () => {
   });
 
   it('should return valid result', async () => {
-    const result = await validateDataContractSTData(stateTransition);
+    const result = await validateDataContractCreateTransitionData(stateTransition);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
