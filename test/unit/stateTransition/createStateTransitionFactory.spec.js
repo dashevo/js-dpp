@@ -16,11 +16,12 @@ describe('createStateTransitionFactory', () => {
     createStateTransition = createStateTransitionFactory();
   });
 
-  it('should return DataContractStateTransition if type is DATA_CONTRACT', () => {
+  it('should return DataContractCreateTransition if type is DATA_CONTRACT_CREATE', () => {
     const dataContract = getDataContractFixture();
 
     const stateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
     });
 
     const result = createStateTransition(stateTransition.toJSON());

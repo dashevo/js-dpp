@@ -55,13 +55,15 @@ describe('validateStateTransitionFeeFactory', () => {
   });
 
   it('should return invalid result if balance is not enough', async () => {
-    const stateTransition = new DataContractCreateTransition({
+    const dataContractCreateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
     });
 
-    identity.balance = Buffer.byteLength(stateTransition.serialize({ skipSignature: true })) - 1;
+    const serializedData = dataContractCreateTransition.serialize({ skipSignature: true });
+    identity.balance = Buffer.byteLength(serializedData) - 1;
 
-    const result = await validateStateTransitionFee(stateTransition);
+    const result = await validateStateTransitionFee(dataContractCreateTransition);
 
     expectValidationError(result, IdentityBalanceIsNotEnoughError);
 
@@ -70,13 +72,16 @@ describe('validateStateTransitionFeeFactory', () => {
     expect(error.getBalance()).to.equal(identity.balance);
   });
 
-  it('should return valid result for DataContractStateTransition', async () => {
-    const stateTransition = new DataContractCreateTransition({
+  it('should return valid result for DataContractCreateTransition', async () => {
+    const dataContractCreateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
     });
-    identity.balance = Buffer.byteLength(stateTransition.serialize({ skipSignature: true }));
 
-    const result = await validateStateTransitionFee(stateTransition);
+    const serializedData = dataContractCreateTransition.serialize({ skipSignature: true });
+    identity.balance = Buffer.byteLength(serializedData);
+
+    const result = await validateStateTransitionFee(dataContractCreateTransition);
 
     expect(result.isValid()).to.be.true();
     expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(dataContract.getOwnerId());

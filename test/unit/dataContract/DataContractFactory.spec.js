@@ -164,7 +164,7 @@ describe('DataContractFactory', () => {
   });
 
   describe('createStateTransition', () => {
-    it('should return new DataContractStateTransition with passed DataContract', () => {
+    it('should return new DataContractCreateTransition with passed DataContract', () => {
       const result = factory.createStateTransition(dataContract);
 
       expect(result).to.be.an.instanceOf(DataContractCreateTransition);

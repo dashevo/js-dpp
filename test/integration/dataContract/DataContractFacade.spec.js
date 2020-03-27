@@ -53,7 +53,7 @@ describe('DataContractFacade', () => {
   });
 
   describe('createStateTransition', () => {
-    it('should create DataContractStateTransition from DataContract', () => {
+    it('should create DataContractCreateTransition from DataContract', () => {
       const stateTransition = new DataContractCreateTransition({
         dataContract: dataContract.toJSON(),
         entropy: dataContract.getEntropy(),

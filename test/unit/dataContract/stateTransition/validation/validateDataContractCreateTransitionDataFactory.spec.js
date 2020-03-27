@@ -20,10 +20,10 @@ describe('validateDataContractCreateTransitionDataFactory', () => {
   beforeEach(function beforeEach() {
     dataProviderMock = createDataProviderMock(this.sinonSandbox);
 
-
     dataContract = getDataContractFixture();
     stateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
     });
 
     validateDataContractCreateTransitionData = validateDataContractCreateTransitionDataFactory(

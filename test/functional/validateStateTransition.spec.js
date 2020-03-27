@@ -121,6 +121,7 @@ describe.skip('validateStateTransition', function main() {
 
     const stateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
     });
 
     await withinBlock(async (blockHeight, blockHash) => {
@@ -143,6 +144,7 @@ describe.skip('validateStateTransition', function main() {
   it('should validate contract state transition when it submitted twice', async () => {
     const stateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
     });
 
     await withinBlock(async (blockHeight, blockHash) => {
@@ -176,6 +178,7 @@ describe.skip('validateStateTransition', function main() {
 
     const stateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
     });
 
     await withinBlock(async (blockHeight, blockHash) => {
@@ -224,6 +227,7 @@ describe.skip('validateStateTransition', function main() {
   it('should successfully submit valid contract and documents', async () => {
     const stateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
     });
 
     await withinBlock(async (blockHeight, blockHash) => {

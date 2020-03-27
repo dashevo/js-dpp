@@ -1,4 +1,4 @@
-const validateDataContractSTStructureFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractSTStructureFactory');
+const validateDataContractCreateTransitionStructureFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractCreateTransitionStructureFactory');
 
 const DataContractCreateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 
@@ -14,9 +14,9 @@ const InvalidIdentityPublicKeyTypeError = require('../../../../../lib/errors/Inv
 const InvalidDataContractIdError = require('../../../../../lib/errors/InvalidDataContractIdError');
 const InvalidDataContractEntropyError = require('../../../../../lib/errors/InvalidDataContractEntropyError');
 
-describe('validateDataContractSTStructureFactory', () => {
+describe('validateDataContractCreateTransitionStructureFactory', () => {
   let validateDataContract;
-  let validateDataContractSTStructure;
+  let validateDataContractCreateTransitionStructure;
   let rawDataContract;
   let rawStateTransition;
   let validateStateTransitionSignatureMock;
@@ -44,7 +44,8 @@ describe('validateDataContractSTStructureFactory', () => {
       new ValidationResult(),
     );
 
-    validateDataContractSTStructure = validateDataContractSTStructureFactory(
+    // eslint-disable-next-line max-len
+    validateDataContractCreateTransitionStructure = validateDataContractCreateTransitionStructureFactory(
       validateDataContract,
       validateStateTransitionSignatureMock,
       validateIdentityExistenceMock,
@@ -64,7 +65,7 @@ describe('validateDataContractSTStructureFactory', () => {
       new ValidationResult([blockchainUserError]),
     );
 
-    const result = await validateDataContractSTStructure(rawStateTransition);
+    const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
 
     expectValidationError(result);
 
@@ -88,7 +89,7 @@ describe('validateDataContractSTStructureFactory', () => {
     const validateSignatureResult = new ValidationResult();
     validateStateTransitionSignatureMock.resolves(validateSignatureResult);
 
-    const result = await validateDataContractSTStructure(rawStateTransition);
+    const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
 
     expectValidationError(result);
 
@@ -117,7 +118,7 @@ describe('validateDataContractSTStructureFactory', () => {
 
     validateStateTransitionSignatureMock.resolves(validateSignatureResult);
 
-    const result = await validateDataContractSTStructure(rawStateTransition);
+    const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
 
     expectValidationError(result);
 
@@ -145,7 +146,7 @@ describe('validateDataContractSTStructureFactory', () => {
 
     rawStateTransition.dataContract.$id = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
 
-    const result = await validateDataContractSTStructure(rawStateTransition);
+    const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
 
     expectValidationError(result);
 
@@ -165,7 +166,7 @@ describe('validateDataContractSTStructureFactory', () => {
     const validateSignatureResult = new ValidationResult();
     validateStateTransitionSignatureMock.resolves(validateSignatureResult);
 
-    const result = await validateDataContractSTStructure(rawStateTransition);
+    const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
 
     expectValidationError(result);
 
@@ -183,7 +184,7 @@ describe('validateDataContractSTStructureFactory', () => {
     const validateSignatureResult = new ValidationResult();
     validateStateTransitionSignatureMock.resolves(validateSignatureResult);
 
-    const result = await validateDataContractSTStructure(rawStateTransition);
+    const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();

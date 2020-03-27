@@ -38,7 +38,7 @@ describe('DataContractCreateTransition', () => {
     it('should return State Transition type', () => {
       const result = stateTransition.getType();
 
-      expect(result).to.equal(stateTransitionTypes.DATA_CONTRACT);
+      expect(result).to.equal(stateTransitionTypes.DATA_CONTRACT_CREATE);
     });
   });
 
@@ -54,7 +54,7 @@ describe('DataContractCreateTransition', () => {
     it('should return State Transition as plain JS object', () => {
       expect(stateTransition.toJSON()).to.deep.equal({
         protocolVersion: 0,
-        type: stateTransitionTypes.DATA_CONTRACT,
+        type: stateTransitionTypes.DATA_CONTRACT_CREATE,
         dataContract: dataContract.toJSON(),
         signaturePublicKeyId: null,
         signature: null,

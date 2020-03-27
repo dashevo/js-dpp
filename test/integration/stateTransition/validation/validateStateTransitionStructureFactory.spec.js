@@ -47,7 +47,7 @@ describe('validateStateTransitionStructureFactory', () => {
     extensionFunctionMock = this.sinonSandbox.stub();
 
     const typeExtensions = {
-      [stateTransitionTypes.DATA_CONTRACT]: {
+      [stateTransitionTypes.DATA_CONTRACT_CREATE]: {
         validationFunction: extensionFunctionMock,
         schema: dataContractExtensionSchema,
       },
@@ -60,13 +60,13 @@ describe('validateStateTransitionStructureFactory', () => {
 
     privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
 
-    const dataContractStateTransition = new DataContractCreateTransition({
+    const dataContractCreateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
       entropy: dataContract.getEntropy(),
     });
-    dataContractStateTransition.signByPrivateKey(privateKey);
+    dataContractCreateTransition.signByPrivateKey(privateKey);
 
-    rawStateTransition = dataContractStateTransition.toJSON();
+    rawStateTransition = dataContractCreateTransition.toJSON();
 
     createStateTransition = createStateTransitionFactory();
 
@@ -261,7 +261,7 @@ describe('validateStateTransitionStructureFactory', () => {
   describe('Data Contract Schema', () => {
     beforeEach(() => {
       const typeExtensions = {
-        [stateTransitionTypes.DATA_CONTRACT]: {
+        [stateTransitionTypes.DATA_CONTRACT_CREATE]: {
           validationFunction: extensionFunctionMock,
           schema: dataContractCreateTransitionSchema,
         },

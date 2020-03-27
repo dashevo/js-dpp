@@ -25,6 +25,7 @@ describe('StateTransitionFactory', () => {
 
     stateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
     });
     rawStateTransition = stateTransition.toJSON();
 

@@ -21,7 +21,7 @@ describe('validateStateTransitionDataFactory', () => {
     validateDataContractSTDataMock = this.sinonSandbox.stub();
 
     validateStateTransitionData = validateStateTransitionDataFactory({
-      [stateTransitionTypes.DATA_CONTRACT]: validateDataContractSTDataMock,
+      [stateTransitionTypes.DATA_CONTRACT_CREATE]: validateDataContractSTDataMock,
     });
   });
 
@@ -58,6 +58,7 @@ describe('validateStateTransitionDataFactory', () => {
     const dataContract = getDataContractFixture();
     const stateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
     });
 
     const result = await validateStateTransitionData(stateTransition);
@@ -79,6 +80,7 @@ describe('validateStateTransitionDataFactory', () => {
     const dataContract = getDataContractFixture();
     const stateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
     });
 
     const result = await validateStateTransitionData(stateTransition);
