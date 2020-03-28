@@ -58,7 +58,9 @@ describe('applyDocumentsBatchTransition', () => {
     existingDocument.id = createDocumentTransition.getId();
 
     try {
-      applyDocumentsBatchTransition(stateTransition, [existingDocument]);
+      applyDocumentsBatchTransition(stateTransition, {
+        [existingDocument.getId()]: existingDocument,
+      });
       expect.fail('Error was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(DocumentAlreadyExistsError);
@@ -69,7 +71,7 @@ describe('applyDocumentsBatchTransition', () => {
   it('should throw an error if document was not provided for a replacement', () => {
     const replaceDocumentTransition = documentTransitions[1];
     try {
-      applyDocumentsBatchTransition(stateTransition, []);
+      applyDocumentsBatchTransition(stateTransition, {});
       expect.fail('Error was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(DocumentNotProvidedError);
@@ -80,7 +82,9 @@ describe('applyDocumentsBatchTransition', () => {
   it('should throw an error if document was not provided for a deletion', () => {
     const deleteDocumentTransition = documentTransitions[2];
     try {
-      applyDocumentsBatchTransition(stateTransition, [documents[0]]);
+      applyDocumentsBatchTransition(stateTransition, {
+        [documents[0].getId()]: documents[0],
+      });
       expect.fail('Error was not thrown');
     } catch (e) {
       expect(e).to.be.an.instanceOf(DocumentNotProvidedError);
@@ -96,7 +100,14 @@ describe('applyDocumentsBatchTransition', () => {
       $rev: 2,
     });
 
-    const result = applyDocumentsBatchTransition(stateTransition, documents);
+    const result = applyDocumentsBatchTransition(
+      stateTransition, documents.reduce((acc, document) => (
+        {
+          ...acc,
+          [document.getId()]: document,
+        }
+      ), {}),
+    );
 
     expect(result).to.deep.equal({
       [documents[1].getId()]: null, // delete document
