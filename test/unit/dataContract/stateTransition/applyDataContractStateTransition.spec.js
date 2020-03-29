@@ -2,7 +2,9 @@ const DataContractCreateTransition = require(
   '../../../../lib/dataContract/stateTransition/DataContractCreateTransition',
 );
 
-const WrongStateTransitionTypeError = require('../../../../lib/dataContract/errors/WrongStateTransitionTypeError');
+const WrongStateTransitionTypeError = require(
+  '../../../../lib/stateTransition/errors/WrongStateTransitionTypeError',
+);
 const DataContractAlreadyExistsError = require('../../../../lib/dataContract/errors/DataContractAlreadyExistsError');
 
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');

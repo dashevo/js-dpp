@@ -5,7 +5,9 @@ const applyIdentityStateTransition = require('../../../../lib/identity/stateTran
 const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
 const IdentityAlreadyExistsError = require('../../../../lib/errors/IdentityAlreadyExistsError');
-const WrongStateTransitionTypeError = require('../../../../lib/identity/errors/WrongStateTransitionTypeError');
+const WrongStateTransitionTypeError = require(
+  '../../../../lib/stateTransition/errors/WrongStateTransitionTypeError',
+);
 
 describe('applyIdentityStateTransition', () => {
   describe('Identity Create', () => {
