@@ -96,7 +96,7 @@ describe('applyDocumentsBatchTransition', () => {
 
     const resultingReplacedDocument = new Document({
       ...replaceDocument.toJSON(),
-      $rev: 2,
+      $revision: 2,
     });
 
     const result = applyDocumentsBatchTransition(

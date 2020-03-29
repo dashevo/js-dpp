@@ -11,7 +11,7 @@
     "$type": {
       "type": "string"
     },
-    "$rev": {
+    "$revision": {
       "type": "number",
       "multipleOf": 1.0,
       "minimum": 1
@@ -32,7 +32,7 @@
   "required": [
     "$id",
     "$type",
-    "$rev",
+    "$revision",
     "$contractId",
     "$ownerId"
   ],
