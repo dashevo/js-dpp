@@ -5,7 +5,9 @@ const applyIdentityStateTransitionFactory = require('../../../../lib/identity/st
 const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
 const IdentityAlreadyExistsError = require('../../../../lib/errors/IdentityAlreadyExistsError');
-const WrongStateTransitionTypeError = require('../../../../lib/identity/errors/WrongStateTransitionTypeError');
+const WrongStateTransitionTypeError = require(
+  '../../../../lib/stateTransition/errors/WrongStateTransitionTypeError',
+);
 
 const { convertSatoshiToCredits } = require('../../../../lib/identity/creditsConverter');
 const calculateStateTransitionFee = require('../../../../lib/stateTransition/calculateStateTransitionFee');
