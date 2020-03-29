@@ -10,7 +10,7 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const getDocumentTransitionsFixture = require('../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
-const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
+const createStateRepositoryMock = require('../../../lib/test/mocks/createStateRepositoryMock');
 
 const IdentityPublicKey = require('../../../lib/identity/IdentityPublicKey');
 
@@ -20,7 +20,7 @@ describe('StateTransitionFacade', () => {
   let dpp;
   let dataContractCreateTransition;
   let documentsBatchTransition;
-  let dataProviderMock;
+  let stateRepositoryMock;
   let dataContract;
   let identityPublicKey;
 
@@ -63,16 +63,16 @@ describe('StateTransitionFacade', () => {
       getBalance,
     };
 
-    dataProviderMock = createDataProviderMock(this.sinonSandbox);
-    dataProviderMock.fetchIdentity.resolves(identity);
+    stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
+    stateRepositoryMock.fetchIdentity.resolves(identity);
 
     dpp = new DashPlatformProtocol({
-      dataProvider: dataProviderMock,
+      stateRepository: stateRepositoryMock,
     });
   });
 
   describe('createFromObject', () => {
-    it('should throw MissingOption if dataProvider is not set', async () => {
+    it('should throw MissingOption if stateRepository is not set', async () => {
       dpp = new DashPlatformProtocol();
 
       try {
@@ -83,11 +83,11 @@ describe('StateTransitionFacade', () => {
         expect.fail('MissingOption should be thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(MissingOptionError);
-        expect(e.getOptionName()).to.equal('dataProvider');
+        expect(e.getOptionName()).to.equal('stateRepository');
       }
     });
 
-    it('should skip checking for data provider if skipValidation is set', async () => {
+    it('should skip checking for state repository if skipValidation is set', async () => {
       dpp = new DashPlatformProtocol();
 
       await dpp.stateTransition.createFromObject(
@@ -108,7 +108,7 @@ describe('StateTransitionFacade', () => {
   });
 
   describe('createFromSerialized', () => {
-    it('should throw MissingOption if dataProvider is not set', async () => {
+    it('should throw MissingOption if stateRepository is not set', async () => {
       dpp = new DashPlatformProtocol();
 
       try {
@@ -119,11 +119,11 @@ describe('StateTransitionFacade', () => {
         expect.fail('MissingOption should be thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(MissingOptionError);
-        expect(e.getOptionName()).to.equal('dataProvider');
+        expect(e.getOptionName()).to.equal('stateRepository');
       }
     });
 
-    it('should skip checking for data provider if skipValidation is set', async () => {
+    it('should skip checking for state repository if skipValidation is set', async () => {
       dpp = new DashPlatformProtocol();
 
       await dpp.stateTransition.createFromSerialized(
@@ -184,10 +184,10 @@ describe('StateTransitionFacade', () => {
     });
 
     it('should validate Documents ST structure and data', async function it() {
-      dataProviderMock.fetchDocuments.resolves([]);
+      stateRepositoryMock.fetchDocuments.resolves([]);
 
-      dataProviderMock.fetchDataContract.resolves(dataContract);
-      dataProviderMock.fetchIdentity.resolves({
+      stateRepositoryMock.fetchDataContract.resolves(dataContract);
+      stateRepositoryMock.fetchIdentity.resolves({
         getPublicKeyById: this.sinonSandbox.stub().returns(identityPublicKey),
       });
 
@@ -214,7 +214,7 @@ describe('StateTransitionFacade', () => {
   });
 
   describe('validateStructure', () => {
-    it('should throw MissingOption if dataProvider is not set', async () => {
+    it('should throw MissingOption if stateRepository is not set', async () => {
       dpp = new DashPlatformProtocol();
 
       try {
@@ -225,7 +225,7 @@ describe('StateTransitionFacade', () => {
         expect.fail('MissingOption should be thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(MissingOptionError);
-        expect(e.getOptionName()).to.equal('dataProvider');
+        expect(e.getOptionName()).to.equal('stateRepository');
       }
     });
 
@@ -240,7 +240,7 @@ describe('StateTransitionFacade', () => {
   });
 
   describe('validateData', () => {
-    it('should throw MissingOption if dataProvider is not set', async () => {
+    it('should throw MissingOption if stateRepository is not set', async () => {
       dpp = new DashPlatformProtocol();
 
       try {
@@ -251,7 +251,7 @@ describe('StateTransitionFacade', () => {
         expect.fail('MissingOption should be thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(MissingOptionError);
-        expect(e.getOptionName()).to.equal('dataProvider');
+        expect(e.getOptionName()).to.equal('stateRepository');
       }
     });
 
@@ -275,7 +275,7 @@ describe('StateTransitionFacade', () => {
   });
 
   describe('validateFee', () => {
-    it('should throw MissingOption if dataProvider is not set', async () => {
+    it('should throw MissingOption if stateRepository is not set', async () => {
       dpp = new DashPlatformProtocol();
 
       try {
@@ -286,7 +286,7 @@ describe('StateTransitionFacade', () => {
         expect.fail('MissingOption should be thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(MissingOptionError);
-        expect(e.getOptionName()).to.equal('dataProvider');
+        expect(e.getOptionName()).to.equal('stateRepository');
       }
     });
 

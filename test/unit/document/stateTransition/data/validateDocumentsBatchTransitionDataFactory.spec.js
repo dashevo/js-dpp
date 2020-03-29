@@ -9,7 +9,7 @@ const DataTriggerExecutionResult = require('../../../../../lib/dataTrigger/DataT
 
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
 const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
-const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
+const createStateRepositoryMock = require('../../../../../lib/test/mocks/createStateRepositoryMock');
 
 const ValidationResult = require('../../../../../lib/validation/ValidationResult');
 
@@ -33,7 +33,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
   let dataContract;
   let ownerId;
   let validateDocumentsUniquenessByIndicesMock;
-  let dataProviderMock;
+  let stateRepositoryMock;
   let executeDataTriggersMock;
   let documentTransitions;
 
@@ -52,8 +52,8 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       transitions: documentTransitions.map((t) => t.toJSON()),
     });
 
-    dataProviderMock = createDataProviderMock(this.sinonSandbox);
-    dataProviderMock.fetchDataContract.resolves(dataContract);
+    stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
+    stateRepositoryMock.fetchDataContract.resolves(dataContract);
 
     fetchDocumentsMock = this.sinonSandbox.stub().resolves([]);
 
@@ -63,7 +63,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     validateDocumentsUniquenessByIndicesMock.resolves(new ValidationResult());
 
     validateData = validateDocumentsBatchTransitionDataFactory(
-      dataProviderMock,
+      stateRepositoryMock,
       fetchDocumentsMock,
       validateDocumentsUniquenessByIndicesMock,
       executeDataTriggersMock,
@@ -71,7 +71,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
   });
 
   it('should return invalid result if data contract was not found', async () => {
-    dataProviderMock.fetchDataContract.resolves(undefined);
+    stateRepositoryMock.fetchDataContract.resolves(undefined);
 
     const result = await validateData(stateTransition);
 
@@ -81,7 +81,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
     expect(error.getDataContractId()).to.equal(dataContract.getId());
 
-    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+    expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
     );
 
@@ -102,7 +102,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
     expect(error.getFetchedDocument()).to.deep.equal(documents[0]);
 
-    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+    expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
     );
 
@@ -134,7 +134,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
     expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
 
-    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+    expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
     );
 
@@ -166,7 +166,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
     expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
 
-    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+    expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
     );
 
@@ -204,7 +204,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
     expect(error.getFetchedDocument()).to.deep.equal(documents[0]);
 
-    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+    expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
     );
 
@@ -245,7 +245,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
     expect(error.getFetchedDocument()).to.deep.equal(fetchedDocument);
 
-    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+    expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
     );
 
@@ -278,7 +278,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
         stateTransition.transitions[0].toJSON(),
       );
 
-      expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+      expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
         dataContract.getId(),
       );
 
@@ -306,7 +306,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
     expect(error).to.equal(duplicateDocumentsError);
 
-    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+    expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
     );
 
@@ -324,7 +324,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
   it('should return invalid result if data triggers execution failed', async () => {
     const dataTriggersExecutionContext = new DataTriggerExecutionContext(
-      dataProviderMock,
+      stateRepositoryMock,
       ownerId,
       dataContract,
     );
@@ -348,7 +348,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
     expect(error).to.equal(dataTriggerExecutionError);
 
-    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+    expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
     );
 
@@ -392,7 +392,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     });
 
     const dataTriggersExecutionContext = new DataTriggerExecutionContext(
-      dataProviderMock,
+      stateRepositoryMock,
       ownerId,
       dataContract,
     );
@@ -406,7 +406,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
 
-    expect(dataProviderMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+    expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
     );
 

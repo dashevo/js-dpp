@@ -5,7 +5,7 @@ const DocumentsBatchTransition = require('../../../lib/document/stateTransition/
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
+const createStateRepositoryMock = require('../../../lib/test/mocks/createStateRepositoryMock');
 
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const getDocumentTransitionsFixture = require('../../../lib/test/fixtures/getDocumentTransitionsFixture');
@@ -19,18 +19,18 @@ describe('DocumentFacade', () => {
   let documents;
   let dataContract;
   let ownerId;
-  let dataProviderMock;
+  let stateRepositoryMock;
 
   beforeEach(function beforeEach() {
     dataContract = getDocumentsFixture.dataContract;
     ownerId = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
 
-    dataProviderMock = createDataProviderMock(this.sinonSandbox);
+    stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
 
-    dataProviderMock.fetchDataContract.resolves(dataContract);
+    stateRepositoryMock.fetchDataContract.resolves(dataContract);
 
     dpp = new DashPlatformProtocol({
-      dataProvider: dataProviderMock,
+      stateRepository: stateRepositoryMock,
     });
 
     documents = getDocumentsFixture();
@@ -54,7 +54,7 @@ describe('DocumentFacade', () => {
   });
 
   describe('createFromObject', () => {
-    it('should throw MissingOption if dataProvider is not set', async () => {
+    it('should throw MissingOption if stateRepository is not set', async () => {
       dpp = new DashPlatformProtocol();
 
       try {
@@ -63,11 +63,11 @@ describe('DocumentFacade', () => {
         expect.fail('MissingOption should be thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(MissingOptionError);
-        expect(e.getOptionName()).to.equal('dataProvider');
+        expect(e.getOptionName()).to.equal('stateRepository');
       }
     });
 
-    it('should skip checking for data provider if skipValidation is set', async () => {
+    it('should skip checking for state repository if skipValidation is set', async () => {
       dpp = new DashPlatformProtocol();
 
       await dpp.document.createFromObject(document.toJSON(), { skipValidation: true });
@@ -83,7 +83,7 @@ describe('DocumentFacade', () => {
   });
 
   describe('createFromSerialized', () => {
-    it('should throw MissingOption if dataProvider is not set', async () => {
+    it('should throw MissingOption if stateRepository is not set', async () => {
       dpp = new DashPlatformProtocol();
 
       try {
@@ -92,11 +92,11 @@ describe('DocumentFacade', () => {
         expect.fail('MissingOption should be thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(MissingOptionError);
-        expect(e.getOptionName()).to.equal('dataProvider');
+        expect(e.getOptionName()).to.equal('stateRepository');
       }
     });
 
-    it('should skip checking for data provider if skipValidation is set', async () => {
+    it('should skip checking for state repository if skipValidation is set', async () => {
       dpp = new DashPlatformProtocol();
 
       await dpp.document.createFromSerialized(document.serialize(), { skipValidation: true });
@@ -125,7 +125,7 @@ describe('DocumentFacade', () => {
   });
 
   describe('validate', () => {
-    it('should throw MissingOption if dataProvider is not set', async () => {
+    it('should throw MissingOption if stateRepository is not set', async () => {
       dpp = new DashPlatformProtocol();
 
       try {
@@ -134,7 +134,7 @@ describe('DocumentFacade', () => {
         expect.fail('MissingOption should be thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(MissingOptionError);
-        expect(e.getOptionName()).to.equal('dataProvider');
+        expect(e.getOptionName()).to.equal('stateRepository');
       }
     });
 
@@ -146,7 +146,7 @@ describe('DocumentFacade', () => {
     });
 
     it('should return invalid result if Data Contract is invalid', async () => {
-      dataProviderMock.fetchDataContract.returns(null);
+      stateRepositoryMock.fetchDataContract.returns(null);
 
       const result = await dpp.document.validate(dataContract, document);
 

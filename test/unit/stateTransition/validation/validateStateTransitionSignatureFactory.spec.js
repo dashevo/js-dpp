@@ -1,5 +1,5 @@
 const validateStateTransitionSignatureFactory = require('../../../../lib/stateTransition/validation/validateStateTransitionSignatureFactory');
-const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
+const createStateRepositoryMock = require('../../../../lib/test/mocks/createStateRepositoryMock');
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
 const IdentityPublicKey = require('../../../../lib/identity/IdentityPublicKey');
 const InvalidIdentityPublicKeyTypeError = require('../../../../lib/errors/InvalidIdentityPublicKeyTypeError');
@@ -8,7 +8,7 @@ const MissingPublicKeyError = require('../../../../lib/errors/MissingPublicKeyEr
 
 describe('validateStateTransitionSignatureFactory', () => {
   let validateStateTransitionSignature;
-  let dataProviderMock;
+  let stateRepositoryMock;
   let stateTransition;
   let ownerId;
   let identity;
@@ -33,11 +33,11 @@ describe('validateStateTransitionSignatureFactory', () => {
       getPublicKeyById,
     };
 
-    dataProviderMock = createDataProviderMock(this.sinonSandbox);
-    dataProviderMock.fetchIdentity.resolves(identity);
+    stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
+    stateRepositoryMock.fetchIdentity.resolves(identity);
 
     validateStateTransitionSignature = validateStateTransitionSignatureFactory(
-      dataProviderMock,
+      stateRepositoryMock,
     );
   });
 
@@ -53,7 +53,7 @@ describe('validateStateTransitionSignatureFactory', () => {
     expect(result.getErrors()).to.be.an('array');
     expect(result.getErrors()).to.be.empty();
 
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(ownerId);
+    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(ownerId);
     expect(identity.getPublicKeyById).to.be.calledOnceWithExactly(publicKeyId);
     expect(identityPublicKey.getType).to.be.calledOnce();
     expect(stateTransition.getSignaturePublicKeyId).to.be.calledOnce();
@@ -72,7 +72,7 @@ describe('validateStateTransitionSignatureFactory', () => {
 
     expect(result).to.be.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.false();
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(ownerId);
+    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(ownerId);
     expect(identity.getPublicKeyById).to.be.calledOnceWithExactly(publicKeyId);
     expect(stateTransition.getSignaturePublicKeyId).to.be.calledTwice();
     expect(stateTransition.verifySignature).to.not.be.called();
@@ -97,7 +97,7 @@ describe('validateStateTransitionSignatureFactory', () => {
 
     expect(result).to.be.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.false();
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(ownerId);
+    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(ownerId);
     expect(identity.getPublicKeyById).to.be.calledOnceWithExactly(publicKeyId);
     expect(identityPublicKey.getType).to.be.calledTwice();
     expect(stateTransition.getSignaturePublicKeyId).to.be.calledOnce();
@@ -131,7 +131,7 @@ describe('validateStateTransitionSignatureFactory', () => {
     expect(error).to.be.instanceOf(InvalidStateTransitionSignatureError);
     expect(error.getRawStateTransition()).to.equal(stateTransition);
 
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(ownerId);
+    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(ownerId);
     expect(identity.getPublicKeyById).to.be.calledOnceWithExactly(publicKeyId);
     expect(identityPublicKey.getType).to.be.calledOnce();
     expect(stateTransition.getSignaturePublicKeyId).to.be.calledOnce();

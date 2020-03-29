@@ -4,7 +4,7 @@ const IdentityPublicKey = require('../../../../lib/identity/IdentityPublicKey');
 
 const validateIdentityExistenceFactory = require('../../../../lib/stateTransition/validation/validateIdentityExistenceFactory');
 
-const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
+const createStateRepositoryMock = require('../../../../lib/test/mocks/createStateRepositoryMock');
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 
@@ -14,15 +14,15 @@ const IdentityNotFoundError = require('../../../../lib/errors/IdentityNotFoundEr
 
 describe('validateIdentityExistence', () => {
   let validateIdentityExistence;
-  let dataProviderMock;
+  let stateRepositoryMock;
   let ownerId;
   let rawIdentityUser;
 
   beforeEach(function beforeEach() {
-    dataProviderMock = createDataProviderMock(this.sinonSandbox);
+    stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
 
     validateIdentityExistence = validateIdentityExistenceFactory(
-      dataProviderMock,
+      stateRepositoryMock,
     );
 
     ownerId = generateRandomId();
@@ -51,7 +51,7 @@ describe('validateIdentityExistence', () => {
   });
 
   it('should return valid result', async () => {
-    dataProviderMock.fetchIdentity.resolves(rawIdentityUser);
+    stateRepositoryMock.fetchIdentity.resolves(rawIdentityUser);
 
     const result = await validateIdentityExistence(ownerId);
 

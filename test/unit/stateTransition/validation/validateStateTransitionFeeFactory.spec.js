@@ -1,6 +1,6 @@
 const validateStateTransitionFeeFactory = require('../../../../lib/stateTransition/validation/validateStateTransitionFeeFactory');
 
-const createDataProviderMock = require('../../../../lib/test/mocks/createDataProviderMock');
+const createStateRepositoryMock = require('../../../../lib/test/mocks/createStateRepositoryMock');
 
 const getIdentityFixture = require('../../../../lib/test/fixtures/getIdentityFixture');
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
@@ -19,7 +19,7 @@ const InvalidStateTransitionTypeError = require('../../../../lib/errors/InvalidS
 const { RATIO } = require('../../../../lib/identity/creditsConverter');
 
 describe('validateStateTransitionFeeFactory', () => {
-  let dataProviderMock;
+  let stateRepositoryMock;
   let validateStateTransitionFee;
 
   let identity;
@@ -40,10 +40,10 @@ describe('validateStateTransitionFeeFactory', () => {
 
     getLockedTransactionOutputMock = this.sinonSandbox.stub().resolves(output);
     identity = getIdentityFixture();
-    dataProviderMock = createDataProviderMock(this.sinonSandbox);
-    dataProviderMock.fetchIdentity.resolves(identity);
+    stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
+    stateRepositoryMock.fetchIdentity.resolves(identity);
     validateStateTransitionFee = validateStateTransitionFeeFactory(
-      dataProviderMock,
+      stateRepositoryMock,
       getLockedTransactionOutputMock,
     );
     dataContract = getDataContractFixture();
@@ -80,7 +80,7 @@ describe('validateStateTransitionFeeFactory', () => {
     const result = await validateStateTransitionFee(dataContractCreateTransition);
 
     expect(result.isValid()).to.be.true();
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(dataContract.getOwnerId());
+    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(dataContract.getOwnerId());
   });
 
   it('should return valid result for DocumentsBatchTransition', async () => {
@@ -98,7 +98,7 @@ describe('validateStateTransitionFeeFactory', () => {
     const result = await validateStateTransitionFee(stateTransition);
 
     expect(result.isValid()).to.be.true();
-    expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(getDocumentsFixture.ownerId);
+    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(getDocumentsFixture.ownerId);
   });
 
   it('should return valid result for IdentityCreateStateTransition', async () => {
