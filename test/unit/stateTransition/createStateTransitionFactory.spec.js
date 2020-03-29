@@ -1,6 +1,6 @@
 const createStateTransitionFactory = require('../../../lib/stateTransition/createStateTransitionFactory');
 
-const DataContractStateTransition = require('../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 const DocumentsBatchTransition = require('../../../lib/document/stateTransition/DocumentsBatchTransition');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
@@ -16,14 +16,17 @@ describe('createStateTransitionFactory', () => {
     createStateTransition = createStateTransitionFactory();
   });
 
-  it('should return DataContractStateTransition if type is DATA_CONTRACT', () => {
+  it('should return DataContractCreateTransition if type is DATA_CONTRACT_CREATE', () => {
     const dataContract = getDataContractFixture();
 
-    const stateTransition = new DataContractStateTransition(dataContract);
+    const stateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
+    });
 
     const result = createStateTransition(stateTransition.toJSON());
 
-    expect(result).to.be.instanceOf(DataContractStateTransition);
+    expect(result).to.be.instanceOf(DataContractCreateTransition);
     expect(result.getDataContract().toJSON()).to.deep.equal(dataContract.toJSON());
   });
 

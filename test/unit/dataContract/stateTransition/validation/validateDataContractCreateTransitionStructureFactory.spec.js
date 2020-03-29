@@ -1,6 +1,6 @@
-const validateDataContractSTStructureFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractSTStructureFactory');
+const validateDataContractCreateTransitionStructureFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractCreateTransitionStructureFactory');
 
-const DataContractStateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const DataContractCreateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 
 const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 
@@ -11,10 +11,12 @@ const ValidationResult = require('../../../../../lib/validation/ValidationResult
 const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 
 const InvalidIdentityPublicKeyTypeError = require('../../../../../lib/errors/InvalidIdentityPublicKeyTypeError');
+const InvalidDataContractIdError = require('../../../../../lib/errors/InvalidDataContractIdError');
+const InvalidDataContractEntropyError = require('../../../../../lib/errors/InvalidDataContractEntropyError');
 
-describe('validateDataContractSTStructureFactory', () => {
+describe('validateDataContractCreateTransitionStructureFactory', () => {
   let validateDataContract;
-  let validateDataContractSTStructure;
+  let validateDataContractCreateTransitionStructure;
   let rawDataContract;
   let rawStateTransition;
   let validateStateTransitionSignatureMock;
@@ -29,7 +31,10 @@ describe('validateDataContractSTStructureFactory', () => {
 
     rawDataContract = dataContract.toJSON();
 
-    stateTransition = new DataContractStateTransition(dataContract);
+    stateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
+    });
 
     rawStateTransition = stateTransition.toJSON();
 
@@ -39,7 +44,8 @@ describe('validateDataContractSTStructureFactory', () => {
       new ValidationResult(),
     );
 
-    validateDataContractSTStructure = validateDataContractSTStructureFactory(
+    // eslint-disable-next-line max-len
+    validateDataContractCreateTransitionStructure = validateDataContractCreateTransitionStructureFactory(
       validateDataContract,
       validateStateTransitionSignatureMock,
       validateIdentityExistenceMock,
@@ -59,7 +65,7 @@ describe('validateDataContractSTStructureFactory', () => {
       new ValidationResult([blockchainUserError]),
     );
 
-    const result = await validateDataContractSTStructure(rawStateTransition);
+    const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
 
     expectValidationError(result);
 
@@ -83,7 +89,7 @@ describe('validateDataContractSTStructureFactory', () => {
     const validateSignatureResult = new ValidationResult();
     validateStateTransitionSignatureMock.resolves(validateSignatureResult);
 
-    const result = await validateDataContractSTStructure(rawStateTransition);
+    const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
 
     expectValidationError(result);
 
@@ -112,7 +118,7 @@ describe('validateDataContractSTStructureFactory', () => {
 
     validateStateTransitionSignatureMock.resolves(validateSignatureResult);
 
-    const result = await validateDataContractSTStructure(rawStateTransition);
+    const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
 
     expectValidationError(result);
 
@@ -130,6 +136,46 @@ describe('validateDataContractSTStructureFactory', () => {
     );
   });
 
+  it('should return invalid result on invalid Data Contract id', async () => {
+    const dataContractResult = new ValidationResult();
+
+    validateDataContract.returns(dataContractResult);
+
+    const validateSignatureResult = new ValidationResult();
+    validateStateTransitionSignatureMock.resolves(validateSignatureResult);
+
+    rawStateTransition.dataContract.$id = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
+
+    const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
+
+    expectValidationError(result);
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(InvalidDataContractIdError);
+    expect(error.getRawDataContract()).to.equal(rawStateTransition.dataContract);
+  });
+
+  it('should return invalid result on invalid entropy', async () => {
+    const dataContractResult = new ValidationResult();
+
+    validateDataContract.returns(dataContractResult);
+
+    rawStateTransition.entropy = '86b273ff86b273ff86b273ff86b273ff86';
+
+    const validateSignatureResult = new ValidationResult();
+    validateStateTransitionSignatureMock.resolves(validateSignatureResult);
+
+    const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
+
+    expectValidationError(result);
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(InvalidDataContractEntropyError);
+    expect(error.getRawDataContract()).to.deep.equal(rawStateTransition.dataContract);
+  });
+
   it('should return valid result', async () => {
     const dataContractResult = new ValidationResult();
 
@@ -138,7 +184,7 @@ describe('validateDataContractSTStructureFactory', () => {
     const validateSignatureResult = new ValidationResult();
     validateStateTransitionSignatureMock.resolves(validateSignatureResult);
 
-    const result = await validateDataContractSTStructure(rawStateTransition);
+    const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();

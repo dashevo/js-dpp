@@ -2,7 +2,7 @@ const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
 const DataContract = require('../../../lib/dataContract/DataContract');
 
-const DataContractStateTransition = require('../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
@@ -53,12 +53,15 @@ describe('DataContractFacade', () => {
   });
 
   describe('createStateTransition', () => {
-    it('should create DataContractStateTransition from DataContract', () => {
-      const stateTransition = new DataContractStateTransition(dataContract);
+    it('should create DataContractCreateTransition from DataContract', () => {
+      const stateTransition = new DataContractCreateTransition({
+        dataContract: dataContract.toJSON(),
+        entropy: dataContract.getEntropy(),
+      });
 
       const result = dpp.dataContract.createStateTransition(dataContract);
 
-      expect(result).to.be.an.instanceOf(DataContractStateTransition);
+      expect(result).to.be.an.instanceOf(DataContractCreateTransition);
 
       expect(result.toJSON()).to.deep.equal(stateTransition.toJSON());
     });

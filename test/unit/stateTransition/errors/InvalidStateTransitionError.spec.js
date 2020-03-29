@@ -1,5 +1,5 @@
 const InvalidStateTransitionError = require('../../../../lib/stateTransition/errors/InvalidStateTransitionError');
-const DataContractStateTransition = require('../../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const DataContractCreateTransition = require('../../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 
 describe('InvalidStateTransitionError', () => {
@@ -10,8 +10,11 @@ describe('InvalidStateTransitionError', () => {
     error = new Error('Some error');
 
     const dataContract = getDataContractFixture();
-    const dataContractStateTransition = new DataContractStateTransition(dataContract);
-    rawStateTransition = dataContractStateTransition.toJSON();
+    const dataContractCreateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
+    });
+    rawStateTransition = dataContractCreateTransition.toJSON();
   });
 
   it('should return errors', () => {

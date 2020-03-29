@@ -47,7 +47,6 @@ describe('DataContract', () => {
     dataContract = new DataContract({
       $id: contractId,
       $ownerId: ownerId,
-      $entropy: entropy,
       $schema: DataContract.DEFAULTS.SCHEMA,
       documents,
       definitions: {},
@@ -61,7 +60,6 @@ describe('DataContract', () => {
       dataContract = new DataContract({
         $id: id,
         $ownerId: ownerId,
-        $entropy: entropy,
         $schema: DataContract.DEFAULTS.SCHEMA,
         documents,
         definitions: {},
@@ -69,7 +67,6 @@ describe('DataContract', () => {
 
       expect(dataContract.id).to.equal(id);
       expect(dataContract.ownerId).to.equal(ownerId);
-      expect(dataContract.entropy).to.equal(entropy);
       expect(dataContract.schema).to.equal(DataContract.DEFAULTS.SCHEMA);
       expect(dataContract.documents).to.equal(documents);
       expect(dataContract.definitions).to.deep.equal({});
@@ -241,7 +238,6 @@ describe('DataContract', () => {
         $id: contractId,
         $schema: DataContract.DEFAULTS.SCHEMA,
         $ownerId: ownerId,
-        $entropy: entropy,
         documents,
       });
     });
@@ -259,7 +255,6 @@ describe('DataContract', () => {
         $id: contractId,
         $schema: DataContract.DEFAULTS.SCHEMA,
         $ownerId: ownerId,
-        $entropy: entropy,
         documents,
         definitions,
       });
@@ -300,6 +295,25 @@ describe('DataContract', () => {
       expect(DataContract.prototype.serialize).to.have.been.calledOnce();
 
       expect(hashMock).to.have.been.calledOnceWith(serializedDataContract);
+    });
+  });
+
+  describe('#setEntropy', () => {
+    it('should set entropy', () => {
+      const result = dataContract.setEntropy(entropy);
+
+      expect(result).to.equal(dataContract);
+      expect(dataContract.entropy).to.equal(entropy);
+    });
+  });
+
+  describe('#getEntropy', () => {
+    it('should return entropy', () => {
+      dataContract.entropy = entropy;
+
+      const result = dataContract.getEntropy();
+
+      expect(result).to.equal(dataContract.entropy);
     });
   });
 });

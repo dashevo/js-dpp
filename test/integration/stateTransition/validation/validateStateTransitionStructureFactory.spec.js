@@ -6,7 +6,7 @@ const createStateTransitionFactory = require('../../../../lib/stateTransition/cr
 const JsonSchemaValidator = require('../../../../lib/validation/JsonSchemaValidator');
 
 const DocumentsBatchTransition = require('../../../../lib/document/stateTransition/DocumentsBatchTransition');
-const DataContractStateTransition = require('../../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const DataContractCreateTransition = require('../../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
@@ -47,7 +47,7 @@ describe('validateStateTransitionStructureFactory', () => {
     extensionFunctionMock = this.sinonSandbox.stub();
 
     const typeExtensions = {
-      [stateTransitionTypes.DATA_CONTRACT]: {
+      [stateTransitionTypes.DATA_CONTRACT_CREATE]: {
         validationFunction: extensionFunctionMock,
         schema: dataContractExtensionSchema,
       },
@@ -60,10 +60,13 @@ describe('validateStateTransitionStructureFactory', () => {
 
     privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
 
-    const dataContractStateTransition = new DataContractStateTransition(dataContract);
-    dataContractStateTransition.signByPrivateKey(privateKey);
+    const dataContractCreateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
+    });
+    dataContractCreateTransition.signByPrivateKey(privateKey);
 
-    rawStateTransition = dataContractStateTransition.toJSON();
+    rawStateTransition = dataContractCreateTransition.toJSON();
 
     createStateTransition = createStateTransitionFactory();
 
@@ -258,7 +261,7 @@ describe('validateStateTransitionStructureFactory', () => {
   describe('Data Contract Schema', () => {
     beforeEach(() => {
       const typeExtensions = {
-        [stateTransitionTypes.DATA_CONTRACT]: {
+        [stateTransitionTypes.DATA_CONTRACT_CREATE]: {
           validationFunction: extensionFunctionMock,
           schema: dataContractCreateTransitionSchema,
         },
@@ -270,7 +273,10 @@ describe('validateStateTransitionStructureFactory', () => {
         createStateTransition,
       );
 
-      const stateTransition = new DataContractStateTransition(dataContract);
+      const stateTransition = new DataContractCreateTransition({
+        dataContract: dataContract.toJSON(),
+        entropy: dataContract.getEntropy(),
+      });
       stateTransition.signByPrivateKey(privateKey);
 
       rawStateTransition = stateTransition.toJSON();
@@ -291,6 +297,61 @@ describe('validateStateTransitionStructureFactory', () => {
         expect(error.params.missingProperty).to.equal('dataContract');
 
         expect(extensionFunctionMock).to.not.be.called();
+      });
+    });
+
+    describe('entropy', () => {
+      it('should be present', async () => {
+        delete rawStateTransition.entropy;
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('entropy');
+      });
+
+      it('should be a string', async () => {
+        rawStateTransition.entropy = 1;
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.entropy');
+        expect(error.keyword).to.equal('type');
+      });
+
+      it('should be no less than 34 chars', async () => {
+        rawStateTransition.entropy = '86b273ff';
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.entropy');
+        expect(error.keyword).to.equal('minLength');
+      });
+
+      it('should be no longer than 34 chars', async () => {
+        rawStateTransition.entropy = '86b273ff86b273ff86b273ff86b273ff86b273ff86b273ff';
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.entropy');
+        expect(error.keyword).to.equal('maxLength');
       });
     });
 

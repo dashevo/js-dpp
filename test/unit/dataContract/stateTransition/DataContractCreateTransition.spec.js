@@ -3,7 +3,7 @@ const rewiremock = require('rewiremock/node');
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
-describe('DataContractStateTransition', () => {
+describe('DataContractCreateTransition', () => {
   let stateTransition;
   let dataContract;
   let hashMock;
@@ -14,13 +14,16 @@ describe('DataContractStateTransition', () => {
     const serializerMock = { encode: this.sinonSandbox.stub() };
     encodeMock = serializerMock.encode;
 
-    const DataContractStateTransition = rewiremock.proxy('../../../../lib/dataContract/stateTransition/DataContractStateTransition', {
+    const DataContractCreateTransition = rewiremock.proxy('../../../../lib/dataContract/stateTransition/DataContractCreateTransition', {
       '../../../../lib/util/hash': hashMock,
       '../../../../lib/util/serializer': serializerMock,
     });
 
     dataContract = getDataContractFixture();
-    stateTransition = new DataContractStateTransition(dataContract);
+    stateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
+    });
   });
 
   describe('#getProtocolVersion', () => {
@@ -35,7 +38,7 @@ describe('DataContractStateTransition', () => {
     it('should return State Transition type', () => {
       const result = stateTransition.getType();
 
-      expect(result).to.equal(stateTransitionTypes.DATA_CONTRACT);
+      expect(result).to.equal(stateTransitionTypes.DATA_CONTRACT_CREATE);
     });
   });
 
@@ -43,7 +46,7 @@ describe('DataContractStateTransition', () => {
     it('should return Data Contract', () => {
       const result = stateTransition.getDataContract();
 
-      expect(result).to.equal(dataContract);
+      expect(result.toJSON()).to.deep.equal(dataContract.toJSON());
     });
   });
 
@@ -51,10 +54,11 @@ describe('DataContractStateTransition', () => {
     it('should return State Transition as plain JS object', () => {
       expect(stateTransition.toJSON()).to.deep.equal({
         protocolVersion: 0,
-        type: stateTransitionTypes.DATA_CONTRACT,
+        type: stateTransitionTypes.DATA_CONTRACT_CREATE,
         dataContract: dataContract.toJSON(),
         signaturePublicKeyId: null,
         signature: null,
+        entropy: dataContract.getEntropy(),
       });
     });
   });

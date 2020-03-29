@@ -8,7 +8,7 @@ const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsF
 const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 const getDocumentTransitionsFixture = require('../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
-const DataContractStateTransition = require('../../../../lib/dataContract/stateTransition/DataContractStateTransition');
+const DataContractCreateTransition = require('../../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 const DocumentsBatchTransition = require('../../../../lib/document/stateTransition/DocumentsBatchTransition');
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
@@ -55,11 +55,15 @@ describe('validateStateTransitionFeeFactory', () => {
   });
 
   it('should return invalid result if balance is not enough', async () => {
-    const stateTransition = new DataContractStateTransition(dataContract);
+    const dataContractCreateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
+    });
 
-    identity.balance = Buffer.byteLength(stateTransition.serialize({ skipSignature: true })) - 1;
+    const serializedData = dataContractCreateTransition.serialize({ skipSignature: true });
+    identity.balance = Buffer.byteLength(serializedData) - 1;
 
-    const result = await validateStateTransitionFee(stateTransition);
+    const result = await validateStateTransitionFee(dataContractCreateTransition);
 
     expectValidationError(result, IdentityBalanceIsNotEnoughError);
 
@@ -68,11 +72,16 @@ describe('validateStateTransitionFeeFactory', () => {
     expect(error.getBalance()).to.equal(identity.balance);
   });
 
-  it('should return valid result for DataContractStateTransition', async () => {
-    const stateTransition = new DataContractStateTransition(dataContract);
-    identity.balance = Buffer.byteLength(stateTransition.serialize({ skipSignature: true }));
+  it('should return valid result for DataContractCreateTransition', async () => {
+    const dataContractCreateTransition = new DataContractCreateTransition({
+      dataContract: dataContract.toJSON(),
+      entropy: dataContract.getEntropy(),
+    });
 
-    const result = await validateStateTransitionFee(stateTransition);
+    const serializedData = dataContractCreateTransition.serialize({ skipSignature: true });
+    identity.balance = Buffer.byteLength(serializedData);
+
+    const result = await validateStateTransitionFee(dataContractCreateTransition);
 
     expect(result.isValid()).to.be.true();
     expect(dataProviderMock.fetchIdentity).to.be.calledOnceWithExactly(dataContract.getOwnerId());
