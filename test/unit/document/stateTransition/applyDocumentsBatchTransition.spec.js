@@ -15,7 +15,6 @@ const getDocumentTransitionsFixture = require(
 const DocumentNotProvidedError = require('../../../../lib/document/errors/DocumentNotProvidedError');
 const DocumentAlreadyExistsError = require('../../../../lib/document/errors/DocumentAlreadyExistsError');
 
-
 describe('applyDocumentsBatchTransition', () => {
   let documents;
   let documentTransitions;
