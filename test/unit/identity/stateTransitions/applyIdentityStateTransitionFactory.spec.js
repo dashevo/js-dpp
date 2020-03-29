@@ -10,7 +10,6 @@ const WrongStateTransitionTypeError = require(
 );
 
 const { convertSatoshiToCredits } = require('../../../../lib/identity/creditsConverter');
-const calculateStateTransitionFee = require('../../../../lib/stateTransition/calculateStateTransitionFee');
 
 describe('applyIdentityStateTransitionFactory', () => {
   let createStateTransition;
@@ -48,8 +47,7 @@ describe('applyIdentityStateTransitionFactory', () => {
     it('should set proper data from state transition', async () => {
       const identity = await applyIdentityStateTransition(createStateTransition, null);
 
-      const balance = convertSatoshiToCredits(output.satoshi)
-        - calculateStateTransitionFee(createStateTransition);
+      const balance = convertSatoshiToCredits(output.satoshi);
 
       expect(getLockedTransactionOutputMock).to.be.calledOnceWithExactly(
         createStateTransition.getLockedOutPoint(),
