@@ -2,14 +2,14 @@
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
   "properties": {
-    "$rev": {
+    "$revision": {
       "type": "number",
       "multipleOf": 1.0,
       "minimum": 1
     }
   },
   "required": [
-    "$rev"
+    "$revision"
   ],
   "additionalProperties": false
 }

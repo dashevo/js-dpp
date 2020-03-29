@@ -162,9 +162,9 @@ describe('validateDocumentFactory', () => {
       });
     });
 
-    describe('$rev', () => {
+    describe('$revision', () => {
       it('should be present', () => {
-        delete rawDocument.$rev;
+        delete rawDocument.$revision;
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -174,11 +174,11 @@ describe('validateDocumentFactory', () => {
 
         expect(error.dataPath).to.equal('');
         expect(error.keyword).to.equal('required');
-        expect(error.params.missingProperty).to.equal('$rev');
+        expect(error.params.missingProperty).to.equal('$revision');
       });
 
       it('should be a number', () => {
-        rawDocument.$rev = 'string';
+        rawDocument.$revision = 'string';
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -186,12 +186,12 @@ describe('validateDocumentFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.$rev');
+        expect(error.dataPath).to.equal('.$revision');
         expect(error.keyword).to.equal('type');
       });
 
       it('should be an integer', () => {
-        rawDocument.$rev = 1.1;
+        rawDocument.$revision = 1.1;
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -199,12 +199,12 @@ describe('validateDocumentFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.$rev');
+        expect(error.dataPath).to.equal('.$revision');
         expect(error.keyword).to.equal('multipleOf');
       });
 
       it('should be greater or equal to one', () => {
-        rawDocument.$rev = -1;
+        rawDocument.$revision = -1;
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -212,7 +212,7 @@ describe('validateDocumentFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.$rev');
+        expect(error.dataPath).to.equal('.$revision');
         expect(error.keyword).to.equal('minimum');
       });
     });

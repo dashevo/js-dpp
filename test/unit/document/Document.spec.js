@@ -32,7 +32,7 @@ describe('Document', () => {
       $type: 'test',
       $contractId: generateRandomId(),
       $ownerId: generateRandomId(),
-      $rev: DocumentCreateTransition.INITIAL_REVISION,
+      $revision: DocumentCreateTransition.INITIAL_REVISION,
     };
 
     document = new Document(rawDocument);
@@ -122,19 +122,19 @@ describe('Document', () => {
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
-    it('should create Document with $rev and data if present', () => {
+    it('should create Document with $revision and data if present', () => {
       const data = {
         test: 1,
       };
 
       rawDocument = {
-        $rev: 'test',
+        $revision: 'test',
         ...data,
       };
 
       document = new Document(rawDocument);
 
-      expect(document.revision).to.equal(rawDocument.$rev);
+      expect(document.revision).to.equal(rawDocument.$revision);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
   });
@@ -172,7 +172,7 @@ describe('Document', () => {
   });
 
   describe('#setRevision', () => {
-    it('should set $rev', () => {
+    it('should set $revision', () => {
       const revision = 5;
 
       const result = document.setRevision(revision);
@@ -184,7 +184,7 @@ describe('Document', () => {
   });
 
   describe('#getRevision', () => {
-    it('should return $rev', () => {
+    it('should return $revision', () => {
       const revision = 5;
 
       document.revision = revision;

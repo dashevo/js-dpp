@@ -232,11 +232,11 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     });
 
     describe('schema', () => {
-      describe('$rev', () => {
+      describe('$revision', () => {
         it('should be present', async () => {
           const [documentTransition] = rawStateTransition.transitions;
 
-          delete documentTransition.$rev;
+          delete documentTransition.$revision;
 
           const result = await validateStructure(rawStateTransition);
 
@@ -244,14 +244,14 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
 
           const [error] = result.getErrors();
 
-          expect(error.params.missingProperty).to.equal('$rev');
+          expect(error.params.missingProperty).to.equal('$revision');
           expect(error.keyword).to.equal('required');
         });
 
         it('should be a number', async () => {
           const [documentTransition] = rawStateTransition.transitions;
 
-          documentTransition.$rev = '1';
+          documentTransition.$revision = '1';
 
           const result = await validateStructure(rawStateTransition);
 
@@ -259,14 +259,14 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
 
           const [error] = result.getErrors();
 
-          expect(error.dataPath).to.equal('.$rev');
+          expect(error.dataPath).to.equal('.$revision');
           expect(error.keyword).to.equal('type');
         });
 
         it('should be multiple of 1.0', async () => {
           const [documentTransition] = rawStateTransition.transitions;
 
-          documentTransition.$rev = 1.2;
+          documentTransition.$revision = 1.2;
 
           const result = await validateStructure(rawStateTransition);
 
@@ -274,14 +274,14 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
 
           const [error] = result.getErrors();
 
-          expect(error.dataPath).to.equal('.$rev');
+          expect(error.dataPath).to.equal('.$revision');
           expect(error.keyword).to.equal('multipleOf');
         });
 
         it('should have a minimum value of 1', async () => {
           const [documentTransition] = rawStateTransition.transitions;
 
-          documentTransition.$rev = 0;
+          documentTransition.$revision = 0;
 
           const result = await validateStructure(rawStateTransition);
 
@@ -289,7 +289,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
 
           const [error] = result.getErrors();
 
-          expect(error.dataPath).to.equal('.$rev');
+          expect(error.dataPath).to.equal('.$revision');
           expect(error.keyword).to.equal('minimum');
         });
       });
