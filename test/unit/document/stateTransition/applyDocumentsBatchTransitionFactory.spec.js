@@ -83,6 +83,8 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     ]);
 
     expect(stateRepositoryMock.removeDocument).to.have.been.calledOnceWithExactly(
+      stateTransition.getDataContractId(),
+      documentTransitions[2].getType(),
       documentTransitions[2].getId(),
     );
   });
