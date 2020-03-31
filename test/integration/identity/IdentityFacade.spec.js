@@ -70,13 +70,4 @@ describe('IdentityFacade', () => {
       expect(result.isValid()).to.be.true();
     });
   });
-
-  describe('#applyStateTransition', () => {
-    it('should apply identity create transition', async () => {
-      const createStateTransition = getIdentityCreateSTFixture();
-      const result = await dpp.identity.applyStateTransition(createStateTransition, null);
-
-      expect(result).to.be.an.instanceOf(Identity);
-    });
-  });
 });

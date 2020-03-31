@@ -80,7 +80,9 @@ describe('validateStateTransitionFeeFactory', () => {
     const result = await validateStateTransitionFee(dataContractCreateTransition);
 
     expect(result.isValid()).to.be.true();
-    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(dataContract.getOwnerId());
+    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(
+      dataContract.getOwnerId(),
+    );
   });
 
   it('should return valid result for DocumentsBatchTransition', async () => {
@@ -98,7 +100,9 @@ describe('validateStateTransitionFeeFactory', () => {
     const result = await validateStateTransitionFee(stateTransition);
 
     expect(result.isValid()).to.be.true();
-    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(getDocumentsFixture.ownerId);
+    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(
+      getDocumentsFixture.ownerId,
+    );
   });
 
   it('should return valid result for IdentityCreateStateTransition', async () => {
