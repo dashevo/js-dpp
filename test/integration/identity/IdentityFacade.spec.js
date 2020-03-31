@@ -5,7 +5,6 @@ const Identity = require('../../../lib/identity/Identity');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const getIdentityFixture = require('../../../lib/test/fixtures/getIdentityFixture');
-const getIdentityCreateSTFixture = require('../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
 const createStateRepositoryMock = require('../../../lib/test/mocks/createStateRepositoryMock');
 
