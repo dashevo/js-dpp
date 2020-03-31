@@ -21,6 +21,7 @@ describe('applyDataContractCreateTransitionFactory', () => {
 
     stateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
+      entropy: 'yMhYUcMgUgYZGwBnTEyWFmRhqQSjZv7twq',
     });
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
