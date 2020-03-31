@@ -2,7 +2,7 @@ const validateDataContractCreateTransitionDataFactory = require('../../../../../
 const DataContractCreateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 
 
-const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
+const createStateRepositoryMock = require('../../../../../lib/test/mocks/createStateRepositoryMock');
 const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 
 const { expectValidationError } = require('../../../../../lib/test/expect/expectError');
@@ -15,10 +15,10 @@ describe('validateDataContractCreateTransitionDataFactory', () => {
   let validateDataContractCreateTransitionData;
   let dataContract;
   let stateTransition;
-  let dataProviderMock;
+  let stateRepositoryMock;
 
   beforeEach(function beforeEach() {
-    dataProviderMock = createDataProviderMock(this.sinonSandbox);
+    stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
 
     dataContract = getDataContractFixture();
     stateTransition = new DataContractCreateTransition({
@@ -27,12 +27,12 @@ describe('validateDataContractCreateTransitionDataFactory', () => {
     });
 
     validateDataContractCreateTransitionData = validateDataContractCreateTransitionDataFactory(
-      dataProviderMock,
+      stateRepositoryMock,
     );
   });
 
   it('should return invalid result if Data Contract with specified contractId is already exist', async () => {
-    dataProviderMock.fetchDataContract.resolves(dataContract);
+    stateRepositoryMock.fetchDataContract.resolves(dataContract);
 
     const result = await validateDataContractCreateTransitionData(stateTransition);
 
@@ -42,7 +42,7 @@ describe('validateDataContractCreateTransitionDataFactory', () => {
 
     expect(error.getDataContract().toJSON()).to.deep.equal(dataContract.toJSON());
 
-    expect(dataProviderMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
+    expect(stateRepositoryMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
   });
 
   it('should return valid result', async () => {
@@ -51,6 +51,6 @@ describe('validateDataContractCreateTransitionDataFactory', () => {
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
 
-    expect(dataProviderMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
+    expect(stateRepositoryMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
   });
 });

@@ -5,14 +5,14 @@ const getContractFixture = require('../../../../../lib/test/fixtures/getDataCont
 const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
 const { expectValidationError } = require('../../../../../lib/test/expect/expectError');
-const createDataProviderMock = require('../../../../../lib/test/mocks/createDataProviderMock');
+const createStateRepositoryMock = require('../../../../../lib/test/mocks/createStateRepositoryMock');
 
 const ValidationResult = require('../../../../../lib/validation/ValidationResult');
 
 const DuplicateDocumentError = require('../../../../../lib/errors/DuplicateDocumentError');
 
 describe('validateDocumentsUniquenessByIndices', () => {
-  let dataProviderMock;
+  let stateRepositoryMock;
   let validateDocumentsUniquenessByIndices;
   let documents;
   let documentTransitions;
@@ -28,11 +28,11 @@ describe('validateDocumentsUniquenessByIndices', () => {
     });
     dataContract = getContractFixture();
 
-    dataProviderMock = createDataProviderMock(this.sinonSandbox);
-    dataProviderMock.fetchDocuments.resolves([]);
+    stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
+    stateRepositoryMock.fetchDocuments.resolves([]);
 
     validateDocumentsUniquenessByIndices = verifyDocumentsUniquenessByIndicesFactory(
-      dataProviderMock,
+      stateRepositoryMock,
     );
   });
 
@@ -41,7 +41,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
   it('should return valid result if Document has unique indices and there are no duplicates', async () => {
     const [, , , william] = documents;
 
-    dataProviderMock.fetchDocuments
+    stateRepositoryMock.fetchDocuments
       .withArgs(
         dataContract.getId(),
         william.getType(),
@@ -54,7 +54,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
       )
       .resolves([william]);
 
-    dataProviderMock.fetchDocuments
+    stateRepositoryMock.fetchDocuments
       .withArgs(
         dataContract.getId(),
         william.getType(),
@@ -80,7 +80,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
 
     const indicesDefinition = dataContract.getDocumentSchema(william.getType()).indices;
 
-    dataProviderMock.fetchDocuments
+    stateRepositoryMock.fetchDocuments
       .withArgs(
         dataContract.getId(),
         william.getType(),
@@ -93,7 +93,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
       )
       .resolves([leon]);
 
-    dataProviderMock.fetchDocuments
+    stateRepositoryMock.fetchDocuments
       .withArgs(
         dataContract.getId(),
         william.getType(),
@@ -106,7 +106,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
       )
       .resolves([leon]);
 
-    dataProviderMock.fetchDocuments
+    stateRepositoryMock.fetchDocuments
       .withArgs(
         dataContract.getId(),
         leon.getType(),
@@ -119,7 +119,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
       )
       .resolves([william]);
 
-    dataProviderMock.fetchDocuments
+    stateRepositoryMock.fetchDocuments
       .withArgs(
         dataContract.getId(),
         leon.getType(),

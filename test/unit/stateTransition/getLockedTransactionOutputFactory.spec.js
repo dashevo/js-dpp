@@ -3,7 +3,7 @@ const WrongOutPointError = require('@dashevo/dashcore-lib/lib/errors/WrongOutPoi
 
 const getLockedTransactionOutputFactory = require('../../../lib/stateTransition/getLockedTransactionOutputFactory');
 
-const createDataProviderMock = require('../../../lib/test/mocks/createDataProviderMock');
+const createStateRepositoryMock = require('../../../lib/test/mocks/createStateRepositoryMock');
 
 const IdentityLockTransactionNotFoundError = require(
   '../../../lib/errors/IdentityLockTransactionNotFoundError',
@@ -16,7 +16,7 @@ describe('getLockedTransactionOutputFactory', () => {
   let rawTransaction;
   let transactionHash;
   let outputIndex;
-  let dataProviderMock;
+  let stateRepositoryMock;
   let parseTransactionOutPointBufferMock;
   let getLockedTransactionOutput;
   let lockedOutPoint;
@@ -24,8 +24,8 @@ describe('getLockedTransactionOutputFactory', () => {
   beforeEach(function beforeEach() {
     rawTransaction = '030000000137feb5676d0851337ea3c9a992496aab7a0b3eee60aeeb9774000b7f4bababa5000000006b483045022100d91557de37645c641b948c6cd03b4ae3791a63a650db3e2fee1dcf5185d1b10402200e8bd410bf516ca61715867666d31e44495428ce5c1090bf2294a829ebcfa4ef0121025c3cc7fbfc52f710c941497fd01876c189171ea227458f501afcb38a297d65b4ffffffff021027000000000000166a14152073ca2300a86b510fa2f123d3ea7da3af68dcf77cb0090a0000001976a914152073ca2300a86b510fa2f123d3ea7da3af68dc88ac00000000';
 
-    dataProviderMock = createDataProviderMock(this.sinonSandbox);
-    dataProviderMock.fetchTransaction.resolves(rawTransaction);
+    stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
+    stateRepositoryMock.fetchTransaction.resolves(rawTransaction);
 
     lockedOutPoint = 'azW1UgBiB0CmdphN6of4DbT91t0Xv3/c3YUV4CnoV/kAAAAA';
 
@@ -38,7 +38,7 @@ describe('getLockedTransactionOutputFactory', () => {
     });
 
     getLockedTransactionOutput = getLockedTransactionOutputFactory(
-      dataProviderMock,
+      stateRepositoryMock,
       parseTransactionOutPointBufferMock,
     );
   });
@@ -50,7 +50,7 @@ describe('getLockedTransactionOutputFactory', () => {
 
     expect(result).to.deep.equal(transaction.outputs[outputIndex]);
     expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
-    expect(dataProviderMock.fetchTransaction).to.be.calledOnceWithExactly(transactionHash);
+    expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(transactionHash);
   });
 
   it('should throw InvalidIdentityOutPointError if state transition has wrong out point', async () => {
@@ -66,12 +66,12 @@ describe('getLockedTransactionOutputFactory', () => {
       expect(e).to.be.an.instanceof(InvalidIdentityOutPointError);
       expect(e.message).to.equal(`Invalid Identity out point: ${wrongOutPointError.message}`);
       expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
-      expect(dataProviderMock.fetchTransaction).to.be.not.called();
+      expect(stateRepositoryMock.fetchTransaction).to.be.not.called();
     }
   });
 
   it('should throw IdentityLockTransactionNotFoundError if lock transaction is not found', async () => {
-    dataProviderMock.fetchTransaction.resolves(null);
+    stateRepositoryMock.fetchTransaction.resolves(null);
 
     try {
       await getLockedTransactionOutput(lockedOutPoint);
@@ -81,7 +81,7 @@ describe('getLockedTransactionOutputFactory', () => {
       expect(e).to.be.an.instanceof(IdentityLockTransactionNotFoundError);
       expect(e.getTransactionHash()).to.deep.equal(transactionHash);
       expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
-      expect(dataProviderMock.fetchTransaction).to.calledOnceWithExactly(transactionHash);
+      expect(stateRepositoryMock.fetchTransaction).to.calledOnceWithExactly(transactionHash);
     }
   });
 
@@ -101,7 +101,7 @@ describe('getLockedTransactionOutputFactory', () => {
       expect(e).to.be.an.instanceof(InvalidIdentityOutPointError);
       expect(e.message).to.equal(`Invalid Identity out point: Output with index ${outputIndex} not found`);
       expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
-      expect(dataProviderMock.fetchTransaction).to.calledOnceWithExactly(transactionHash);
+      expect(stateRepositoryMock.fetchTransaction).to.calledOnceWithExactly(transactionHash);
     }
   });
 });
