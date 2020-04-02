@@ -125,9 +125,17 @@ describe('IdentityCreateTransition', () => {
   });
 
   describe('#getIdentityId', () => {
-    it('should return set identity id', () => {
+    it('should return identity id', () => {
       expect(stateTransition.getIdentityId()).to.equal(
         '11111111111111111111111111111111',
+      );
+    });
+  });
+
+  describe('#getOwnerId', () => {
+    it('should return owner id', () => {
+      expect(stateTransition.getOwnerId()).to.equal(
+        stateTransition.getIdentityId(),
       );
     });
   });
