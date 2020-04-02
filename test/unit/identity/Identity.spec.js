@@ -140,4 +140,24 @@ describe('Identity', () => {
       expect(identity.balance).to.equal(42);
     });
   });
+
+  describe('#increaseBalance', () => {
+    it('should increase identity balance', () => {
+      const result = identity.increaseBalance(42);
+
+      expect(result).to.equal(42);
+      expect(identity.balance).to.equal(42);
+    });
+  });
+
+  describe('#reduceBalance', () => {
+    it('should reduce identity balance', () => {
+      identity.balance = 42;
+
+      const result = identity.reduceBalance(2);
+
+      expect(result).to.equal(40);
+      expect(identity.balance).to.equal(40);
+    });
+  });
 });
