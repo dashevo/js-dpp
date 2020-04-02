@@ -1,5 +1,5 @@
 const Ajv = require('ajv');
-const $RefParser = require('json-schema-ref-parser');
+const $RefParser = require('@apidevtools/json-schema-ref-parser');
 
 const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator');
 
