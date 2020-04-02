@@ -1,5 +1,7 @@
 const { PrivateKey } = require('@dashevo/dashcore-lib');
 
+const calculateStateTransitionFee = require('../../../lib/stateTransition/calculateStateTransitionFee');
+
 const StateTransitionMock = require('../../../lib/test/mocks/StateTransitionMock');
 const IdentityPublicKey = require('../../../lib/identity/IdentityPublicKey');
 const InvalidSignatureTypeError = require('../../../lib/stateTransition/errors/InvalidSignatureTypeError');
@@ -245,6 +247,16 @@ describe('AbstractStateTransitionIdentitySigned', () => {
       stateTransition.setSignaturePublicKeyId(signaturePublicKeyId);
 
       expect(stateTransition.signaturePublicKeyId).to.equal(signaturePublicKeyId);
+    });
+  });
+
+  describe('#calculateFee', () => {
+    it('should calculate fee', () => {
+      const result = stateTransition.calculateFee();
+
+      const fee = calculateStateTransitionFee(stateTransition);
+
+      expect(result).to.equal(fee);
     });
   });
 });
