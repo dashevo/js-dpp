@@ -1,3 +1,10 @@
+const bs58 = require('bs58');
+const crypto = require('crypto');
+
+const { PublicKey } = require('@dashevo/dashcore-lib');
+
+const hash = require('../../../lib/util/hash');
+
 const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
 const Identity = require('../../../lib/identity/Identity');
@@ -28,16 +35,27 @@ describe('IdentityFacade', () => {
 
   describe('#create', () => {
     it('should create Identity', () => {
-      identity.balance = 0;
+      const lockedOutPoint = crypto.randomBytes(64);
+
+      identity.id = bs58.encode(
+        hash(lockedOutPoint),
+      );
+
+      identity.setBalance(0);
+
+      const publicKeys = identity.getPublicKeys().map((identityPublicKey) => {
+        const publicKeyData = Buffer.from(identityPublicKey.getData(), 'base64');
+
+        return new PublicKey(publicKeyData);
+      });
 
       const result = dpp.identity.create(
-        identity.getId(),
-        identity.getPublicKeys(),
+        lockedOutPoint,
+        publicKeys,
       );
 
       expect(result).to.be.an.instanceOf(Identity);
-
-      expect(result).to.deep.equal(identity);
+      expect(result.toJSON()).to.deep.equal(identity.toJSON());
     });
   });
 
