@@ -1,4 +1,10 @@
 const rewiremock = require('rewiremock/node');
+const bs58 = require('bs58');
+const crypto = require('crypto');
+
+const { PublicKey } = require('@dashevo/dashcore-lib');
+
+const hash = require('../../../lib/util/hash');
 
 const Identity = require('../../../lib/identity/Identity');
 
@@ -30,6 +36,7 @@ describe('IdentityFactory', () => {
           decode: decodeMock,
         },
         '../../../lib/identity/Identity': Identity,
+        '../../../lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition': IdentityCreateTransition,
       },
     );
 
@@ -45,16 +52,28 @@ describe('IdentityFactory', () => {
   });
 
   describe('#create', () => {
-    it('should create Identity with specified id, type and public keys', () => {
-      identity.balance = 0;
+    it('should create Identity from transaction out point and public keys', () => {
+      const lockedOutPoint = crypto.randomBytes(64);
+
+      identity.id = bs58.encode(
+        hash(lockedOutPoint),
+      );
+
+      identity.setBalance(0);
+
+      const publicKeys = identity.getPublicKeys().map((identityPublicKey) => {
+        const publicKeyData = Buffer.from(identityPublicKey.getData(), 'base64');
+
+        return new PublicKey(publicKeyData);
+      });
 
       const result = factory.create(
-        identity.getId(),
-        identity.getPublicKeys(),
+        lockedOutPoint,
+        publicKeys,
       );
 
       expect(result).to.be.an.instanceOf(Identity);
-      expect(result).to.deep.equal(identity);
+      expect(result.toJSON()).to.deep.equal(identity.toJSON());
     });
   });
 
