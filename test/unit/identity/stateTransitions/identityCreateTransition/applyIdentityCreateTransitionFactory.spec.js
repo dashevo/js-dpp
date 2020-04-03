@@ -19,7 +19,7 @@ describe('applyIdentityCreateTransitionFactory', () => {
 
   beforeEach(function beforeEach() {
     output = {
-      satoshi: 10000,
+      satoshis: 10000,
     };
 
     getLockedTransactionOutputMock = this.sinonSandbox.stub().resolves(output);
@@ -36,7 +36,7 @@ describe('applyIdentityCreateTransitionFactory', () => {
   it('should store identity created from state transition', async () => {
     await applyIdentityCreateTransition(stateTransition);
 
-    const balance = convertSatoshiToCredits(output.satoshi);
+    const balance = convertSatoshiToCredits(output.satoshis);
 
     const identity = new Identity({
       id: stateTransition.getIdentityId(),
