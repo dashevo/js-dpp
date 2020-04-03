@@ -7,6 +7,7 @@ const { PublicKey } = require('@dashevo/dashcore-lib');
 const hash = require('../../../lib/util/hash');
 
 const Identity = require('../../../lib/identity/Identity');
+const IdentityCreateTransition = require('../../../lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition');
 
 const getIdentityFixture = require('../../../lib/test/fixtures/getIdentityFixture');
 
@@ -36,6 +37,7 @@ describe('IdentityFactory', () => {
           decode: decodeMock,
         },
         '../../../lib/identity/Identity': Identity,
+        '../../../lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition': IdentityCreateTransition,
       },
     );
 
@@ -148,6 +150,20 @@ describe('IdentityFactory', () => {
         expect(innerError.getPayload()).to.deep.equal(serializedIdentity);
         expect(innerError.getParsingError()).to.deep.equal(parsingError);
       }
+    });
+  });
+
+  describe('#createIdentityCreateTransition', () => {
+    it('should create IdentityCreateTransition from Identity model', () => {
+      const lockedOutPoint = crypto.randomBytes(64);
+
+      identity.setLockedOutPoint(lockedOutPoint);
+
+      const stateTransition = factory.createIdentityCreateTransition(identity);
+
+      expect(stateTransition).to.be.instanceOf(IdentityCreateTransition);
+      expect(stateTransition.getPublicKeys()).to.equal(identity.getPublicKeys());
+      expect(stateTransition.getLockedOutPoint()).to.equal(lockedOutPoint.toString('base64'));
     });
   });
 });

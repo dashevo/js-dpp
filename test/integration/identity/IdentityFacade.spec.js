@@ -8,6 +8,7 @@ const hash = require('../../../lib/util/hash');
 const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
 const Identity = require('../../../lib/identity/Identity');
+const IdentityCreateTransition = require('../../../lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
@@ -85,6 +86,20 @@ describe('IdentityFacade', () => {
 
       expect(result).to.be.an.instanceOf(ValidationResult);
       expect(result.isValid()).to.be.true();
+    });
+  });
+
+  describe('#createIdentityCreateTransition', () => {
+    it('should create IdentityCreateTransition from Identity model', () => {
+      const lockedOutPoint = crypto.randomBytes(64);
+
+      identity.setLockedOutPoint(lockedOutPoint);
+
+      const stateTransition = dpp.identity.createIdentityCreateTransition(identity);
+
+      expect(stateTransition).to.be.instanceOf(IdentityCreateTransition);
+      expect(stateTransition.getPublicKeys()).to.equal(identity.getPublicKeys());
+      expect(stateTransition.getLockedOutPoint()).to.equal(lockedOutPoint.toString('base64'));
     });
   });
 });
