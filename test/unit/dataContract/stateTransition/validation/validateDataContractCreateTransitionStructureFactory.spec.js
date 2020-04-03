@@ -74,7 +74,7 @@ describe('validateDataContractCreateTransitionStructureFactory', () => {
     expect(error).to.equal(blockchainUserError);
 
     expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(
-      dataContract.getId(),
+      dataContract.getOwnerId(),
     );
   });
 
@@ -132,7 +132,7 @@ describe('validateDataContractCreateTransitionStructureFactory', () => {
     );
 
     expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(
-      dataContract.getId(),
+      dataContract.getOwnerId(),
     );
   });
 
@@ -197,7 +197,7 @@ describe('validateDataContractCreateTransitionStructureFactory', () => {
     );
 
     expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(
-      dataContract.getId(),
+      dataContract.getOwnerId(),
     );
   });
 });
