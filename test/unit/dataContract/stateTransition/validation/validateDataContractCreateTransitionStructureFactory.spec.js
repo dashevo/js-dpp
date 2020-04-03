@@ -128,7 +128,7 @@ describe('validateDataContractCreateTransitionStructureFactory', () => {
 
     expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(
       stateTransition,
-      dataContract.getId(),
+      dataContract.getOwnerId(),
     );
 
     expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(
@@ -193,7 +193,7 @@ describe('validateDataContractCreateTransitionStructureFactory', () => {
 
     expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(
       stateTransition,
-      dataContract.getId(),
+      dataContract.getOwnerId(),
     );
 
     expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(
