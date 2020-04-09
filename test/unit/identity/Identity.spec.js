@@ -14,7 +14,7 @@ describe('Identity', () => {
       id: 'someId',
       publicKeys: [
         {
-          id: 1,
+          id: 0,
           type: IdentityPublicKey.TYPES.ECDSA_SECP256K1,
           data: 'somePublicKey',
           isEnabled: true,
@@ -82,7 +82,7 @@ describe('Identity', () => {
 
   describe('#getPublicKeyById', () => {
     it('should return a public key for a given id', () => {
-      const key = identity.getPublicKeyById(1);
+      const key = identity.getPublicKeyById(0);
 
       expect(key).to.be.deep.equal(new IdentityPublicKey(rawIdentity.publicKeys[0]));
     });

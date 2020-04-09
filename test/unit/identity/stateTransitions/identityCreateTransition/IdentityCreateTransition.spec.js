@@ -18,7 +18,7 @@ describe('IdentityCreateTransition', () => {
       lockedOutPoint: 'c3BlY2lhbEJ1ZmZlcg==',
       publicKeys: [
         {
-          id: 1,
+          id: 0,
           type: IdentityPublicKey.TYPES.ECDSA_SECP256K1,
           data: 'someString',
           isEnabled: true,
