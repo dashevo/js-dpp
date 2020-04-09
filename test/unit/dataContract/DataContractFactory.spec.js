@@ -66,6 +66,7 @@ describe('DataContractFactory', () => {
         $schema: DataContract.DEFAULTS.SCHEMA,
         documents: rawDataContract.documents,
         definitions: {},
+        $version: rawDataContract.$version,
       });
     });
   });

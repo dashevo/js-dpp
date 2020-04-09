@@ -17,7 +17,6 @@ const DocumentNotProvidedError = require('../../../../lib/document/errors/Docume
 const createStateRepositoryMock = require('../../../../lib/test/mocks/createStateRepositoryMock');
 
 describe('applyDocumentsBatchTransitionFactory', () => {
-  let documents;
   let documentTransitions;
   let contractId;
   let ownerId;
@@ -27,6 +26,7 @@ describe('applyDocumentsBatchTransitionFactory', () => {
   let applyDocumentsBatchTransition;
   let stateRepositoryMock;
   let fetchDocumentsMock;
+  let createDocument;
 
   beforeEach(function beforeEach() {
     documentsFixture = getDocumentsFixture();
@@ -37,14 +37,15 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     replaceDocument = new Document({
       ...documentsFixture[1].toJSON(),
       lastName: 'NotSoShiny',
+      $version: '0.0.1',
     });
 
-    documents = [replaceDocument, documentsFixture[2]];
+    [createDocument] = documentsFixture;
 
     documentTransitions = getDocumentTransitionsFixture({
-      create: [documentsFixture[0]],
-      replace: [documents[0]],
-      delete: [documents[1]],
+      create: [createDocument],
+      replace: [replaceDocument],
+      delete: [documentsFixture[2]],
     });
 
     stateTransition = new DocumentsBatchTransition({
@@ -54,9 +55,11 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     });
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
+
     fetchDocumentsMock = this.sinonSandbox.stub();
+
     fetchDocumentsMock.resolves([
-      replaceDocument,
+      new Document(documentsFixture[1].toJSON()),
     ]);
 
     applyDocumentsBatchTransition = applyDocumentsBatchTransitionFactory(
@@ -76,10 +79,14 @@ describe('applyDocumentsBatchTransitionFactory', () => {
 
     expect(stateRepositoryMock.storeDocument).to.have.been.calledTwice();
     expect(stateRepositoryMock.storeDocument.getCall(0).args).to.deep.equal([
-      documentsFixture[0],
+      createDocument,
     ]);
+
+    const replaceDocumentCall = new Document(replaceDocument.toJSON());
+    replaceDocumentCall.setRevision(2);
+
     expect(stateRepositoryMock.storeDocument.getCall(1).args).to.deep.equal([
-      documents[0],
+      replaceDocumentCall,
     ]);
 
     expect(stateRepositoryMock.removeDocument).to.have.been.calledOnceWithExactly(

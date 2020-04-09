@@ -15,11 +15,17 @@
     "balance": {
       "type": "integer",
       "minimum": 0
+    },
+    "$version": {
+      "type": "string",
+      "minLength": 5,
+      "pattern": "^\\d+(\\.\\d+){0,2}$"
     }
   },
   "required": [
     "id",
     "publicKeys",
-    "balance"
+    "balance",
+    "$version"
   ]
 }

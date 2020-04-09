@@ -312,6 +312,11 @@
       "maxLength": 44,
       "pattern": "^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$"
     },
+    "$version": {
+      "type": "string",
+      "minLength": 5,
+      "pattern": "^\\d+(\\.\\d+){0,2}$"
+    },
     "documents": {
       "type": "object",
       "patternProperties": {
@@ -458,7 +463,8 @@
     "$id",
     "$schema",
     "$ownerId",
-    "documents"
+    "documents",
+    "$version"
   ],
   "additionalProperties": false
 }

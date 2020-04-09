@@ -15,6 +15,7 @@ describe('DataContract', () => {
   let ownerId;
   let entropy;
   let contractId;
+  let version;
 
   beforeEach(function beforeEach() {
     hashMock = this.sinonSandbox.stub();
@@ -26,6 +27,7 @@ describe('DataContract', () => {
       '../../../lib/util/serializer': serializerMock,
     });
 
+    version = '0.12.0';
     documentType = 'niceDocument';
 
     documentSchema = {
@@ -50,6 +52,7 @@ describe('DataContract', () => {
       $schema: DataContract.DEFAULTS.SCHEMA,
       documents,
       definitions: {},
+      $version: version,
     });
   });
 
@@ -239,6 +242,7 @@ describe('DataContract', () => {
         $schema: DataContract.DEFAULTS.SCHEMA,
         $ownerId: ownerId,
         documents,
+        $version: version,
       });
     });
 
@@ -257,6 +261,7 @@ describe('DataContract', () => {
         $ownerId: ownerId,
         documents,
         definitions,
+        $version: version,
       });
     });
   });
@@ -314,6 +319,16 @@ describe('DataContract', () => {
       const result = dataContract.getEntropy();
 
       expect(result).to.equal(dataContract.entropy);
+    });
+  });
+
+  describe('#getVersion', () => {
+    it('should return version', () => {
+      dataContract.version = version;
+
+      const result = dataContract.getVersion();
+
+      expect(result).to.equal(dataContract.version);
     });
   });
 });

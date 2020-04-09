@@ -212,6 +212,54 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
           expect(error.keyword).to.equal('maxLength');
         });
       });
+
+      describe('$version', () => {
+        it('should be present', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          delete documentTransition.$version;
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('');
+          expect(error.keyword).to.equal('required');
+          expect(error.params.missingProperty).to.equal('$version');
+        });
+
+        it('should be no less than 5 chars', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          documentTransition.$version = '0.1.';
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.$version');
+          expect(error.keyword).to.equal('minLength');
+        });
+
+        it('should be a version string', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          documentTransition.$version = '0.1.0-dev';
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.$version');
+          expect(error.keyword).to.equal('pattern');
+        });
+      });
     });
   });
 
@@ -291,6 +339,121 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
 
           expect(error.dataPath).to.equal('.$revision');
           expect(error.keyword).to.equal('minimum');
+        });
+      });
+
+      describe('$version', () => {
+        it('should be present', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          delete documentTransition.$version;
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('');
+          expect(error.keyword).to.equal('required');
+          expect(error.params.missingProperty).to.equal('$version');
+        });
+
+        it('should be no less than 5 chars', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          documentTransition.$version = '0.1.';
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.$version');
+          expect(error.keyword).to.equal('minLength');
+        });
+
+        it('should be a version string', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          documentTransition.$version = '0.1.0-dev';
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.$version');
+          expect(error.keyword).to.equal('pattern');
+        });
+      });
+    });
+  });
+
+  describe('delete', () => {
+    beforeEach(() => {
+      documentTransitions = getDocumentTransitionsFixture({
+        create: [],
+        delete: documents,
+      });
+
+      stateTransition = new DocumentsBatchTransition({
+        ownerId,
+        contractId: dataContract.getId(),
+        transitions: documentTransitions.map((t) => t.toJSON()),
+      });
+
+      rawStateTransition = stateTransition.toJSON();
+    });
+
+    describe('schema', () => {
+      describe('$version', () => {
+        it('should be present', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          delete documentTransition.$version;
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('');
+          expect(error.keyword).to.equal('required');
+          expect(error.params.missingProperty).to.equal('$version');
+        });
+
+        it('should be no less than 5 chars', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          documentTransition.$version = '0.1.';
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.$version');
+          expect(error.keyword).to.equal('minLength');
+        });
+
+        it('should be a version string', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          documentTransition.$version = '0.1.0-dev';
+
+          const result = await validateStructure(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.$version');
+          expect(error.keyword).to.equal('pattern');
         });
       });
     });
