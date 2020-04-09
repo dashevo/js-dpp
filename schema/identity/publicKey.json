@@ -9,7 +9,7 @@
     },
     "type": {
       "type": "number",
-      "enum": [1]
+      "enum": [0]
     },
     "data": {
       "type": "string",
