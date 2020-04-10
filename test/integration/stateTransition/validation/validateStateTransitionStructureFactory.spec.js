@@ -369,7 +369,7 @@ describe('validateStateTransitionStructureFactory', () => {
   describe('Documents Schema', () => {
     beforeEach(() => {
       const typeExtensions = {
-        [stateTransitionTypes.DOCUMENTS]: {
+        [stateTransitionTypes.DOCUMENTS_BATCH]: {
           validationFunction: extensionFunctionMock,
           schema: documentsBatchTransitionSchema,
         },
