@@ -3,13 +3,12 @@
   "type": "object",
   "properties": {
     "id": {
-      "type": "number",
-      "multipleOf": 1.0,
-      "minimum": 1
+      "type": "integer",
+      "minimum": 0
     },
     "type": {
       "type": "number",
-      "enum": [1]
+      "enum": [0]
     },
     "data": {
       "type": "string",

@@ -39,7 +39,7 @@ describe('DocumentsBatchTransition', () => {
     it('should return State Transition type', () => {
       const result = stateTransition.getType();
 
-      expect(result).to.equal(stateTransitionTypes.DOCUMENTS);
+      expect(result).to.equal(stateTransitionTypes.DOCUMENTS_BATCH);
     });
   });
 
@@ -55,7 +55,7 @@ describe('DocumentsBatchTransition', () => {
     it('should return State Transition as plain JS object', () => {
       expect(stateTransition.toJSON()).to.deep.equal({
         protocolVersion: 0,
-        type: stateTransitionTypes.DOCUMENTS,
+        type: stateTransitionTypes.DOCUMENTS_BATCH,
         contractId: documents[0].contractId,
         ownerId: documents[0].ownerId,
         transitions: stateTransition.getTransitions().map((d) => d.toJSON()),
