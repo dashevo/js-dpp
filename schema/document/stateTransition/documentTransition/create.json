@@ -4,8 +4,8 @@
   "properties": {
     "$entropy": {
       "type": "string",
-      "minLength": 34,
-      "maxLength": 34
+      "minLength": 26,
+      "maxLength": 35
     }
   },
   "required": [
