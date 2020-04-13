@@ -75,7 +75,7 @@ describe('Document', () => {
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
-    it('should create Document with $contractId and data if present', () => {
+    it('should create Document with $dataContractId and data if present', () => {
       const data = {
         test: 1,
       };

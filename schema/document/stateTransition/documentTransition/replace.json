@@ -3,8 +3,7 @@
   "type": "object",
   "properties": {
     "$revision": {
-      "type": "number",
-      "multipleOf": 1.0,
+      "type": "integer",
       "minimum": 1
     }
   },
