@@ -21,7 +21,6 @@ describe('Identity', () => {
         },
       ],
       balance: 0,
-      $version: '0.12.0',
     };
 
     hashMock = this.sinonSandbox.stub();
@@ -159,13 +158,6 @@ describe('Identity', () => {
 
       expect(result).to.equal(40);
       expect(identity.balance).to.equal(40);
-    });
-  });
-
-  describe('#getVersion', () => {
-    it('should return version', () => {
-      identity.version = '0.12.0';
-      expect(identity.getVersion()).to.equal(identity.version);
     });
   });
 });

@@ -3,11 +3,14 @@ const rewiremock = require('rewiremock/node');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
+const { getProtocolVersion } = require('../../../../lib/util/version');
+
 describe('DocumentsBatchTransition', () => {
   let stateTransition;
   let documents;
   let hashMock;
   let encodeMock;
+  let protocolVersion;
 
   beforeEach(function beforeEach() {
     documents = getDocumentsFixture();
@@ -25,14 +28,7 @@ describe('DocumentsBatchTransition', () => {
     stateTransition = factory.createStateTransition({
       create: documents,
     });
-  });
-
-  describe('#getProtocolVersion', () => {
-    it('should return the current protocol version', () => {
-      const result = stateTransition.getProtocolVersion();
-
-      expect(result).to.equal(0);
-    });
+    protocolVersion = getProtocolVersion();
   });
 
   describe('#getType', () => {
@@ -54,7 +50,7 @@ describe('DocumentsBatchTransition', () => {
   describe('#toJSON', () => {
     it('should return State Transition as plain JS object', () => {
       expect(stateTransition.toJSON()).to.deep.equal({
-        protocolVersion: 0,
+        protocolVersion,
         type: stateTransitionTypes.DOCUMENTS,
         contractId: documents[0].contractId,
         ownerId: documents[0].ownerId,

@@ -95,8 +95,8 @@ describe('validateStateTransitionStructureFactory', () => {
         expect(extensionFunctionMock).to.not.be.called();
       });
 
-      it('should equal to 0', async () => {
-        rawStateTransition.protocolVersion = 666;
+      it('should be a string', async () => {
+        rawStateTransition.protocolVersion = 1;
 
         const result = await validateStateTransitionStructure(rawStateTransition);
 
@@ -105,7 +105,37 @@ describe('validateStateTransitionStructureFactory', () => {
         const [error] = result.getErrors();
 
         expect(error.dataPath).to.equal('.protocolVersion');
-        expect(error.keyword).to.equal('const');
+        expect(error.keyword).to.equal('type');
+
+        expect(extensionFunctionMock).to.not.be.called();
+      });
+
+      it('should have length >= 5', async () => {
+        rawStateTransition.protocolVersion = '4.2.';
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.protocolVersion');
+        expect(error.keyword).to.equal('minLength');
+
+        expect(extensionFunctionMock).to.not.be.called();
+      });
+
+      it('should be a semantic version', async () => {
+        rawStateTransition.protocolVersion = '123.45';
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.protocolVersion');
+        expect(error.keyword).to.equal('pattern');
 
         expect(extensionFunctionMock).to.not.be.called();
       });

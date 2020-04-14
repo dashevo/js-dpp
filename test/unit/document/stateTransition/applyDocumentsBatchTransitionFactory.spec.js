@@ -37,7 +37,7 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     replaceDocument = new Document({
       ...documentsFixture[1].toJSON(),
       lastName: 'NotSoShiny',
-      $version: '0.0.1',
+      $protocolVersion: '0.0.1',
     });
 
     [createDocument] = documentsFixture;

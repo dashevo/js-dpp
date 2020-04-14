@@ -6,12 +6,15 @@ const stateTransitionTypes = require(
   '../../../../../lib/stateTransition/stateTransitionTypes',
 );
 
+const { getProtocolVersion } = require('../../../../../lib/util/version');
+
 describe('IdentityCreateTransition', () => {
   let rawStateTransition;
   let stateTransition;
   let hashMock;
   let signerMock;
   let IdentityCreateTransition;
+  let protocolVersion;
 
   beforeEach(function beforeEach() {
     rawStateTransition = {
@@ -45,6 +48,7 @@ describe('IdentityCreateTransition', () => {
     );
 
     stateTransition = new IdentityCreateTransition(rawStateTransition);
+    protocolVersion = getProtocolVersion();
   });
 
   describe('#constructor', () => {
@@ -145,7 +149,7 @@ describe('IdentityCreateTransition', () => {
       const jsonWithASig = stateTransition.toJSON();
 
       expect(jsonWithASig).to.deep.equal({
-        protocolVersion: 0,
+        protocolVersion,
         type: stateTransitionTypes.IDENTITY_CREATE,
         lockedOutPoint: rawStateTransition.lockedOutPoint,
         publicKeys: rawStateTransition.publicKeys,
@@ -155,7 +159,7 @@ describe('IdentityCreateTransition', () => {
       const jsonWithSig = stateTransition.toJSON({ skipSignature: true });
 
       expect(jsonWithSig).to.deep.equal({
-        protocolVersion: 0,
+        protocolVersion,
         type: stateTransitionTypes.IDENTITY_CREATE,
         lockedOutPoint: rawStateTransition.lockedOutPoint,
         publicKeys: rawStateTransition.publicKeys,

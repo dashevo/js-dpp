@@ -33,7 +33,6 @@ describe('Document', () => {
       $contractId: generateRandomId(),
       $ownerId: generateRandomId(),
       $revision: DocumentCreateTransition.INITIAL_REVISION,
-      $version: '0.12.0',
     };
 
     document = new Document(rawDocument);
@@ -297,28 +296,6 @@ describe('Document', () => {
       expect(Document.prototype.serialize).to.have.been.calledOnce();
 
       expect(hashMock).to.have.been.calledOnceWith(serializedDocument);
-    });
-  });
-
-  describe('#setVersion', () => {
-    it('should set $version', () => {
-      const version = '0.12.0';
-
-      const result = document.setVersion(version);
-
-      expect(result).to.equal(document);
-
-      expect(document.version).to.equal(version);
-    });
-  });
-
-  describe('#getVersion', () => {
-    it('should return $version', () => {
-      const version = '0.12.0';
-
-      document.version = version;
-
-      expect(document.getVersion()).to.equal(version);
     });
   });
 });
