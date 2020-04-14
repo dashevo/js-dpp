@@ -31,10 +31,10 @@ describe('fetchAndValidateDataContractFactory', () => {
     );
   });
 
-  it('should return with invalid result if $contractId is not present', async () => {
+  it('should return with invalid result if $dataContractId is not present', async () => {
     const rawDocument = document.toJSON();
 
-    delete rawDocument.$contractId;
+    delete rawDocument.$dataContractId;
 
     const result = await fetchAndValidateDataContract(rawDocument);
 
