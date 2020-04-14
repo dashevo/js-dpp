@@ -182,10 +182,10 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
           expect(error.keyword).to.equal('type');
         });
 
-        it('should be no less than 34 chars', async () => {
+        it('should be no less than 26 chars', async () => {
           const [documentTransition] = rawStateTransition.transitions;
 
-          documentTransition.$entropy = '1'.repeat(33);
+          documentTransition.$entropy = '1'.repeat(24);
 
           const result = await validateStructure(rawStateTransition);
 
@@ -197,10 +197,10 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
           expect(error.keyword).to.equal('minLength');
         });
 
-        it('should be no longer than 34 chars', async () => {
+        it('should be no longer than 35 chars', async () => {
           const [documentTransition] = rawStateTransition.transitions;
 
-          documentTransition.$entropy = '1'.repeat(35);
+          documentTransition.$entropy = '1'.repeat(36);
 
           const result = await validateStructure(rawStateTransition);
 

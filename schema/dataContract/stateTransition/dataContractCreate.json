@@ -6,8 +6,8 @@
     },
     "entropy": {
       "type": "string",
-      "minLength": 34,
-      "maxLength": 34,
+      "minLength": 26,
+      "maxLength": 35,
       "pattern": "^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$"
     }
   },
