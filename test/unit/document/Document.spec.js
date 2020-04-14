@@ -30,7 +30,7 @@ describe('Document', () => {
     rawDocument = {
       $id: 'D3AT6rBtyTqx3hXFckwtP81ncu49y5ndE7ot9JkuNSeB',
       $type: 'test',
-      $contractId: generateRandomId(),
+      $dataContractId: generateRandomId(),
       $ownerId: generateRandomId(),
       $revision: DocumentCreateTransition.INITIAL_REVISION,
     };
@@ -81,13 +81,13 @@ describe('Document', () => {
       };
 
       rawDocument = {
-        $contractId: generateRandomId(),
+        $dataContractId: generateRandomId(),
         ...data,
       };
 
       document = new Document(rawDocument);
 
-      expect(document.contractId).to.equal(rawDocument.$contractId);
+      expect(document.dataContractId).to.equal(rawDocument.$dataContractId);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
@@ -165,8 +165,8 @@ describe('Document', () => {
     });
   });
 
-  describe('#getContractId', () => {
-    it('should return $contractId', () => {
+  describe('#getDataContractId', () => {
+    it('should return $dataContractId', () => {
       expect(document.getOwnerId()).to.equal(rawDocument.$ownerId);
     });
   });

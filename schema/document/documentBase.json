@@ -15,7 +15,7 @@
       "type": "integer",
       "minimum": 1
     },
-    "$contractId": {
+    "$dataContractId": {
       "type": "string",
       "minLength": 42,
       "maxLength": 44,
@@ -32,7 +32,7 @@
     "$id",
     "$type",
     "$revision",
-    "$contractId",
+    "$dataContractId",
     "$ownerId"
   ],
   "additionalProperties": false
