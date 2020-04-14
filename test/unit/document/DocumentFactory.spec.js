@@ -90,11 +90,11 @@ describe('DocumentFactory', () => {
 
       expect(newDocument.get('name')).to.equal(name);
 
-      expect(newDocument.contractId).to.equal(contractId);
-      expect(newDocument.ownerId).to.equal(ownerId);
+      expect(newDocument.getDataContractId()).to.equal(contractId);
+      expect(newDocument.getOwnerId()).to.equal(ownerId);
 
       expect(generateMock).to.have.been.calledOnce();
-      expect(newDocument.entropy).to.equal(entropy);
+      expect(newDocument.getEntropy()).to.equal(entropy);
 
       expect(newDocument.getRevision()).to.equal(DocumentCreateTransition.INITIAL_REVISION);
 
@@ -262,7 +262,7 @@ describe('DocumentFactory', () => {
     });
 
     it('should throw and error if documents have mixed contract ids', () => {
-      documents[0].contractId = generateRandomId();
+      documents[0].dataContractId = generateRandomId();
       try {
         factory.createStateTransition({
           create: documents,
