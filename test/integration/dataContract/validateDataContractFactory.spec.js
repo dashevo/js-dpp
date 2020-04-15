@@ -84,7 +84,7 @@ describe('validateDataContractFactory', () => {
 
   describe('ownerId', () => {
     it('should be present', async () => {
-      delete rawDataContract.$ownerId;
+      delete rawDataContract.ownerId;
 
       const result = await validateDataContract(rawDataContract);
 
@@ -94,11 +94,11 @@ describe('validateDataContractFactory', () => {
 
       expect(error.dataPath).to.equal('');
       expect(error.keyword).to.equal('required');
-      expect(error.params.missingProperty).to.equal('$ownerId');
+      expect(error.params.missingProperty).to.equal('ownerId');
     });
 
     it('should be a string', async () => {
-      rawDataContract.$ownerId = 1;
+      rawDataContract.ownerId = 1;
 
       const result = await validateDataContract(rawDataContract);
 
@@ -106,12 +106,12 @@ describe('validateDataContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.$ownerId');
+      expect(error.dataPath).to.equal('.ownerId');
       expect(error.keyword).to.equal('type');
     });
 
     it('should be no less than 42 chars', async () => {
-      rawDataContract.$ownerId = '1'.repeat(41);
+      rawDataContract.ownerId = '1'.repeat(41);
 
       const result = await validateDataContract(rawDataContract);
 
@@ -119,12 +119,12 @@ describe('validateDataContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.$ownerId');
+      expect(error.dataPath).to.equal('.ownerId');
       expect(error.keyword).to.equal('minLength');
     });
 
     it('should be no longer than 44 chars', async () => {
-      rawDataContract.$ownerId = '1'.repeat(45);
+      rawDataContract.ownerId = '1'.repeat(45);
 
       const result = await validateDataContract(rawDataContract);
 
@@ -132,12 +132,12 @@ describe('validateDataContractFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.$ownerId');
+      expect(error.dataPath).to.equal('.ownerId');
       expect(error.keyword).to.equal('maxLength');
     });
 
     it('should be base58 encoded', async () => {
-      rawDataContract.$ownerId = '&'.repeat(44);
+      rawDataContract.ownerId = '&'.repeat(44);
 
       const result = await validateDataContract(rawDataContract);
 
@@ -146,7 +146,7 @@ describe('validateDataContractFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('pattern');
-      expect(error.dataPath).to.equal('.$ownerId');
+      expect(error.dataPath).to.equal('.ownerId');
     });
   });
 

@@ -45,9 +45,9 @@ describe('DataContract', () => {
     contractId = 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgza';
 
     dataContract = new DataContract({
-      $id: contractId,
-      $ownerId: ownerId,
       $schema: DataContract.DEFAULTS.SCHEMA,
+      $id: contractId,
+      ownerId,
       documents,
       definitions: {},
     });
@@ -58,9 +58,9 @@ describe('DataContract', () => {
       const id = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
 
       dataContract = new DataContract({
-        $id: id,
-        $ownerId: ownerId,
         $schema: DataContract.DEFAULTS.SCHEMA,
+        $id: id,
+        ownerId,
         documents,
         definitions: {},
       });
@@ -237,7 +237,7 @@ describe('DataContract', () => {
       expect(result).to.deep.equal({
         $id: contractId,
         $schema: DataContract.DEFAULTS.SCHEMA,
-        $ownerId: ownerId,
+        ownerId,
         documents,
       });
     });
@@ -252,9 +252,9 @@ describe('DataContract', () => {
       const result = dataContract.toJSON();
 
       expect(result).to.deep.equal({
-        $id: contractId,
         $schema: DataContract.DEFAULTS.SCHEMA,
-        $ownerId: ownerId,
+        $id: contractId,
+        ownerId,
         documents,
         definitions,
       });
