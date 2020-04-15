@@ -31,11 +31,19 @@ describe('DocumentsBatchTransition', () => {
     protocolVersion = getProtocolVersion();
   });
 
+  describe('#getProtocolVersion', () => {
+    it('should return the current protocol version', () => {
+      const result = stateTransition.getProtocolVersion();
+
+      expect(result).to.equal(protocolVersion);
+    });
+  });
+
   describe('#getType', () => {
     it('should return State Transition type', () => {
       const result = stateTransition.getType();
 
-      expect(result).to.equal(stateTransitionTypes.DOCUMENTS);
+      expect(result).to.equal(stateTransitionTypes.DOCUMENTS_BATCH);
     });
   });
 
@@ -51,9 +59,9 @@ describe('DocumentsBatchTransition', () => {
     it('should return State Transition as plain JS object', () => {
       expect(stateTransition.toJSON()).to.deep.equal({
         protocolVersion,
-        type: stateTransitionTypes.DOCUMENTS,
-        contractId: documents[0].contractId,
-        ownerId: documents[0].ownerId,
+        type: stateTransitionTypes.DOCUMENTS_BATCH,
+        contractId: documents[0].getDataContractId(),
+        ownerId: documents[0].getOwnerId(),
         transitions: stateTransition.getTransitions().map((d) => d.toJSON()),
         signaturePublicKeyId: null,
         signature: null,

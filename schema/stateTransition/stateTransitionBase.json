@@ -8,7 +8,7 @@
     },
     "type": {
       "type": "number",
-      "enum": [1, 2, 3]
+      "enum": [0, 1, 2]
     },
     "signaturePublicKeyId": {
       "type": ["integer", "null"],

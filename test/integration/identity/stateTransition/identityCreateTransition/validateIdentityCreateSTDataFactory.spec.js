@@ -39,7 +39,7 @@ describe('validateIdentityCreateSTDataFactory', () => {
       lockedOutPoint: 'azW1UgBiB0CmdphN6of4DbT91t0Xv3/c3YUV4CnoV/kAAAAA',
       publicKeys: [
         {
-          id: 1,
+          id: 0,
           type: 1,
           data: 'Alw8x/v8UvcQyUFJf9AYdsGJFx6iJ0WPUBr8s4opfWW0',
           isEnabled: true,

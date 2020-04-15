@@ -217,9 +217,9 @@ describe('validateDocumentFactory', () => {
       });
     });
 
-    describe('$contractId', () => {
+    describe('$dataContractId', () => {
       it('should be present', () => {
-        delete rawDocument.$contractId;
+        delete rawDocument.$dataContractId;
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -229,11 +229,11 @@ describe('validateDocumentFactory', () => {
 
         expect(error.dataPath).to.equal('');
         expect(error.keyword).to.equal('required');
-        expect(error.params.missingProperty).to.equal('$contractId');
+        expect(error.params.missingProperty).to.equal('$dataContractId');
       });
 
       it('should be a string', () => {
-        rawDocument.$contractId = 1;
+        rawDocument.$dataContractId = 1;
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -241,12 +241,12 @@ describe('validateDocumentFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.$contractId');
+        expect(error.dataPath).to.equal('.$dataContractId');
         expect(error.keyword).to.equal('type');
       });
 
       it('should be no less than 42 chars', () => {
-        rawDocument.$contractId = '1'.repeat(41);
+        rawDocument.$dataContractId = '1'.repeat(41);
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -254,12 +254,12 @@ describe('validateDocumentFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.$contractId');
+        expect(error.dataPath).to.equal('.$dataContractId');
         expect(error.keyword).to.equal('minLength');
       });
 
       it('should be no longer than 44 chars', () => {
-        rawDocument.$contractId = '1'.repeat(45);
+        rawDocument.$dataContractId = '1'.repeat(45);
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -267,12 +267,12 @@ describe('validateDocumentFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.$contractId');
+        expect(error.dataPath).to.equal('.$dataContractId');
         expect(error.keyword).to.equal('maxLength');
       });
 
       it('should be base58 encoded', () => {
-        rawDocument.$contractId = '&'.repeat(44);
+        rawDocument.$dataContractId = '&'.repeat(44);
 
         const result = validateDocument(rawDocument, dataContract);
 
@@ -281,7 +281,7 @@ describe('validateDocumentFactory', () => {
         const [error] = result.getErrors();
 
         expect(error.keyword).to.equal('pattern');
-        expect(error.dataPath).to.equal('.$contractId');
+        expect(error.dataPath).to.equal('.$dataContractId');
       });
     });
 
@@ -383,7 +383,7 @@ describe('validateDocumentFactory', () => {
   });
 
   it('should return invalid result if a document contractId is not equal to Data Contract ID', () => {
-    rawDocument.$contractId = generateRandomId();
+    rawDocument.$dataContractId = generateRandomId();
 
     const result = validateDocument(
       rawDocument,

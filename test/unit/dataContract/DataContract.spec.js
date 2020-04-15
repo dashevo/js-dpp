@@ -85,7 +85,7 @@ describe('DataContract', () => {
   });
 
   describe('#getJsonSchemaId', () => {
-    it('should return JSON Schema $contractId', () => {
+    it('should return JSON Schema ID', () => {
       const hashed = Buffer.from(ownerId + entropy);
       hashMock.returns(hashed);
 
