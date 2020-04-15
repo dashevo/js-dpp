@@ -10,7 +10,7 @@ const createStateRepositoryMock = require('../../../lib/test/mocks/createStateRe
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const getDocumentTransitionsFixture = require('../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
-const MissingDocumentContractIdError = require('../../../lib/errors/MissingDocumentContractIdError');
+const MissingDocumentContractIdError = require('../../../lib/errors/MissingDataContractIdError');
 const MissingOptionError = require('../../../lib/errors/MissingOptionError');
 
 describe('DocumentFacade', () => {
