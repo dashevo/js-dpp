@@ -54,16 +54,16 @@ describe('DataContractFactory', () => {
     it('should return new Data Contract with specified name and documents definition', () => {
       entropyMock.generate.returns(dataContract.getEntropy());
       const result = factory.create(
-        rawDataContract.$ownerId,
+        rawDataContract.ownerId,
         rawDataContract.documents,
       );
 
       expect(result).to.equal(dataContract);
 
       expect(DataContractMock).to.have.been.calledOnceWith({
-        $id: rawDataContract.$id,
-        $ownerId: rawDataContract.$ownerId,
         $schema: DataContract.DEFAULTS.SCHEMA,
+        $id: rawDataContract.$id,
+        ownerId: rawDataContract.ownerId,
         documents: rawDataContract.documents,
         definitions: {},
       });
