@@ -200,7 +200,7 @@ describe('validateDocumentFactory', () => {
         const [error] = result.getErrors();
 
         expect(error.dataPath).to.equal('.$revision');
-        expect(error.keyword).to.equal('multipleOf');
+        expect(error.keyword).to.equal('type');
       });
 
       it('should be greater or equal to one', () => {

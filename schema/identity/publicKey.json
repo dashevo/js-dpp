@@ -7,7 +7,7 @@
       "minimum": 0
     },
     "type": {
-      "type": "number",
+      "type": "integer",
       "enum": [0]
     },
     "data": {

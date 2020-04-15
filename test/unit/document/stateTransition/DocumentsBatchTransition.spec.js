@@ -56,7 +56,6 @@ describe('DocumentsBatchTransition', () => {
       expect(stateTransition.toJSON()).to.deep.equal({
         protocolVersion: 0,
         type: stateTransitionTypes.DOCUMENTS_BATCH,
-        contractId: documents[0].getDataContractId(),
         ownerId: documents[0].getOwnerId(),
         transitions: stateTransition.getTransitions().map((d) => d.toJSON()),
         signaturePublicKeyId: null,

@@ -19,7 +19,7 @@ const createStateRepositoryMock = require('../../../../lib/test/mocks/createStat
 describe('applyDocumentsBatchTransitionFactory', () => {
   let documents;
   let documentTransitions;
-  let contractId;
+  let dataContractId;
   let ownerId;
   let replaceDocument;
   let stateTransition;
@@ -31,7 +31,7 @@ describe('applyDocumentsBatchTransitionFactory', () => {
   beforeEach(function beforeEach() {
     documentsFixture = getDocumentsFixture();
 
-    contractId = getDocumentsFixture.dataContract.getId();
+    dataContractId = getDocumentsFixture.dataContract.getId();
     ownerId = getDocumentsFixture.ownerId;
 
     replaceDocument = new Document({
@@ -48,7 +48,7 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     });
 
     stateTransition = new DocumentsBatchTransition({
-      contractId,
+      contractId: dataContractId,
       ownerId,
       transitions: documentTransitions.map((t) => t.toJSON()),
     });
@@ -71,7 +71,7 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     const replaceDocumentTransition = documentTransitions[1];
 
     expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(
-      stateTransition.getDataContractId(), [replaceDocumentTransition],
+      dataContractId, [replaceDocumentTransition],
     );
 
     expect(stateRepositoryMock.storeDocument).to.have.been.calledTwice();
@@ -83,7 +83,7 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     ]);
 
     expect(stateRepositoryMock.removeDocument).to.have.been.calledOnceWithExactly(
-      stateTransition.getDataContractId(),
+      dataContractId,
       documentTransitions[2].getType(),
       documentTransitions[2].getId(),
     );

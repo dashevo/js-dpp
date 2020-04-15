@@ -12,8 +12,7 @@
       "type": "string"
     },
     "$revision": {
-      "type": "number",
-      "multipleOf": 1.0,
+      "type": "integer",
       "minimum": 1
     },
     "$dataContractId": {

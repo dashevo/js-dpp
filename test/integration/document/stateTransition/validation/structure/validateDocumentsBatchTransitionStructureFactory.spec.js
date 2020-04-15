@@ -275,7 +275,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
           const [error] = result.getErrors();
 
           expect(error.dataPath).to.equal('.$revision');
-          expect(error.keyword).to.equal('multipleOf');
+          expect(error.keyword).to.equal('type');
         });
 
         it('should have a minimum value of 1', async () => {

@@ -366,7 +366,7 @@ describe('validateStateTransitionStructureFactory', () => {
     });
   });
 
-  describe('Documents Schema', () => {
+  describe('Documents Batch Schema', () => {
     beforeEach(() => {
       const typeExtensions = {
         [stateTransitionTypes.DOCUMENTS_BATCH]: {
@@ -394,84 +394,6 @@ describe('validateStateTransitionStructureFactory', () => {
       stateTransition.signByPrivateKey(privateKey);
 
       rawStateTransition = stateTransition.toJSON();
-    });
-
-    describe('contractId', () => {
-      it('should be present', async () => {
-        delete rawStateTransition.contractId;
-
-        const result = await validateStateTransitionStructure(
-          rawStateTransition,
-        );
-
-        expectJsonSchemaError(result);
-
-        const [error] = result.getErrors();
-
-        expect(error.dataPath).to.equal('');
-        expect(error.keyword).to.equal('required');
-        expect(error.params.missingProperty).to.equal('contractId');
-      });
-
-      it('should be a string', async () => {
-        rawStateTransition.contractId = 1;
-
-        const result = await validateStateTransitionStructure(
-          rawStateTransition,
-        );
-
-        expectJsonSchemaError(result);
-
-        const [error] = result.getErrors();
-
-        expect(error.dataPath).to.equal('.contractId');
-        expect(error.keyword).to.equal('type');
-      });
-
-      it('should be no less than 42 chars', async () => {
-        rawStateTransition.contractId = '1'.repeat(41);
-
-        const result = await validateStateTransitionStructure(
-          rawStateTransition,
-        );
-
-        expectJsonSchemaError(result);
-
-        const [error] = result.getErrors();
-
-        expect(error.dataPath).to.equal('.contractId');
-        expect(error.keyword).to.equal('minLength');
-      });
-
-      it('should be no longer than 44 chars', async () => {
-        rawStateTransition.contractId = '1'.repeat(45);
-
-        const result = await validateStateTransitionStructure(
-          rawStateTransition,
-        );
-
-        expectJsonSchemaError(result);
-
-        const [error] = result.getErrors();
-
-        expect(error.dataPath).to.equal('.contractId');
-        expect(error.keyword).to.equal('maxLength');
-      });
-
-      it('should be base58 encoded', async () => {
-        rawStateTransition.contractId = '&'.repeat(44);
-
-        const result = await validateStateTransitionStructure(
-          rawStateTransition,
-        );
-
-        expectJsonSchemaError(result);
-
-        const [error] = result.getErrors();
-
-        expect(error.keyword).to.equal('pattern');
-        expect(error.dataPath).to.equal('.contractId');
-      });
     });
 
     describe('ownerId', () => {
