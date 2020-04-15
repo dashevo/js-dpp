@@ -33,6 +33,7 @@ describe('Document', () => {
       $contractId: generateRandomId(),
       $ownerId: generateRandomId(),
       $revision: DocumentCreateTransition.INITIAL_REVISION,
+      $protocolVersion: '0.0.1',
     };
 
     document = new Document(rawDocument);
@@ -296,6 +297,28 @@ describe('Document', () => {
       expect(Document.prototype.serialize).to.have.been.calledOnce();
 
       expect(hashMock).to.have.been.calledOnceWith(serializedDocument);
+    });
+  });
+
+  describe('#setProtocolVersion', () => {
+    it('should set protocol version', () => {
+      const version = '0.0.1';
+
+      const result = document.setProtocolVersion(version);
+
+      expect(result).to.equal(document);
+
+      expect(document.protocolVersion).to.equal(version);
+    });
+  });
+
+  describe('#getProtocolVersion', () => {
+    it('should return protocol version', () => {
+      const version = '0.0.1';
+
+      document.protocolVersion = version;
+
+      expect(document.getProtocolVersion()).to.equal(version);
     });
   });
 });

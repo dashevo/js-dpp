@@ -21,6 +21,7 @@ describe('Identity', () => {
         },
       ],
       balance: 0,
+      $protocolVersion: '0.0.1',
     };
 
     hashMock = this.sinonSandbox.stub();
@@ -158,6 +159,13 @@ describe('Identity', () => {
 
       expect(result).to.equal(40);
       expect(identity.balance).to.equal(40);
+    });
+  });
+
+  describe('#getProtocolVersion', () => {
+    it('should return protocol version', () => {
+      identity.protocolVersion = '0.0.1';
+      expect(identity.getProtocolVersion()).to.equal(identity.protocolVersion);
     });
   });
 });

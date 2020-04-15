@@ -27,7 +27,7 @@ describe('DataContract', () => {
       '../../../lib/util/serializer': serializerMock,
     });
 
-    protocolVersion = '0.12.0';
+    protocolVersion = '0.0.1';
     documentType = 'niceDocument';
 
     documentSchema = {
@@ -242,6 +242,7 @@ describe('DataContract', () => {
         $schema: DataContract.DEFAULTS.SCHEMA,
         $ownerId: ownerId,
         documents,
+        $protocolVersion: protocolVersion,
       });
     });
 
@@ -258,6 +259,7 @@ describe('DataContract', () => {
         $id: contractId,
         $schema: DataContract.DEFAULTS.SCHEMA,
         $ownerId: ownerId,
+        $protocolVersion: protocolVersion,
         documents,
         definitions,
       });
@@ -317,6 +319,16 @@ describe('DataContract', () => {
       const result = dataContract.getEntropy();
 
       expect(result).to.equal(dataContract.entropy);
+    });
+  });
+
+  describe('#getProtocolVersion', () => {
+    it('should return version', () => {
+      dataContract.protocolVersion = protocolVersion;
+
+      const result = dataContract.getProtocolVersion();
+
+      expect(result).to.equal(dataContract.protocolVersion);
     });
   });
 });

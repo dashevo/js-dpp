@@ -27,6 +27,11 @@
       "minLength": 42,
       "maxLength": 44,
       "pattern": "^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$"
+    },
+    "$protocolVersion": {
+      "type": "string",
+      "minLength": 5,
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
     }
   },
   "required": [
@@ -34,7 +39,8 @@
     "$type",
     "$revision",
     "$contractId",
-    "$ownerId"
+    "$ownerId",
+    "$protocolVersion"
   ],
   "additionalProperties": false
 }

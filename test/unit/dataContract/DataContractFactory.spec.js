@@ -64,6 +64,7 @@ describe('DataContractFactory', () => {
         $id: rawDataContract.$id,
         $ownerId: rawDataContract.$ownerId,
         $schema: DataContract.DEFAULTS.SCHEMA,
+        $protocolVersion: rawDataContract.$protocolVersion,
         documents: rawDataContract.documents,
         definitions: {},
       });

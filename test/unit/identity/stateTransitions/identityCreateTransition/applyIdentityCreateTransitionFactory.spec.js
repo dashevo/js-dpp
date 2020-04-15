@@ -10,6 +10,8 @@ const { convertSatoshiToCredits } = require('../../../../../lib/identity/credits
 
 const createStateRepositoryMock = require('../../../../../lib/test/mocks/createStateRepositoryMock');
 
+const { getProtocolVersion } = require('../../../../../lib/util/version');
+
 describe('applyIdentityCreateTransitionFactory', () => {
   let stateTransition;
   let applyIdentityCreateTransition;
@@ -42,7 +44,7 @@ describe('applyIdentityCreateTransitionFactory', () => {
       id: stateTransition.getIdentityId(),
       publicKeys: stateTransition.getPublicKeys().map((key) => key.toJSON()),
       balance,
-      $protocolVersion: '0.12.0',
+      $protocolVersion: getProtocolVersion(),
     });
 
     expect(getLockedTransactionOutputMock).to.be.calledOnceWithExactly(

@@ -16,6 +16,8 @@ const DocumentNotProvidedError = require('../../../../lib/document/errors/Docume
 
 const createStateRepositoryMock = require('../../../../lib/test/mocks/createStateRepositoryMock');
 
+const { getProtocolVersion } = require('../../../../lib/util/version');
+
 describe('applyDocumentsBatchTransitionFactory', () => {
   let documentTransitions;
   let contractId;
@@ -37,7 +39,7 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     replaceDocument = new Document({
       ...documentsFixture[1].toJSON(),
       lastName: 'NotSoShiny',
-      $protocolVersion: '0.0.1',
+      $protocolVersion: getProtocolVersion(),
     });
 
     [createDocument] = documentsFixture;
