@@ -241,8 +241,8 @@ describe('validateStateTransitionStructureFactory', () => {
         expect(extensionFunctionMock).to.be.calledOnceWith(rawStateTransition);
       });
 
-      it('should not be < 1', async () => {
-        rawStateTransition.signaturePublicKeyId = 0;
+      it('should not be < 0', async () => {
+        rawStateTransition.signaturePublicKeyId = -1;
 
         const result = await validateStateTransitionStructure(rawStateTransition);
 
