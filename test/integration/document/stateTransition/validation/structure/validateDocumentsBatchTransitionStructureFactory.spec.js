@@ -30,6 +30,7 @@ const MissingDocumentTypeError = require('../../../../../../lib/errors/MissingDo
 const InvalidDocumentTypeError = require('../../../../../../lib/errors/InvalidDocumentTypeError');
 const MissingDocumentTransitionActionError = require('../../../../../../lib/errors/MissingDocumentTransitionActionError');
 const InvalidDocumentTransitionActionError = require('../../../../../../lib/errors/InvalidDocumentTransitionActionError');
+const InvalidDataContractIdError = require('../../../../../../lib/errors/InvalidDataContractIdError');
 
 describe('validateDocumentsBatchTransitionStructureFactory', () => {
   let dataContract;
@@ -412,6 +413,35 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
         const [error] = result.getErrors();
 
         expect(error.getRawDocument()).to.equal(firstDocumentTransition);
+
+        expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
+          dataContract.getId(),
+        );
+
+        expect(enrichSpy).to.have.been.calledThrice();
+
+        expect(findDuplicatesByIdMock).to.have.been.calledOnceWithExactly(
+          rawStateTransition.transitions.slice(1),
+        );
+        expect(findDuplicatesByIndicesMock).to.have.been.calledOnceWithExactly(
+          rawStateTransition.transitions.slice(1), dataContract,
+        );
+        expect(validateIdentityExistenceMock).to.have.not.been.called();
+        expect(validateStateTransitionSignatureMock).to.have.not.been.called();
+      });
+
+      it('should be string', async () => {
+        const [firstDocumentTransition] = rawStateTransition.transitions;
+
+        firstDocumentTransition.$dataContractId = null;
+
+        const result = await validateStructure(rawStateTransition);
+
+        expectValidationError(result, InvalidDataContractIdError);
+
+        const [error] = result.getErrors();
+
+        expect(error.getRawDataContract()).to.equal(firstDocumentTransition.$dataContractId);
 
         expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
           dataContract.getId(),
