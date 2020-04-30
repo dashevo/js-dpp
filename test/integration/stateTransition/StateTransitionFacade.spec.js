@@ -315,15 +315,15 @@ describe('StateTransitionFacade', () => {
       type: 1,
       signature: 'H5v2t8blUDwJ284sLV7ZBlmjEAuviK1EzhiqoiXLrI+fYPF2JeAv4IGH/doLTEaDp/PKXDvY5gC7gn9fjR7eVh0=',
       signaturePublicKeyId: 0,
-      ownerId: '8XU4ufb3SrGCNQ6hSByW29Xkiw5r1Ac8D8wr8nWXgCww',
+      ownerId: 'Di94QuVennkE4FfTQHJF2MJhqehLbmodSn5Uzy5u4zHL',
       transitions: [
         {
-          '$action': 0,
-          '$dataContractId': '295xRRRMGYyAruG39XdAibaU9jMAzxhknkkAxFE7uVkW',
-          '$id': '3LoRCWhCb9kJBBcbRjJvTc4szX93vDYsznSCrLwcNytp',
-          '$type': 'preorder',
-          '$entropy': 'yfLGvfKr3Y3ahtkeEKY3wTFz2zNjmsrwbj',
-          saltedDomainHash: '562088f2e19881fe8c05da623463582fd84a644489e570a1ea3fcd716b28f11ed4f7'
+          $action: 0,
+          $dataContractId: '295xRRRMGYyAruG39XdAibaU9jMAzxhknkkAxFE7uVkW',
+          $id: 'DhwqCBK82fmoxYaw8z5oTiKTPPWiCE95YJTj1zjHWpaG',
+          $type: 'preorder',
+          $entropy: 'yfLGvfKr3Y3ahtkeEKY3wTFz2zNjmsrwbj',
+          saltedDomainHash: '562088f2e19881fe8c05da623463582fd84a644489e570a1ea3fcd716b28f11ed4f7',
         },
       ],
     };
@@ -332,20 +332,20 @@ describe('StateTransitionFacade', () => {
     const Identity = require('../../../lib/identity/Identity');
 
     const contract = new DataContract({
-      '$id': '295xRRRMGYyAruG39XdAibaU9jMAzxhknkkAxFE7uVkW',
-      '$schema': 'https://schema.dash.org/dpp-0-4-0/meta/data-contract',
+      $id: '295xRRRMGYyAruG39XdAibaU9jMAzxhknkkAxFE7uVkW',
+      $schema: 'https://schema.dash.org/dpp-0-4-0/meta/data-contract',
       ownerId: 'Czcr8PwPbXBCu1Jzu54MnC4urbdtrnKwsswUYeD2gbYQ',
       documents: {
         domain: {
           indices: [
-            { unique: true, properties: [ { nameHash: 'asc' } ] },
+            { unique: true, properties: [{ nameHash: 'asc' }] },
             {
               properties: [
                 { normalizedParentDomainName: 'asc' },
-                { normalizedLabel: 'asc' }
-              ]
+                { normalizedLabel: 'asc' },
+              ],
             },
-            { properties: [ { 'records.dashIdentity': 'asc' } ] }
+            { properties: [{ 'records.dashIdentity': 'asc' }] },
           ],
           required: [
             'nameHash',
@@ -353,14 +353,14 @@ describe('StateTransitionFacade', () => {
             'normalizedLabel',
             'normalizedParentDomainName',
             'preorderSalt',
-            'records'
+            'records',
           ],
           properties: {
             label: {
               type: 'string',
               pattern: '^((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9])$',
               maxLength: 63,
-              description: "Domain label. e.g. 'UseR'"
+              description: "Domain label. e.g. 'UseR'",
             },
             records: {
               type: 'object',
@@ -370,63 +370,65 @@ describe('StateTransitionFacade', () => {
                   pattern: '^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$',
                   maxLength: 44,
                   minLength: 42,
-                  description: 'base58 identity id string'
-                }
+                  description: 'base58 identity id string',
+                },
               },
               minProperties: 1,
-              additionalProperties: false
+              additionalProperties: false,
             },
             nameHash: {
               type: 'string',
               pattern: '^[A-Fa-f0-9]+$',
               maxLength: 68,
               minLength: 68,
-              description: 'Double sha-256 multihash of the full domain name in a form of a hex string'
+              description: 'Double sha-256 multihash of the full domain name in a form of a hex string',
             },
             preorderSalt: {
               type: 'string',
               pattern: '^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$',
               maxLength: 34,
               minLength: 25,
-              description: 'Domain pre-order salt. Currently randomly generated base58 address string.'
+              description: 'Domain pre-order salt. Currently randomly generated base58 address string.',
             },
             normalizedLabel: {
               type: 'string',
               pattern: '^((?!-)[a-z0-9-]{0,62}[a-z0-9])$',
               maxLength: 63,
-              description: "Domain label in a lower case. e.g. 'user'"
+              description: "Domain label in a lower case. e.g. 'user'",
             },
             normalizedParentDomainName: {
               type: 'string',
               maxLength: 190,
               minLength: 0,
-              description: "A full parent domain name in lower case. e.g. 'dash.org'"
-            }
+              description: "A full parent domain name in lower case. e.g. 'dash.org'",
+            },
           },
-          additionalProperties: false
+          additionalProperties: false,
         },
         preorder: {
           indices: [
-            { unique: true, properties: [ { saltedDomainHash: 'asc' } ] }
+            { unique: true, properties: [{ saltedDomainHash: 'asc' }] },
           ],
-          required: [ 'saltedDomainHash' ],
+          required: ['saltedDomainHash'],
           properties: {
             saltedDomainHash: {
               type: 'string',
               pattern: '^[A-Fa-f0-9]+$',
               maxLength: 68,
               minLength: 68,
-              description: 'Double sha-256 multihash of the full domain name + salt in a form of a hex string'
-            }
+              description: 'Double sha-256 multihash of the full domain name + salt in a form of a hex string',
+            },
           },
-          additionalProperties: false
-        }
-      }
+          additionalProperties: false,
+        },
+      },
     });
 
     stateRepositoryMock.fetchDataContract.withArgs('295xRRRMGYyAruG39XdAibaU9jMAzxhknkkAxFE7uVkW').resolves(
       contract,
     );
+
+    const privateKey = new PrivateKey('a891a0cfbc1235fc768f23af45f8a786ff98b54e263d68d87074be3e8f7c1a02');
 
     const identity = new Identity({
       id: 'Di94QuVennkE4FfTQHJF2MJhqehLbmodSn5Uzy5u4zHL',
@@ -434,7 +436,7 @@ describe('StateTransitionFacade', () => {
         {
           id: 0,
           type: 0,
-          data: 'A2AXIu93hht/yM/tYGg+mQ5pppT4v7jOf4ngG9htwS4Q',
+          data: privateKey.toPublicKey().toBuffer().toString('base64'),
           isEnabled: true,
         },
       ],
@@ -445,17 +447,17 @@ describe('StateTransitionFacade', () => {
       identity,
     );
 
-    const stateTransition = new DocumentsBatchTransition(st);
+    const stFromPlayground = new DocumentsBatchTransition(st);
 
-    const privateKey = new PrivateKey('a891a0cfbc1235fc768f23af45f8a786ff98b54e263d68d87074be3e8f7c1a02');
+    const pubKey = identity.getPublicKeyById(0);
 
-    stateTransition.sign(
-      identity.getPublicKeyById(0),
+    stFromPlayground.sign(
+      pubKey,
       privateKey,
     );
 
-    const result = await dpp.stateTransition.validateStructure(stateTransition);
+    const result = await dpp.stateTransition.validateStructure(stFromPlayground);
 
     expect(result.isValid()).to.be.true();
-  })
+  });
 });
