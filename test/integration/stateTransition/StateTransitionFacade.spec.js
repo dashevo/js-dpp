@@ -359,7 +359,9 @@ describe('StateTransitionFacade', () => {
         privateKey,
       );
 
-      await dpp.dataContract.validate(contract);
+      const contractValidationResult = await dpp.dataContract.validate(contract);
+
+      expect(contractValidationResult.isValid()).to.be.true();
 
       const result = await dpp.stateTransition.validateStructure(stFromPlayground);
 
