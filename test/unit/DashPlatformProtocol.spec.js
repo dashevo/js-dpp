@@ -9,17 +9,19 @@ describe('DashPlatformProtocol', () => {
   let dpp;
   let stateRepositoryMock;
   let jsonSchemaValidatorMock;
-  let useLockTxFallback;
+  let enableLockTxOneBlockConfirmationFallback;
 
   beforeEach(function beforeEach() {
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
     jsonSchemaValidatorMock = {};
-    useLockTxFallback = true;
+    enableLockTxOneBlockConfirmationFallback = true;
 
     dpp = new DashPlatformProtocol({
       stateRepository: stateRepositoryMock,
       jsonSchemaValidator: jsonSchemaValidatorMock,
-      useLockTxFallback,
+      identities: {
+        enableLockTxOneBlockConfirmationFallback,
+      },
     });
   });
 
@@ -50,9 +52,10 @@ describe('DashPlatformProtocol', () => {
     });
   });
 
-  describe('useLockTxFallback', () => {
-    it('should contain useLockTxFallback value', async () => {
-      expect(dpp.useLockTxFallback).to.equal(useLockTxFallback);
+  describe('enableLockTxOneBlockConfirmationFallback', () => {
+    it('should contain enableLockTxOneBlockConfirmationFallback value', async () => {
+      expect(dpp.enableLockTxOneBlockConfirmationFallback)
+        .to.equal(enableLockTxOneBlockConfirmationFallback);
     });
   });
 });
