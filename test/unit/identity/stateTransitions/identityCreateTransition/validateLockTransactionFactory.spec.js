@@ -119,7 +119,7 @@ describe('validateLockTransactionFactory', () => {
     expect(error.getRawStateTransition()).to.deep.equal(stateTransition);
   });
 
-  it('should return consensus error from fetchLockTransactionOutput', async () => {
+  it('should return an invalid result if transaction is not found', async () => {
     const transactionHash = 'f1c1cbc37b5d5543eeb126a53de7863ea2b9d5dbd03b981337bbda76cc6d771c';
     const notFoundError = new IdentityLockTransactionNotFoundError(transactionHash);
 
