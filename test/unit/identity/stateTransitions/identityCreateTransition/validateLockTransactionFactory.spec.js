@@ -19,7 +19,7 @@ describe('validateLockTransactionFactory', () => {
   let validateLockTransaction;
   let stateTransition;
   let privateKey;
-  let fetchLockTransactionOutputMock;
+  let fetchConfirmedLockTransactionOutputMock;
   let output;
 
   beforeEach(function beforeEach() {
@@ -51,10 +51,10 @@ describe('validateLockTransactionFactory', () => {
       script,
     };
 
-    fetchLockTransactionOutputMock = this.sinonSandbox.stub().resolves(output);
+    fetchConfirmedLockTransactionOutputMock = this.sinonSandbox.stub().resolves(output);
 
     validateLockTransaction = validateLockTransactionFactory(
-      fetchLockTransactionOutputMock,
+      fetchConfirmedLockTransactionOutputMock,
     );
   });
 
@@ -63,7 +63,7 @@ describe('validateLockTransactionFactory', () => {
 
     expect(result.isValid()).to.be.true();
 
-    expect(fetchLockTransactionOutputMock).to.be.calledOnceWithExactly(
+    expect(fetchConfirmedLockTransactionOutputMock).to.be.calledOnceWithExactly(
       stateTransition.getLockedOutPoint(),
     );
   });
@@ -123,7 +123,7 @@ describe('validateLockTransactionFactory', () => {
     const transactionHash = 'f1c1cbc37b5d5543eeb126a53de7863ea2b9d5dbd03b981337bbda76cc6d771c';
     const notFoundError = new IdentityLockTransactionNotFoundError(transactionHash);
 
-    fetchLockTransactionOutputMock.throws(notFoundError);
+    fetchConfirmedLockTransactionOutputMock.throws(notFoundError);
 
     const result = await validateLockTransaction(stateTransition);
 

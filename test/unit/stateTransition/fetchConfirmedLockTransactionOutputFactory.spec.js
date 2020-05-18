@@ -1,7 +1,9 @@
 const { Transaction } = require('@dashevo/dashcore-lib');
 const WrongOutPointError = require('@dashevo/dashcore-lib/lib/errors/WrongOutPointError');
 
-const fetchLockTransactionOutputFactory = require('../../../lib/stateTransition/fetchLockTransactionOutputFactory');
+const fetchConfirmedLockTransactionOutputFactory = require(
+  '../../../lib/stateTransition/fetchConfirmedLockTransactionOutputFactory',
+);
 
 const createStateRepositoryMock = require('../../../lib/test/mocks/createStateRepositoryMock');
 
@@ -18,13 +20,13 @@ const IdentityLockTransactionIsNotFinalizedError = require(
   '../../../lib/errors/IdentityLockTransactionIsNotFinalizedError',
 );
 
-describe('fetchLockTransactionOutputFactory', () => {
+describe('fetchConfirmedLockTransactionOutputFactory', () => {
   let rawTransaction;
   let transactionHash;
   let outputIndex;
   let stateRepositoryMock;
   let parseTransactionOutPointBufferMock;
-  let fetchLockTransactionOutput;
+  let fetchConfirmedLockTransactionOutput;
   let lockedOutPoint;
   let enableLockTxOneBlockConfirmationFallback;
 
@@ -46,7 +48,7 @@ describe('fetchLockTransactionOutputFactory', () => {
 
     enableLockTxOneBlockConfirmationFallback = false;
 
-    fetchLockTransactionOutput = fetchLockTransactionOutputFactory(
+    fetchConfirmedLockTransactionOutput = fetchConfirmedLockTransactionOutputFactory(
       stateRepositoryMock,
       parseTransactionOutPointBufferMock,
       enableLockTxOneBlockConfirmationFallback,
@@ -56,7 +58,7 @@ describe('fetchLockTransactionOutputFactory', () => {
   it('should return lock transaction output', async () => {
     const transaction = new Transaction(rawTransaction.hex);
 
-    const result = await fetchLockTransactionOutput(lockedOutPoint);
+    const result = await fetchConfirmedLockTransactionOutput(lockedOutPoint);
 
     expect(result).to.deep.equal(transaction.outputs[outputIndex]);
     expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
@@ -69,7 +71,7 @@ describe('fetchLockTransactionOutputFactory', () => {
     parseTransactionOutPointBufferMock.throws(wrongOutPointError);
 
     try {
-      await fetchLockTransactionOutput(lockedOutPoint);
+      await fetchConfirmedLockTransactionOutput(lockedOutPoint);
 
       expect.fail('should throw InvalidIdentityOutPointError');
     } catch (e) {
@@ -84,7 +86,7 @@ describe('fetchLockTransactionOutputFactory', () => {
     stateRepositoryMock.fetchTransaction.resolves(null);
 
     try {
-      await fetchLockTransactionOutput(lockedOutPoint);
+      await fetchConfirmedLockTransactionOutput(lockedOutPoint);
 
       expect.fail('should throw InvalidIdentityOutPointError');
     } catch (e) {
@@ -104,7 +106,7 @@ describe('fetchLockTransactionOutputFactory', () => {
     });
 
     try {
-      await fetchLockTransactionOutput(lockedOutPoint);
+      await fetchConfirmedLockTransactionOutput(lockedOutPoint);
 
       expect.fail('should throw InvalidIdentityOutPointError');
     } catch (e) {
@@ -120,7 +122,7 @@ describe('fetchLockTransactionOutputFactory', () => {
     rawTransaction.instantlock = false;
 
     try {
-      await fetchLockTransactionOutput(lockedOutPoint);
+      await fetchConfirmedLockTransactionOutput(lockedOutPoint);
 
       expect.fail('should throw IdentityLockTransactionIsNotFinalizedError');
     } catch (e) {
@@ -134,7 +136,7 @@ describe('fetchLockTransactionOutputFactory', () => {
 
     const transaction = new Transaction(rawTransaction.hex);
 
-    const result = await fetchLockTransactionOutput(lockedOutPoint);
+    const result = await fetchConfirmedLockTransactionOutput(lockedOutPoint);
 
     expect(result).to.deep.equal(transaction.outputs[outputIndex]);
     expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
@@ -146,7 +148,7 @@ describe('fetchLockTransactionOutputFactory', () => {
 
     const transaction = new Transaction(rawTransaction.hex);
 
-    const result = await fetchLockTransactionOutput(lockedOutPoint);
+    const result = await fetchConfirmedLockTransactionOutput(lockedOutPoint);
 
     expect(result).to.deep.equal(transaction.outputs[outputIndex]);
     expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
@@ -160,7 +162,7 @@ describe('fetchLockTransactionOutputFactory', () => {
 
     enableLockTxOneBlockConfirmationFallback = true;
 
-    fetchLockTransactionOutput = fetchLockTransactionOutputFactory(
+    fetchConfirmedLockTransactionOutput = fetchConfirmedLockTransactionOutputFactory(
       stateRepositoryMock,
       parseTransactionOutPointBufferMock,
       enableLockTxOneBlockConfirmationFallback,
@@ -168,7 +170,7 @@ describe('fetchLockTransactionOutputFactory', () => {
 
     const transaction = new Transaction(rawTransaction.hex);
 
-    const result = await fetchLockTransactionOutput(lockedOutPoint);
+    const result = await fetchConfirmedLockTransactionOutput(lockedOutPoint);
 
     expect(result).to.deep.equal(transaction.outputs[outputIndex]);
     expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
@@ -182,14 +184,14 @@ describe('fetchLockTransactionOutputFactory', () => {
 
     enableLockTxOneBlockConfirmationFallback = true;
 
-    fetchLockTransactionOutput = fetchLockTransactionOutputFactory(
+    fetchConfirmedLockTransactionOutput = fetchConfirmedLockTransactionOutputFactory(
       stateRepositoryMock,
       parseTransactionOutPointBufferMock,
       enableLockTxOneBlockConfirmationFallback,
     );
 
     try {
-      await fetchLockTransactionOutput(lockedOutPoint);
+      await fetchConfirmedLockTransactionOutput(lockedOutPoint);
 
       expect.fail('should throw IdentityLockTransactionIsNotFinalizedError');
     } catch (e) {
