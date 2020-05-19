@@ -51,11 +51,4 @@ describe('DashPlatformProtocol', () => {
       expect(result).to.equal(jsonSchemaValidatorMock);
     });
   });
-
-  describe('enableLockTxOneBlockConfirmationFallback', () => {
-    it('should contain enableLockTxOneBlockConfirmationFallback value', async () => {
-      expect(dpp.enableLockTxOneBlockConfirmationFallback)
-        .to.equal(enableLockTxOneBlockConfirmationFallback);
-    });
-  });
 });
