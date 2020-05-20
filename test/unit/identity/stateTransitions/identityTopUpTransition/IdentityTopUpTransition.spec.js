@@ -26,7 +26,7 @@ describe('IdentityTopUpTransition', () => {
     };
 
     IdentityTopUpTransition = rewiremock.proxy(
-      '../../../../../lib/identity/stateTransitions/IdentityTopUpTransition/IdentityTopUpTransition',
+      '../../../../../lib/identity/stateTransitions/identityTopUpTransition/IdentityTopUpTransition',
       {
         '../../../../../lib/util/hash': hashMock,
         '../../../../../node_modules/@dashevo/dashcore-lib': {
