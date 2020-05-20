@@ -16,7 +16,7 @@ const ValidationResult = require('../../../../../lib/validation/ValidationResult
 
 const createStateRepositoryMock = require('../../../../../lib/test/mocks/createStateRepositoryMock');
 
-describe('validateIdentityTopUpSTDataFactory', () => {
+describe('validateIdentityTopUpTransitionDataFactory', () => {
   let validateIdentityTopUpSTData;
   let stateTransition;
   let stateRepositoryMock;

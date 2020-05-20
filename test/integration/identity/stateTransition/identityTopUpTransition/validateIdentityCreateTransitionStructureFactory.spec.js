@@ -8,7 +8,7 @@ const IdentityTopUpTransition = require(
   '../../../../../lib/identity/stateTransitions/identityTopUpTransition/IdentityTopUpTransition',
 );
 
-describe('validateIdentityTopUpSTStructureFactory', () => {
+describe('validateIdentityTopUpTransitionStructureFactory', () => {
   let validateIdentityTopUpST;
   let rawStateTransition;
   let stateTransition;
