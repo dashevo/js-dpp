@@ -1,5 +1,4 @@
-const IdentityTopUpTransition = require('../../../../../lib/identity/stateTransitions/identityTopUpTransition/IdentityTopUpTransition');
-const stateTransitionTypes = require('../../../../../lib/stateTransition/stateTransitionTypes');
+const getIdentityTopUpSTFixture = require('../../../../../lib/test/fixtures/getIdentityTopUpSTFixture');
 
 const { expectValidationError } = require(
   '../../../../../lib/test/expect/expectError',
@@ -9,8 +8,8 @@ const validateIdentityTopUpSTDataFactory = require(
   '../../../../../lib/identity/stateTransitions/identityTopUpTransition/validateIdentityTopUpSTDataFactory',
 );
 
-const IdentityAlreadyExistsError = require(
-  '../../../../../lib/errors/IdentityAlreadyExistsError',
+const IdentityNotFoundError = require(
+  '../../../../../lib/errors/IdentityNotFoundError',
 );
 
 const ValidationResult = require('../../../../../lib/validation/ValidationResult');
@@ -33,37 +32,25 @@ describe('validateIdentityTopUpSTDataFactory', () => {
       validateLockTransactionMock,
     );
 
-    stateTransition = new IdentityTopUpTransition({
-      protocolVersion: 0,
-      type: stateTransitionTypes.IDENTITY_CREATE,
-      lockedOutPoint: 'azW1UgBiB0CmdphN6of4DbT91t0Xv3/c3YUV4CnoV/kAAAAA',
-      publicKeys: [
-        {
-          id: 0,
-          type: 1,
-          data: 'Alw8x/v8UvcQyUFJf9AYdsGJFx6iJ0WPUBr8s4opfWW0',
-          isEnabled: true,
-        },
-      ],
-    });
+    stateTransition = getIdentityTopUpSTFixture();
     stateTransition.signByPrivateKey(privateKey);
 
     const rawTransaction = '030000000137feb5676d0851337ea3c9a992496aab7a0b3eee60aeeb9774000b7f4bababa5000000006b483045022100d91557de37645c641b948c6cd03b4ae3791a63a650db3e2fee1dcf5185d1b10402200e8bd410bf516ca61715867666d31e44495428ce5c1090bf2294a829ebcfa4ef0121025c3cc7fbfc52f710c941497fd01876c189171ea227458f501afcb38a297d65b4ffffffff021027000000000000166a14152073ca2300a86b510fa2f123d3ea7da3af68dcf77cb0090a0000001976a914152073ca2300a86b510fa2f123d3ea7da3af68dc88ac00000000';
 
     stateRepositoryMock.fetchTransaction.resolves(rawTransaction);
+    stateRepositoryMock.fetchIdentity.resolves({});
   });
 
-  it('should return invalid result if identity already exists', async () => {
-    stateRepositoryMock.fetchIdentity.resolves({});
-
+  it('should return invalid result if identity does not exist', async () => {
+    stateRepositoryMock.fetchIdentity.resolves(null);
     const result = await validateIdentityTopUpSTData(stateTransition);
 
-    expectValidationError(result, IdentityAlreadyExistsError, 1);
+    expectValidationError(result, IdentityNotFoundError, 1);
 
     const [error] = result.getErrors();
 
-    expect(error.message).to.equal(`Identity with id ${stateTransition.getIdentityId()} already exists`);
-    expect(error.getStateTransition()).to.deep.equal(stateTransition);
+    expect(error.message).to.equal('Identity not found');
+    expect(error.getIdentityId()).to.be.equal(stateTransition.getIdentityId());
   });
 
   it('should return valid result if state transition is valid', async () => {
