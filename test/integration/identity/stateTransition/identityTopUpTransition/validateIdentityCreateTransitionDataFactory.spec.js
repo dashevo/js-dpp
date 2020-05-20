@@ -5,7 +5,7 @@ const { expectValidationError } = require(
 );
 
 const validateIdentityTopUpSTDataFactory = require(
-  '../../../../../lib/identity/stateTransitions/identityTopUpTransition/validateIdentityTopUpSTDataFactory',
+  '../../../../../lib/identity/stateTransitions/identityTopUpTransition/validateIdentityTopUpTransitionDataFactory',
 );
 
 const IdentityNotFoundError = require(

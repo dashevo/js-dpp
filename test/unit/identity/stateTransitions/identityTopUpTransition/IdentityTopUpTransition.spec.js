@@ -1,7 +1,5 @@
 const rewiremock = require('rewiremock/node');
 
-const IdentityPublicKey = require('../../../../../lib/identity/IdentityPublicKey');
-
 const stateTransitionTypes = require(
   '../../../../../lib/stateTransition/stateTransitionTypes',
 );
