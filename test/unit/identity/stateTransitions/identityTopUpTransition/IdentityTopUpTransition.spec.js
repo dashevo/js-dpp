@@ -41,25 +41,19 @@ describe('IdentityTopUpTransition', () => {
   });
 
   describe('#constructor', () => {
-    it('should create an instance with default values if nothing specified', () => {
-      stateTransition = new IdentityTopUpTransition();
-
-      expect(stateTransition.publicKeys).to.deep.equal([]);
-    });
-
     it('should create an instance with specified data from specified raw transition', () => {
-      expect(stateTransition.lockedOutPoint).to.deep.equal(
+      expect(stateTransition.lockedOutPoint).to.be.equal(
         rawStateTransition.lockedOutPoint,
       );
-      expect(stateTransition.publicKeys).to.deep.equal([
-        new IdentityPublicKey(rawStateTransition.publicKeys[0]),
-      ]);
+      expect(stateTransition.identityId).to.be.equal(
+        rawStateTransition.identityId,
+      );
     });
   });
 
   describe('#getType', () => {
     it('should return IDENTITY_CREATE type', () => {
-      expect(stateTransition.getType()).to.equal(stateTransitionTypes.IDENTITY_CREATE);
+      expect(stateTransition.getType()).to.equal(stateTransitionTypes.IDENTITY_TOP_UP);
     });
   });
 
@@ -100,9 +94,9 @@ describe('IdentityTopUpTransition', () => {
 
       expect(jsonWithASig).to.deep.equal({
         protocolVersion: 0,
-        type: stateTransitionTypes.IDENTITY_CREATE,
+        type: stateTransitionTypes.IDENTITY_TOP_UP,
         lockedOutPoint: rawStateTransition.lockedOutPoint,
-        publicKeys: rawStateTransition.publicKeys,
+        identityId: '9egkkRs6ErFbLUh3yYn8mdgeKGpJQ41iayS1Z9bwsRM7',
         signature: null,
       });
 
@@ -110,9 +104,9 @@ describe('IdentityTopUpTransition', () => {
 
       expect(jsonWithSig).to.deep.equal({
         protocolVersion: 0,
-        type: stateTransitionTypes.IDENTITY_CREATE,
+        type: stateTransitionTypes.IDENTITY_TOP_UP,
         lockedOutPoint: rawStateTransition.lockedOutPoint,
-        publicKeys: rawStateTransition.publicKeys,
+        identityId: '9egkkRs6ErFbLUh3yYn8mdgeKGpJQ41iayS1Z9bwsRM7',
       });
     });
   });
