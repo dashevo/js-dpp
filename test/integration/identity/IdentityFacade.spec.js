@@ -9,6 +9,7 @@ const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
 const Identity = require('../../../lib/identity/Identity');
 const IdentityCreateTransition = require('../../../lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition');
+const IdentityTopUpTransition = require('../../../lib/identity/stateTransitions/identityTopUpTransition/IdentityTopUpTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
@@ -104,17 +105,17 @@ describe('IdentityFacade', () => {
   });
 
   describe('#createIdentityTopUpTransition', () => {
-    it('should create IdentityCreateTransition from Identity model', () => {
+    it('should create IdentityTopUpTransition from identity id and outpoint', () => {
       const lockedOutPoint = crypto.randomBytes(64);
 
       identity.setLockedOutPoint(lockedOutPoint);
 
-      const stateTransition = dpp.identity.createIdentityTopUpTransition(identity);
+      const stateTransition = dpp.identity
+        .createIdentityTopUpTransition(identity.getId(), lockedOutPoint);
 
-      expect(stateTransition).to.be.instanceOf(IdentityCreateTransition);
-      expect(stateTransition.getPublicKeys()).to.equal(identity.getPublicKeys());
+      expect(stateTransition).to.be.instanceOf(IdentityTopUpTransition);
+      expect(stateTransition.getIdentityId()).to.be.equal(identity.getId());
       expect(stateTransition.getLockedOutPoint()).to.equal(lockedOutPoint.toString('base64'));
-      throw new Error('Not implemented');
     });
   });
 });
