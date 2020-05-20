@@ -13,7 +13,7 @@ describe('validateIdentityTopUpTransitionStructureFactory', () => {
   let rawStateTransition;
   let stateTransition;
 
-  beforeEach(function beforeEach() {
+  beforeEach(() => {
     validateIdentityTopUpST = validateIdentityTopUpSTStructureFactory();
 
     stateTransition = getIdentityTopUpSTFixture();

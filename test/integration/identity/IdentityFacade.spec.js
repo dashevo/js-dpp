@@ -105,7 +105,6 @@ describe('IdentityFacade', () => {
 
   describe('#createIdentityTopUpTransition', () => {
     it('should create IdentityCreateTransition from Identity model', () => {
-      throw new Error('Not implemented');
       const lockedOutPoint = crypto.randomBytes(64);
 
       identity.setLockedOutPoint(lockedOutPoint);
@@ -115,6 +114,7 @@ describe('IdentityFacade', () => {
       expect(stateTransition).to.be.instanceOf(IdentityCreateTransition);
       expect(stateTransition.getPublicKeys()).to.equal(identity.getPublicKeys());
       expect(stateTransition.getLockedOutPoint()).to.equal(lockedOutPoint.toString('base64'));
+      throw new Error('Not implemented');
     });
   });
 });
