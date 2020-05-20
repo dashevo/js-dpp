@@ -173,6 +173,7 @@ describe('IdentityFactory', () => {
     it('should create IdentityTopUpTransition from identity id and outpoint', () => {
       const lockedOutPoint = crypto.randomBytes(64);
 
+
       identity.setLockedOutPoint(lockedOutPoint);
 
       const stateTransition = factory
