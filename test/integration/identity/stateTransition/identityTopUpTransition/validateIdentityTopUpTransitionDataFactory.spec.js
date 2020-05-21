@@ -21,15 +21,17 @@ describe('validateIdentityTopUpTransitionDataFactory', () => {
   let stateTransition;
   let stateRepositoryMock;
   let validateLockTransactionMock;
+  let validateIdentityExistenceMock;
 
   beforeEach(function beforeEach() {
     const privateKey = 'af432c476f65211f45f48f1d42c9c0b497e56696aa1736b40544ef1a496af837';
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
     validateLockTransactionMock = this.sinonSandbox.stub().returns(new ValidationResult());
+    validateIdentityExistenceMock = this.sinonSandbox.stub().resolves(new ValidationResult());
 
     validateIdentityTopUpSTData = validateIdentityTopUpSTDataFactory(
-      stateRepositoryMock,
       validateLockTransactionMock,
+      validateIdentityExistenceMock,
     );
 
     stateTransition = getIdentityTopUpSTFixture();
@@ -42,7 +44,10 @@ describe('validateIdentityTopUpTransitionDataFactory', () => {
   });
 
   it('should return invalid result if identity does not exist', async () => {
-    stateRepositoryMock.fetchIdentity.resolves(null);
+    const identityNotFoundResult = new ValidationResult();
+    identityNotFoundResult.addError(new IdentityNotFoundError(stateTransition.getIdentityId()));
+    validateIdentityExistenceMock.resolves(identityNotFoundResult);
+
     const result = await validateIdentityTopUpSTData(stateTransition);
 
     expectValidationError(result, IdentityNotFoundError, 1);
