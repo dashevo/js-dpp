@@ -1,6 +1,6 @@
 const getIdentityTopUpSTFixture = require('../../../../../lib/test/fixtures/getIdentityTopUpSTFixture');
 
-const validateIdentityTopUpSTStructureFactory = require(
+const validateIdentityTopUpTransitionStructure = require(
   '../../../../../lib/identity/stateTransitions/identityTopUpTransition/validateIdentityTopUpTransitionStructure',
 );
 
@@ -8,27 +8,26 @@ const IdentityTopUpTransition = require(
   '../../../../../lib/identity/stateTransitions/identityTopUpTransition/IdentityTopUpTransition',
 );
 
-describe('validateIdentityTopUpTransitionStructureFactory', () => {
-  let validateIdentityTopUpST;
+describe('validateIdentityTopUpTransitionStructure', () => {
   let rawStateTransition;
   let stateTransition;
 
   beforeEach(() => {
-    validateIdentityTopUpST = validateIdentityTopUpSTStructureFactory();
-
     stateTransition = getIdentityTopUpSTFixture();
 
     rawStateTransition = stateTransition.toJSON();
   });
 
   it('should pass valid raw state transition', () => {
-    const result = validateIdentityTopUpST(rawStateTransition);
+    const result = validateIdentityTopUpTransitionStructure(rawStateTransition);
 
     expect(result.isValid()).to.be.true();
   });
 
   it('should pass valid state transition', () => {
-    const result = validateIdentityTopUpST(new IdentityTopUpTransition(rawStateTransition));
+    const result = validateIdentityTopUpTransitionStructure(
+      new IdentityTopUpTransition(rawStateTransition),
+    );
 
     expect(result.isValid()).to.be.true();
   });
