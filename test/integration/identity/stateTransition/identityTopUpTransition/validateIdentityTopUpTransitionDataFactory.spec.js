@@ -17,7 +17,7 @@ const ValidationResult = require('../../../../../lib/validation/ValidationResult
 const createStateRepositoryMock = require('../../../../../lib/test/mocks/createStateRepositoryMock');
 
 describe('validateIdentityTopUpTransitionDataFactory', () => {
-  let validateIdentityTopUpSTData;
+  let validateIdentityTopUpTransitionData;
   let stateTransition;
   let stateRepositoryMock;
   let validateLockTransactionMock;
@@ -29,7 +29,7 @@ describe('validateIdentityTopUpTransitionDataFactory', () => {
     validateLockTransactionMock = this.sinonSandbox.stub().returns(new ValidationResult());
     validateIdentityExistenceMock = this.sinonSandbox.stub().resolves(new ValidationResult());
 
-    validateIdentityTopUpSTData = validateIdentityTopUpTransitionDataFactory(
+    validateIdentityTopUpTransitionData = validateIdentityTopUpTransitionDataFactory(
       validateLockTransactionMock,
       validateIdentityExistenceMock,
     );
@@ -48,7 +48,7 @@ describe('validateIdentityTopUpTransitionDataFactory', () => {
     identityNotFoundResult.addError(new IdentityNotFoundError(stateTransition.getIdentityId()));
     validateIdentityExistenceMock.resolves(identityNotFoundResult);
 
-    const result = await validateIdentityTopUpSTData(stateTransition);
+    const result = await validateIdentityTopUpTransitionData(stateTransition);
 
     expectValidationError(result, IdentityNotFoundError, 1);
 
@@ -59,7 +59,7 @@ describe('validateIdentityTopUpTransitionDataFactory', () => {
   });
 
   it('should return valid result if state transition is valid', async () => {
-    const result = await validateIdentityTopUpSTData(stateTransition);
+    const result = await validateIdentityTopUpTransitionData(stateTransition);
 
     expect(result.isValid()).to.be.true();
   });
@@ -73,7 +73,7 @@ describe('validateIdentityTopUpTransitionDataFactory', () => {
 
     validateLockTransactionMock.returns(validationResult);
 
-    const result = await validateIdentityTopUpSTData(stateTransition);
+    const result = await validateIdentityTopUpTransitionData(stateTransition);
 
     const [error] = result.getErrors();
     expect(error).to.deep.equal(validationError);
