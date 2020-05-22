@@ -3,7 +3,7 @@ const applyIdentityTopUpTransitionFactory = require(
 );
 
 const getIdentityFixture = require('../../../../../lib/test/fixtures/getIdentityFixture');
-const getIdentityTopUpSTFixture = require('../../../../../lib/test/fixtures/getIdentityTopUpSTFixture');
+const getIdentityTopUpTransitionFixture = require('../../../../../lib/test/fixtures/getIdentityTopUpTransitionFixture');
 
 const { convertSatoshiToCredits } = require('../../../../../lib/identity/creditsConverter');
 
@@ -28,8 +28,7 @@ describe('applyIdentityTopUpTransitionFactory', () => {
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
     stateRepositoryMock.fetchIdentity.resolves(identity);
 
-
-    stateTransition = getIdentityTopUpSTFixture();
+    stateTransition = getIdentityTopUpTransitionFixture();
     applyIdentityTopUpTransition = applyIdentityTopUpTransitionFactory(
       stateRepositoryMock,
       getLockedTransactionOutputMock,
@@ -37,13 +36,13 @@ describe('applyIdentityTopUpTransitionFactory', () => {
   });
 
   it('should store identity created from state transition', async () => {
-    const balanceBeforeTopUp = identity.balance;
+    const balanceBeforeTopUp = identity.getBalance();
     const balanceToTopUp = convertSatoshiToCredits(output.satoshis);
 
     await applyIdentityTopUpTransition(stateTransition);
 
-    expect(identity.balance).to.be.equal(balanceBeforeTopUp + balanceToTopUp);
-    expect(identity.balance).to.be.greaterThan(balanceBeforeTopUp);
+    expect(identity.getBalance()).to.be.equal(balanceBeforeTopUp + balanceToTopUp);
+    expect(identity.getBalance()).to.be.greaterThan(balanceBeforeTopUp);
 
     expect(getLockedTransactionOutputMock).to.be.calledOnceWithExactly(
       stateTransition.getLockedOutPoint(),

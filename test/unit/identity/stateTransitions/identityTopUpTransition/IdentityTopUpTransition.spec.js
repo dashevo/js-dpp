@@ -4,18 +4,19 @@ const stateTransitionTypes = require(
   '../../../../../lib/stateTransition/stateTransitionTypes',
 );
 
+const getIdentityTopUpTransitionFixture = require('../../../../../lib/test/fixtures/getIdentityTopUpTransitionFixture');
+
 describe('IdentityTopUpTransition', () => {
   let rawStateTransition;
   let stateTransition;
   let hashMock;
   let signerMock;
   let IdentityTopUpTransition;
+  let identityTopUpTransition;
 
   beforeEach(function beforeEach() {
-    rawStateTransition = {
-      lockedOutPoint: 'c3BlY2lhbEJ1ZmZlcg==',
-      identityId: '9egkkRs6ErFbLUh3yYn8mdgeKGpJQ41iayS1Z9bwsRM7',
-    };
+    identityTopUpTransition = getIdentityTopUpTransitionFixture();
+    rawStateTransition = identityTopUpTransition.toJSON();
 
     hashMock = this.sinonSandbox.stub();
     hashMock.returns(Buffer.alloc(32));

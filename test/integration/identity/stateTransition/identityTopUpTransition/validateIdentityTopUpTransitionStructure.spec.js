@@ -1,4 +1,4 @@
-const getIdentityTopUpSTFixture = require('../../../../../lib/test/fixtures/getIdentityTopUpSTFixture');
+const getIdentityTopUpTransitionFixture = require('../../../../../lib/test/fixtures/getIdentityTopUpTransitionFixture');
 
 const validateIdentityTopUpTransitionStructure = require(
   '../../../../../lib/identity/stateTransitions/identityTopUpTransition/validateIdentityTopUpTransitionStructure',
@@ -13,7 +13,7 @@ describe('validateIdentityTopUpTransitionStructure', () => {
   let stateTransition;
 
   beforeEach(() => {
-    stateTransition = getIdentityTopUpSTFixture();
+    stateTransition = getIdentityTopUpTransitionFixture();
 
     rawStateTransition = stateTransition.toJSON();
   });
