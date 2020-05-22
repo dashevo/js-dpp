@@ -13,7 +13,7 @@ const { expectValidationError } = require(
   '../../../../../lib/test/expect/expectError',
 );
 
-describe('validateLockTransactionFactory', () => {
+describe('validateIdentityPublicKeyUniquenessFactory', () => {
   let identity;
   let stateRepositoryMock;
   let validateIdentityPublicKeyUniqueness;
