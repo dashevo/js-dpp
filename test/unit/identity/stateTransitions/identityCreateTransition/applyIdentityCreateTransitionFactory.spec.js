@@ -50,8 +50,10 @@ describe('applyIdentityCreateTransitionFactory', () => {
     expect(stateRepositoryMock.storeIdentity).to.have.been.calledOnceWithExactly(
       identity,
     );
+
+    const [firstPublicKey] = identity.getPublicKeys();
     expect(stateRepositoryMock.storePublicKeyIdentityId).to.have.been.calledOnceWithExactly(
-      identity.getPublicKeyById(0).hash(),
+      firstPublicKey.hash(),
       identity.getId(),
     );
   });

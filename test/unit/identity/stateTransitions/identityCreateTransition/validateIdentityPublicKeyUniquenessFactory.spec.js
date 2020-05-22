@@ -2,8 +2,8 @@ const validateIdentityPublicKeyUniquenessFactory = require(
   '../../../../../lib/identity/stateTransitions/identityCreateTransition/validateIdentityPublicKeyUniquenessFactory',
 );
 
-const IdentityPublicKeyAlreadyExistsError = require(
-  '../../../../../lib/errors/IdentityPublicKeyAlreadyExistsError',
+const IdentityFirstPublicKeyAlreadyExistsError = require(
+  '../../../../../lib/errors/IdentityFirstPublicKeyAlreadyExistsError',
 );
 
 const getIdentityFixture = require('../../../../../lib/test/fixtures/getIdentityFixture');
@@ -31,11 +31,12 @@ describe('validateLockTransactionFactory', () => {
   it('should return invalid result if identity id was found', async () => {
     stateRepositoryMock.fetchPublicKeyIdentityId.resolves(identity.getId());
 
+    const [firstPublicKey] = identity.getPublicKeys();
     const result = await validateIdentityPublicKeyUniqueness(
-      identity.getPublicKeyById(0),
+      firstPublicKey,
     );
 
-    expectValidationError(result, IdentityPublicKeyAlreadyExistsError);
+    expectValidationError(result, IdentityFirstPublicKeyAlreadyExistsError);
 
     const [error] = result.getErrors();
 
