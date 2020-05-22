@@ -50,5 +50,9 @@ describe('applyIdentityCreateTransitionFactory', () => {
     expect(stateRepositoryMock.storeIdentity).to.have.been.calledOnceWithExactly(
       identity,
     );
+    expect(stateRepositoryMock.storePublicKeyIdentityId).to.have.been.calledOnceWithExactly(
+      identity.getPublicKeyById(0).hash(),
+      identity.getId(),
+    );
   });
 });
