@@ -1,14 +1,14 @@
 const { Transaction } = require('@dashevo/dashcore-lib');
 const WrongOutPointError = require('@dashevo/dashcore-lib/lib/errors/WrongOutPointError');
 
-const fetchConfirmedLockTransactionOutputFactory = require(
-  '../../../lib/stateTransition/fetchConfirmedLockTransactionOutputFactory',
+const fetchConfirmedAssetLockTransactionOutputFactory = require(
+  '../../../lib/stateTransition/fetchConfirmedAssetLockTransactionOutputFactory',
 );
 
 const createStateRepositoryMock = require('../../../lib/test/mocks/createStateRepositoryMock');
 
-const IdentityLockTransactionNotFoundError = require(
-  '../../../lib/errors/IdentityLockTransactionNotFoundError',
+const IdentityAssetLockTransactionNotFoundError = require(
+  '../../../lib/errors/IdentityAssetLockTransactionNotFoundError',
 );
 const InvalidIdentityOutPointError = require(
   '../../../lib/errors/InvalidIdentityOutPointError',
@@ -16,17 +16,17 @@ const InvalidIdentityOutPointError = require(
 const getRawTransactionFixture = require(
   '../../../lib/test/fixtures/getRawTransactionFixture',
 );
-const IdentityLockTransactionIsNotFinalizedError = require(
-  '../../../lib/errors/IdentityLockTransactionIsNotFinalizedError',
+const IdentityAssetLockTransactionIsNotFinalizedError = require(
+  '../../../lib/errors/IdentityAssetLockTransactionIsNotConfirmedError',
 );
 
-describe('fetchConfirmedLockTransactionOutputFactory', () => {
+describe('fetchConfirmedAssetLockTransactionOutputFactory', () => {
   let rawTransaction;
   let transactionHash;
   let outputIndex;
   let stateRepositoryMock;
   let parseTransactionOutPointBufferMock;
-  let fetchConfirmedLockTransactionOutput;
+  let fetchConfirmedAssetLockTransactionOutput;
   let lockedOutPoint;
   let enableLockTxOneBlockConfirmationFallback;
 
@@ -48,7 +48,7 @@ describe('fetchConfirmedLockTransactionOutputFactory', () => {
 
     enableLockTxOneBlockConfirmationFallback = false;
 
-    fetchConfirmedLockTransactionOutput = fetchConfirmedLockTransactionOutputFactory(
+    fetchConfirmedAssetLockTransactionOutput = fetchConfirmedAssetLockTransactionOutputFactory(
       stateRepositoryMock,
       parseTransactionOutPointBufferMock,
       enableLockTxOneBlockConfirmationFallback,
@@ -58,7 +58,7 @@ describe('fetchConfirmedLockTransactionOutputFactory', () => {
   it('should return lock transaction output', async () => {
     const transaction = new Transaction(rawTransaction.hex);
 
-    const result = await fetchConfirmedLockTransactionOutput(lockedOutPoint);
+    const result = await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
     expect(result).to.deep.equal(transaction.outputs[outputIndex]);
     expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
@@ -71,7 +71,7 @@ describe('fetchConfirmedLockTransactionOutputFactory', () => {
     parseTransactionOutPointBufferMock.throws(wrongOutPointError);
 
     try {
-      await fetchConfirmedLockTransactionOutput(lockedOutPoint);
+      await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
       expect.fail('should throw InvalidIdentityOutPointError');
     } catch (e) {
@@ -82,15 +82,15 @@ describe('fetchConfirmedLockTransactionOutputFactory', () => {
     }
   });
 
-  it('should throw IdentityLockTransactionNotFoundError if lock transaction is not found', async () => {
+  it('should throw IdentityAssetLockTransactionNotFoundError if lock transaction is not found', async () => {
     stateRepositoryMock.fetchTransaction.resolves(null);
 
     try {
-      await fetchConfirmedLockTransactionOutput(lockedOutPoint);
+      await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
       expect.fail('should throw InvalidIdentityOutPointError');
     } catch (e) {
-      expect(e).to.be.an.instanceof(IdentityLockTransactionNotFoundError);
+      expect(e).to.be.an.instanceof(IdentityAssetLockTransactionNotFoundError);
       expect(e.getTransactionHash()).to.deep.equal(transactionHash);
       expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
       expect(stateRepositoryMock.fetchTransaction).to.calledOnceWithExactly(transactionHash);
@@ -106,7 +106,7 @@ describe('fetchConfirmedLockTransactionOutputFactory', () => {
     });
 
     try {
-      await fetchConfirmedLockTransactionOutput(lockedOutPoint);
+      await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
       expect.fail('should throw InvalidIdentityOutPointError');
     } catch (e) {
@@ -117,16 +117,16 @@ describe('fetchConfirmedLockTransactionOutputFactory', () => {
     }
   });
 
-  it('should throw IdentityLockTransactionIsNotFinalizedError if transaction is not chainlocked and not instantlocked', async () => {
+  it('should throw IdentityAssetLockTransactionIsNotFinalizedError if transaction is not chainlocked and not instantlocked', async () => {
     rawTransaction.chainlock = false;
     rawTransaction.instantlock = false;
 
     try {
-      await fetchConfirmedLockTransactionOutput(lockedOutPoint);
+      await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
-      expect.fail('should throw IdentityLockTransactionIsNotFinalizedError');
+      expect.fail('should throw IdentityAssetLockTransactionIsNotFinalizedError');
     } catch (e) {
-      expect(e).to.be.an.instanceof(IdentityLockTransactionIsNotFinalizedError);
+      expect(e).to.be.an.instanceof(IdentityAssetLockTransactionIsNotFinalizedError);
       expect(e.getTransactionHash()).to.deep.equal(transactionHash);
     }
   });
@@ -136,7 +136,7 @@ describe('fetchConfirmedLockTransactionOutputFactory', () => {
 
     const transaction = new Transaction(rawTransaction.hex);
 
-    const result = await fetchConfirmedLockTransactionOutput(lockedOutPoint);
+    const result = await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
     expect(result).to.deep.equal(transaction.outputs[outputIndex]);
     expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
@@ -148,7 +148,7 @@ describe('fetchConfirmedLockTransactionOutputFactory', () => {
 
     const transaction = new Transaction(rawTransaction.hex);
 
-    const result = await fetchConfirmedLockTransactionOutput(lockedOutPoint);
+    const result = await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
     expect(result).to.deep.equal(transaction.outputs[outputIndex]);
     expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
@@ -162,7 +162,7 @@ describe('fetchConfirmedLockTransactionOutputFactory', () => {
 
     enableLockTxOneBlockConfirmationFallback = true;
 
-    fetchConfirmedLockTransactionOutput = fetchConfirmedLockTransactionOutputFactory(
+    fetchConfirmedAssetLockTransactionOutput = fetchConfirmedAssetLockTransactionOutputFactory(
       stateRepositoryMock,
       parseTransactionOutPointBufferMock,
       enableLockTxOneBlockConfirmationFallback,
@@ -170,32 +170,32 @@ describe('fetchConfirmedLockTransactionOutputFactory', () => {
 
     const transaction = new Transaction(rawTransaction.hex);
 
-    const result = await fetchConfirmedLockTransactionOutput(lockedOutPoint);
+    const result = await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
     expect(result).to.deep.equal(transaction.outputs[outputIndex]);
     expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
     expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(transactionHash);
   });
 
-  it('should throw IdentityLockTransactionIsNotFinalizedError on fallback and zero confirmations', async () => {
+  it('should throw IdentityAssetLockTransactionIsNotFinalizedError on fallback and zero confirmations', async () => {
     rawTransaction.confirmations = 0;
     rawTransaction.chainlock = false;
     rawTransaction.instantlock = false;
 
     enableLockTxOneBlockConfirmationFallback = true;
 
-    fetchConfirmedLockTransactionOutput = fetchConfirmedLockTransactionOutputFactory(
+    fetchConfirmedAssetLockTransactionOutput = fetchConfirmedAssetLockTransactionOutputFactory(
       stateRepositoryMock,
       parseTransactionOutPointBufferMock,
       enableLockTxOneBlockConfirmationFallback,
     );
 
     try {
-      await fetchConfirmedLockTransactionOutput(lockedOutPoint);
+      await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
-      expect.fail('should throw IdentityLockTransactionIsNotFinalizedError');
+      expect.fail('should throw IdentityAssetLockTransactionIsNotFinalizedError');
     } catch (e) {
-      expect(e).to.be.an.instanceof(IdentityLockTransactionIsNotFinalizedError);
+      expect(e).to.be.an.instanceof(IdentityAssetLockTransactionIsNotFinalizedError);
       expect(e.getTransactionHash()).to.deep.equal(transactionHash);
     }
   });
