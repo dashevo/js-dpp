@@ -10,13 +10,19 @@ const createStateRepositoryMock = require('../../../lib/test/mocks/createStateRe
 const IdentityAssetLockTransactionNotFoundError = require(
   '../../../lib/errors/IdentityAssetLockTransactionNotFoundError',
 );
-const InvalidIdentityOutPointError = require(
-  '../../../lib/errors/InvalidIdentityOutPointError',
+
+const IdentityAssetLockTransactionOutputNotFoundError = require(
+  '../../../lib/errors/IdentityAssetLockTransactionOutputNotFoundError',
 );
+
+const InvalidIdentityAssetLockTransactionOutPointError = require(
+  '../../../lib/errors/InvalidIdentityAssetLockTransactionOutPointError',
+);
+
 const getRawTransactionFixture = require(
   '../../../lib/test/fixtures/getRawTransactionFixture',
 );
-const IdentityAssetLockTransactionIsNotFinalizedError = require(
+const IdentityAssetLockTransactionIsNotConfirmedError = require(
   '../../../lib/errors/IdentityAssetLockTransactionIsNotConfirmedError',
 );
 
@@ -65,7 +71,7 @@ describe('fetchConfirmedAssetLockTransactionOutputFactory', () => {
     expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(transactionHash);
   });
 
-  it('should throw InvalidIdentityOutPointError if state transition has wrong out point', async () => {
+  it('should throw InvalidIdentityAssetLockTransactionOutPointError if state transition has wrong out point', async () => {
     const wrongOutPointError = new WrongOutPointError('Outpoint is wrong');
 
     parseTransactionOutPointBufferMock.throws(wrongOutPointError);
@@ -73,9 +79,9 @@ describe('fetchConfirmedAssetLockTransactionOutputFactory', () => {
     try {
       await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
-      expect.fail('should throw InvalidIdentityOutPointError');
+      expect.fail('should throw InvalidIdentityAssetLockTransactionOutPointError');
     } catch (e) {
-      expect(e).to.be.an.instanceof(InvalidIdentityOutPointError);
+      expect(e).to.be.an.instanceof(InvalidIdentityAssetLockTransactionOutPointError);
       expect(e.message).to.equal(`Invalid Identity out point: ${wrongOutPointError.message}`);
       expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
       expect(stateRepositoryMock.fetchTransaction).to.be.not.called();
@@ -88,7 +94,7 @@ describe('fetchConfirmedAssetLockTransactionOutputFactory', () => {
     try {
       await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
-      expect.fail('should throw InvalidIdentityOutPointError');
+      expect.fail('should throw IdentityAssetLockTransactionNotFoundError');
     } catch (e) {
       expect(e).to.be.an.instanceof(IdentityAssetLockTransactionNotFoundError);
       expect(e.getTransactionHash()).to.deep.equal(transactionHash);
@@ -97,7 +103,7 @@ describe('fetchConfirmedAssetLockTransactionOutputFactory', () => {
     }
   });
 
-  it('should throw InvalidIdentityOutPointError if transaction has no output with given index', async () => {
+  it('should throw IdentityAssetLockTransactionOutputNotFoundError if transaction has no output with given index', async () => {
     outputIndex = 10;
 
     parseTransactionOutPointBufferMock.returns({
@@ -108,25 +114,25 @@ describe('fetchConfirmedAssetLockTransactionOutputFactory', () => {
     try {
       await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
-      expect.fail('should throw InvalidIdentityOutPointError');
+      expect.fail('should throw IdentityAssetLockTransactionOutputNotFoundError');
     } catch (e) {
-      expect(e).to.be.an.instanceof(InvalidIdentityOutPointError);
-      expect(e.message).to.equal(`Invalid Identity out point: Output with index ${outputIndex} not found`);
+      expect(e).to.be.an.instanceof(IdentityAssetLockTransactionOutputNotFoundError);
+      expect(e.getOutputIndex()).to.equal(outputIndex);
       expect(parseTransactionOutPointBufferMock).to.be.calledOnceWithExactly(Buffer.from(lockedOutPoint, 'base64'));
       expect(stateRepositoryMock.fetchTransaction).to.calledOnceWithExactly(transactionHash);
     }
   });
 
-  it('should throw IdentityAssetLockTransactionIsNotFinalizedError if transaction is not chainlocked and not instantlocked', async () => {
+  it('should throw IdentityAssetLockTransactionIsNotConfirmedError if transaction is not chainlocked and not instantlocked', async () => {
     rawTransaction.chainlock = false;
     rawTransaction.instantlock = false;
 
     try {
       await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
-      expect.fail('should throw IdentityAssetLockTransactionIsNotFinalizedError');
+      expect.fail('should throw IdentityAssetLockTransactionIsNotConfirmedError');
     } catch (e) {
-      expect(e).to.be.an.instanceof(IdentityAssetLockTransactionIsNotFinalizedError);
+      expect(e).to.be.an.instanceof(IdentityAssetLockTransactionIsNotConfirmedError);
       expect(e.getTransactionHash()).to.deep.equal(transactionHash);
     }
   });
@@ -177,7 +183,7 @@ describe('fetchConfirmedAssetLockTransactionOutputFactory', () => {
     expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(transactionHash);
   });
 
-  it('should throw IdentityAssetLockTransactionIsNotFinalizedError on fallback and zero confirmations', async () => {
+  it('should throw IdentityAssetLockTransactionIsNotConfirmedError on fallback and zero confirmations', async () => {
     rawTransaction.confirmations = 0;
     rawTransaction.chainlock = false;
     rawTransaction.instantlock = false;
@@ -193,9 +199,9 @@ describe('fetchConfirmedAssetLockTransactionOutputFactory', () => {
     try {
       await fetchConfirmedAssetLockTransactionOutput(lockedOutPoint);
 
-      expect.fail('should throw IdentityAssetLockTransactionIsNotFinalizedError');
+      expect.fail('should throw IdentityAssetLockTransactionIsNotConfirmedError');
     } catch (e) {
-      expect(e).to.be.an.instanceof(IdentityAssetLockTransactionIsNotFinalizedError);
+      expect(e).to.be.an.instanceof(IdentityAssetLockTransactionIsNotConfirmedError);
       expect(e.getTransactionHash()).to.deep.equal(transactionHash);
     }
   });
