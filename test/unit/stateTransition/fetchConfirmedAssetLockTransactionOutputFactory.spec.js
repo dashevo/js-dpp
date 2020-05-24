@@ -28,7 +28,7 @@ describe('fetchConfirmedAssetLockTransactionOutputFactory', () => {
   let parseTransactionOutPointBufferMock;
   let fetchConfirmedAssetLockTransactionOutput;
   let lockedOutPoint;
-  let enableLockTxOneBlockConfirmationFallback;
+  let enableAssetLockTxOneBlockConfirmationFallback;
 
   beforeEach(function beforeEach() {
     rawTransaction = getRawTransactionFixture();
@@ -46,12 +46,12 @@ describe('fetchConfirmedAssetLockTransactionOutputFactory', () => {
       outputIndex,
     });
 
-    enableLockTxOneBlockConfirmationFallback = false;
+    enableAssetLockTxOneBlockConfirmationFallback = false;
 
     fetchConfirmedAssetLockTransactionOutput = fetchConfirmedAssetLockTransactionOutputFactory(
       stateRepositoryMock,
       parseTransactionOutPointBufferMock,
-      enableLockTxOneBlockConfirmationFallback,
+      enableAssetLockTxOneBlockConfirmationFallback,
     );
   });
 
@@ -160,12 +160,12 @@ describe('fetchConfirmedAssetLockTransactionOutputFactory', () => {
     rawTransaction.chainlock = false;
     rawTransaction.instantlock = false;
 
-    enableLockTxOneBlockConfirmationFallback = true;
+    enableAssetLockTxOneBlockConfirmationFallback = true;
 
     fetchConfirmedAssetLockTransactionOutput = fetchConfirmedAssetLockTransactionOutputFactory(
       stateRepositoryMock,
       parseTransactionOutPointBufferMock,
-      enableLockTxOneBlockConfirmationFallback,
+      enableAssetLockTxOneBlockConfirmationFallback,
     );
 
     const transaction = new Transaction(rawTransaction.hex);
@@ -182,12 +182,12 @@ describe('fetchConfirmedAssetLockTransactionOutputFactory', () => {
     rawTransaction.chainlock = false;
     rawTransaction.instantlock = false;
 
-    enableLockTxOneBlockConfirmationFallback = true;
+    enableAssetLockTxOneBlockConfirmationFallback = true;
 
     fetchConfirmedAssetLockTransactionOutput = fetchConfirmedAssetLockTransactionOutputFactory(
       stateRepositoryMock,
       parseTransactionOutPointBufferMock,
-      enableLockTxOneBlockConfirmationFallback,
+      enableAssetLockTxOneBlockConfirmationFallback,
     );
 
     try {
