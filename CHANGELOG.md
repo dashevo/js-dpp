@@ -12,13 +12,18 @@
 * add `hash` method to `IdentityPublicKey` ([#170](https://github.com/dashevo/js-dpp/pull/170), [#173](https://github.com/dashevo/js-dpp/pull/173))
 * `StateRepository#fetchTransaction` responses with verbose data ([#169](https://github.com/dashevo/js-dpp/pull/169))
 * check asset lock transaction is confirmed ([#168](https://github.com/dashevo/js-dpp/pull/168), [#184](https://github.com/dashevo/js-dpp/pull/184))
-* identity topup state transition ([#167](https://github.com/dashevo/js-dpp/pull/167), [#178](https://github.com/dashevo/js-dpp/pull/178), [#180](https://github.com/dashevo/js-dpp/pull/180))
+* introduce Identity Topup Transition ([#167](https://github.com/dashevo/js-dpp/pull/167), [#178](https://github.com/dashevo/js-dpp/pull/178), [#180](https://github.com/dashevo/js-dpp/pull/180))
 * validate first identity public key uniqueness ([#175](https://github.com/dashevo/js-dpp/pull/175))
 
 
 ### Code Refactoring
 
 * rename `LockTransaction` to `AssetLockTransaction` ([#177](https://github.com/dashevo/js-dpp/pull/177))
+
+
+### BREAKING CHANGES
+
+* the first public key in Identity should be unique
 
 
 
