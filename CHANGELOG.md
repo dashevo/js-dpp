@@ -24,7 +24,7 @@
 ### BREAKING CHANGES
 
 * the first public key in Identity should be unique
-* `StateRepository#fetchTransaction` expects verbose transaction
+* expect `StateRepository#fetchTransaction` to respond with verbose transaction
 
 
 ## [0.12.1](https://github.com/dashevo/js-dpp/compare/v0.12.0...v0.12.1) (2020-04-22)
