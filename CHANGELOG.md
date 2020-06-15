@@ -1,3 +1,12 @@
+## [0.13.1](https://github.com/dashevo/js-dpp/compare/v0.13.0...v0.13.1) (2020-06-15)
+
+
+### Bug Fixes
+
+* conflicting schema ids in AJV cache ([#187](https://github.com/dashevo/js-dpp/issues/187))
+
+
+
 # [0.13.0](https://github.com/dashevo/js-dpp/compare/v0.12.1...v0.13.0) (2020-06-08)
 
 
