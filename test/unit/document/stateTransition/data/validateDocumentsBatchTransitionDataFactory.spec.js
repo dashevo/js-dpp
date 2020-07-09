@@ -51,8 +51,15 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       transitions: documentTransitions.map((t) => t.toJSON()),
     });
 
+    const timeInSeconds = Math.ceil(new Date().getTime() / 1000);
+
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
     stateRepositoryMock.fetchDataContract.resolves(dataContract);
+    stateRepositoryMock.fetchLatestPlatformBlockHeader.resolves({
+      time: {
+        seconds: timeInSeconds,
+      },
+    });
 
     fetchDocumentsMock = this.sinonSandbox.stub().resolves([]);
 
