@@ -141,6 +141,43 @@ describe('Document', () => {
       expect(document.revision).to.equal(rawDocument.$revision);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
+
+    it('should create Document with $createdAt and data if preset', async () => {
+      const data = {
+        test: 1,
+      };
+
+      const createdAt = new Date().getTime();
+
+      rawDocument = {
+        $createdAt: createdAt,
+        ...data,
+      };
+
+      document = new Document(rawDocument);
+
+      expect(document.createdAt.getTime()).to.equal(rawDocument.$createdAt);
+      expect(document.updatedAt.getTime()).to.equal(rawDocument.$createdAt);
+      expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
+    });
+
+    it('should create Document with $updatedAt and data if preset', async () => {
+      const data = {
+        test: 1,
+      };
+
+      const updatedAt = new Date().getTime();
+
+      rawDocument = {
+        $updatedAt: updatedAt,
+        ...data,
+      };
+
+      document = new Document(rawDocument);
+
+
+      expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
+    });
   });
 
   describe('#getId', () => {
@@ -300,6 +337,50 @@ describe('Document', () => {
       expect(Document.prototype.serialize).to.have.been.calledOnce();
 
       expect(hashMock).to.have.been.calledOnceWith(serializedDocument);
+    });
+  });
+
+  describe('#setCreatedAt', () => {
+    it('should set $revision', () => {
+      const time = new Date();
+
+      const result = document.setCreatedAt(time);
+
+      expect(result).to.equal(document);
+
+      expect(document.createdAt).to.equal(time);
+    });
+  });
+
+  describe('#getCreatedAt', () => {
+    it('should return $revision', () => {
+      const time = new Date();
+
+      document.createdAt = time;
+
+      expect(document.getCreatedAt()).to.equal(time);
+    });
+  });
+
+  describe('#setUpdatedAt', () => {
+    it('should set $revision', () => {
+      const time = new Date();
+
+      const result = document.setUpdatedAt(time);
+
+      expect(result).to.equal(document);
+
+      expect(document.updatedAt).to.equal(time);
+    });
+  });
+
+  describe('#getUpdatedAt', () => {
+    it('should return $revision', () => {
+      const time = new Date();
+
+      document.updatedAt = time;
+
+      expect(document.getUpdatedAt()).to.equal(time);
     });
   });
 });
