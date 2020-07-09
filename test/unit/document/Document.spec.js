@@ -20,6 +20,8 @@ describe('Document', () => {
     const serializerMock = { encode: this.sinonSandbox.stub() };
     encodeMock = serializerMock.encode;
 
+    const now = new Date().getTime();
+
     Document = rewiremock.proxy('../../../lib/document/Document', {
       '../../../node_modules/lodash.get': lodashGetMock,
       '../../../node_modules/lodash.set': lodashSetMock,
@@ -33,6 +35,8 @@ describe('Document', () => {
       $dataContractId: generateRandomId(),
       $ownerId: generateRandomId(),
       $revision: DocumentCreateTransition.INITIAL_REVISION,
+      $createdAt: now,
+      $updatedAt: now,
     };
 
     document = new Document(rawDocument);
