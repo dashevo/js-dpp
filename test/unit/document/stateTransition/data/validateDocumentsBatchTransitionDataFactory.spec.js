@@ -36,6 +36,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
   let stateRepositoryMock;
   let executeDataTriggersMock;
   let documentTransitions;
+  let abciHeader;
 
   beforeEach(function beforeEach() {
     documents = getDocumentsFixture();
@@ -60,6 +61,14 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
         seconds: timeInSeconds,
       },
     });
+
+    abciHeader = {
+      time: {
+        seconds: new Date().getTime() / 1000,
+      },
+    };
+
+    stateRepositoryMock.fetchLatestPlatformBlockHeader.resolves(abciHeader);
 
     fetchDocumentsMock = this.sinonSandbox.stub().resolves([]);
 
@@ -199,6 +208,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       transitions: documentTransitions.map((t) => t.toJSON()),
     });
 
+    documents[0].setCreatedAt(replaceDocument.getCreatedAt());
     fetchDocumentsMock.resolves([documents[0]]);
 
     const result = await validateData(stateTransition);
