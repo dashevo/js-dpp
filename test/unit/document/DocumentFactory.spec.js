@@ -98,6 +98,9 @@ describe('DocumentFactory', () => {
       expect(newDocument.getRevision()).to.equal(DocumentCreateTransition.INITIAL_REVISION);
 
       expect(newDocument.getId()).to.equal('E9QpjZMD7CPAGa7x2ABuLFPvBLZjhPji4TMrUfSP3Hk9');
+
+      expect(new Date().getTime() - newDocument.getCreatedAt().getTime()).to.be.lessThan(1000);
+      expect(newDocument.getCreatedAt().getTime()).to.equal(newDocument.getUpdatedAt().getTime());
     });
 
     it('should throw an error if type is not defined', () => {
