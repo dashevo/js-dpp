@@ -41,6 +41,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
   let executeDataTriggersMock;
   let documentTransitions;
   let abciHeader;
+  let fakeTime;
 
   beforeEach(function beforeEach() {
     documents = getDocumentsFixture();
@@ -87,6 +88,12 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       validateDocumentsUniquenessByIndicesMock,
       executeDataTriggersMock,
     );
+
+    fakeTime = this.sinonSandbox.useFakeTimers(new Date());
+  });
+
+  afterEach(() => {
+    fakeTime.reset();
   });
 
   it('should return invalid result if data contract was not found', async () => {
