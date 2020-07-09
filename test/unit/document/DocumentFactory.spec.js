@@ -34,6 +34,7 @@ describe('DocumentFactory', () => {
   let documents;
   let rawDocument;
   let factory;
+  let fakeTime;
 
   beforeEach(function beforeEach() {
     ({ ownerId } = getDocumentsFixture);
@@ -63,6 +64,12 @@ describe('DocumentFactory', () => {
       validateDocumentMock,
       fetchAndValidateDataContractMock,
     );
+
+    fakeTime = this.sinonSandbox.useFakeTimers(new Date());
+  });
+
+  afterEach(() => {
+    fakeTime.reset();
   });
 
   describe('create', () => {
@@ -290,14 +297,24 @@ describe('DocumentFactory', () => {
     });
 
     it('should create DocumentsBatchTransition with passed documents', () => {
+      const [newDocument] = getDocumentsFixture();
+
+      fakeTime.tick(1000);
+
       const stateTransition = factory.createStateTransition({
         create: documents,
+        replace: [newDocument],
       });
 
+      const expectedTransitions = getDocumentTransitionsFixture({
+        create: documents,
+        replace: [newDocument],
+      });
+
+      expectedTransitions.slice(-1).updatedAt = new Date();
+
       expect(stateTransition.getTransitions()).to.deep.equal(
-        getDocumentTransitionsFixture({
-          create: documents,
-        }),
+        expectedTransitions,
       );
     });
   });
