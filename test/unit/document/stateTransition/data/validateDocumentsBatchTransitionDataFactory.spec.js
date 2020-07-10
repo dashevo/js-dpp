@@ -437,7 +437,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
           // eslint-disable-next-line no-param-reassign
           t.createdAt.setMinutes(t.createdAt.getMinutes() - 6);
           // eslint-disable-next-line no-param-reassign
-          t.updatedAt = t.createdAt;
+          t.updatedAt = undefined;
         });
 
         const result = await validateData(stateTransition);
@@ -449,7 +449,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
         documentTransitions[0].createdAt.setMinutes(
           documentTransitions[0].createdAt.getMinutes() - 6,
         );
-        documentTransitions[0].updatedAt = documentTransitions[0].createdAt;
+        documentTransitions[0].updatedAt = undefined;
 
         expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
       });
@@ -467,9 +467,9 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
         stateTransition.transitions.forEach((t) => {
           // eslint-disable-next-line no-param-reassign
-          t.createdAt.setMinutes(t.createdAt.getMinutes() - 6);
+          t.updatedAt.setMinutes(t.updatedAt.getMinutes() - 6);
           // eslint-disable-next-line no-param-reassign
-          t.updatedAt = t.createdAt;
+          t.createdAt = undefined;
         });
 
         const result = await validateData(stateTransition);
@@ -478,10 +478,10 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
         const [error] = result.getErrors();
 
-        documentTransitions[0].createdAt.setMinutes(
-          documentTransitions[0].createdAt.getMinutes() - 6,
+        documentTransitions[0].updatedAt.setMinutes(
+          documentTransitions[0].updatedAt.getMinutes() - 6,
         );
-        documentTransitions[0].updatedAt = documentTransitions[0].createdAt;
+        documentTransitions[0].createdAt = undefined;
 
         expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
       });
@@ -500,17 +500,15 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
           transitions: documentTransitions.map((t) => t.toJSON()),
         });
 
-        documents[0].createdAt.setMinutes(
-          documents[0].createdAt.getMinutes() - 6,
+        documents[0].updatedAt.setMinutes(
+          documents[0].updatedAt.getMinutes() - 6,
         );
 
         fetchDocumentsMock.resolves([documents[0]]);
 
         stateTransition.transitions.forEach((t) => {
           // eslint-disable-next-line no-param-reassign
-          t.createdAt.setMinutes(t.createdAt.getMinutes() - 6);
-          // eslint-disable-next-line no-param-reassign
-          t.updatedAt = t.createdAt;
+          t.updatedAt.setMinutes(t.updatedAt.getMinutes() - 6);
         });
 
         const result = await validateData(stateTransition);
@@ -519,10 +517,9 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
         const [error] = result.getErrors();
 
-        documentTransitions[0].createdAt.setMinutes(
-          documentTransitions[0].createdAt.getMinutes() - 6,
+        documentTransitions[0].updatedAt.setMinutes(
+          documentTransitions[0].updatedAt.getMinutes() - 6,
         );
-        documentTransitions[0].updatedAt = documentTransitions[0].createdAt;
 
         expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
         expect(error.getFetchedDocument()).to.deep.equal(documents[0]);
