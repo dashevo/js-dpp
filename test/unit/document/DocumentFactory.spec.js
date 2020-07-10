@@ -42,7 +42,7 @@ describe('DocumentFactory', () => {
     dataContract = getDataContractFixture();
 
     documents = getDocumentsFixture();
-    ([document] = documents);
+    ([,,, document] = documents);
     rawDocument = document.toJSON();
 
     decodeMock = this.sinonSandbox.stub();
@@ -106,15 +106,10 @@ describe('DocumentFactory', () => {
 
       expect(newDocument.getRevision()).to.equal(DocumentCreateTransition.INITIAL_REVISION);
 
-      expect(newDocument.getId()).to.equal('E9QpjZMD7CPAGa7x2ABuLFPvBLZjhPji4TMrUfSP3Hk9');
+      expect(newDocument.getId()).to.equal('B99gjrjq6R1FXwGUQnoP7VrmCDDT1PbKprUNzjVbxXfz');
 
-      if (newDocument.getCreatedAt()) {
-        expect(newDocument.getCreatedAt().getTime()).to.be.equal(fakeTimeDate.getTime());
-      }
-
-      if (newDocument.getCreatedAt() && newDocument.getUpdatedAt()) {
-        expect(newDocument.getCreatedAt().getTime()).to.equal(newDocument.getUpdatedAt().getTime());
-      }
+      expect(newDocument.getCreatedAt().getTime()).to.be.equal(fakeTimeDate.getTime());
+      expect(newDocument.getCreatedAt().getTime()).to.equal(newDocument.getUpdatedAt().getTime());
     });
 
     it('should throw an error if type is not defined', () => {
