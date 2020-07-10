@@ -41,9 +41,7 @@
     "$type",
     "$revision",
     "$dataContractId",
-    "$ownerId",
-    "$createdAt",
-    "$updatedAt"
+    "$ownerId"
   ],
   "additionalProperties": false
 }

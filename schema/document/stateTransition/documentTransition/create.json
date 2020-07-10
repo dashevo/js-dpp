@@ -17,9 +17,7 @@
     }
   },
   "required": [
-    "$entropy",
-    "$createdAt",
-    "$updatedAt"
+    "$entropy"
   ],
   "additionalProperties": false
 }

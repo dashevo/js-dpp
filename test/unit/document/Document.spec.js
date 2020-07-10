@@ -142,7 +142,7 @@ describe('Document', () => {
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
-    it('should create Document with $createdAt and data if preset', async () => {
+    it('should create Document with $createdAt and data if present', async () => {
       const data = {
         test: 1,
       };
@@ -156,8 +156,25 @@ describe('Document', () => {
 
       document = new Document(rawDocument);
 
-      expect(document.createdAt.getTime()).to.equal(rawDocument.$createdAt);
-      expect(document.updatedAt.getTime()).to.equal(rawDocument.$createdAt);
+      expect(document.getCreatedAt().getTime()).to.equal(rawDocument.$createdAt);
+      expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
+    });
+
+    it('should create Document with $updatedAt and data if present', async () => {
+      const data = {
+        test: 1,
+      };
+
+      const updatedAt = new Date().getTime();
+
+      rawDocument = {
+        $updatedAt: updatedAt,
+        ...data,
+      };
+
+      document = new Document(rawDocument);
+
+      expect(document.getUpdatedAt().getTime()).to.equal(rawDocument.$updatedAt);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
