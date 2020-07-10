@@ -6,10 +6,6 @@
       "type": "integer",
       "minimum": 1
     },
-    "$createdAt": {
-      "type": "integer",
-      "minimum": 0
-    },
     "$updatedAt": {
       "type": "integer",
       "minimum": 0
