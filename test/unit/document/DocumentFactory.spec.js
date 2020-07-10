@@ -35,6 +35,7 @@ describe('DocumentFactory', () => {
   let rawDocument;
   let factory;
   let fakeTime;
+  let fakeTimeDate;
 
   beforeEach(function beforeEach() {
     ({ ownerId } = getDocumentsFixture);
@@ -65,7 +66,8 @@ describe('DocumentFactory', () => {
       fetchAndValidateDataContractMock,
     );
 
-    fakeTime = this.sinonSandbox.useFakeTimers(new Date());
+    fakeTimeDate = new Date();
+    fakeTime = this.sinonSandbox.useFakeTimers(fakeTimeDate);
   });
 
   afterEach(() => {
@@ -106,7 +108,7 @@ describe('DocumentFactory', () => {
 
       expect(newDocument.getId()).to.equal('E9QpjZMD7CPAGa7x2ABuLFPvBLZjhPji4TMrUfSP3Hk9');
 
-      expect(new Date().getTime() - newDocument.getCreatedAt().getTime()).to.be.lessThan(1000);
+      expect(newDocument.getCreatedAt().getTime()).to.be.equal(fakeTimeDate.getTime());
       expect(newDocument.getCreatedAt().getTime()).to.equal(newDocument.getUpdatedAt().getTime());
     });
 

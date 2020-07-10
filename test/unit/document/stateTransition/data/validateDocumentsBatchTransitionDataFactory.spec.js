@@ -452,6 +452,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
         documentTransitions[0].updatedAt = undefined;
 
         expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
+        expect(error.getTimestampName()).to.equal('createdAt');
       });
 
       it('should return invalid result if "$updatedAt" have violated time window', async () => {
@@ -484,6 +485,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
         documentTransitions[0].createdAt = undefined;
 
         expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
+        expect(error.getTimestampName()).to.equal('updatedAt');
       });
     });
 
@@ -523,6 +525,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
         expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
         expect(error.getFetchedDocument()).to.deep.equal(documents[0]);
+        expect(error.getTimestampName()).to.equal('updatedAt');
       });
     });
   });

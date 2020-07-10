@@ -177,24 +177,6 @@ describe('Document', () => {
       expect(document.getUpdatedAt().getTime()).to.equal(rawDocument.$updatedAt);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
-
-    it('should create Document with $updatedAt and data if preset', async () => {
-      const data = {
-        test: 1,
-      };
-
-      const updatedAt = new Date().getTime();
-
-      rawDocument = {
-        $updatedAt: updatedAt,
-        ...data,
-      };
-
-      document = new Document(rawDocument);
-
-
-      expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
-    });
   });
 
   describe('#getId', () => {
@@ -358,7 +340,7 @@ describe('Document', () => {
   });
 
   describe('#setCreatedAt', () => {
-    it('should set $revision', () => {
+    it('should set $createdAt', () => {
       const time = new Date();
 
       const result = document.setCreatedAt(time);
@@ -370,7 +352,7 @@ describe('Document', () => {
   });
 
   describe('#getCreatedAt', () => {
-    it('should return $revision', () => {
+    it('should return $createdAt', () => {
       const time = new Date();
 
       document.createdAt = time;
@@ -380,7 +362,7 @@ describe('Document', () => {
   });
 
   describe('#setUpdatedAt', () => {
-    it('should set $revision', () => {
+    it('should set $updatedAt', () => {
       const time = new Date();
 
       const result = document.setUpdatedAt(time);
@@ -392,7 +374,7 @@ describe('Document', () => {
   });
 
   describe('#getUpdatedAt', () => {
-    it('should return $revision', () => {
+    it('should return $updatedAt', () => {
       const time = new Date();
 
       document.updatedAt = time;
