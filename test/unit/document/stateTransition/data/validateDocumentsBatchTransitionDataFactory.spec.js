@@ -457,7 +457,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
       it('should return invalid result if "$updatedAt" have violated time window', async () => {
         documentTransitions = getDocumentTransitionsFixture({
-          create: [documents[0]],
+          create: [documents[1]],
         });
 
         stateTransition = new DocumentsBatchTransition({
@@ -493,7 +493,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       it('should return invalid result if documents with action "replace" have violated time window', async () => {
         documentTransitions = getDocumentTransitionsFixture({
           create: [],
-          replace: [documents[0]],
+          replace: [documents[1]],
         });
 
         stateTransition = new DocumentsBatchTransition({
@@ -502,11 +502,11 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
           transitions: documentTransitions.map((t) => t.toJSON()),
         });
 
-        documents[0].updatedAt.setMinutes(
-          documents[0].updatedAt.getMinutes() - 6,
+        documents[1].updatedAt.setMinutes(
+          documents[1].updatedAt.getMinutes() - 6,
         );
 
-        fetchDocumentsMock.resolves([documents[0]]);
+        fetchDocumentsMock.resolves([documents[1]]);
 
         stateTransition.transitions.forEach((t) => {
           // eslint-disable-next-line no-param-reassign
@@ -524,7 +524,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
         );
 
         expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
-        expect(error.getFetchedDocument()).to.deep.equal(documents[0]);
+        expect(error.getFetchedDocument()).to.deep.equal(documents[1]);
         expect(error.getTimestampName()).to.equal('updatedAt');
       });
     });

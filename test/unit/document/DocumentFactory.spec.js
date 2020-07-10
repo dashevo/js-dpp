@@ -108,8 +108,13 @@ describe('DocumentFactory', () => {
 
       expect(newDocument.getId()).to.equal('E9QpjZMD7CPAGa7x2ABuLFPvBLZjhPji4TMrUfSP3Hk9');
 
-      expect(newDocument.getCreatedAt().getTime()).to.be.equal(fakeTimeDate.getTime());
-      expect(newDocument.getCreatedAt().getTime()).to.equal(newDocument.getUpdatedAt().getTime());
+      if (newDocument.getCreatedAt()) {
+        expect(newDocument.getCreatedAt().getTime()).to.be.equal(fakeTimeDate.getTime());
+      }
+
+      if (newDocument.getCreatedAt() && newDocument.getUpdatedAt()) {
+        expect(newDocument.getCreatedAt().getTime()).to.equal(newDocument.getUpdatedAt().getTime());
+      }
     });
 
     it('should throw an error if type is not defined', () => {
