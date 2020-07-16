@@ -18,7 +18,7 @@ const UndefinedIndexPropertyError = require('../../../lib/errors/UndefinedIndexP
 const InvalidIndexPropertyTypeError = require('../../../lib/errors/InvalidIndexPropertyTypeError');
 const SystemPropertyIndexAlreadyPresentError = require('../../../lib/errors/SystemPropertyIndexAlreadyPresentError');
 const UniqueIndicesLimitReachedError = require('../../../lib/errors/UniqueIndicesLimitReachedError');
-const MissingIndexedPropertyConstraintError = require('../../../lib/errors/MissingIndexedPropertyConstraintError');
+const InvalidIndexedPropertyConstraintError = require('../../../lib/errors/InvalidIndexedPropertyConstraintError');
 
 describe('validateDataContractFactory', () => {
   let dataContract;
@@ -1456,12 +1456,27 @@ describe('validateDataContractFactory', () => {
 
     const result = await validateDataContract(rawDataContract);
 
-    expectValidationError(result, MissingIndexedPropertyConstraintError);
+    expectValidationError(result, InvalidIndexedPropertyConstraintError);
 
     const [error] = result.getErrors();
 
     expect(error.getPropertyName()).to.equal('firstName');
     expect(error.getConstraintName()).to.equal('maxLength');
+    expect(error.getReason()).to.equal('should be set');
+  });
+
+  it('should return invalid result if indexed property have to big maxLength', async () => {
+    rawDataContract.documents.indexedDocument.properties.firstName.maxLength = 2048;
+
+    const result = await validateDataContract(rawDataContract);
+
+    expectValidationError(result, InvalidIndexedPropertyConstraintError);
+
+    const [error] = result.getErrors();
+
+    expect(error.getPropertyName()).to.equal('firstName');
+    expect(error.getConstraintName()).to.equal('maxLength');
+    expect(error.getReason()).to.equal('should be less or equal 1024');
   });
 
   it('should return valid result if Data Contract is valid', async () => {
