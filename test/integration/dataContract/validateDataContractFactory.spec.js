@@ -1451,7 +1451,7 @@ describe('validateDataContractFactory', () => {
     ));
   });
 
-  it('should return invalid result if indexed property missing maxLength constraint' ,async () => {
+  it('should return invalid result if indexed property missing maxLength constraint', async () => {
     delete rawDataContract.documents.indexedDocument.properties.firstName.maxLength;
 
     const result = await validateDataContract(rawDataContract);
