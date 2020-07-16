@@ -1240,7 +1240,10 @@ describe('validateDataContractFactory', () => {
         for (let i = 0; i < 4; i++) {
           const propertyName = `field${i}`;
 
-          rawDataContract.documents.indexedDocument.properties[propertyName] = { type: 'string' };
+          rawDataContract.documents.indexedDocument.properties[propertyName] = {
+            type: 'string',
+            maxLength: 256,
+          };
 
           rawDataContract.documents.indexedDocument.indices.push({
             properties: [{ [propertyName]: 'asc' }],
