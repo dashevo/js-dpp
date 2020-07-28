@@ -145,14 +145,23 @@ describe('DocumentFactory', () => {
       );
     });
 
-    it('should return new Document without validation if "skipValidation" option is passed', async () => {
+    it('should return new Document without validation if "skipValidation" option is passed', async function it() {
+      const resultMock = {
+        isValid: () => true,
+        merge: this.sinonSandbox.stub(),
+        getData: () => getDocumentsFixture.dataContract,
+      };
+
+      fetchAndValidateDataContractMock.resolves(resultMock);
+
       const result = await factory.createFromObject(rawDocument, { skipValidation: true });
 
       expect(result).to.be.an.instanceOf(Document);
       expect(result.toJSON()).to.deep.equal(rawDocument);
 
-      expect(fetchAndValidateDataContractMock).to.have.not.been.called();
+      expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(rawDocument);
       expect(validateDocumentMock).to.have.not.been.called();
+      expect(resultMock.merge).to.have.not.been.called();
     });
 
     it('should throw InvalidDocumentError if passed object is not valid', async () => {
