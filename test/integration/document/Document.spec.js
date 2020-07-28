@@ -27,7 +27,7 @@ describe('Document', () => {
   });
 
   describe('#toObject', () => {
-    it('should return raw document with encoded binary fields as Buffer', () => {
+    it('should return raw document', () => {
       const result = document.toObject();
 
       expect(result).to.deep.equal({
