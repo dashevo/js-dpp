@@ -218,7 +218,7 @@ describe('DocumentFactory', () => {
 
   describe('createFromSerialized', () => {
     beforeEach(function beforeEach() {
-      this.sinonSandbox.stub(factory, 'createFromObject');
+      this.sinonSandbox.stub(factory, 'createFromJson');
     });
 
     it('should return new Data Contract from serialized Contract', async () => {
@@ -226,13 +226,13 @@ describe('DocumentFactory', () => {
 
       decodeMock.returns(rawDocument);
 
-      factory.createFromObject.returns(document);
+      factory.createFromJson.returns(document);
 
       const result = await factory.createFromSerialized(serializedDocument);
 
       expect(result).to.equal(document);
 
-      expect(factory.createFromObject).to.have.been.calledOnceWith(rawDocument);
+      expect(factory.createFromJson).to.have.been.calledOnceWith(rawDocument);
 
       expect(decodeMock).to.have.been.calledOnceWith(serializedDocument);
     });

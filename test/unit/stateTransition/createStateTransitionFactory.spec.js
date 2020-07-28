@@ -37,7 +37,7 @@ describe('createStateTransitionFactory', () => {
       ownerId: getDocumentsFixture.ownerId,
       contractId: getDocumentsFixture.dataContract.getId(),
       transitions: documentTransitions.map((t) => t.toJSON()),
-    });
+    }, [getDocumentsFixture.dataContract]);
 
     const result = createStateTransition(stateTransition.toJSON());
 

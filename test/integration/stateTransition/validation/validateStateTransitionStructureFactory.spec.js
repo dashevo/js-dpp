@@ -63,7 +63,7 @@ describe('validateStateTransitionStructureFactory', () => {
     const dataContractCreateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
       entropy: dataContract.getEntropy(),
-    });
+    }, [dataContract]);
     dataContractCreateTransition.signByPrivateKey(privateKey);
 
     rawStateTransition = dataContractCreateTransition.toJSON();
@@ -390,7 +390,7 @@ describe('validateStateTransitionStructureFactory', () => {
         ownerId: getDocumentsFixture.ownerId,
         contractId: getDocumentsFixture.dataContract.getId(),
         transitions: documentTransitions.map((t) => t.toJSON()),
-      });
+      }, [dataContract]);
       stateTransition.signByPrivateKey(privateKey);
 
       rawStateTransition = stateTransition.toJSON();

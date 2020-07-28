@@ -54,7 +54,7 @@ describe('StateTransitionFacade', () => {
       ownerId: getDocumentsFixture.ownerId,
       contractId: dataContract.getId(),
       transitions: documentTransitions.map((t) => t.toJSON()),
-    });
+    }, [dataContract]);
     documentsBatchTransition.sign(identityPublicKey, privateKey);
 
     const getPublicKeyById = this.sinonSandbox.stub().returns(identityPublicKey);
@@ -360,7 +360,7 @@ describe('StateTransitionFacade', () => {
         identity,
       );
 
-      const stFromPlayground = new DocumentsBatchTransition(st);
+      const stFromPlayground = new DocumentsBatchTransition(st, [contract]);
 
       const pubKey = identity.getPublicKeyById(0);
 

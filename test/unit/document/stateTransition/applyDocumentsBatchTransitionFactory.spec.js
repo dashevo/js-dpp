@@ -35,7 +35,7 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     replaceDocument = new Document({
       ...documentsFixture[1].toJSON(),
       lastName: 'NotSoShiny',
-    });
+    }, getDocumentsFixture.dataContract);
 
     documents = [replaceDocument, documentsFixture[2]];
 
@@ -48,7 +48,7 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     stateTransition = new DocumentsBatchTransition({
       ownerId,
       transitions: documentTransitions.map((t) => t.toJSON()),
-    });
+    }, [getDocumentsFixture.dataContract]);
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
     stateRepositoryMock.fetchDataContract.resolves(getDocumentsFixture.dataContract);
