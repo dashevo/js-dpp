@@ -41,9 +41,9 @@ describe('Document', () => {
     });
   });
 
-  describe('#fromJson', () => {
+  describe('#fromJSON', () => {
     it('should return new document from raw document in JSON format', () => {
-      const result = Document.fromJson(document.toJSON(), dataContract);
+      const result = Document.fromJSON(document.toJSON(), dataContract);
 
       expect(result.toObject()).to.deep.equal(document.toObject());
     });
