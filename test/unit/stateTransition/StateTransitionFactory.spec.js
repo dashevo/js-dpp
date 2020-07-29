@@ -15,7 +15,8 @@ describe('StateTransitionFactory', () => {
   let StateTransitionFactory;
   let decodeMock;
   let validateStateTransitionStructureMock;
-  let createStateTransitionMock;
+  let createStateTransitionFromJSONMock;
+  let createStateTransitionFromObjectMock;
   let factory;
   let stateTransition;
   let rawStateTransition;
@@ -32,7 +33,8 @@ describe('StateTransitionFactory', () => {
     decodeMock = this.sinonSandbox.stub();
 
     validateStateTransitionStructureMock = this.sinonSandbox.stub();
-    createStateTransitionMock = this.sinonSandbox.stub().returns(stateTransition);
+    createStateTransitionFromJSONMock = this.sinonSandbox.stub().returns(stateTransition);
+    createStateTransitionFromObjectMock = this.sinonSandbox.stub().returns(stateTransition);
 
     // Require Factory module for webpack
     // eslint-disable-next-line global-require
@@ -44,7 +46,8 @@ describe('StateTransitionFactory', () => {
 
     factory = new StateTransitionFactory(
       validateStateTransitionStructureMock,
-      createStateTransitionMock,
+      createStateTransitionFromJSONMock,
+      createStateTransitionFromObjectMock,
     );
   });
 
@@ -58,7 +61,7 @@ describe('StateTransitionFactory', () => {
 
       expect(validateStateTransitionStructureMock).to.have.been.calledOnceWith(rawStateTransition);
 
-      expect(createStateTransitionMock).to.have.been.calledOnceWith(rawStateTransition);
+      expect(createStateTransitionFromObjectMock).to.have.been.calledOnceWith(rawStateTransition);
     });
 
     it('should return new State Transition without validation if "skipValidation" option is passed', async () => {
@@ -68,7 +71,7 @@ describe('StateTransitionFactory', () => {
 
       expect(validateStateTransitionStructureMock).to.have.not.been.called();
 
-      expect(createStateTransitionMock).to.have.been.calledOnceWith(rawStateTransition);
+      expect(createStateTransitionFromObjectMock).to.have.been.calledOnceWith(rawStateTransition);
     });
 
     it('should throw InvalidStateTransitionError if passed object is not valid', async () => {
@@ -94,14 +97,14 @@ describe('StateTransitionFactory', () => {
           rawStateTransition,
         );
 
-        expect(createStateTransitionMock).to.have.not.been.called();
+        expect(createStateTransitionFromObjectMock).to.have.not.been.called();
       }
     });
   });
 
   describe('createFromSerialized', () => {
     beforeEach(function beforeEach() {
-      this.sinonSandbox.stub(factory, 'createFromObject');
+      this.sinonSandbox.stub(factory, 'createFromJSON');
     });
 
     it('should return new State Transition from serialized contract', async () => {
@@ -109,13 +112,13 @@ describe('StateTransitionFactory', () => {
 
       decodeMock.returns(rawStateTransition);
 
-      factory.createFromObject.returns(stateTransition);
+      factory.createFromJSON.resolves(stateTransition);
 
       const result = await factory.createFromSerialized(serializedStateTransition);
 
       expect(result).to.equal(stateTransition);
 
-      expect(factory.createFromObject).to.have.been.calledOnceWith(rawStateTransition);
+      expect(factory.createFromJSON).to.have.been.calledOnceWith(rawStateTransition);
 
       expect(decodeMock).to.have.been.calledOnceWith(serializedStateTransition);
     });
