@@ -130,8 +130,8 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       dataContract.getId(),
     );
 
-    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(
-      documentTransitions,
+    expect(fetchDocumentsMock.getCall(0).args[0].map((t) => t.toJSON())).to.have.deep.members(
+      documentTransitions.map((t) => t.toJSON()),
     );
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
@@ -339,11 +339,21 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       stateTransition.transitions,
     );
 
-    expect(validateDocumentsUniquenessByIndicesMock).to.have.been.calledOnceWithExactly(
-      ownerId,
-      documentTransitions,
-      dataContract,
+    const [callOwnerId, callDocumentTransitions, callDataContract] = (
+      validateDocumentsUniquenessByIndicesMock.getCall(0).args
     );
+
+    const callArgs = [
+      callOwnerId,
+      callDocumentTransitions.map((t) => t.toJSON()),
+      callDataContract,
+    ];
+
+    expect(callArgs).to.have.deep.members([
+      ownerId,
+      documentTransitions.map((t) => t.toJSON()),
+      dataContract,
+    ]);
     expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
@@ -381,16 +391,35 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       stateTransition.transitions,
     );
 
-    expect(validateDocumentsUniquenessByIndicesMock).to.have.been.calledOnceWithExactly(
-      ownerId,
-      documentTransitions,
-      dataContract,
+    const [callOwnerId, callDocumentTransitions, callDataContract] = (
+      validateDocumentsUniquenessByIndicesMock.getCall(0).args
     );
 
-    expect(executeDataTriggersMock).to.have.been.calledOnceWithExactly(
-      documentTransitions,
-      dataTriggersExecutionContext,
+    const callArgs = [
+      callOwnerId,
+      callDocumentTransitions.map((t) => t.toJSON()),
+      callDataContract,
+    ];
+
+    expect(callArgs).to.have.deep.members([
+      ownerId,
+      documentTransitions.map((t) => t.toJSON()),
+      dataContract,
+    ]);
+
+    const [triggerCallDocumentTransitions, triggerCallDataTriggersExecutionContext] = (
+      executeDataTriggersMock.getCall(0).args
     );
+
+    const triggerCallArgs = [
+      triggerCallDocumentTransitions.map((t) => t.toJSON()),
+      triggerCallDataTriggersExecutionContext,
+    ];
+
+    expect(triggerCallArgs).to.have.deep.members([
+      documentTransitions.map((t) => t.toJSON()),
+      dataTriggersExecutionContext,
+    ]);
   });
 
   describe('Timestamps', () => {
