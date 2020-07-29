@@ -15,9 +15,10 @@ const documentsBatchTransitionSchema = require('../../../../schema/document/stat
 const identityCreateTransitionSchema = require('../../../../schema/identity/stateTransition/identityCreate');
 
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
-const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentTransitionsFixture = require('../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
+
+const createStateRepositoryMock = require('../../../../lib/test/mocks/createStateRepositoryMock');
 
 const dataContractExtensionSchema = require('../../../../schema/dataContract/stateTransition/dataContractCreate');
 
@@ -42,6 +43,7 @@ describe('validateStateTransitionStructureFactory', () => {
   let dataContract;
   let privateKey;
   let createStateTransition;
+  let stateRepositoryMock;
 
   beforeEach(function beforeEach() {
     extensionFunctionMock = this.sinonSandbox.stub();
@@ -56,7 +58,7 @@ describe('validateStateTransitionStructureFactory', () => {
     const ajv = new Ajv();
     validator = new JsonSchemaValidator(ajv);
 
-    dataContract = getDataContractFixture();
+    dataContract = getDocumentsFixture.dataContract;
 
     privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
 
@@ -68,7 +70,10 @@ describe('validateStateTransitionStructureFactory', () => {
 
     rawStateTransition = dataContractCreateTransition.toJSON();
 
-    createStateTransition = createStateTransitionFactory();
+    stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
+    stateRepositoryMock.fetchDataContract.resolves(dataContract);
+
+    createStateTransition = createStateTransitionFactory(stateRepositoryMock);
 
     validateStateTransitionStructure = validateStateTransitionStructureFactory(
       validator,
@@ -390,7 +395,7 @@ describe('validateStateTransitionStructureFactory', () => {
         ownerId: getDocumentsFixture.ownerId,
         contractId: getDocumentsFixture.dataContract.getId(),
         transitions: documentTransitions.map((t) => t.toJSON()),
-      }, [dataContract]);
+      }, [getDocumentsFixture.dataContract]);
       stateTransition.signByPrivateKey(privateKey);
 
       rawStateTransition = stateTransition.toJSON();
@@ -777,6 +782,8 @@ describe('validateStateTransitionStructureFactory', () => {
     const extensionResult = new ValidationResult();
 
     extensionFunctionMock.returns(extensionResult);
+
+    rawStateTransition = JSON.parse(JSON.stringify(rawStateTransition));
 
     // generate big state transition
     for (let i = 0; i < 500; i++) {
