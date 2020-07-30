@@ -3,6 +3,10 @@ const rewiremock = require('rewiremock/node');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
+const DocumentsBatchTransition = require(
+  '../../../../lib/document/stateTransition/DocumentsBatchTransition',
+);
+
 describe('DocumentsBatchTransition', () => {
   let stateTransition;
   let documents;
@@ -52,12 +56,25 @@ describe('DocumentsBatchTransition', () => {
   });
 
   describe('#toJSON', () => {
-    it('should return State Transition as plain JS object', () => {
+    it('should return State Transition as JSON', () => {
       expect(stateTransition.toJSON()).to.deep.equal({
         protocolVersion: 0,
         type: stateTransitionTypes.DOCUMENTS_BATCH,
         ownerId: documents[0].getOwnerId(),
         transitions: stateTransition.getTransitions().map((d) => d.toJSON()),
+        signaturePublicKeyId: null,
+        signature: null,
+      });
+    });
+  });
+
+  describe('#toObject', () => {
+    it('should return State Transition as plain object', () => {
+      expect(stateTransition.toObject()).to.deep.equal({
+        protocolVersion: 0,
+        type: stateTransitionTypes.DOCUMENTS_BATCH,
+        ownerId: documents[0].getOwnerId(),
+        transitions: stateTransition.getTransitions().map((d) => d.toObject()),
         signaturePublicKeyId: null,
         signature: null,
       });
@@ -100,6 +117,20 @@ describe('DocumentsBatchTransition', () => {
       const result = stateTransition.getOwnerId();
 
       expect(result).to.equal(getDocumentsFixture.ownerId);
+    });
+  });
+
+  describe('#fromJSON', () => {
+    it('should create an instance using plain object converted from JSON', async () => {
+      const rawStateTransition = stateTransition.toJSON();
+
+      const result = DocumentsBatchTransition.fromJSON(
+        rawStateTransition, [getDocumentsFixture.dataContract],
+      );
+
+      expect(result.toJSON()).to.deep.equal(
+        stateTransition.toJSON(),
+      );
     });
   });
 });

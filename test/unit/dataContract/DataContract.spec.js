@@ -347,5 +347,14 @@ describe('DataContract', () => {
       );
       expect(getEncodedPropertiesFromSchemaMock).to.have.been.calledOnceWith(documentSchema);
     });
+
+    it('should throw an error if document type is not found', () => {
+      try {
+        dataContract.getEncodedProperties('unknown');
+        expect.fail('Error was not thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(InvalidDocumentTypeError);
+      }
+    });
   });
 });
