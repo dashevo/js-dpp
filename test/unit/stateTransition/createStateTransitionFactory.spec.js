@@ -1,4 +1,4 @@
-const createStateTransitionFromJSONFactory = require('../../../lib/stateTransition/createStateTransitionFromJSONFactory');
+const createStateTransitionFactory = require('../../../lib/stateTransition/createStateTransitionFactory');
 
 const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 const DocumentsBatchTransition = require('../../../lib/document/stateTransition/DocumentsBatchTransition');
@@ -11,14 +11,14 @@ const createStateRepositoryMock = require('../../../lib/test/mocks/createStateRe
 
 const InvalidStateTransitionTypeError = require('../../../lib/errors/InvalidStateTransitionTypeError');
 
-describe('createStateTransitionFromJSONFactory', () => {
+describe('createStateTransitionFactory', () => {
   let createStateTransition;
   let stateRepositoryMock;
 
   beforeEach(function beforeEach() {
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
     stateRepositoryMock.fetchDataContract.resolves(getDocumentsFixture.dataContract);
-    createStateTransition = createStateTransitionFromJSONFactory(stateRepositoryMock);
+    createStateTransition = createStateTransitionFactory(stateRepositoryMock);
   });
 
   it('should return DataContractCreateTransition if type is DATA_CONTRACT_CREATE', async () => {

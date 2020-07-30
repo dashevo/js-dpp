@@ -1,7 +1,7 @@
 const Ajv = require('ajv');
 
 const validateStateTransitionStructureFactory = require('../../../../lib/stateTransition/validation/validateStateTransitionStructureFactory');
-const createStateTransitionFromJSONFactory = require('../../../../lib/stateTransition/createStateTransitionFromJSONFactory');
+const createStateTransitionFactory = require('../../../../lib/stateTransition/createStateTransitionFactory');
 
 const JsonSchemaValidator = require('../../../../lib/validation/JsonSchemaValidator');
 
@@ -73,7 +73,7 @@ describe('validateStateTransitionStructureFactory', () => {
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
     stateRepositoryMock.fetchDataContract.resolves(dataContract);
 
-    createStateTransition = createStateTransitionFromJSONFactory(stateRepositoryMock);
+    createStateTransition = createStateTransitionFactory(stateRepositoryMock);
 
     validateStateTransitionStructure = validateStateTransitionStructureFactory(
       validator,
