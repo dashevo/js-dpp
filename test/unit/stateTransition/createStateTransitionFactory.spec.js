@@ -7,16 +7,21 @@ const getDataContractFixture = require('../../../lib/test/fixtures/getDataContra
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const getDocumentTranstionsFixture = require('../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
+const createStateRepositoryMock = require('../../../lib/test/mocks/createStateRepositoryMock');
+
 const InvalidStateTransitionTypeError = require('../../../lib/errors/InvalidStateTransitionTypeError');
 
 describe('createStateTransitionFactory', () => {
   let createStateTransition;
+  let stateRepositoryMock;
 
-  beforeEach(() => {
-    createStateTransition = createStateTransitionFactory();
+  beforeEach(function beforeEach() {
+    stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
+    stateRepositoryMock.fetchDataContract.resolves(getDocumentsFixture.dataContract);
+    createStateTransition = createStateTransitionFactory(stateRepositoryMock);
   });
 
-  it('should return DataContractCreateTransition if type is DATA_CONTRACT_CREATE', () => {
+  it('should return DataContractCreateTransition if type is DATA_CONTRACT_CREATE', async () => {
     const dataContract = getDataContractFixture();
 
     const stateTransition = new DataContractCreateTransition({
@@ -24,34 +29,36 @@ describe('createStateTransitionFactory', () => {
       entropy: dataContract.getEntropy(),
     });
 
-    const result = createStateTransition(stateTransition.toJSON());
+    const result = await createStateTransition(stateTransition.toJSON());
 
     expect(result).to.be.instanceOf(DataContractCreateTransition);
     expect(result.getDataContract().toJSON()).to.deep.equal(dataContract.toJSON());
   });
 
-  it('should return DocumentsBatchTransition if type is DOCUMENTS', () => {
+  it('should return DocumentsBatchTransition if type is DOCUMENTS', async () => {
     const documentTransitions = getDocumentTranstionsFixture();
 
     const stateTransition = new DocumentsBatchTransition({
       ownerId: getDocumentsFixture.ownerId,
       contractId: getDocumentsFixture.dataContract.getId(),
       transitions: documentTransitions.map((t) => t.toJSON()),
-    });
+    }, [getDocumentsFixture.dataContract]);
 
-    const result = createStateTransition(stateTransition.toJSON());
+    const result = await createStateTransition(stateTransition.toJSON());
 
     expect(result).to.be.instanceOf(DocumentsBatchTransition);
-    expect(result.getTransitions()).to.deep.equal(documentTransitions);
+    expect(result.getTransitions().map((t) => t.toJSON())).to.have.deep.members(
+      documentTransitions.map((t) => t.toJSON()),
+    );
   });
 
-  it('should throw InvalidStateTransitionTypeError if type is invalid', () => {
+  it('should throw InvalidStateTransitionTypeError if type is invalid', async () => {
     const rawStateTransition = {
       type: 666,
     };
 
     try {
-      createStateTransition(rawStateTransition);
+      await createStateTransition(rawStateTransition);
 
       expect.fail('InvalidStateTransitionTypeError is not thrown');
     } catch (e) {

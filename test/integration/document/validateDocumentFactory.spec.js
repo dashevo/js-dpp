@@ -398,6 +398,23 @@ describe('validateDocumentFactory', () => {
     expect(error.getRawDocument()).to.equal(rawDocument);
   });
 
+  it('return invalid result if binary field exceeds `maxLength`', () => {
+    const [document] = getDocumentsFixture().slice(-1);
+
+    document.data.binaryField = Buffer.from([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+
+    rawDocument = document.toJSON();
+
+    const result = validateDocument(rawDocument, dataContract);
+
+    expectJsonSchemaError(result);
+
+    const [error] = result.getErrors();
+
+    expect(error.dataPath).to.equal('.binaryField');
+    expect(error.keyword).to.equal('maxLength');
+  });
+
   it('should return valid result is a document is valid', () => {
     const result = validateDocument(rawDocument, dataContract);
 

@@ -67,12 +67,6 @@ describe('DocumentFacade', () => {
       }
     });
 
-    it('should skip checking for state repository if skipValidation is set', async () => {
-      dpp = new DashPlatformProtocol();
-
-      await dpp.document.createFromObject(document.toJSON(), { skipValidation: true });
-    });
-
     it('should create Document from plain object', async () => {
       const result = await dpp.document.createFromObject(document.toJSON());
 
@@ -94,12 +88,6 @@ describe('DocumentFacade', () => {
         expect(e).to.be.an.instanceOf(MissingOptionError);
         expect(e.getOptionName()).to.equal('stateRepository');
       }
-    });
-
-    it('should skip checking for state repository if skipValidation is set', async () => {
-      dpp = new DashPlatformProtocol();
-
-      await dpp.document.createFromSerialized(document.serialize(), { skipValidation: true });
     });
 
     it('should create Document from string', async () => {

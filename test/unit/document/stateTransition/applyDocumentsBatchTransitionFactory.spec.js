@@ -35,7 +35,7 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     replaceDocument = new Document({
       ...documentsFixture[1].toJSON(),
       lastName: 'NotSoShiny',
-    });
+    }, getDocumentsFixture.dataContract);
 
     documents = [replaceDocument, documentsFixture[2]];
 
@@ -48,9 +48,11 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     stateTransition = new DocumentsBatchTransition({
       ownerId,
       transitions: documentTransitions.map((t) => t.toJSON()),
-    });
+    }, [getDocumentsFixture.dataContract]);
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
+    stateRepositoryMock.fetchDataContract.resolves(getDocumentsFixture.dataContract);
+
     fetchDocumentsMock = this.sinonSandbox.stub();
     fetchDocumentsMock.resolves([
       replaceDocument,
@@ -72,10 +74,14 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     );
 
     expect(stateRepositoryMock.storeDocument).to.have.been.calledTwice();
-    expect(stateRepositoryMock.storeDocument.getCall(0).args).to.deep.equal([
+
+    const callsArgs = [
+      ...stateRepositoryMock.storeDocument.getCall(0).args,
+      ...stateRepositoryMock.storeDocument.getCall(1).args,
+    ];
+
+    expect(callsArgs).to.have.deep.members([
       documentsFixture[0],
-    ]);
-    expect(stateRepositoryMock.storeDocument.getCall(1).args).to.deep.equal([
       documents[0],
     ]);
 

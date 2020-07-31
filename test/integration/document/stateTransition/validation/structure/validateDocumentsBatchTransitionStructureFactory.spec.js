@@ -62,7 +62,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
       ownerId,
       contractId: dataContract.getId(),
       transitions: documentTransitions.map((t) => t.toJSON()),
-    });
+    }, [dataContract]);
     rawStateTransition = stateTransition.toJSON();
 
     findDuplicatesByIdMock = this.sinonSandbox.stub().returns([]);
@@ -227,7 +227,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
           ownerId,
           contractId: dataContract.getId(),
           transitions: documentTransitions.map((t) => t.toJSON()),
-        });
+        }, [dataContract]);
 
         rawStateTransition = stateTransition.toJSON();
       });

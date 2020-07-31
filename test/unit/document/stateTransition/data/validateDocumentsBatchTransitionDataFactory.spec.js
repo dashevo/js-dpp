@@ -53,7 +53,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     stateTransition = new DocumentsBatchTransition({
       ownerId,
       transitions: documentTransitions.map((t) => t.toJSON()),
-    });
+    }, [dataContract]);
 
     const timeInSeconds = Math.ceil(new Date().getTime() / 1000);
 
@@ -130,8 +130,8 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       dataContract.getId(),
     );
 
-    expect(fetchDocumentsMock).to.have.been.calledOnceWithExactly(
-      documentTransitions,
+    expect(fetchDocumentsMock.getCall(0).args[0].map((t) => t.toJSON())).to.have.deep.members(
+      documentTransitions.map((t) => t.toJSON()),
     );
 
     expect(validateDocumentsUniquenessByIndicesMock).to.have.not.been.called();
@@ -148,7 +148,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       ownerId,
       contractId: dataContract.getId(),
       transitions: documentTransitions.map((t) => t.toJSON()),
-    });
+    }, [dataContract]);
 
     const result = await validateData(stateTransition);
 
@@ -180,7 +180,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       ownerId,
       contractId: dataContract.getId(),
       transitions: documentTransitions.map((t) => t.toJSON()),
-    });
+    }, [dataContract]);
 
     const result = await validateData(stateTransition);
 
@@ -203,7 +203,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
   });
 
   it('should return invalid result if document transition with action "replace" has wrong revision', async () => {
-    const replaceDocument = new Document(documents[0].toJSON());
+    const replaceDocument = new Document(documents[0].toJSON(), dataContract);
     replaceDocument.setRevision(3);
 
     documentTransitions = getDocumentTransitionsFixture({
@@ -215,7 +215,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       ownerId,
       contractId: dataContract.getId(),
       transitions: documentTransitions.map((t) => t.toJSON()),
-    });
+    }, [dataContract]);
 
     documents[0].setCreatedAt(replaceDocument.getCreatedAt());
     fetchDocumentsMock.resolves([documents[0]]);
@@ -242,10 +242,10 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
   });
 
   it('should return invalid result if document transition with action "replace" has mismatch of ownerId with previous revision', async () => {
-    const replaceDocument = new Document(documents[0].toJSON());
+    const replaceDocument = new Document(documents[0].toJSON(), dataContract);
     replaceDocument.setRevision(1);
 
-    const fetchedDocument = new Document(documents[0].toJSON());
+    const fetchedDocument = new Document(documents[0].toJSON(), dataContract);
     fetchedDocument.ownerId = generateRandomId();
 
     documentTransitions = getDocumentTransitionsFixture({
@@ -257,7 +257,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       ownerId,
       contractId: dataContract.getId(),
       transitions: documentTransitions.map((t) => t.toJSON()),
-    });
+    }, [dataContract]);
 
     fetchDocumentsMock.resolves([fetchedDocument]);
 
@@ -287,7 +287,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       ownerId,
       contractId: dataContract.getId(),
       transitions: documentTransitions.map((t) => t.toJSON()),
-    });
+    }, [dataContract]);
 
     stateTransition.transitions[0].getAction = () => 5;
 
@@ -339,11 +339,21 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       stateTransition.transitions,
     );
 
-    expect(validateDocumentsUniquenessByIndicesMock).to.have.been.calledOnceWithExactly(
-      ownerId,
-      documentTransitions,
-      dataContract,
+    const [callOwnerId, callDocumentTransitions, callDataContract] = (
+      validateDocumentsUniquenessByIndicesMock.getCall(0).args
     );
+
+    const callArgs = [
+      callOwnerId,
+      callDocumentTransitions.map((t) => t.toJSON()),
+      callDataContract,
+    ];
+
+    expect(callArgs).to.have.deep.members([
+      ownerId,
+      documentTransitions.map((t) => t.toJSON()),
+      dataContract,
+    ]);
     expect(executeDataTriggersMock).to.have.not.been.called();
   });
 
@@ -381,16 +391,35 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       stateTransition.transitions,
     );
 
-    expect(validateDocumentsUniquenessByIndicesMock).to.have.been.calledOnceWithExactly(
-      ownerId,
-      documentTransitions,
-      dataContract,
+    const [callOwnerId, callDocumentTransitions, callDataContract] = (
+      validateDocumentsUniquenessByIndicesMock.getCall(0).args
     );
 
-    expect(executeDataTriggersMock).to.have.been.calledOnceWithExactly(
-      documentTransitions,
-      dataTriggersExecutionContext,
+    const callArgs = [
+      callOwnerId,
+      callDocumentTransitions.map((t) => t.toJSON()),
+      callDataContract,
+    ];
+
+    expect(callArgs).to.have.deep.members([
+      ownerId,
+      documentTransitions.map((t) => t.toJSON()),
+      dataContract,
+    ]);
+
+    const [triggerCallDocumentTransitions, triggerCallDataTriggersExecutionContext] = (
+      executeDataTriggersMock.getCall(0).args
     );
+
+    const triggerCallArgs = [
+      triggerCallDocumentTransitions.map((t) => t.toJSON()),
+      triggerCallDataTriggersExecutionContext,
+    ];
+
+    expect(triggerCallArgs).to.have.deep.members([
+      documentTransitions.map((t) => t.toJSON()),
+      dataTriggersExecutionContext,
+    ]);
   });
 
   describe('Timestamps', () => {
@@ -404,7 +433,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
           ownerId,
           contractId: dataContract.getId(),
           transitions: documentTransitions.map((t) => t.toJSON()),
-        });
+        }, [dataContract]);
 
         stateTransition.transitions.forEach((t) => {
           // eslint-disable-next-line no-param-reassign
@@ -431,7 +460,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
           ownerId,
           contractId: dataContract.getId(),
           transitions: documentTransitions.map((t) => t.toJSON()),
-        });
+        }, [dataContract]);
 
         stateTransition.transitions.forEach((t) => {
           // eslint-disable-next-line no-param-reassign
@@ -464,7 +493,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
           ownerId,
           contractId: dataContract.getId(),
           transitions: documentTransitions.map((t) => t.toJSON()),
-        });
+        }, [dataContract]);
 
         stateTransition.transitions.forEach((t) => {
           // eslint-disable-next-line no-param-reassign
@@ -500,7 +529,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
           ownerId,
           contractId: dataContract.getId(),
           transitions: documentTransitions.map((t) => t.toJSON()),
-        });
+        }, [dataContract]);
 
         documents[1].updatedAt.setMinutes(
           documents[1].updatedAt.getMinutes() - 6,
@@ -532,8 +561,8 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
   it('should return valid result if document transitions are valid', async () => {
     const fetchedDocuments = [
-      new Document(documents[1].toJSON()),
-      new Document(documents[2].toJSON()),
+      new Document(documents[1].toJSON(), dataContract),
+      new Document(documents[2].toJSON(), dataContract),
     ];
 
     fetchDocumentsMock.resolves(fetchedDocuments);
@@ -551,7 +580,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
       ownerId,
       contractId: dataContract.getId(),
       transitions: documentTransitions.map((t) => t.toJSON()),
-    });
+    }, [dataContract]);
 
     const dataTriggersExecutionContext = new DataTriggerExecutionContext(
       stateRepositoryMock,
