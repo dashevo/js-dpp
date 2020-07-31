@@ -15,8 +15,7 @@ describe('StateTransitionFactory', () => {
   let StateTransitionFactory;
   let decodeMock;
   let validateStateTransitionStructureMock;
-  let createStateTransitionFromJSONMock;
-  let createStateTransitionFromObjectMock;
+  let createStateTransitionMock;
   let factory;
   let stateTransition;
   let rawStateTransition;
@@ -33,8 +32,7 @@ describe('StateTransitionFactory', () => {
     decodeMock = this.sinonSandbox.stub();
 
     validateStateTransitionStructureMock = this.sinonSandbox.stub();
-    createStateTransitionFromJSONMock = this.sinonSandbox.stub().returns(stateTransition);
-    createStateTransitionFromObjectMock = this.sinonSandbox.stub().returns(stateTransition);
+    createStateTransitionMock = this.sinonSandbox.stub().returns(stateTransition);
 
     // Require Factory module for webpack
     // eslint-disable-next-line global-require
@@ -46,8 +44,7 @@ describe('StateTransitionFactory', () => {
 
     factory = new StateTransitionFactory(
       validateStateTransitionStructureMock,
-      createStateTransitionFromJSONMock,
-      createStateTransitionFromObjectMock,
+      createStateTransitionMock,
     );
   });
 
@@ -61,7 +58,7 @@ describe('StateTransitionFactory', () => {
 
       expect(validateStateTransitionStructureMock).to.have.been.calledOnceWith(rawStateTransition);
 
-      expect(createStateTransitionFromObjectMock).to.have.been.calledOnceWith(rawStateTransition);
+      expect(createStateTransitionMock).to.have.been.calledOnceWith(rawStateTransition);
     });
 
     it('should return new State Transition without validation if "skipValidation" option is passed', async () => {
@@ -71,7 +68,7 @@ describe('StateTransitionFactory', () => {
 
       expect(validateStateTransitionStructureMock).to.have.not.been.called();
 
-      expect(createStateTransitionFromObjectMock).to.have.been.calledOnceWith(rawStateTransition);
+      expect(createStateTransitionMock).to.have.been.calledOnceWith(rawStateTransition);
     });
 
     it('should throw InvalidStateTransitionError if passed object is not valid', async () => {
@@ -97,7 +94,7 @@ describe('StateTransitionFactory', () => {
           rawStateTransition,
         );
 
-        expect(createStateTransitionFromObjectMock).to.have.not.been.called();
+        expect(createStateTransitionMock).to.have.not.been.called();
       }
     });
   });
