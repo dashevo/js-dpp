@@ -273,7 +273,9 @@ describe('createDomainDataTrigger', () => {
   });
 
   it('should fail with disallowed domain creation', async () => {
-    childDocument.data.subdomainRules.allowSubdomains = false;
+    childDocument.data.subdomainRules = {
+      allowSubdomains: false,
+    };
     parentDocument.ownerId = 'newId';
 
     const result = await createDomainDataTrigger(
