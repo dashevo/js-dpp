@@ -3,6 +3,8 @@ const Ajv = require('ajv');
 const JsonSchemaValidator = require('../../../lib/validation/JsonSchemaValidator');
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
+const DataContract = require('../../../lib/dataContract/DataContract');
+
 const validateDocumentFactory = require('../../../lib/document/validateDocumentFactory');
 const enrichDataContractWithBaseSchema = require('../../../lib/dataContract/enrichDataContractWithBaseSchema');
 
@@ -147,7 +149,7 @@ describe('validateDocumentFactory', () => {
       it('should throw an error if getDocumentSchemaRef throws error', function it() {
         const someError = new Error();
 
-        this.sinonSandbox.stub(dataContract, 'getDocumentSchemaRef').throws(someError);
+        this.sinonSandbox.stub(DataContract.prototype, 'getDocumentSchemaRef').throws(someError);
 
         let error;
         try {
