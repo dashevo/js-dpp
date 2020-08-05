@@ -41,7 +41,7 @@
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
-    "@dashevo/dpns-contract": "~0.1.0",
+    "@dashevo/dpns-contract": "github:dashevo/dpns-contract#update-schema",
     "@dashevo/drive-grpc": "~0.3.0",
     "babel-loader": "^8.1.0",
     "chai": "^4.2.0",
@@ -75,7 +75,6 @@
     "cbor": "^5.0.1",
     "lodash.get": "^4.4.2",
     "lodash.mergewith": "^4.6.2",
-    "lodash.set": "^4.3.2",
-    "multihashes": "^0.4.19"
+    "lodash.set": "^4.3.2"
   }
 }
