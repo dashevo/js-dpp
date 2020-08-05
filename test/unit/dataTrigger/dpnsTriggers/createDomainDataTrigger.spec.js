@@ -286,7 +286,7 @@ describe('createDomainDataTrigger', () => {
     const [error] = result.getErrors();
     expect(error).to.be.an.instanceOf(DataTriggerConditionError);
     expect(error.message).to.equal(
-      'Can\'t create domain for this identity',
+      'The subdomain can be created only by the parent domain owner',
     );
   });
 });
