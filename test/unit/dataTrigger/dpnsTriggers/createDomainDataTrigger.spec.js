@@ -155,7 +155,7 @@ describe('createDomainDataTrigger', () => {
     const [error] = result.getErrors();
 
     expect(error).to.be.an.instanceOf(DataTriggerConditionError);
-    expect(error.message).to.equal('Can\'t find parent domain matching parent hash');
+    expect(error.message).to.equal('Parent domain is not present');
   });
 
   it('should fail with invalid dashUniqueIdentityId', async () => {
