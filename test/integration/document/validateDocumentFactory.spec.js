@@ -8,6 +8,7 @@ const DataContract = require('../../../lib/dataContract/DataContract');
 const validateDocumentFactory = require('../../../lib/document/validateDocumentFactory');
 const enrichDataContractWithBaseSchema = require('../../../lib/dataContract/enrichDataContractWithBaseSchema');
 
+const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
 const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTypeError');
@@ -34,14 +35,14 @@ describe('validateDocumentFactory', () => {
     validator = new JsonSchemaValidator(ajv);
     this.sinonSandbox.spy(validator, 'validate');
 
-    dataContract = getDocumentsFixture.dataContract;
+    dataContract = getDataContractFixture();
 
     validateDocument = validateDocumentFactory(
       validator,
       enrichDataContractWithBaseSchema,
     );
 
-    const documents = getDocumentsFixture();
+    const documents = getDocumentsFixture(dataContract);
     rawDocuments = documents.map((o) => o.toJSON());
     [rawDocument] = rawDocuments;
   });
@@ -401,7 +402,7 @@ describe('validateDocumentFactory', () => {
   });
 
   it('return invalid result if binary field exceeds `maxLength`', () => {
-    const [document] = getDocumentsFixture().slice(-1);
+    const [document] = getDocumentsFixture(dataContract).slice(-1);
 
     document.data.binaryField = Buffer.from([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
 

@@ -1,5 +1,6 @@
 const Document = require('../../../lib/document/Document');
 
+const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
 describe('Document', () => {
@@ -7,8 +8,8 @@ describe('Document', () => {
   let dataContract;
 
   beforeEach(() => {
-    [document] = getDocumentsFixture().slice(-1);
-    dataContract = getDocumentsFixture.dataContract;
+    dataContract = getDataContractFixture();
+    [document] = getDocumentsFixture(dataContract).slice(-1);
   });
 
   describe('#toJSON', () => {

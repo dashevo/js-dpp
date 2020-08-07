@@ -7,6 +7,7 @@ const DataTriggerExecutionContext = require('../../../../../lib/dataTrigger/Data
 const DataTriggerExecutionError = require('../../../../../lib/errors/DataTriggerExecutionError');
 const DataTriggerExecutionResult = require('../../../../../lib/dataTrigger/DataTriggerExecutionResult');
 
+const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
 const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 const createStateRepositoryMock = require('../../../../../lib/test/mocks/createStateRepositoryMock');
@@ -42,8 +43,8 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
   let fakeTime;
 
   beforeEach(function beforeEach() {
-    documents = getDocumentsFixture();
-    dataContract = getDocumentsFixture.dataContract;
+    dataContract = getDataContractFixture();
+    documents = getDocumentsFixture(dataContract);
     ownerId = getDocumentsFixture.ownerId;
 
     documentTransitions = getDocumentTransitionsFixture({

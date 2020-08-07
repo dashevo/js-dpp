@@ -7,6 +7,7 @@ const DocumentsBatchTransition = require('../../../lib/document/stateTransition/
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
+const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const getDocumentTransitionsFixture = require('../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
@@ -38,7 +39,7 @@ describe('StateTransitionFacade', () => {
       .setType(IdentityPublicKey.TYPES.ECDSA_SECP256K1)
       .setData(publicKey);
 
-    dataContract = getDocumentsFixture.dataContract;
+    dataContract = getDataContractFixture();
 
     dataContractCreateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
@@ -47,7 +48,7 @@ describe('StateTransitionFacade', () => {
     dataContractCreateTransition.sign(identityPublicKey, privateKey);
 
     const documentTransitions = getDocumentTransitionsFixture({
-      create: getDocumentsFixture(),
+      create: getDocumentsFixture(dataContract),
     });
 
     documentsBatchTransition = new DocumentsBatchTransition({

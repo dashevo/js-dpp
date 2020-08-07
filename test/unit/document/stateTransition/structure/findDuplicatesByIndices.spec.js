@@ -57,7 +57,7 @@ describe('findDuplicatesByIndices', () => {
       additionalProperties: false,
     });
 
-    documents = getDocumentsFixture();
+    documents = getDocumentsFixture(contract);
     documents.forEach((doc) => {
       // eslint-disable-next-line no-param-reassign
       doc.dataContract = contract;

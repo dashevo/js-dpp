@@ -10,6 +10,7 @@ const DocumentsBatchTransition = require('../../../../../../lib/document/stateTr
 
 const getDocumentTransitionsFixture = require('../../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 const getDocumentsFixture = require('../../../../../../lib/test/fixtures/getDocumentsFixture');
+const getDataContractFixture = require('../../../../../../lib/test/fixtures/getDataContractFixture');
 
 const ValidationResult = require('../../../../../../lib/validation/ValidationResult');
 
@@ -49,10 +50,10 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
   let documentTransitions;
 
   beforeEach(function beforeEach() {
-    documents = getDocumentsFixture();
+    dataContract = getDataContractFixture();
+    documents = getDocumentsFixture(dataContract);
 
     ownerId = getDocumentsFixture.ownerId;
-    dataContract = getDocumentsFixture.dataContract;
 
     documentTransitions = getDocumentTransitionsFixture({
       create: documents,

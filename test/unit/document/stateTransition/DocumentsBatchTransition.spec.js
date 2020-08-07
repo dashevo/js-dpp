@@ -1,5 +1,6 @@
 const rewiremock = require('rewiremock/node');
 
+const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
@@ -12,9 +13,11 @@ describe('DocumentsBatchTransition', () => {
   let documents;
   let hashMock;
   let encodeMock;
+  let dataContract;
 
   beforeEach(function beforeEach() {
-    documents = getDocumentsFixture();
+    dataContract = getDataContractFixture();
+    documents = getDocumentsFixture(dataContract);
 
     hashMock = this.sinonSandbox.stub();
     const serializerMock = { encode: this.sinonSandbox.stub() };
@@ -125,7 +128,7 @@ describe('DocumentsBatchTransition', () => {
       const rawStateTransition = stateTransition.toJSON();
 
       const result = DocumentsBatchTransition.fromJSON(
-        rawStateTransition, [getDocumentsFixture.dataContract],
+        rawStateTransition, [dataContract],
       );
 
       expect(result.toJSON()).to.deep.equal(

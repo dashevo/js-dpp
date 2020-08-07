@@ -41,7 +41,7 @@ describe('DocumentFactory', () => {
     ({ ownerId } = getDocumentsFixture);
     dataContract = getDataContractFixture();
 
-    documents = getDocumentsFixture();
+    documents = getDocumentsFixture(dataContract);
     ([,,, document] = documents);
     rawDocument = document.toJSON();
 
@@ -149,7 +149,7 @@ describe('DocumentFactory', () => {
       const resultMock = {
         isValid: () => true,
         merge: this.sinonSandbox.stub(),
-        getData: () => getDocumentsFixture.dataContract,
+        getData: () => getDataContractFixture(),
       };
 
       fetchAndValidateDataContractMock.resolves(resultMock);
@@ -308,7 +308,7 @@ describe('DocumentFactory', () => {
     });
 
     it('should create DocumentsBatchTransition with passed documents', () => {
-      const [newDocument] = getDocumentsFixture();
+      const [newDocument] = getDocumentsFixture(dataContract);
 
       fakeTime.tick(1000);
 
