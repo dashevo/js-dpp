@@ -4,6 +4,7 @@ const createStateRepositoryMock = require('../../../../lib/test/mocks/createStat
 
 const getIdentityFixture = require('../../../../lib/test/fixtures/getIdentityFixture');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
+const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 const getDocumentTransitionsFixture = require('../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 const getIdentityTopUpTransitionFixture = require('../../../../lib/test/fixtures/getIdentityTopUpTransitionFixture');
@@ -48,8 +49,8 @@ describe('validateStateTransitionFeeFactory', () => {
       stateRepositoryMock,
       getLockedTransactionOutputMock,
     );
-    dataContract = getDocumentsFixture.dataContract;
-    documents = getDocumentsFixture();
+    dataContract = getDataContractFixture();
+    documents = getDocumentsFixture(dataContract);
   });
 
   it('should return invalid result if balance is not enough', async () => {

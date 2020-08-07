@@ -14,16 +14,16 @@ const InvalidStateTransitionTypeError = require('../../../lib/errors/InvalidStat
 describe('createStateTransitionFactory', () => {
   let createStateTransition;
   let stateRepositoryMock;
+  let dataContract;
 
   beforeEach(function beforeEach() {
+    dataContract = getDataContractFixture();
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
-    stateRepositoryMock.fetchDataContract.resolves(getDocumentsFixture.dataContract);
+    stateRepositoryMock.fetchDataContract.resolves(dataContract);
     createStateTransition = createStateTransitionFactory(stateRepositoryMock);
   });
 
   it('should return DataContractCreateTransition if type is DATA_CONTRACT_CREATE', async () => {
-    const dataContract = getDataContractFixture();
-
     const stateTransition = new DataContractCreateTransition({
       dataContract: dataContract.toJSON(),
       entropy: dataContract.getEntropy(),
@@ -36,15 +36,20 @@ describe('createStateTransitionFactory', () => {
   });
 
   it('should return DocumentsBatchTransition if type is DOCUMENTS', async () => {
-    const documentTransitions = getDocumentTranstionsFixture();
+    const documents = getDocumentsFixture(dataContract);
+    const documentTransitions = getDocumentTranstionsFixture({
+      create: documents,
+    });
 
     const stateTransition = new DocumentsBatchTransition({
       ownerId: getDocumentsFixture.ownerId,
-      contractId: getDocumentsFixture.dataContract.getId(),
+      contractId: dataContract.getId(),
       transitions: documentTransitions.map((t) => t.toJSON()),
-    }, [getDocumentsFixture.dataContract]);
+    }, [dataContract]);
 
-    const result = await createStateTransition(stateTransition.toJSON());
+    const result = await createStateTransition(stateTransition.toJSON(), {
+      fromJSON: true,
+    });
 
     expect(result).to.be.instanceOf(DocumentsBatchTransition);
     expect(result.getTransitions().map((t) => t.toJSON())).to.have.deep.members(

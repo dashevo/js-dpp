@@ -7,6 +7,7 @@ const applyDocumentsBatchTransitionFactory = require(
   '../../../../lib/document/stateTransition/applyDocumentsBatchTransitionFactory',
 );
 
+const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const getDocumentTransitionsFixture = require(
   '../../../../lib/test/fixtures/getDocumentTransitionsFixture',
@@ -18,6 +19,7 @@ const createStateRepositoryMock = require('../../../../lib/test/mocks/createStat
 
 describe('applyDocumentsBatchTransitionFactory', () => {
   let documents;
+  let dataContract;
   let documentTransitions;
   let ownerId;
   let replaceDocument;
@@ -28,14 +30,15 @@ describe('applyDocumentsBatchTransitionFactory', () => {
   let fetchDocumentsMock;
 
   beforeEach(function beforeEach() {
-    documentsFixture = getDocumentsFixture();
+    dataContract = getDataContractFixture();
+    documentsFixture = getDocumentsFixture(dataContract);
 
     ownerId = getDocumentsFixture.ownerId;
 
     replaceDocument = new Document({
       ...documentsFixture[1].toJSON(),
       lastName: 'NotSoShiny',
-    }, getDocumentsFixture.dataContract);
+    }, dataContract);
 
     documents = [replaceDocument, documentsFixture[2]];
 
@@ -48,10 +51,10 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     stateTransition = new DocumentsBatchTransition({
       ownerId,
       transitions: documentTransitions.map((t) => t.toJSON()),
-    }, [getDocumentsFixture.dataContract]);
+    }, [dataContract]);
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
-    stateRepositoryMock.fetchDataContract.resolves(getDocumentsFixture.dataContract);
+    stateRepositoryMock.fetchDataContract.resolves(dataContract);
 
     fetchDocumentsMock = this.sinonSandbox.stub();
     fetchDocumentsMock.resolves([

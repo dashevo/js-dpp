@@ -14,6 +14,7 @@ const dataContractCreateTransitionSchema = require('../../../../schema/dataContr
 const documentsBatchTransitionSchema = require('../../../../schema/document/stateTransition/documentsBatch');
 const identityCreateTransitionSchema = require('../../../../schema/identity/stateTransition/identityCreate');
 
+const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const getDocumentTransitionsFixture = require('../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
@@ -58,7 +59,7 @@ describe('validateStateTransitionStructureFactory', () => {
     const ajv = new Ajv();
     validator = new JsonSchemaValidator(ajv);
 
-    dataContract = getDocumentsFixture.dataContract;
+    dataContract = getDataContractFixture();
 
     privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
 
@@ -386,16 +387,16 @@ describe('validateStateTransitionStructureFactory', () => {
         createStateTransition,
       );
 
-      const documents = getDocumentsFixture();
+      const documents = getDocumentsFixture(dataContract);
       const documentTransitions = getDocumentTransitionsFixture({
         create: documents,
       });
 
       const stateTransition = new DocumentsBatchTransition({
         ownerId: getDocumentsFixture.ownerId,
-        contractId: getDocumentsFixture.dataContract.getId(),
+        contractId: getDataContractFixture().getId(),
         transitions: documentTransitions.map((t) => t.toJSON()),
-      }, [getDocumentsFixture.dataContract]);
+      }, [dataContract]);
       stateTransition.signByPrivateKey(privateKey);
 
       rawStateTransition = stateTransition.toJSON();

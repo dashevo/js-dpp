@@ -7,6 +7,7 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const createStateRepositoryMock = require('../../../lib/test/mocks/createStateRepositoryMock');
 
+const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 const getDocumentTransitionsFixture = require('../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
@@ -22,7 +23,7 @@ describe('DocumentFacade', () => {
   let stateRepositoryMock;
 
   beforeEach(function beforeEach() {
-    dataContract = getDocumentsFixture.dataContract;
+    dataContract = getDataContractFixture();
     ownerId = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
@@ -33,7 +34,7 @@ describe('DocumentFacade', () => {
       stateRepository: stateRepositoryMock,
     });
 
-    documents = getDocumentsFixture();
+    documents = getDocumentsFixture(dataContract);
     ([document] = documents);
   });
 
