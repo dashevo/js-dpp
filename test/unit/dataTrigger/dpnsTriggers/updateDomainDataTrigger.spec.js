@@ -1,4 +1,4 @@
-const domainUpdateDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/updateDomainDataTrigger');
+const domainUpdateDataTrigger = require('../../../../lib/dataTrigger/dpnsTriggers/rejectUpdateDataTrigger');
 const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
 const { getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
 const createStateRepositoryMock = require('../../../../lib/test/mocks/createStateRepositoryMock');
