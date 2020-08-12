@@ -146,11 +146,9 @@
         "format": {
           "$ref": "http://json-schema.org/draft-07/schema#/properties/format"
         },
-        "contentMediaType": {
-          "$ref": "http://json-schema.org/draft-07/schema#/properties/contentMediaType"
-        },
         "contentEncoding": {
-          "$ref": "http://json-schema.org/draft-07/schema#/properties/contentEncoding"
+          "type": "string",
+          "const": "base64"
         }
       },
       "dependencies": {

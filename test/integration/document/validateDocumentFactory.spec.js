@@ -404,7 +404,7 @@ describe('validateDocumentFactory', () => {
   it('return invalid result if binary field exceeds `maxLength`', () => {
     const [document] = getDocumentsFixture(dataContract).slice(-1);
 
-    document.data.binaryField = Buffer.from([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    document.data.binaryField = Buffer.alloc(32);
 
     rawDocument = document.toJSON();
 
