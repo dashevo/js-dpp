@@ -47,7 +47,7 @@ describe('DataContract', () => {
     getEncodedPropertiesFromSchemaMock.withArgs(documentSchema)
       .returns({
         'firstLevel.secondLevel': {
-          contentEncoding: 'binary',
+          contentEncoding: 'base64',
         },
       });
 
@@ -332,7 +332,7 @@ describe('DataContract', () => {
     it('should return flat map of properties with `contentEncoding` keywords', () => {
       const result = dataContract.getEncodedProperties(documentType);
       expect(result).to.deep.equal(
-        { 'firstLevel.secondLevel': { contentEncoding: 'binary' } },
+        { 'firstLevel.secondLevel': { contentEncoding: 'base64' } },
       );
       expect(getEncodedPropertiesFromSchemaMock).to.have.been.calledOnceWith(documentSchema);
     });
@@ -343,7 +343,7 @@ describe('DataContract', () => {
       const result = dataContract.getEncodedProperties(documentType);
 
       expect(result).to.deep.equal(
-        { 'firstLevel.secondLevel': { contentEncoding: 'binary' } },
+        { 'firstLevel.secondLevel': { contentEncoding: 'base64' } },
       );
       expect(getEncodedPropertiesFromSchemaMock).to.have.been.calledOnceWith(documentSchema);
     });
