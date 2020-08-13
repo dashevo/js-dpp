@@ -196,6 +196,27 @@
             ]
           }
         },
+        "contentEncoding": {
+          "description": "force to use base64 pattern without padding",
+          "if": {
+            "properties": {
+              "contentEncoding": {
+                "const": "base64"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "const": "!!!REGEXP!!!"
+              }
+            },
+            "required": [
+              "pattern"
+            ]
+          }
+        },
         "pattern": {
           "description": "prevent slow pattern matching of large strings",
           "properties": {
