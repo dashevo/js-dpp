@@ -22,7 +22,7 @@ describe('Document', () => {
         $ownerId: getDocumentsFixture.ownerId,
         $revision: 1,
         $type: 'withContentEncoding',
-        binaryField: document.getData().binaryField.toString('base64'),
+        binaryField: document.getData().binaryField.toString('base64').replace(/=/g, ''),
       });
     });
   });
