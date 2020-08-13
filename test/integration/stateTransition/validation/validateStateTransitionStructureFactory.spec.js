@@ -64,6 +64,7 @@ describe('validateStateTransitionStructureFactory', () => {
     privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
 
     const dataContractCreateTransition = new DataContractCreateTransition({
+      protocolVersion: 0,
       dataContract: dataContract.toJSON(),
       entropy: dataContract.getEntropy(),
     }, [dataContract]);
@@ -84,39 +85,6 @@ describe('validateStateTransitionStructureFactory', () => {
   });
 
   describe('Base schema', () => {
-    describe('protocolVersion', () => {
-      it('should be present', async () => {
-        delete rawStateTransition.protocolVersion;
-
-        const result = await validateStateTransitionStructure(rawStateTransition);
-
-        expectJsonSchemaError(result);
-
-        const [error] = result.getErrors();
-
-        expect(error.dataPath).to.equal('');
-        expect(error.keyword).to.equal('required');
-        expect(error.params.missingProperty).to.equal('protocolVersion');
-
-        expect(extensionFunctionMock).to.not.be.called();
-      });
-
-      it('should equal to 0', async () => {
-        rawStateTransition.protocolVersion = 666;
-
-        const result = await validateStateTransitionStructure(rawStateTransition);
-
-        expectJsonSchemaError(result);
-
-        const [error] = result.getErrors();
-
-        expect(error.dataPath).to.equal('.protocolVersion');
-        expect(error.keyword).to.equal('const');
-
-        expect(extensionFunctionMock).to.not.be.called();
-      });
-    });
-
     describe('type', () => {
       it('should be present', async () => {
         delete rawStateTransition.type;
@@ -264,7 +232,7 @@ describe('validateStateTransitionStructureFactory', () => {
     });
   });
 
-  describe('Data Contract Schema', () => {
+  describe('Data Contract Create Transition', () => {
     beforeEach(() => {
       const typeExtensions = {
         [stateTransitionTypes.DATA_CONTRACT_CREATE]: {
@@ -286,6 +254,61 @@ describe('validateStateTransitionStructureFactory', () => {
       stateTransition.signByPrivateKey(privateKey);
 
       rawStateTransition = stateTransition.toJSON();
+    });
+
+    describe('protocolVersion', () => {
+      it('should be present', async () => {
+        delete rawStateTransition.protocolVersion;
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('protocolVersion');
+      });
+
+      it('should be an integer', async () => {
+        rawStateTransition.protocolVersion = '1';
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.protocolVersion');
+        expect(error.keyword).to.equal('type');
+      });
+
+      it('should not be less than 0', async () => {
+        rawStateTransition.protocolVersion = -1;
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.keyword).to.equal('minimum');
+        expect(error.dataPath).to.equal('.protocolVersion');
+      });
+
+      it('should not be greater than current version (0)', async () => {
+        rawStateTransition.protocolVersion = 1;
+
+        const result = await validateStateTransitionStructure(rawStateTransition);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.keyword).to.equal('maximum');
+        expect(error.dataPath).to.equal('.protocolVersion');
+      });
     });
 
     describe('dataContract', () => {

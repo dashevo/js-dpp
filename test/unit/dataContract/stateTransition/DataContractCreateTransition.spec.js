@@ -3,11 +3,14 @@ const rewiremock = require('rewiremock/node');
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
+const dataContractCreateTransitionSchema = require('../../../../schema/dataContract/stateTransition/dataContractCreate.json');
+
 describe('DataContractCreateTransition', () => {
   let stateTransition;
   let dataContract;
   let hashMock;
   let encodeMock;
+  let protocolVersion;
 
   beforeEach(function beforeEach() {
     hashMock = this.sinonSandbox.stub();
@@ -19,8 +22,11 @@ describe('DataContractCreateTransition', () => {
       '../../../../lib/util/serializer': serializerMock,
     });
 
+    protocolVersion = dataContractCreateTransitionSchema.properties.protocolVersion.maximum;
+
     dataContract = getDataContractFixture();
     stateTransition = new DataContractCreateTransition({
+      protocolVersion,
       dataContract: dataContract.toJSON(),
       entropy: dataContract.getEntropy(),
     });
@@ -53,7 +59,7 @@ describe('DataContractCreateTransition', () => {
   describe('#toJSON', () => {
     it('should return State Transition as plain JS object', () => {
       expect(stateTransition.toJSON()).to.deep.equal({
-        protocolVersion: 0,
+        protocolVersion,
         type: stateTransitionTypes.DATA_CONTRACT_CREATE,
         dataContract: dataContract.toJSON(),
         signaturePublicKeyId: null,

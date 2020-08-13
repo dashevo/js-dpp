@@ -246,6 +246,7 @@ describe('DataContract', () => {
       const result = dataContract.toJSON();
 
       expect(result).to.deep.equal({
+        protocolVersion: dataContract.getProtocolVersion(),
         $id: contractId,
         $schema: DataContract.DEFAULTS.SCHEMA,
         ownerId,
@@ -263,6 +264,7 @@ describe('DataContract', () => {
       const result = dataContract.toJSON();
 
       expect(result).to.deep.equal({
+        protocolVersion: dataContract.getProtocolVersion(),
         $schema: DataContract.DEFAULTS.SCHEMA,
         $id: contractId,
         ownerId,
