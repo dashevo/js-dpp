@@ -209,7 +209,7 @@
             "properties": {
               "pattern": {
                 "type": "string",
-                "const": "!!!REGEXP!!!"
+                "const": "^[A-Za-z0-9+/]$"
               }
             },
             "required": [
