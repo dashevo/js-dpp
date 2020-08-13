@@ -62,7 +62,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     stateTransition = new DocumentsBatchTransition({
       ownerId,
       contractId: dataContract.getId(),
-      transitions: documentTransitions.map((t) => t.toJSON()),
+      transitions: documentTransitions.map((t) => t.toObject()),
     }, [dataContract]);
     rawStateTransition = stateTransition.toJSON();
 
@@ -673,8 +673,11 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
       rawStateTransition.transitions, dataContract,
     );
     expect(validateIdentityExistenceMock).to.have.been.calledOnceWithExactly(ownerId);
-    expect(validateStateTransitionSignatureMock).to.have.been.calledOnceWithExactly(
-      stateTransition, ownerId,
+    expect(validateStateTransitionSignatureMock.getCall(0).args[0].toJSON()).to.deep.equal(
+      stateTransition.toJSON(),
+    );
+    expect(validateStateTransitionSignatureMock.getCall(0).args[1]).to.deep.equal(
+      ownerId,
     );
   });
 
@@ -695,8 +698,11 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
       rawStateTransition.transitions, dataContract,
     );
     expect(validateIdentityExistenceMock).to.have.been.calledOnceWithExactly(ownerId);
-    expect(validateStateTransitionSignatureMock).to.have.been.calledOnceWithExactly(
-      stateTransition, ownerId,
+    expect(validateStateTransitionSignatureMock.getCall(0).args[0].toJSON()).to.deep.equal(
+      stateTransition.toJSON(),
+    );
+    expect(validateStateTransitionSignatureMock.getCall(0).args[1]).to.deep.equal(
+      ownerId,
     );
   });
 });
