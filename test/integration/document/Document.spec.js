@@ -17,6 +17,7 @@ describe('Document', () => {
       const result = document.toJSON();
 
       expect(result).to.deep.equal({
+        $protocolVersion: document.getProtocolVersion(),
         $dataContractId: dataContract.getId(),
         $id: document.getId(),
         $ownerId: getDocumentsFixture.ownerId,
@@ -32,6 +33,7 @@ describe('Document', () => {
       const result = document.toObject();
 
       expect(result).to.deep.equal({
+        $protocolVersion: document.getProtocolVersion(),
         $dataContractId: dataContract.getId(),
         $id: document.getId(),
         $ownerId: getDocumentsFixture.ownerId,

@@ -6,9 +6,6 @@ const DataContract = require('../../../lib/dataContract/DataContract');
 
 const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition');
 
-const dataContractJsonMetaSchema = require('../../../schema/dataContract/dataContractMeta');
-const dataContractCreateTransitionSchema = require('../../../schema/dataContract/stateTransition/dataContractCreate.json');
-
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
 const InvalidDataContractError = require('../../../lib/dataContract/errors/InvalidDataContractError');
@@ -31,8 +28,11 @@ describe('DataContractFactory', () => {
 
     decodeMock = this.sinonSandbox.stub();
     validateDataContractMock = this.sinonSandbox.stub();
+
     DataContractMock = this.sinonSandbox.stub().returns(dataContract);
     DataContractMock.DEFAULTS = DataContract.DEFAULTS;
+    DataContractMock.PROTOCOL_VERSION = DataContract.PROTOCOL_VERSION;
+
     entropyMock = {
       generate: this.sinonSandbox.stub(),
     };
@@ -63,10 +63,8 @@ describe('DataContractFactory', () => {
 
       expect(result).to.equal(dataContract);
 
-      const protocolVersion = dataContractJsonMetaSchema.properties.protocolVersion.maximum;
-
       expect(DataContractMock).to.have.been.calledOnceWith({
-        protocolVersion,
+        protocolVersion: DataContract.PROTOCOL_VERSION,
         $schema: DataContract.DEFAULTS.SCHEMA,
         $id: rawDataContract.$id,
         ownerId: rawDataContract.ownerId,
@@ -175,9 +173,7 @@ describe('DataContractFactory', () => {
 
       expect(result).to.be.an.instanceOf(DataContractCreateTransition);
 
-      const protocolVersion = dataContractCreateTransitionSchema.properties.protocolVersion.maximum;
-
-      expect(result.getProtocolVersion()).to.equal(protocolVersion);
+      expect(result.getProtocolVersion()).to.equal(DataContract.PROTOCOL_VERSION);
       expect(result.getEntropy()).to.equal(dataContract.getEntropy());
       expect(result.getDataContract().toJSON()).to.deep.equal(dataContract.toJSON());
     });

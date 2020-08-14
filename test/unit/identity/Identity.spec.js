@@ -2,8 +2,6 @@ const rewiremock = require('rewiremock/node');
 
 const IdentityPublicKey = require('../../../lib/identity/IdentityPublicKey');
 
-const identitySchema = require('../../../schema/identity/identity.json');
-
 describe('Identity', () => {
   let rawIdentity;
   let identity;
@@ -12,22 +10,6 @@ describe('Identity', () => {
   let encodeMock;
 
   beforeEach(function beforeEach() {
-    const protocolVersion = identitySchema.properties.protocolVersion.maximum;
-
-    rawIdentity = {
-      protocolVersion,
-      id: 'someId',
-      publicKeys: [
-        {
-          id: 0,
-          type: IdentityPublicKey.TYPES.ECDSA_SECP256K1,
-          data: 'somePublicKey',
-          isEnabled: true,
-        },
-      ],
-      balance: 0,
-    };
-
     hashMock = this.sinonSandbox.stub();
     encodeMock = this.sinonSandbox.stub();
 
@@ -40,6 +22,20 @@ describe('Identity', () => {
         },
       },
     );
+
+    rawIdentity = {
+      protocolVersion: Identity.PROTOCOL_VERSION,
+      id: 'someId',
+      publicKeys: [
+        {
+          id: 0,
+          type: IdentityPublicKey.TYPES.ECDSA_SECP256K1,
+          data: 'somePublicKey',
+          isEnabled: true,
+        },
+      ],
+      balance: 0,
+    };
 
     identity = new Identity(rawIdentity);
   });

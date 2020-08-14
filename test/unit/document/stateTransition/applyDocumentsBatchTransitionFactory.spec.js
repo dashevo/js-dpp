@@ -49,6 +49,7 @@ describe('applyDocumentsBatchTransitionFactory', () => {
     });
 
     stateTransition = new DocumentsBatchTransition({
+      protocolVersion: Document.PROTOCOL_VERSION,
       ownerId,
       transitions: documentTransitions.map((t) => t.toJSON()),
     }, [dataContract]);
