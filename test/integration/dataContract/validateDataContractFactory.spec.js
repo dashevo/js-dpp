@@ -1007,6 +1007,19 @@ describe('validateDataContractFactory', () => {
         expect(error.dataPath).to.equal('.documents[\'indexedDocument\'].properties[\'something\'].maxLength');
         expect(error.keyword).to.equal('maximum');
       });
+
+      it('should have `pattern` set if `contentEncoding` is set to `base64`', async () => {
+        delete rawDataContract.documents.withContentEncoding.properties.binaryField.pattern;
+
+        const result = await validateDataContract(rawDataContract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.documents[\'withContentEncoding\'].properties[\'binaryField\']');
+        expect(error.keyword).to.equal('required');
+      });
     });
   });
 
