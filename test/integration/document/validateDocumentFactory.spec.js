@@ -48,6 +48,74 @@ describe('validateDocumentFactory', () => {
   });
 
   describe('Base schema', () => {
+    describe('$protocolVersion', () => {
+      it('should be present', () => {
+        delete rawDocument.$protocolVersion;
+
+        const result = validateDocument(rawDocument, dataContract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('$protocolVersion');
+      });
+
+      it('should be an integer', () => {
+        rawDocument.$protocolVersion = '1';
+
+        const result = validateDocument(rawDocument, dataContract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.$protocolVersion');
+        expect(error.keyword).to.equal('type');
+      });
+
+      it('should not be less than 0', () => {
+        rawDocument.$protocolVersion = -1;
+
+        const result = validateDocument(rawDocument, dataContract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.$protocolVersion');
+        expect(error.keyword).to.equal('minimum');
+      });
+
+      it('should not be greater than current Document protocol version (0)', () => {
+        rawDocument.$protocolVersion = 1;
+
+        const result = validateDocument(rawDocument, dataContract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.$protocolVersion');
+        expect(error.keyword).to.equal('maximum');
+      });
+
+      it('should be base58 encoded', () => {
+        rawDocument.$id = '&'.repeat(44);
+
+        const result = validateDocument(rawDocument, dataContract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.keyword).to.equal('pattern');
+        expect(error.dataPath).to.equal('.$id');
+      });
+    });
+
     describe('$id', () => {
       it('should be present', () => {
         delete rawDocument.$id;

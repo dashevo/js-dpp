@@ -8,6 +8,8 @@ const DocumentCreateTransition = require(
   '../../../lib/document/stateTransition/documentTransition/DocumentCreateTransition',
 );
 
+const documentBaseSchema = require('../../../schema/document/documentBase.json');
+
 describe('Document', () => {
   let lodashGetMock;
   let lodashSetMock;
@@ -48,7 +50,10 @@ describe('Document', () => {
       },
     });
 
+    const protocolVersion = documentBaseSchema.properties.$protocolVersion.maximum;
+
     rawDocument = {
+      $protocolVersion: protocolVersion,
       $id: 'D3AT6rBtyTqx3hXFckwtP81ncu49y5ndE7ot9JkuNSeB',
       $type: 'test',
       $dataContractId: dataContract.getId(),

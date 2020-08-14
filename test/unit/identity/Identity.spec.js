@@ -2,6 +2,8 @@ const rewiremock = require('rewiremock/node');
 
 const IdentityPublicKey = require('../../../lib/identity/IdentityPublicKey');
 
+const identitySchema = require('../../../schema/identity/identity.json');
+
 describe('Identity', () => {
   let rawIdentity;
   let identity;
@@ -10,7 +12,10 @@ describe('Identity', () => {
   let encodeMock;
 
   beforeEach(function beforeEach() {
+    const protocolVersion = identitySchema.properties.protocolVersion.maximum;
+
     rawIdentity = {
+      protocolVersion,
       id: 'someId',
       publicKeys: [
         {
@@ -40,14 +45,6 @@ describe('Identity', () => {
   });
 
   describe('#constructor', () => {
-    it('should not set anything if nothing passed', () => {
-      const instance = new Identity();
-
-      expect(instance.id).to.be.undefined();
-      expect(instance.type).to.be.undefined();
-      expect(instance.publicKeys).to.deep.equal([]);
-    });
-
     it('should set variables from raw model', () => {
       const instance = new Identity(rawIdentity);
 
