@@ -294,6 +294,12 @@
     }
   },
   "properties": {
+    "protocolVersion": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 0,
+      "$comment": "Maximum is the latest Data Contract protocol version"
+    },
     "$schema": {
       "type": "string",
       "const": "https://schema.dash.org/dpp-0-4-0/meta/data-contract"
@@ -453,6 +459,7 @@
     }
   },
   "required": [
+    "protocolVersion",
     "$schema",
     "$id",
     "ownerId",

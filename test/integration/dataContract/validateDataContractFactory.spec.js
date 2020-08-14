@@ -41,6 +41,61 @@ describe('validateDataContractFactory', () => {
     );
   });
 
+  describe('protocolVersion', () => {
+    it('should be present', async () => {
+      delete rawDataContract.protocolVersion;
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('protocolVersion');
+    });
+
+    it('should be an integer', async () => {
+      rawDataContract.protocolVersion = '1';
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.protocolVersion');
+      expect(error.keyword).to.equal('type');
+    });
+
+    it('should not be less than 0', async () => {
+      rawDataContract.protocolVersion = -1;
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('minimum');
+      expect(error.dataPath).to.equal('.protocolVersion');
+    });
+
+    it('should not be greater than current version (0)', async () => {
+      rawDataContract.protocolVersion = 1;
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('maximum');
+      expect(error.dataPath).to.equal('.protocolVersion');
+    });
+  });
+
   describe('$schema', () => {
     it('should be present', async () => {
       delete rawDataContract.$schema;

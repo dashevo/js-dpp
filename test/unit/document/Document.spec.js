@@ -49,6 +49,7 @@ describe('Document', () => {
     });
 
     rawDocument = {
+      $protocolVersion: Document.PROTOCOL_VERSION,
       $id: 'D3AT6rBtyTqx3hXFckwtP81ncu49y5ndE7ot9JkuNSeB',
       $type: 'test',
       $dataContractId: dataContract.getId(),
