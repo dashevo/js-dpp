@@ -7,8 +7,7 @@ const getDpnsDocumentFixture = require('../../../lib/test/fixtures/getDpnsDocume
 const DataTrigger = require('../../../lib/dataTrigger/DataTrigger');
 
 const createDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/createDomainDataTrigger');
-const updateDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/rejectUpdateDataTrigger');
-const deleteDomainDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/rejectDeleteDataTrigger');
+const rejectDataTrigger = require('../../../lib/dataTrigger/dpnsTriggers/rejectDataTrigger');
 
 const generateRandomId = require('../../../lib/test/utils/generateRandomId');
 
@@ -42,16 +41,16 @@ describe('getDataTriggers', () => {
       dataContractId, 'domain', AbstractDocumentTransition.ACTIONS.CREATE, createDomainDataTrigger, topLevelIdentity,
     );
     updateTrigger = new DataTrigger(
-      dataContractId, 'domain', AbstractDocumentTransition.ACTIONS.REPLACE, updateDomainDataTrigger, topLevelIdentity,
+      dataContractId, 'domain', AbstractDocumentTransition.ACTIONS.REPLACE, rejectDataTrigger, topLevelIdentity,
     );
     deleteTrigger = new DataTrigger(
-      dataContractId, 'domain', AbstractDocumentTransition.ACTIONS.DELETE, deleteDomainDataTrigger, topLevelIdentity,
+      dataContractId, 'domain', AbstractDocumentTransition.ACTIONS.DELETE, rejectDataTrigger, topLevelIdentity,
     );
     updatePreorderTrigger = new DataTrigger(
-      dataContractId, 'preorder', AbstractDocumentTransition.ACTIONS.REPLACE, updateDomainDataTrigger, topLevelIdentity,
+      dataContractId, 'preorder', AbstractDocumentTransition.ACTIONS.REPLACE, rejectDataTrigger, topLevelIdentity,
     );
     deletePreorderTrigger = new DataTrigger(
-      dataContractId, 'preorder', AbstractDocumentTransition.ACTIONS.DELETE, deleteDomainDataTrigger, topLevelIdentity,
+      dataContractId, 'preorder', AbstractDocumentTransition.ACTIONS.DELETE, rejectDataTrigger, topLevelIdentity,
     );
 
     this.sinonSandbox.stub(process, 'env').value({
