@@ -218,21 +218,23 @@ describe('DocumentFactory', () => {
 
   describe('createFromSerialized', () => {
     beforeEach(function beforeEach() {
-      this.sinonSandbox.stub(factory, 'createFromJson');
+      this.sinonSandbox.stub(factory, 'createFromObject');
+      // eslint-disable-next-line prefer-destructuring
+      document = documents[8]; // document with binary fields
     });
 
-    it('should return new Data Contract from serialized Contract', async () => {
+    it('should return new Document from serialized one', async () => {
       const serializedDocument = document.serialize();
 
-      decodeMock.returns(rawDocument);
+      decodeMock.returns(document.toObject());
 
-      factory.createFromJson.returns(document);
+      factory.createFromObject.returns(document);
 
       const result = await factory.createFromSerialized(serializedDocument);
 
       expect(result).to.equal(document);
 
-      expect(factory.createFromJson).to.have.been.calledOnceWith(rawDocument);
+      expect(factory.createFromObject).to.have.been.calledOnceWith(document.toObject());
 
       expect(decodeMock).to.have.been.calledOnceWith(serializedDocument);
     });

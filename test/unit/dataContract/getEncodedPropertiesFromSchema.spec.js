@@ -13,7 +13,7 @@ describe('getEncodedPropertiesFromSchema', () => {
         },
         withEncoding: {
           type: 'string',
-          contentEncoding: 'binary',
+          contentEncoding: 'base64',
         },
         nestedObject: {
           type: 'object',
@@ -23,7 +23,7 @@ describe('getEncodedPropertiesFromSchema', () => {
             },
             withEncoding: {
               type: 'string',
-              contentEncoding: 'binary',
+              contentEncoding: 'base64',
             },
           },
         },
@@ -37,7 +37,7 @@ describe('getEncodedPropertiesFromSchema', () => {
               },
               withEncoding: {
                 type: 'string',
-                contentEncoding: 'binary',
+                contentEncoding: 'base64',
               },
             },
           },
@@ -53,7 +53,7 @@ describe('getEncodedPropertiesFromSchema', () => {
                 },
                 withEncoding: {
                   type: 'string',
-                  contentEncoding: 'binary',
+                  contentEncoding: 'base64',
                 },
               },
             },
@@ -71,7 +71,7 @@ describe('getEncodedPropertiesFromSchema', () => {
                     },
                     withEncoding: {
                       type: 'string',
-                      contentEncoding: 'binary',
+                      contentEncoding: 'base64',
                     },
                   },
                 },
@@ -93,11 +93,11 @@ describe('getEncodedPropertiesFromSchema', () => {
     const result = getEncodedPropertiesFromSchema(documentSchema);
 
     expect(result).to.deep.equal({
-      withEncoding: { type: 'string', contentEncoding: 'binary' },
-      'nestedObject.withEncoding': { type: 'string', contentEncoding: 'binary' },
-      'arrayOfObject.withEncoding': { type: 'string', contentEncoding: 'binary' },
-      'arrayOfObjects[0].withEncoding': { type: 'string', contentEncoding: 'binary' },
-      'arrayOfObjects[2][0].withEncoding': { type: 'string', contentEncoding: 'binary' },
+      withEncoding: { type: 'string', contentEncoding: 'base64' },
+      'nestedObject.withEncoding': { type: 'string', contentEncoding: 'base64' },
+      'arrayOfObject.withEncoding': { type: 'string', contentEncoding: 'base64' },
+      'arrayOfObjects[0].withEncoding': { type: 'string', contentEncoding: 'base64' },
+      'arrayOfObjects[2][0].withEncoding': { type: 'string', contentEncoding: 'base64' },
     });
   });
 });

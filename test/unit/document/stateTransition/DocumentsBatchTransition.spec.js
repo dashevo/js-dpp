@@ -94,7 +94,7 @@ describe('DocumentsBatchTransition', () => {
 
       expect(result).to.equal(serializedStateTransition);
 
-      expect(encodeMock).to.have.been.calledOnceWith(stateTransition.toJSON());
+      expect(encodeMock).to.have.been.calledOnceWith(stateTransition.toObject());
     });
   });
 
@@ -110,7 +110,7 @@ describe('DocumentsBatchTransition', () => {
 
       expect(result).to.equal(hashedDocument);
 
-      expect(encodeMock).to.have.been.calledOnceWith(stateTransition.toJSON());
+      expect(encodeMock).to.have.been.calledOnceWith(stateTransition.toObject());
       expect(hashMock).to.have.been.calledOnceWith(serializedDocument);
     });
   });

@@ -1,5 +1,7 @@
 const Ajv = require('ajv');
 
+const lodashCloneDeep = require('lodash.clonedeep');
+
 const validateStateTransitionStructureFactory = require('../../../../lib/stateTransition/validation/validateStateTransitionStructureFactory');
 const createStateTransitionFactory = require('../../../../lib/stateTransition/createStateTransitionFactory');
 
@@ -1072,7 +1074,7 @@ describe('validateStateTransitionStructureFactory', () => {
 
     extensionFunctionMock.returns(extensionResult);
 
-    rawStateTransition = JSON.parse(JSON.stringify(rawStateTransition));
+    rawStateTransition = lodashCloneDeep(rawStateTransition);
 
     // generate big state transition
     for (let i = 0; i < 500; i++) {

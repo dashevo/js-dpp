@@ -1,5 +1,7 @@
 const Document = require('../../../lib/document/Document');
 
+const encodeToBase64WithoutPadding = require('../../../lib/util/encodeToBase64WithoutPadding');
+
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
 
@@ -23,7 +25,7 @@ describe('Document', () => {
         $ownerId: getDocumentsFixture.ownerId,
         $revision: 1,
         $type: 'withContentEncoding',
-        binaryField: '\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n',
+        binaryField: encodeToBase64WithoutPadding(document.getData().binaryField),
       });
     });
   });
@@ -39,7 +41,7 @@ describe('Document', () => {
         $ownerId: getDocumentsFixture.ownerId,
         $revision: 1,
         $type: 'withContentEncoding',
-        binaryField: Buffer.from([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+        binaryField: document.getData().binaryField,
       });
     });
   });
