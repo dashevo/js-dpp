@@ -101,7 +101,7 @@ describe('StateTransitionFactory', () => {
 
   describe('createFromSerialized', () => {
     beforeEach(function beforeEach() {
-      this.sinonSandbox.stub(factory, 'createFromJSON');
+      this.sinonSandbox.stub(factory, 'createFromObject');
     });
 
     it('should return new State Transition from serialized contract', async () => {
@@ -109,13 +109,13 @@ describe('StateTransitionFactory', () => {
 
       decodeMock.returns(rawStateTransition);
 
-      factory.createFromJSON.resolves(stateTransition);
+      factory.createFromObject.resolves(stateTransition);
 
       const result = await factory.createFromSerialized(serializedStateTransition);
 
       expect(result).to.equal(stateTransition);
 
-      expect(factory.createFromJSON).to.have.been.calledOnceWith(rawStateTransition);
+      expect(factory.createFromObject).to.have.been.calledOnceWith(rawStateTransition);
 
       expect(decodeMock).to.have.been.calledOnceWith(serializedStateTransition);
     });
