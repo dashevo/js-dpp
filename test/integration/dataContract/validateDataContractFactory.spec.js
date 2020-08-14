@@ -1007,6 +1007,49 @@ describe('validateDataContractFactory', () => {
         expect(error.dataPath).to.equal('.documents[\'indexedDocument\'].properties[\'something\'].maxLength');
         expect(error.keyword).to.equal('maximum');
       });
+
+      it('should have `pattern` set if `contentEncoding` is set to `base64`', async () => {
+        delete rawDataContract.documents.withContentEncoding.properties.binaryField.pattern;
+
+        const result = await validateDataContract(rawDataContract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal('.documents[\'withContentEncoding\'].properties[\'binaryField\']');
+        expect(error.keyword).to.equal('required');
+      });
+
+      it('should have specific `pattern` set if `contentEncoding` is set to `base64`', async () => {
+        rawDataContract.documents.withContentEncoding.properties.binaryField.pattern = '.*';
+
+        const result = await validateDataContract(rawDataContract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal(
+          '.documents[\'withContentEncoding\'].properties[\'binaryField\'].pattern',
+        );
+        expect(error.keyword).to.equal('const');
+      });
+
+      it('should have `contentEncoding` set to `base64` if former has been set', async () => {
+        rawDataContract.documents.withContentEncoding.properties.binaryField.contentEncoding = 'binary';
+
+        const result = await validateDataContract(rawDataContract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.dataPath).to.equal(
+          '.documents[\'withContentEncoding\'].properties[\'binaryField\'].contentEncoding',
+        );
+        expect(error.keyword).to.equal('const');
+      });
     });
   });
 
