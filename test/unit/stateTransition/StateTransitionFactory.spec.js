@@ -93,8 +93,6 @@ describe('StateTransitionFactory', () => {
         expect(validateStateTransitionStructureMock).to.have.been.calledOnceWith(
           rawStateTransition,
         );
-
-        expect(createStateTransitionMock).to.have.not.been.called();
       }
     });
   });
