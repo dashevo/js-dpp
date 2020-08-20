@@ -67,8 +67,7 @@ describe('createDomainDataTrigger', () => {
       Buffer.from(fullDomainName),
     ]);
 
-    const saltedDomainHash = hash(saltedDomainHashBuffer)
-      .toString('hex');
+    const saltedDomainHash = hash(saltedDomainHashBuffer);
 
     stateRepositoryMock.fetchDocuments
       .withArgs(
