@@ -49,14 +49,20 @@ describe('createDomainDataTrigger', () => {
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
     stateRepositoryMock.fetchDocuments.resolves([]);
+
+    const [normalizedParentLabel] = normalizedParentDomainName.split('.');
+    const normalizedGrandParentDomainName = normalizedParentDomainName.split('.')
+      .slice(1)
+      .join('.');
+
     stateRepositoryMock.fetchDocuments
       .withArgs(
         dataContract.getId(),
         childDocument.getType(),
         {
           where: [
-            ['normalizedParentDomainName', '==', normalizedParentDomainName],
-            ['normalizedLabel', '==', normalizedLabel],
+            ['normalizedParentDomainName', '==', normalizedGrandParentDomainName],
+            ['normalizedLabel', '==', normalizedParentLabel],
           ],
         },
       )
@@ -131,7 +137,7 @@ describe('createDomainDataTrigger', () => {
     childDocument = getChildDocumentFixture({
       label: 'label',
       normalizedLabel: 'label',
-      normalizedParentDomainName: 'invalidname',
+      normalizedParentDomainName: 'parent.invalidname',
     });
 
     stateRepositoryMock.fetchTransaction
@@ -155,6 +161,17 @@ describe('createDomainDataTrigger', () => {
 
     expect(error).to.be.an.instanceOf(DataTriggerConditionError);
     expect(error.message).to.equal('Parent domain is not present');
+
+    expect(stateRepositoryMock.fetchDocuments).to.have.been.calledOnceWithExactly(
+      context.getDataContract().getId(),
+      'domain',
+      {
+        where: [
+          ['normalizedParentDomainName', '==', 'invalidname'],
+          ['normalizedLabel', '==', 'parent'],
+        ],
+      },
+    );
   });
 
   it('should fail with invalid dashUniqueIdentityId', async () => {
