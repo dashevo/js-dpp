@@ -49,14 +49,20 @@ describe('createDomainDataTrigger', () => {
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
     stateRepositoryMock.fetchDocuments.resolves([]);
+
+    const [normalizedParentLabel] = normalizedParentDomainName.split('.');
+    const normalizedGrandParentDomainName = normalizedParentDomainName.split('.')
+      .slice(1)
+      .join('.');
+
     stateRepositoryMock.fetchDocuments
       .withArgs(
         dataContract.getId(),
         childDocument.getType(),
         {
           where: [
-            ['normalizedParentDomainName', '==', normalizedParentDomainName],
-            ['normalizedLabel', '==', normalizedLabel],
+            ['normalizedParentDomainName', '==', normalizedGrandParentDomainName],
+            ['normalizedLabel', '==', normalizedParentLabel],
           ],
         },
       )
