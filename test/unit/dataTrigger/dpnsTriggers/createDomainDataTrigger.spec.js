@@ -275,7 +275,7 @@ describe('createDomainDataTrigger', () => {
     parentDocument.ownerId = 'newId';
 
     const result = await createDomainDataTrigger(
-      childDocument, context, topLevelIdentity,
+      childDocumentTransition, context, topLevelIdentity,
     );
 
     expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
@@ -285,6 +285,28 @@ describe('createDomainDataTrigger', () => {
     expect(error).to.be.an.instanceOf(DataTriggerConditionError);
     expect(error.message).to.equal(
       'The subdomain can be created only by the parent domain owner',
+    );
+  });
+
+  it('should fail with allowing subdomains for non top level domain', async () => {
+    childDocument = getChildDocumentFixture({ subdomainRules: { allowSubdomains: true } });
+
+    [childDocumentTransition] = getDocumentTransitionFixture({
+      create: [childDocument],
+    });
+
+    const result = await createDomainDataTrigger(
+      childDocumentTransition, context, topLevelIdentity,
+    );
+
+    expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
+    expect(result.isOk()).to.be.false();
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.an.instanceOf(DataTriggerConditionError);
+    expect(error.message).to.equal(
+      'Allowing subdomains registration is forbidden for non top level domains',
     );
   });
 });
