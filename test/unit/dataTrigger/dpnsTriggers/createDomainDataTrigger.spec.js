@@ -3,7 +3,7 @@ const createDomainDataTrigger = require('../../../../lib/dataTrigger/dpnsTrigger
 const DataTriggerExecutionContext = require('../../../../lib/dataTrigger/DataTriggerExecutionContext');
 const DataTriggerExecutionResult = require('../../../../lib/dataTrigger/DataTriggerExecutionResult');
 
-const { getParentDocumentFixture, getChildDocumentFixture } = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
+const { getParentDocumentFixture, getChildDocumentFixture, getTopDocumentFixture } = require('../../../../lib/test/fixtures/getDpnsDocumentFixture');
 const getPreorderDocumentFixture = require('../../../../lib/test/fixtures/getPreorderDocumentFixture');
 const getDpnsContractFixture = require('../../../../lib/test/fixtures/getDpnsContractFixture');
 const getDocumentTransitionFixture = require('../../../../lib/test/fixtures/getDocumentTransitionsFixture');
@@ -18,6 +18,7 @@ describe('createDomainDataTrigger', () => {
   let childDocumentTransition;
   let childDocument;
   let parentDocument;
+  let topDocument;
   let context;
   let stateRepositoryMock;
   let dataContract;
@@ -26,6 +27,7 @@ describe('createDomainDataTrigger', () => {
   beforeEach(function beforeEach() {
     dataContract = getDpnsContractFixture();
 
+    topDocument = getTopDocumentFixture();
     parentDocument = getParentDocumentFixture();
     childDocument = getChildDocumentFixture();
     const preorderDocument = getPreorderDocumentFixture();
@@ -325,5 +327,17 @@ describe('createDomainDataTrigger', () => {
     expect(error.message).to.equal(
       'Allowing subdomains registration is forbidden for non top level domains',
     );
+  });
+
+  it('should allow creating a second level domain by any identity', async () => {
+    topDocument.ownerId = 'anotherId';
+
+    stateRepositoryMock.fetchDocuments.resolves([topDocument]);
+
+    const result = await createDomainDataTrigger(
+      parentDocumentTransition, context, topLevelIdentity,
+    );
+
+    expect(result.isOk()).to.be.true();
   });
 });
