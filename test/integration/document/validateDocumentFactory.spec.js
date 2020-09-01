@@ -470,7 +470,7 @@ describe('validateDocumentFactory', () => {
   });
 
   it('return invalid result if binary field exceeds `maxLength`', () => {
-    const [document] = getDocumentsFixture(dataContract).slice(-1);
+    const document = getDocumentsFixture(dataContract)[8];
 
     document.data.binaryField = Buffer.alloc(32);
 

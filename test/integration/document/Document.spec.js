@@ -11,7 +11,7 @@ describe('Document', () => {
 
   beforeEach(() => {
     dataContract = getDataContractFixture();
-    [document] = getDocumentsFixture(dataContract).slice(-1);
+    [document] = getDocumentsFixture(dataContract).slice(8);
   });
 
   describe('#toJSON', () => {

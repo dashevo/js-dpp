@@ -19,6 +19,7 @@ const InvalidIndexPropertyTypeError = require('../../../lib/errors/InvalidIndexP
 const SystemPropertyIndexAlreadyPresentError = require('../../../lib/errors/SystemPropertyIndexAlreadyPresentError');
 const UniqueIndicesLimitReachedError = require('../../../lib/errors/UniqueIndicesLimitReachedError');
 const InvalidIndexedPropertyConstraintError = require('../../../lib/errors/InvalidIndexedPropertyConstraintError');
+const InvalidIndexDefinitionError = require('../../../lib/errors/InvalidIndexDefinitionError');
 
 describe('validateDataContractFactory', () => {
   let dataContract;
@@ -1582,5 +1583,19 @@ describe('validateDataContractFactory', () => {
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
+  });
+
+  it('should return invalid result if unique compound index contains not all fields', async () => {
+    rawDataContract.documents.optionalUniqueIndexedDocument.required.splice(-1);
+    const result = await validateDataContract(rawDataContract);
+
+    expectValidationError(result, InvalidIndexDefinitionError);
+
+    const [error] = result.getErrors();
+
+    expect(error.getIndexDefinition()).to.deep.equal(
+      rawDataContract.documents.optionalUniqueIndexedDocument.indices[1],
+    );
+    expect(error.getDocumentType()).to.equal('optionalUniqueIndexedDocument');
   });
 });
