@@ -19,7 +19,7 @@ const InvalidIndexPropertyTypeError = require('../../../lib/errors/InvalidIndexP
 const SystemPropertyIndexAlreadyPresentError = require('../../../lib/errors/SystemPropertyIndexAlreadyPresentError');
 const UniqueIndicesLimitReachedError = require('../../../lib/errors/UniqueIndicesLimitReachedError');
 const InvalidIndexedPropertyConstraintError = require('../../../lib/errors/InvalidIndexedPropertyConstraintError');
-const InvalidIndexDefinitionError = require('../../../lib/errors/InvalidIndexDefinitionError');
+const InvalidCompoundIndexError = require('../../../lib/errors/InvalidCompoundIndexError');
 
 describe('validateDataContractFactory', () => {
   let dataContract;
@@ -1589,7 +1589,7 @@ describe('validateDataContractFactory', () => {
     rawDataContract.documents.optionalUniqueIndexedDocument.required.splice(-1);
     const result = await validateDataContract(rawDataContract);
 
-    expectValidationError(result, InvalidIndexDefinitionError);
+    expectValidationError(result, InvalidCompoundIndexError);
 
     const [error] = result.getErrors();
 
