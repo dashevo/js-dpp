@@ -41,7 +41,7 @@ describe('validatePartialCompoundIndices', () => {
     expect(error.getDocumentType()).to.equal('optionalUniqueIndexedDocument');
   });
 
-  it('should return result if compound index contains no fields', () => {
+  it('should return valid result if compound index contains no fields', () => {
     const document = getDocumentsFixture(dataContract)[8];
     document.setData({ });
 
@@ -57,7 +57,7 @@ describe('validatePartialCompoundIndices', () => {
     expect(result.isValid()).to.be.true();
   });
 
-  it('should return result if compound index contains all fields', () => {
+  it('should return valid result if compound index contains all fields', () => {
     documents = [getDocumentsFixture(dataContract)[8]];
     documentTransitions = getDocumentTransitionsFixture({
       create: documents,
