@@ -1361,157 +1361,7 @@ describe('validateDataContractFactory', () => {
         expect(error.getDocumentType()).to.equal('indexedDocument');
       });
 
-      it('should return invalid result if indices has undefined property', async () => {
-        const indexDefinition = rawDataContract.documents.indexedDocument.indices[0];
-
-        indexDefinition.properties.push({
-          missingProperty: 'asc',
-        });
-
-        const result = await validateDataContract(rawDataContract);
-
-        expectValidationError(result, UndefinedIndexPropertyError);
-
-        const [error] = result.getErrors();
-
-        expect(error.getPropertyName()).to.equal('missingProperty');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
-        expect(error.getDocumentType()).to.deep.equal('indexedDocument');
-        expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
-      });
-
-      it('should return invalid result if index property is object', async () => {
-        const propertiesDefinition = rawDataContract.documents.indexedDocument.properties;
-
-        propertiesDefinition.objectProperty = {
-          type: 'object',
-          properties: {
-            something: {
-              type: 'string',
-            },
-          },
-          additionalProperties: false,
-        };
-
-        const indexDefinition = rawDataContract.documents.indexedDocument.indices[0];
-
-        indexDefinition.properties.push({
-          objectProperty: 'asc',
-        });
-
-        const result = await validateDataContract(rawDataContract);
-
-        expectValidationError(result, InvalidIndexPropertyTypeError);
-
-        const [error] = result.getErrors();
-
-        expect(error.getPropertyName()).to.equal('objectProperty');
-        expect(error.getPropertyType()).to.equal('object');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
-        expect(error.getDocumentType()).to.deep.equal('indexedDocument');
-        expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
-      });
-
-      it('should return invalid result if index property is array of objects', async () => {
-        const propertiesDefinition = rawDataContract.documents.indexedDocument.properties;
-
-        propertiesDefinition.arrayProperty = {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              something: {
-                type: 'string',
-              },
-            },
-            additionalProperties: false,
-          },
-        };
-
-        const indexDefinition = rawDataContract.documents.indexedDocument.indices[0];
-
-        indexDefinition.properties.push({
-          arrayProperty: 'asc',
-        });
-
-        const result = await validateDataContract(rawDataContract);
-
-        expectValidationError(result, InvalidIndexPropertyTypeError);
-
-        const [error] = result.getErrors();
-
-        expect(error.getPropertyName()).to.equal('arrayProperty');
-        expect(error.getPropertyType()).to.equal('array');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
-        expect(error.getDocumentType()).to.deep.equal('indexedDocument');
-        expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
-      });
-
-      it('should return invalid result if index property is array of arrays', async () => {
-        const propertiesDefinition = rawDataContract.documents.indexedDocument.properties;
-
-        propertiesDefinition.arrayProperty = {
-          type: 'array',
-          items: {
-            type: 'array',
-            items: {
-              type: 'string',
-            },
-          },
-        };
-
-        const indexDefinition = rawDataContract.documents.indexedDocument.indices[0];
-
-        indexDefinition.properties.push({
-          arrayProperty: 'asc',
-        });
-
-        const result = await validateDataContract(rawDataContract);
-
-        expectValidationError(result, InvalidIndexPropertyTypeError);
-
-        const [error] = result.getErrors();
-
-        expect(error.getPropertyName()).to.equal('arrayProperty');
-        expect(error.getPropertyType()).to.equal('array');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
-        expect(error.getDocumentType()).to.deep.equal('indexedDocument');
-        expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
-      });
-
-      it('should return invalid result if index property is array with many item definitions', async () => {
-        const propertiesDefinition = rawDataContract.documents.indexedDocument.properties;
-
-        propertiesDefinition.arrayProperty = {
-          type: 'array',
-          items: [{
-            type: 'string',
-          }, {
-            type: 'number',
-          }],
-          additionalItems: false,
-        };
-
-        const indexDefinition = rawDataContract.documents.indexedDocument.indices[0];
-
-        indexDefinition.properties.push({
-          arrayProperty: 'asc',
-        });
-
-        const result = await validateDataContract(rawDataContract);
-
-        expectValidationError(result, InvalidIndexPropertyTypeError);
-
-        const [error] = result.getErrors();
-
-        expect(error.getPropertyName()).to.equal('arrayProperty');
-        expect(error.getPropertyType()).to.equal('array');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
-        expect(error.getDocumentType()).to.deep.equal('indexedDocument');
-        expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
-      });
-
-      it('should return invalid result if index property is a single $id', async () => {
+      it('should return invalid result if index is prebuilt', async () => {
         const indexDefinition = {
           properties: [
             { $id: 'asc' },
@@ -1532,6 +1382,179 @@ describe('validateDataContractFactory', () => {
         expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
         expect(error.getDocumentType()).to.deep.equal('indexedDocument');
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
+      });
+
+      it('should return invalid result if indices has undefined property', async () => {
+        const indexDefinition = rawDataContract.documents.indexedDocument.indices[0];
+
+        indexDefinition.properties.push({
+          missingProperty: 'asc',
+        });
+
+        const result = await validateDataContract(rawDataContract);
+
+        expectValidationError(result, UndefinedIndexPropertyError);
+
+        const [error] = result.getErrors();
+
+        expect(error.getPropertyName()).to.equal('missingProperty');
+        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
+        expect(error.getDocumentType()).to.deep.equal('indexedDocument');
+        expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
+      });
+
+      it('should return invalid result if index property is object', async () => {
+        const indexedDocumentDefinition = rawDataContract.documents.indexedDocument;
+
+        indexedDocumentDefinition.properties.objectProperty = {
+          type: 'object',
+          properties: {
+            something: {
+              type: 'string',
+            },
+          },
+          additionalProperties: false,
+        };
+
+        indexedDocumentDefinition.required.push('objectProperty');
+
+        const indexDefinition = indexedDocumentDefinition.indices[0];
+
+        indexDefinition.properties.push({
+          objectProperty: 'asc',
+        });
+
+        const result = await validateDataContract(rawDataContract);
+
+        expectValidationError(result, InvalidIndexPropertyTypeError);
+
+        const [error] = result.getErrors();
+
+        expect(error.getPropertyName()).to.equal('objectProperty');
+        expect(error.getPropertyType()).to.equal('object');
+        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
+        expect(error.getDocumentType()).to.deep.equal('indexedDocument');
+        expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
+      });
+
+      it('should return invalid result if index property is array of objects', async () => {
+        const indexedDocumentDefinition = rawDataContract.documents.indexedDocument;
+
+        indexedDocumentDefinition.properties.arrayProperty = {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              something: {
+                type: 'string',
+              },
+            },
+            additionalProperties: false,
+          },
+        };
+
+        indexedDocumentDefinition.required.push('arrayProperty');
+
+        const indexDefinition = indexedDocumentDefinition.indices[0];
+
+        indexDefinition.properties.push({
+          arrayProperty: 'asc',
+        });
+
+        const result = await validateDataContract(rawDataContract);
+
+        expectValidationError(result, InvalidIndexPropertyTypeError);
+
+        const [error] = result.getErrors();
+
+        expect(error.getPropertyName()).to.equal('arrayProperty');
+        expect(error.getPropertyType()).to.equal('array');
+        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
+        expect(error.getDocumentType()).to.deep.equal('indexedDocument');
+        expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
+      });
+
+      it('should return invalid result if index property is array of arrays', async () => {
+        const indexedDocumentDefinition = rawDataContract.documents.indexedDocument;
+
+        indexedDocumentDefinition.properties.arrayProperty = {
+          type: 'array',
+          items: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+        };
+
+        indexedDocumentDefinition.required.push('arrayProperty');
+
+        const indexDefinition = indexedDocumentDefinition.indices[0];
+
+        indexDefinition.properties.push({
+          arrayProperty: 'asc',
+        });
+
+        const result = await validateDataContract(rawDataContract);
+
+        expectValidationError(result, InvalidIndexPropertyTypeError);
+
+        const [error] = result.getErrors();
+
+        expect(error.getPropertyName()).to.equal('arrayProperty');
+        expect(error.getPropertyType()).to.equal('array');
+        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
+        expect(error.getDocumentType()).to.deep.equal('indexedDocument');
+        expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
+      });
+
+      it('should return invalid result if index property is array with many item definitions', async () => {
+        const indexedDocumentDefinition = rawDataContract.documents.indexedDocument;
+
+        indexedDocumentDefinition.properties.arrayProperty = {
+          type: 'array',
+          items: [{
+            type: 'string',
+          }, {
+            type: 'number',
+          }],
+          additionalItems: false,
+        };
+
+        indexedDocumentDefinition.required.push('arrayProperty');
+
+        const indexDefinition = indexedDocumentDefinition.indices[0];
+
+        indexDefinition.properties.push({
+          arrayProperty: 'asc',
+        });
+
+        const result = await validateDataContract(rawDataContract);
+
+        expectValidationError(result, InvalidIndexPropertyTypeError);
+
+        const [error] = result.getErrors();
+
+        expect(error.getPropertyName()).to.equal('arrayProperty');
+        expect(error.getPropertyType()).to.equal('array');
+        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
+        expect(error.getDocumentType()).to.deep.equal('indexedDocument');
+        expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
+      });
+
+      it('should return invalid result if unique compound index contains both required and optional properties', async () => {
+        rawDataContract.documents.optionalUniqueIndexedDocument.required.splice(-1);
+
+        const result = await validateDataContract(rawDataContract);
+
+        expectValidationError(result, InvalidCompoundIndexError);
+
+        const [error] = result.getErrors();
+
+        expect(error.getIndexDefinition()).to.deep.equal(
+          rawDataContract.documents.optionalUniqueIndexedDocument.indices[1],
+        );
+        expect(error.getDocumentType()).to.equal('optionalUniqueIndexedDocument');
       });
     });
   });
@@ -1583,19 +1606,5 @@ describe('validateDataContractFactory', () => {
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
-  });
-
-  it('should return invalid result if unique compound index contains not all fields', async () => {
-    rawDataContract.documents.optionalUniqueIndexedDocument.required.splice(-1);
-    const result = await validateDataContract(rawDataContract);
-
-    expectValidationError(result, InvalidCompoundIndexError);
-
-    const [error] = result.getErrors();
-
-    expect(error.getIndexDefinition()).to.deep.equal(
-      rawDataContract.documents.optionalUniqueIndexedDocument.indices[1],
-    );
-    expect(error.getDocumentType()).to.equal('optionalUniqueIndexedDocument');
   });
 });
