@@ -23,6 +23,8 @@ describe('validateIdentityPublicKeyUniquenessFactory', () => {
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
 
+    stateRepositoryMock.fetchIdentityIdsByPublicKeyHashes.resolves({});
+
     validateIdentityPublicKeyUniqueness = validateIdentityPublicKeyUniquenessFactory(
       stateRepositoryMock,
     );
@@ -32,7 +34,7 @@ describe('validateIdentityPublicKeyUniquenessFactory', () => {
     const publicKeys = identity.getPublicKeys();
     const publicKeyHash = publicKeys[0].hash();
 
-    stateRepositoryMock.fetchIdentityIdsByPublicKeys.resolves({
+    stateRepositoryMock.fetchIdentityIdsByPublicKeyHashes.resolves({
       [publicKeyHash]: identity.getId(),
     });
 
