@@ -56,7 +56,7 @@ describe('applyIdentityCreateTransitionFactory', () => {
       .getPublicKeys()
       .map((publicKey) => publicKey.hash());
 
-    expect(stateRepositoryMock.storeIdentityIdPublicKeyHashes).to.have.been.calledOnceWithExactly(
+    expect(stateRepositoryMock.storeIdentityPublicKeyHashes).to.have.been.calledOnceWithExactly(
       identity.getId(),
       publicKeyHashes,
     );
