@@ -74,10 +74,11 @@ describe('Document', () => {
 
       rawDocument = {
         $id: 'id',
+        $type: 'test',
         ...data,
       };
 
-      document = new Document(rawDocument);
+      document = new Document(rawDocument, dataContract);
 
       expect(document.id).to.equal(rawDocument.$id);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
@@ -93,7 +94,7 @@ describe('Document', () => {
         ...data,
       };
 
-      document = new Document(rawDocument);
+      document = new Document(rawDocument, dataContract);
 
       expect(document.type).to.equal(rawDocument.$type);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
@@ -106,10 +107,11 @@ describe('Document', () => {
 
       rawDocument = {
         $dataContractId: generateRandomId(),
+        $type: 'test',
         ...data,
       };
 
-      document = new Document(rawDocument);
+      document = new Document(rawDocument, dataContract);
 
       expect(document.dataContractId).to.equal(rawDocument.$dataContractId);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
@@ -122,10 +124,11 @@ describe('Document', () => {
 
       rawDocument = {
         $ownerId: generateRandomId(),
+        $type: 'test',
         ...data,
       };
 
-      document = new Document(rawDocument);
+      document = new Document(rawDocument, dataContract);
 
       expect(document.ownerId).to.equal(rawDocument.$ownerId);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
@@ -137,10 +140,11 @@ describe('Document', () => {
       };
 
       rawDocument = {
+        $type: 'test',
         ...data,
       };
 
-      document = new Document(rawDocument);
+      document = new Document(rawDocument, dataContract);
 
       expect(document.action).to.equal(undefined);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
@@ -153,10 +157,11 @@ describe('Document', () => {
 
       rawDocument = {
         $revision: 'test',
+        $type: 'test',
         ...data,
       };
 
-      document = new Document(rawDocument);
+      document = new Document(rawDocument, dataContract);
 
       expect(document.revision).to.equal(rawDocument.$revision);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
@@ -171,10 +176,11 @@ describe('Document', () => {
 
       rawDocument = {
         $createdAt: createdAt,
+        $type: 'test',
         ...data,
       };
 
-      document = new Document(rawDocument);
+      document = new Document(rawDocument, dataContract);
 
       expect(document.getCreatedAt().getTime()).to.equal(rawDocument.$createdAt);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
@@ -189,10 +195,11 @@ describe('Document', () => {
 
       rawDocument = {
         $updatedAt: updatedAt,
+        $type: 'test',
         ...data,
       };
 
-      document = new Document(rawDocument);
+      document = new Document(rawDocument, dataContract);
 
       expect(document.getUpdatedAt().getTime()).to.equal(rawDocument.$updatedAt);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);

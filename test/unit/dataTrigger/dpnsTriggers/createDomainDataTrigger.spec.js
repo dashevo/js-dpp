@@ -71,7 +71,7 @@ describe('createDomainDataTrigger', () => {
       .resolves([parentDocument]);
 
     const saltedDomainHashBuffer = Buffer.concat([
-      preorderSalt,
+      preorderSalt.toBuffer(),
       Buffer.from(fullDomainName),
     ]);
 
