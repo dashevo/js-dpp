@@ -1135,7 +1135,7 @@ describe('validateDataContractFactory', () => {
         expect(error.keyword).to.equal('const');
       });
 
-      it('should have `contentEncoding` set to `base58` if former has been set', async () => {
+      it('should have contentEncoding set to either base64 or base58', async () => {
         rawDataContract.documents.withContentEncoding.properties.base58Field.contentEncoding = 'binary';
 
         const result = await validateDataContract(rawDataContract);
