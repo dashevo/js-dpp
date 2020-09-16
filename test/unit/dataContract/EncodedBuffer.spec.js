@@ -29,7 +29,7 @@ describe('EncodedBuffer', () => {
   });
 
   describe('#toBuffer', () => {
-    it('should return buffer value', () => {
+    it('should return a new normal Buffer', () => {
       const encodedBuffer = new EncodedBuffer(buffer, EncodedBuffer.ENCODING.BASE64);
 
       const data = encodedBuffer.toBuffer();
@@ -68,27 +68,27 @@ describe('EncodedBuffer', () => {
     });
   });
 
-  describe('#fromString', () => {
+  describe('#from', () => {
     it('should create an instance using base64 string representation', () => {
       const encoding = EncodedBuffer.ENCODING.BASE64;
       const data = buffer.toString('base64').replace(/=/g, '');
 
-      const encodedBuffer = EncodedBuffer.fromString(data, encoding);
+      const encodedBuffer = EncodedBuffer.from(data, encoding);
 
       expect(encodedBuffer).to.be.an.instanceOf(EncodedBuffer);
-      expect(encodedBuffer.buffer).to.deep.equal(buffer);
-      expect(encodedBuffer.encoding).to.equal(encoding);
+      expect(encodedBuffer.toBuffer()).to.deep.equal(buffer);
+      expect(encodedBuffer.getEncoding()).to.equal(encoding);
     });
 
     it('should create an instance using base58 string representation', () => {
       const encoding = EncodedBuffer.ENCODING.BASE58;
       const data = bs58.encode(buffer);
 
-      const encodedBuffer = EncodedBuffer.fromString(data, encoding);
+      const encodedBuffer = EncodedBuffer.from(data, encoding);
 
       expect(encodedBuffer).to.be.an.instanceOf(EncodedBuffer);
-      expect(encodedBuffer.buffer).to.deep.equal(buffer);
-      expect(encodedBuffer.encoding).to.equal(encoding);
+      expect(encodedBuffer.toBuffer()).to.deep.equal(buffer);
+      expect(encodedBuffer.getEncoding()).to.equal(encoding);
     });
   });
 
