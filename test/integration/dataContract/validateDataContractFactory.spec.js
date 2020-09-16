@@ -1092,21 +1092,6 @@ describe('validateDataContractFactory', () => {
         expect(error.keyword).to.equal('const');
       });
 
-      it('should have `contentEncoding` set to `base64` if former has been set', async () => {
-        rawDataContract.documents.withContentEncoding.properties.base64Field.contentEncoding = 'binary';
-
-        const result = await validateDataContract(rawDataContract);
-
-        expectJsonSchemaError(result);
-
-        const [error] = result.getErrors();
-
-        expect(error.dataPath).to.equal(
-          '.documents[\'withContentEncoding\'].properties[\'base64Field\'].contentEncoding',
-        );
-        expect(error.keyword).to.equal('enum');
-      });
-
       it('should have `pattern` set if `contentEncoding` is set to `base58`', async () => {
         delete rawDataContract.documents.withContentEncoding.properties.base58Field.pattern;
 
