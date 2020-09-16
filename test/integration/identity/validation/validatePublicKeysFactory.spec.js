@@ -152,7 +152,7 @@ describe('validatePublicKeysFactory', () => {
       expect(error.keyword).to.equal('type');
     });
 
-    it('should be in base64 format', () => {
+    it('should be base64 encoded string without padding', () => {
       publicKeys[1].data = '&'.repeat(44);
 
       const result = validatePublicKeys(publicKeys);
@@ -180,7 +180,7 @@ describe('validatePublicKeysFactory', () => {
       });
 
       it('should be no longer than 44 character', () => {
-        publicKeys[1].data = `${Buffer.alloc(33).toString('base64')}=`;
+        publicKeys[1].data = `${Buffer.alloc(33).toString('base64')}a`;
 
         const result = validatePublicKeys(publicKeys);
 
@@ -209,7 +209,7 @@ describe('validatePublicKeysFactory', () => {
       });
 
       it('should be no longer than 64 character', () => {
-        publicKeys[1].data = `${Buffer.alloc(48).toString('base64')}=`;
+        publicKeys[1].data = `${Buffer.alloc(48).toString('base64')}a`;
         publicKeys[1].type = 1;
 
         const result = validatePublicKeys(publicKeys);
