@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const bs58 = require('bs58');
-const EncodedBuffer = require('../../../lib/dataContract/EncodedBuffer');
-const InvalidBufferEncodingError = require('../../../lib/errors/InvalidBufferEncodingError');
+const EncodedBuffer = require('../../../../lib/util/encoding/EncodedBuffer');
+const InvalidBufferEncodingError = require('../../../../lib/errors/InvalidBufferEncodingError');
 
 describe('EncodedBuffer', () => {
   let buffer;

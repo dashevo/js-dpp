@@ -15,7 +15,7 @@ const MissingDocumentTypeError = require('../../../lib/errors/MissingDocumentTyp
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 const MismatchDocumentContractIdAndDataContractError = require('../../../lib/errors/MismatchDocumentContractIdAndDataContractError');
 
-const EncodedBuffer = require('../../../lib/dataContract/EncodedBuffer');
+const EncodedBuffer = require('../../../lib/util/encoding/EncodedBuffer');
 
 const {
   expectValidationError,

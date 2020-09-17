@@ -8,9 +8,12 @@ const DocumentCreateTransition = require(
   '../../../lib/document/stateTransition/documentTransition/DocumentCreateTransition',
 );
 
+const EncodedBuffer = require('../../../lib/util/encoding/EncodedBuffer');
+
 describe('Document', () => {
   let lodashGetMock;
   let lodashSetMock;
+  let lodashCloneDeepMock;
   let hashMock;
   let encodeMock;
   let Document;
@@ -21,6 +24,7 @@ describe('Document', () => {
   beforeEach(function beforeEach() {
     lodashGetMock = this.sinonSandbox.stub();
     lodashSetMock = this.sinonSandbox.stub();
+    lodashCloneDeepMock = this.sinonSandbox.stub().returnsArg(0);
     hashMock = this.sinonSandbox.stub();
     const serializerMock = { encode: this.sinonSandbox.stub() };
     encodeMock = serializerMock.encode;
@@ -30,6 +34,7 @@ describe('Document', () => {
     Document = rewiremock.proxy('../../../lib/document/Document', {
       '../../../node_modules/lodash.get': lodashGetMock,
       '../../../node_modules/lodash.set': lodashSetMock,
+      '../../../node_modules/lodash.clonedeep': lodashCloneDeepMock,
       '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': serializerMock,
     });
@@ -43,6 +48,22 @@ describe('Document', () => {
         properties: {
           name: {
             type: 'string',
+          },
+          dataObject: {
+            type: 'object',
+            properties: {
+              binaryObject: {
+                type: 'object',
+                properties: {
+                  base64Value: {
+                    type: 'string',
+                    contentEncoding: 'base64',
+                    maxLength: 64,
+                    pattern: '^([A-Za-z0-9+/])*$',
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -305,6 +326,34 @@ describe('Document', () => {
       expect(result).to.equal(document);
 
       expect(lodashSetMock).to.have.been.calledOnceWith(document.data, path, value);
+    });
+
+    it('should set binary encoded field directly', () => {
+      const path = 'dataObject.binaryObject.base64Value';
+      const buffer = Buffer.alloc(36);
+
+      const result = document.set(path, buffer);
+
+      expect(result).to.equal(document);
+
+      const valueToSet = new EncodedBuffer(buffer, 'base64');
+
+      expect(lodashSetMock).to.have.been.calledOnceWith(document.data, path, valueToSet);
+    });
+
+    it('should set binary field as part of object', () => {
+      const path = 'dataObject.binaryObject';
+      const value = { base64Value: Buffer.alloc(36) };
+
+      lodashGetMock.returns(value.base64Value);
+
+      const result = document.set(path, value);
+
+      expect(result).to.equal(document);
+
+      const valueToSet = new EncodedBuffer(value.base64Value, 'base64');
+
+      expect(lodashSetMock).to.have.been.calledOnceWith(document.data, path, valueToSet);
     });
   });
 
