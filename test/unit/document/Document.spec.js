@@ -353,7 +353,13 @@ describe('Document', () => {
 
       const valueToSet = new EncodedBuffer(value.base64Value, 'base64');
 
-      expect(lodashSetMock).to.have.been.calledOnceWith(document.data, path, valueToSet);
+      expect(lodashSetMock).to.have.been.calledTwice();
+      expect(lodashSetMock.getCall(0).args).to.have.deep.members(
+        [value, 'base64Value', valueToSet],
+      );
+      expect(lodashSetMock.getCall(1).args).to.have.deep.members(
+        [document.data, path, { base64Value: valueToSet }],
+      );
     });
   });
 
