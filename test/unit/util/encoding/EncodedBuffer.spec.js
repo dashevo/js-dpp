@@ -90,6 +90,34 @@ describe('EncodedBuffer', () => {
       expect(encodedBuffer.toBuffer()).to.deep.equal(buffer);
       expect(encodedBuffer.getEncoding()).to.equal(encoding);
     });
+
+    it('should create an instance using buffer', async () => {
+      const encoding = EncodedBuffer.ENCODING.BASE58;
+
+      const encodedBuffer = EncodedBuffer.from(buffer, encoding);
+
+      expect(encodedBuffer).to.be.an.instanceOf(EncodedBuffer);
+      expect(encodedBuffer.toBuffer()).to.deep.equal(buffer);
+      expect(encodedBuffer.getEncoding()).to.equal(encoding);
+    });
+  });
+
+  describe('#toJSON', () => {
+    it('should return buffer encoded in base64 encoding without padding', () => {
+      const encodedBuffer = new EncodedBuffer(buffer, EncodedBuffer.ENCODING.BASE64);
+
+      const string = encodedBuffer.toJSON();
+
+      expect(string).to.equal(buffer.toString('base64').replace(/=/g, ''));
+    });
+
+    it('should return buffer encoded in base58 encoding', () => {
+      const encodedBuffer = new EncodedBuffer(buffer, EncodedBuffer.ENCODING.BASE58);
+
+      const string = encodedBuffer.toJSON();
+
+      expect(string).to.equal(bs58.encode(buffer));
+    });
   });
 
   it('should throw InvalidBufferEncodingError if encoding in unknown', () => {

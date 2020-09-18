@@ -1,4 +1,5 @@
 const Document = require('../../../lib/document/Document');
+const EncodedBuffer = require('../../../lib/util/encoding/EncodedBuffer');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
@@ -43,6 +44,24 @@ describe('Document', () => {
         base64Field: document.getData().base64Field.toBuffer(),
         base58Field: document.getData().base58Field.toBuffer(),
       });
+    });
+
+    it('should return raw document with binary data as instance of EncodedBuffer', () => {
+      const result = document.toObject({ encodedBuffer: true });
+
+      expect(result).to.deep.equal({
+        $protocolVersion: document.getProtocolVersion(),
+        $dataContractId: dataContract.getId(),
+        $id: document.getId(),
+        $ownerId: getDocumentsFixture.ownerId,
+        $revision: 1,
+        $type: 'withContentEncoding',
+        base64Field: document.getData().base64Field,
+        base58Field: document.getData().base58Field,
+      });
+
+      expect(result.base64Field).to.be.an.instanceOf(EncodedBuffer);
+      expect(result.base58Field).to.be.an.instanceOf(EncodedBuffer);
     });
   });
 
