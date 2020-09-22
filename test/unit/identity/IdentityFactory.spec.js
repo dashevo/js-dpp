@@ -165,7 +165,7 @@ describe('IdentityFactory', () => {
 
       expect(stateTransition).to.be.instanceOf(IdentityCreateTransition);
       expect(stateTransition.getPublicKeys()).to.equal(identity.getPublicKeys());
-      expect(stateTransition.getLockedOutPoint()).to.equal(lockedOutPoint.toString('base64'));
+      expect(stateTransition.getLockedOutPoint()).to.deep.equal(lockedOutPoint);
     });
   });
 
@@ -179,8 +179,8 @@ describe('IdentityFactory', () => {
         .createIdentityTopUpTransition(identity.getId(), lockedOutPoint);
 
       expect(stateTransition).to.be.instanceOf(IdentityTopUpTransition);
-      expect(stateTransition.getIdentityId()).to.be.equal(identity.getId());
-      expect(stateTransition.getLockedOutPoint()).to.equal(lockedOutPoint.toString('base64'));
+      expect(stateTransition.getIdentityId()).to.deep.equal(identity.getId());
+      expect(stateTransition.getLockedOutPoint()).to.deep.equal(lockedOutPoint);
     });
   });
 });

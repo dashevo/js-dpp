@@ -41,10 +41,10 @@ describe('IdentityTopUpTransition', () => {
 
   describe('#constructor', () => {
     it('should create an instance with specified data from specified raw transition', () => {
-      expect(stateTransition.lockedOutPoint).to.be.equal(
+      expect(stateTransition.lockedOutPoint.toString()).to.be.equal(
         rawStateTransition.lockedOutPoint,
       );
-      expect(stateTransition.identityId).to.be.equal(
+      expect(stateTransition.identityId.toString()).to.be.equal(
         rawStateTransition.identityId,
       );
     });
@@ -65,7 +65,7 @@ describe('IdentityTopUpTransition', () => {
 
   describe('#getLockedOutPoint', () => {
     it('should return currently set locked OutPoint', () => {
-      expect(stateTransition.getLockedOutPoint()).to.deep.equal(
+      expect(stateTransition.getLockedOutPoint().toString()).to.deep.equal(
         rawStateTransition.lockedOutPoint,
       );
     });
@@ -73,7 +73,7 @@ describe('IdentityTopUpTransition', () => {
 
   describe('#getIdentityId', () => {
     it('should return identity id', () => {
-      expect(stateTransition.getIdentityId()).to.equal(
+      expect(stateTransition.getIdentityId().toString()).to.equal(
         '9egkkRs6ErFbLUh3yYn8mdgeKGpJQ41iayS1Z9bwsRM7',
       );
     });

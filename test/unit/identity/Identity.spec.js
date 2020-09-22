@@ -25,12 +25,12 @@ describe('Identity', () => {
 
     rawIdentity = {
       protocolVersion: Identity.PROTOCOL_VERSION,
-      id: 'someId',
+      id: 'FSotMQ4rFrxWprRPJRmnFRBVTXxnDG5u8C27tNbnr935',
       publicKeys: [
         {
           id: 0,
           type: IdentityPublicKey.TYPES.ECDSA_SECP256K1,
-          data: 'somePublicKey',
+          data: 'AkVuTKyF3YgKLAQlLEtaUL2HTditwGILfWUVqjzYnIgH',
         },
       ],
       balance: 0,
@@ -44,7 +44,7 @@ describe('Identity', () => {
     it('should set variables from raw model', () => {
       const instance = new Identity(rawIdentity);
 
-      expect(instance.id).to.equal(rawIdentity.id);
+      expect(instance.id.toString()).to.equal(rawIdentity.id);
       expect(instance.type).to.equal(rawIdentity.type);
       expect(instance.publicKeys).to.deep.equal(
         rawIdentity.publicKeys.map((rawPublicKey) => new IdentityPublicKey(rawPublicKey)),
@@ -54,7 +54,7 @@ describe('Identity', () => {
 
   describe('#getId', () => {
     it('should return set id', () => {
-      expect(identity.getId()).to.equal(rawIdentity.id);
+      expect(identity.getId().toString()).to.equal(rawIdentity.id);
     });
   });
 

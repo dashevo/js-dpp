@@ -57,8 +57,8 @@ describe('IdentityCreateTransition', () => {
     });
 
     it('should create an instance with specified data from specified raw transition', () => {
-      expect(stateTransition.lockedOutPoint).to.deep.equal(
-        rawStateTransition.lockedOutPoint,
+      expect(stateTransition.lockedOutPoint.toString()).to.deep.equal(
+        rawStateTransition.lockedOutPoint.replace(/=/g, ''),
       );
       expect(stateTransition.publicKeys).to.deep.equal([
         new IdentityPublicKey(rawStateTransition.publicKeys[0]),
@@ -86,14 +86,14 @@ describe('IdentityCreateTransition', () => {
       stateTransition.setLockedOutPoint(Buffer.alloc(0).toString('base64'));
 
       expect(hashMock).to.have.been.calledOnceWith(Buffer.alloc(0));
-      expect(stateTransition.identityId).to.equal('11111111111111111111111111111111');
+      expect(stateTransition.identityId.toString()).to.equal('11111111111111111111111111111111');
     });
   });
 
   describe('#getLockedOutPoint', () => {
     it('should return currently set locked OutPoint', () => {
-      expect(stateTransition.getLockedOutPoint()).to.deep.equal(
-        rawStateTransition.lockedOutPoint,
+      expect(stateTransition.getLockedOutPoint().toString()).to.deep.equal(
+        rawStateTransition.lockedOutPoint.replace(/=/g, ''),
       );
     });
   });
@@ -128,7 +128,7 @@ describe('IdentityCreateTransition', () => {
 
   describe('#getIdentityId', () => {
     it('should return identity id', () => {
-      expect(stateTransition.getIdentityId()).to.equal(
+      expect(stateTransition.getIdentityId().toString()).to.equal(
         '11111111111111111111111111111111',
       );
     });
@@ -149,7 +149,7 @@ describe('IdentityCreateTransition', () => {
       expect(jsonWithASig).to.deep.equal({
         protocolVersion: Identity.PROTOCOL_VERSION,
         type: stateTransitionTypes.IDENTITY_CREATE,
-        lockedOutPoint: rawStateTransition.lockedOutPoint,
+        lockedOutPoint: rawStateTransition.lockedOutPoint.replace(/=/g, ''),
         publicKeys: rawStateTransition.publicKeys,
         signature: null,
       });
@@ -159,7 +159,7 @@ describe('IdentityCreateTransition', () => {
       expect(jsonWithSig).to.deep.equal({
         protocolVersion: Identity.PROTOCOL_VERSION,
         type: stateTransitionTypes.IDENTITY_CREATE,
-        lockedOutPoint: rawStateTransition.lockedOutPoint,
+        lockedOutPoint: rawStateTransition.lockedOutPoint.replace(/=/g, ''),
         publicKeys: rawStateTransition.publicKeys,
       });
     });

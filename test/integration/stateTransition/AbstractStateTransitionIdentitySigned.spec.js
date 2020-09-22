@@ -8,6 +8,7 @@ const InvalidSignatureTypeError = require('../../../lib/stateTransition/errors/I
 const InvalidSignaturePublicKeyError = require('../../../lib/stateTransition/errors/InvalidSignaturePublicKeyError');
 const StateTransitionIsNotSignedError = require('../../../lib/stateTransition/errors/StateTransitionIsNotSignedError');
 const PublicKeyMismatchError = require('../../../lib/stateTransition/errors/PublicKeyMismatchError');
+const EncodedBuffer = require('../../../lib/util/encoding/EncodedBuffer');
 
 describe('AbstractStateTransitionIdentitySigned', () => {
   let stateTransition;
@@ -88,7 +89,7 @@ describe('AbstractStateTransitionIdentitySigned', () => {
     it('should sign data and validate signature with private key in hex format', () => {
       stateTransition.sign(identityPublicKey, privateKeyHex);
 
-      expect(stateTransition.signature).to.be.a('string');
+      expect(stateTransition.signature).to.be.an.instanceOf(EncodedBuffer);
 
       const isValid = stateTransition.verifySignature(identityPublicKey);
 
@@ -98,7 +99,7 @@ describe('AbstractStateTransitionIdentitySigned', () => {
     it('should sign data and validate signature with private key in buffer format', () => {
       stateTransition.sign(identityPublicKey, privateKeyBuffer);
 
-      expect(stateTransition.signature).to.be.a('string');
+      expect(stateTransition.signature).to.be.an.instanceOf(EncodedBuffer);
 
       const isValid = stateTransition.verifySignature(identityPublicKey);
 
@@ -119,7 +120,7 @@ describe('AbstractStateTransitionIdentitySigned', () => {
         expect.fail('Should throw InvalidSignaturePublicKeyError');
       } catch (e) {
         expect(e).to.be.instanceOf(InvalidSignaturePublicKeyError);
-        expect(e.getSignaturePublicKey()).to.be.equal(identityPublicKey.getData());
+        expect(e.getSignaturePublicKey()).to.be.equal(identityPublicKey.getData().toString());
       }
     });
 
@@ -143,7 +144,7 @@ describe('AbstractStateTransitionIdentitySigned', () => {
 
       stateTransition.signByPrivateKey(privateKeyHex);
 
-      expect(stateTransition.signature).to.be.a('string');
+      expect(stateTransition.signature).to.be.an.instanceOf(EncodedBuffer);
     });
   });
 
@@ -151,7 +152,7 @@ describe('AbstractStateTransitionIdentitySigned', () => {
     it('should validate signature', () => {
       stateTransition.sign(identityPublicKey, privateKeyHex);
 
-      expect(stateTransition.signature).to.be.a('string');
+      expect(stateTransition.signature).to.be.an.instanceOf(EncodedBuffer);
 
       const isValid = stateTransition.verifySignature(identityPublicKey);
 
@@ -226,10 +227,10 @@ describe('AbstractStateTransitionIdentitySigned', () => {
 
   describe('#setSignature', () => {
     it('should set signature', () => {
-      const signature = 'signature';
+      const signature = 'A1eUrA';
       stateTransition.setSignature(signature);
 
-      expect(stateTransition.signature).to.equal(signature);
+      expect(stateTransition.signature.toString()).to.equal(signature);
     });
   });
 

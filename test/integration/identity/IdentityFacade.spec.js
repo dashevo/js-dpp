@@ -45,11 +45,9 @@ describe('IdentityFacade', () => {
 
       identity.setBalance(0);
 
-      const publicKeys = identity.getPublicKeys().map((identityPublicKey) => {
-        const publicKeyData = Buffer.from(identityPublicKey.getData(), 'base64');
-
-        return new PublicKey(publicKeyData);
-      });
+      const publicKeys = identity.getPublicKeys().map(
+        (identityPublicKey) => new PublicKey(identityPublicKey.getData().toBuffer()),
+      );
 
       const result = dpp.identity.create(
         lockedOutPoint,
@@ -100,7 +98,7 @@ describe('IdentityFacade', () => {
 
       expect(stateTransition).to.be.instanceOf(IdentityCreateTransition);
       expect(stateTransition.getPublicKeys()).to.equal(identity.getPublicKeys());
-      expect(stateTransition.getLockedOutPoint()).to.equal(lockedOutPoint.toString('base64'));
+      expect(stateTransition.getLockedOutPoint().toBuffer()).to.deep.equal(lockedOutPoint);
     });
   });
 
@@ -114,8 +112,8 @@ describe('IdentityFacade', () => {
         .createIdentityTopUpTransition(identity.getId(), lockedOutPoint);
 
       expect(stateTransition).to.be.instanceOf(IdentityTopUpTransition);
-      expect(stateTransition.getIdentityId()).to.be.equal(identity.getId());
-      expect(stateTransition.getLockedOutPoint()).to.equal(lockedOutPoint.toString('base64'));
+      expect(stateTransition.getIdentityId().toString()).to.be.equal(identity.getId().toString());
+      expect(stateTransition.getLockedOutPoint().toBuffer()).to.deep.equal(lockedOutPoint);
     });
   });
 });
