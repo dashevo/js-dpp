@@ -1,3 +1,4 @@
+const bs58 = require('bs58');
 const rewiremock = require('rewiremock/node');
 
 const IdentityPublicKey = require('../../../lib/identity/IdentityPublicKey');
@@ -109,6 +110,26 @@ describe('Identity', () => {
       expect(encodeMock).to.have.been.calledOnceWith(identity.toJSON());
       expect(hashMock).to.have.been.calledOnceWith(buffer);
       expect(result).to.equal(bufferHex);
+    });
+  });
+
+  describe('#toObject', () => {
+    it('should return plain object representation', () => {
+      const json = identity.toObject();
+
+      let [publicKey] = rawIdentity.publicKeys;
+      publicKey = {
+        ...publicKey,
+        data: Buffer.from(publicKey.data, 'base64'),
+      };
+
+      const plainObject = {
+        ...rawIdentity,
+        id: bs58.decode(rawIdentity.id),
+        publicKeys: [publicKey],
+      };
+
+      expect(json).to.deep.equal(plainObject);
     });
   });
 
