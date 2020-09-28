@@ -24,8 +24,8 @@ describe('DataContractCreateTransition', () => {
     dataContract = getDataContractFixture();
     stateTransition = new DataContractCreateTransition({
       protocolVersion: DataContract.PROTOCOL_VERSION,
-      dataContract: dataContract.toJSON(),
-      entropy: dataContract.getEntropy(),
+      dataContract: dataContract.toObject(),
+      entropy: dataContract.getEntropy().toBuffer(),
     });
   });
 
@@ -61,7 +61,7 @@ describe('DataContractCreateTransition', () => {
         dataContract: dataContract.toJSON(),
         signaturePublicKeyId: null,
         signature: null,
-        entropy: dataContract.getEntropy(),
+        entropy: dataContract.getEntropy().toString(),
       });
     });
   });
@@ -76,7 +76,9 @@ describe('DataContractCreateTransition', () => {
 
       expect(result).to.equal(serializedStateTransition);
 
-      expect(encodeMock).to.have.been.calledOnceWith(stateTransition.toJSON());
+      expect(encodeMock.getCall(0).args).to.have.deep.members([
+        stateTransition.toObject(),
+      ]);
     });
   });
 
@@ -92,7 +94,9 @@ describe('DataContractCreateTransition', () => {
 
       expect(result).to.equal(hashedDocument);
 
-      expect(encodeMock).to.have.been.calledOnceWith(stateTransition.toJSON());
+      expect(encodeMock.getCall(0).args).to.have.deep.members([
+        stateTransition.toObject(),
+      ]);
       expect(hashMock).to.have.been.calledOnceWith(serializedDocument);
     });
   });

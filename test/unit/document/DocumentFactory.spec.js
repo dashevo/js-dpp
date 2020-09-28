@@ -287,7 +287,7 @@ describe('DocumentFactory', () => {
     });
 
     it('should throw and error if documents have mixed owner ids', () => {
-      documents[0].ownerId = generateRandomId();
+      documents[0].ownerId = generateRandomId().toBuffer();
       try {
         factory.createStateTransition({
           create: documents,

@@ -52,7 +52,7 @@ describe('DataContract', () => {
         },
       });
 
-    ownerId = generateRandomId();
+    ownerId = generateRandomId().toBuffer();
     entropy = bs58.decode('ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh');
     contractId = bs58.decode('ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgza');
 

@@ -104,7 +104,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
       it('should return invalid result if there are documents with wrong generated $id', async () => {
         const [firstTransition] = rawStateTransition.transitions;
 
-        firstTransition.$id = generateRandomId();
+        firstTransition.$id = generateRandomId().toBuffer();
 
         const result = await validateStructure(rawStateTransition);
 

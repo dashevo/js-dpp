@@ -119,7 +119,7 @@ describe('DocumentsBatchTransition', () => {
     it('should return owner id', async () => {
       const result = stateTransition.getOwnerId();
 
-      expect(result).to.equal(getDocumentsFixture.ownerId);
+      expect(result).to.deep.equal(getDocumentsFixture.ownerId);
     });
   });
 

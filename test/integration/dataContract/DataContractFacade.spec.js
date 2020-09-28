@@ -71,7 +71,7 @@ describe('DataContractFacade', () => {
 
   describe('validate', () => {
     it('should validate DataContract', async () => {
-      const result = await dpp.dataContract.validate(dataContract.toJSON());
+      const result = await dpp.dataContract.validate(dataContract);
 
       expect(result).to.be.an.instanceOf(ValidationResult);
     });

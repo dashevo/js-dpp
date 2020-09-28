@@ -7,9 +7,9 @@ describe('createDataContract', () => {
 
   beforeEach(() => {
     rawDataContract = {
-      $id: generateRandomId(),
-      ownerId: generateRandomId(),
-      contractId: generateRandomId(),
+      $id: generateRandomId().toBuffer(),
+      ownerId: generateRandomId().toBuffer(),
+      contractId: generateRandomId().toBuffer(),
       documents: {
         niceDocument: {
           name: { type: 'string' },

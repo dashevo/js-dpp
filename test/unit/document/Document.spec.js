@@ -39,7 +39,7 @@ describe('Document', () => {
       '../../../lib/util/serializer': serializerMock,
     });
 
-    const ownerId = generateRandomId();
+    const ownerId = generateRandomId().toBuffer();
 
     const dataContractFactory = new DataContractFactory(() => {});
 
@@ -127,7 +127,7 @@ describe('Document', () => {
       };
 
       rawDocument = {
-        $dataContractId: generateRandomId(),
+        $dataContractId: generateRandomId().toBuffer(),
         $type: 'test',
         ...data,
       };
@@ -144,14 +144,14 @@ describe('Document', () => {
       };
 
       rawDocument = {
-        $ownerId: generateRandomId(),
+        $ownerId: generateRandomId().toBuffer(),
         $type: 'test',
         ...data,
       };
 
       document = new Document(rawDocument, dataContract);
 
-      expect(document.ownerId).to.equal(rawDocument.$ownerId);
+      expect(document.ownerId.toBuffer()).to.deep.equal(rawDocument.$ownerId);
       expect(Document.prototype.setData).to.have.been.calledOnceWith(data);
     });
 
