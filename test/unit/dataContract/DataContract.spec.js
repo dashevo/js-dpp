@@ -100,7 +100,7 @@ describe('DataContract', () => {
 
       const result = dataContract.getJsonSchemaId();
 
-      expect(result).to.equal(dataContract.getId());
+      expect(result).to.equal(dataContract.getId().toString());
     });
   });
 

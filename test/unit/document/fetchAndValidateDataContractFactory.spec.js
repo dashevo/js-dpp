@@ -54,7 +54,7 @@ describe('fetchAndValidateDataContractFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getDataContractId()).to.equal(document.getDataContractId());
+    expect(error.getDataContractId()).to.deep.equal(document.getDataContractId());
   });
 
   it('should return valid result', async () => {

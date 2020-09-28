@@ -119,7 +119,7 @@ describe('AbstractStateTransitionIdentitySigned', () => {
         expect.fail('Should throw InvalidSignaturePublicKeyError');
       } catch (e) {
         expect(e).to.be.instanceOf(InvalidSignaturePublicKeyError);
-        expect(e.getSignaturePublicKey()).to.be.equal(identityPublicKey.getData().toString());
+        expect(e.getSignaturePublicKey()).to.deep.equal(identityPublicKey.getData());
       }
     });
 
