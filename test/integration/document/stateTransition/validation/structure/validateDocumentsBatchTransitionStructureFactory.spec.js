@@ -61,7 +61,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
 
     stateTransition = new DocumentsBatchTransition({
       ownerId,
-      contractId: dataContract.getId(),
+      contractId: dataContract.getId().toBuffer(),
       transitions: documentTransitions.map((t) => t.toObject()),
     }, [dataContract]);
     rawStateTransition = stateTransition.toJSON();

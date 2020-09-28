@@ -32,7 +32,7 @@ describe('DataContractFacade', () => {
 
       expect(result).to.be.an.instanceOf(DataContract);
 
-      expect(result.getOwnerId()).to.equal(dataContract.getOwnerId());
+      expect(result.getOwnerId()).to.deep.equal(dataContract.getOwnerId());
       expect(result.getDocuments()).to.equal(dataContract.getDocuments());
     });
   });

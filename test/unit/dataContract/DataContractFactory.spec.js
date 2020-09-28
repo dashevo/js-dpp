@@ -57,7 +57,7 @@ describe('DataContractFactory', () => {
     it('should return new Data Contract with specified name and documents definition', () => {
       entropyMock.generate.returns(dataContract.getEntropy());
       const result = factory.create(
-        rawDataContract.ownerId,
+        dataContract.ownerId.toBuffer(),
         rawDataContract.documents,
       );
 
@@ -66,8 +66,8 @@ describe('DataContractFactory', () => {
       expect(DataContractMock).to.have.been.calledOnceWith({
         protocolVersion: DataContract.PROTOCOL_VERSION,
         $schema: DataContract.DEFAULTS.SCHEMA,
-        $id: rawDataContract.$id,
-        ownerId: rawDataContract.ownerId,
+        $id: dataContract.id.toBuffer(),
+        ownerId: dataContract.ownerId.toBuffer(),
         documents: rawDataContract.documents,
         definitions: {},
       });
@@ -174,7 +174,7 @@ describe('DataContractFactory', () => {
       expect(result).to.be.an.instanceOf(DataContractCreateTransition);
 
       expect(result.getProtocolVersion()).to.equal(DataContract.PROTOCOL_VERSION);
-      expect(result.getEntropy()).to.equal(dataContract.getEntropy());
+      expect(result.getEntropy()).to.deep.equal(dataContract.getEntropy());
       expect(result.getDataContract().toJSON()).to.deep.equal(dataContract.toJSON());
     });
   });

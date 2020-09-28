@@ -29,7 +29,7 @@ describe('StateTransitionFacade', () => {
   beforeEach(function beforeEach() {
     const privateKeyModel = new PrivateKey();
     const privateKey = privateKeyModel.toBuffer();
-    const publicKey = privateKeyModel.toPublicKey().toBuffer().toString('base64');
+    const publicKey = privateKeyModel.toPublicKey().toBuffer();
     const publicKeyId = 1;
 
     identityPublicKey = new IdentityPublicKey()
@@ -102,7 +102,7 @@ describe('StateTransitionFacade', () => {
 
     it('should create State Transition from plain object', async () => {
       const result = await dpp.stateTransition.createFromObject(
-        dataContractCreateTransition.toJSON(),
+        dataContractCreateTransition.toObject(),
       );
 
       expect(result).to.be.an.instanceOf(DataContractCreateTransition);

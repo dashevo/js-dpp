@@ -7,6 +7,8 @@ describe('createDataContract', () => {
 
   beforeEach(() => {
     rawDataContract = {
+      $id: generateRandomId(),
+      ownerId: generateRandomId(),
       contractId: generateRandomId(),
       documents: {
         niceDocument: {
@@ -21,7 +23,7 @@ describe('createDataContract', () => {
 
     expect(dataContract).to.be.an.instanceOf(DataContract);
 
-    expect(dataContract.getOwnerId()).to.equal(rawDataContract.$ownerId);
+    expect(dataContract.getOwnerId()).to.deep.equal(rawDataContract.ownerId);
     expect(dataContract.getDocuments()).to.equal(rawDataContract.documents);
   });
 
@@ -34,7 +36,7 @@ describe('createDataContract', () => {
 
     expect(dataContract.getJsonMetaSchema()).to.equal(rawDataContract.$schema);
 
-    expect(dataContract.getOwnerId()).to.equal(rawDataContract.$ownerId);
+    expect(dataContract.getOwnerId()).to.deep.equal(rawDataContract.ownerId);
     expect(dataContract.getDocuments()).to.equal(rawDataContract.documents);
   });
 
@@ -49,7 +51,7 @@ describe('createDataContract', () => {
 
     expect(dataContract.getDefinitions()).to.equal(rawDataContract.definitions);
 
-    expect(dataContract.getOwnerId()).to.equal(rawDataContract.$ownerId);
+    expect(dataContract.getOwnerId()).to.deep.equal(rawDataContract.ownerId);
     expect(dataContract.getDocuments()).to.equal(rawDataContract.documents);
   });
 });

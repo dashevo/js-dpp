@@ -1,3 +1,4 @@
+const bs58 = require('bs58');
 const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
 const Document = require('../../../lib/document/Document');
@@ -24,7 +25,7 @@ describe('DocumentFacade', () => {
 
   beforeEach(function beforeEach() {
     dataContract = getDataContractFixture();
-    ownerId = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
+    ownerId = bs58.decode('5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq');
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
 
@@ -69,7 +70,7 @@ describe('DocumentFacade', () => {
     });
 
     it('should create Document from plain object', async () => {
-      const result = await dpp.document.createFromObject(document.toJSON());
+      const result = await dpp.document.createFromObject(document.toObject());
 
       expect(result).to.be.an.instanceOf(Document);
 
@@ -91,7 +92,7 @@ describe('DocumentFacade', () => {
       }
     });
 
-    it('should create Document from string', async () => {
+    it('should create Document from serialized', async () => {
       const result = await dpp.document.createFromSerialized(document.serialize());
 
       expect(result).to.be.an.instanceOf(Document);
