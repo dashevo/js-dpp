@@ -141,7 +141,9 @@ describe('DocumentFactory', () => {
 
       expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWith(rawDocument);
 
-      expect(validateDocumentMock.getCall(0).args).to.have.deep.members([new Document(rawDocument, dataContract), dataContract, { skipValidation: false }]);
+      expect(validateDocumentMock.getCall(0).args).to.have.deep.members(
+        [new Document(rawDocument, dataContract), dataContract, { skipValidation: false }],
+      );
     });
 
     it('should return new Document without validation if "skipValidation" option is passed', async function it() {
@@ -184,7 +186,9 @@ describe('DocumentFactory', () => {
         expect(consensusError).to.equal(validationError);
 
         expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWith(rawDocument);
-        expect(validateDocumentMock.getCall(0).args).to.have.deep.members([new Document(rawDocument, dataContract), dataContract, { skipValidation: false }]);
+        expect(validateDocumentMock.getCall(0).args).to.have.deep.members(
+          [new Document(rawDocument, dataContract), dataContract, { skipValidation: false }],
+        );
       }
     });
 
