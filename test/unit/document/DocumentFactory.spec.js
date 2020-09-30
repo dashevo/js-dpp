@@ -46,7 +46,7 @@ describe('DocumentFactory', () => {
 
     documents = getDocumentsFixture(dataContract);
     ([,,, document] = documents);
-    rawDocument = document.toJSON();
+    rawDocument = document.toObject();
 
     decodeMock = this.sinonSandbox.stub();
     generateMock = this.sinonSandbox.stub();
@@ -137,15 +137,11 @@ describe('DocumentFactory', () => {
       const result = await factory.createFromObject(rawDocument);
 
       expect(result).to.be.an.instanceOf(Document);
-      expect(result.toJSON()).to.deep.equal(rawDocument);
+      expect(result.toJSON()).to.deep.equal(document.toJSON());
 
       expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWith(rawDocument);
 
-      expect(validateDocumentMock).to.have.been.calledOnceWith(
-        rawDocument,
-        dataContract,
-        { skipValidation: false },
-      );
+      expect(validateDocumentMock.getCall(0).args).to.have.deep.members([new Document(rawDocument, dataContract), dataContract, { skipValidation: false }]);
     });
 
     it('should return new Document without validation if "skipValidation" option is passed', async function it() {
@@ -160,7 +156,7 @@ describe('DocumentFactory', () => {
       const result = await factory.createFromObject(rawDocument, { skipValidation: true });
 
       expect(result).to.be.an.instanceOf(Document);
-      expect(result.toJSON()).to.deep.equal(rawDocument);
+      expect(result.toJSON()).to.deep.equal(document.toJSON());
 
       expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(rawDocument);
       expect(validateDocumentMock).to.have.not.been.called();
@@ -188,7 +184,7 @@ describe('DocumentFactory', () => {
         expect(consensusError).to.equal(validationError);
 
         expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWith(rawDocument);
-        expect(validateDocumentMock).to.have.been.calledOnceWith(rawDocument, dataContract);
+        expect(validateDocumentMock.getCall(0).args).to.have.deep.members([new Document(rawDocument, dataContract), dataContract, { skipValidation: false }]);
       }
     });
 

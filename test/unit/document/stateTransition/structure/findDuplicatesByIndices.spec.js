@@ -6,6 +6,8 @@ const getDataContractFixture = require('../../../../../lib/test/fixtures/getData
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
 const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
+const entropy = require('../../../../../lib/util/entropy');
+
 describe('findDuplicatesByIndices', () => {
   let documents;
   let contract;
@@ -67,19 +69,29 @@ describe('findDuplicatesByIndices', () => {
 
     const [, , , william] = documents;
 
-    documents.push(new Document({
+    let document = new Document({
       ...william.toJSON(),
       $type: 'nonUniqueIndexDocument',
-    }, contract));
+      $entropy: entropy.generate(),
+    }, contract);
 
-    documents.push(new Document({
+    document.setEntropy(entropy.generate());
+
+    documents.push(document);
+
+    document = new Document({
       ...william.toJSON(),
       $type: 'singleDocument',
-    }, contract));
+      $entropy: entropy.generate(),
+    }, contract);
+
+    document.setEntropy(entropy.generate());
+
+    documents.push(document);
 
     documentTransitions = getDocumentTransitionsFixture({
       create: documents,
-    }).map((t) => t.toJSON());
+    }).map((t) => t.toObject());
   });
 
   it('should return duplicate documents if they are present', () => {
