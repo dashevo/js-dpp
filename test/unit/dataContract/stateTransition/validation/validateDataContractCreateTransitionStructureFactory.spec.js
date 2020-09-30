@@ -17,7 +17,6 @@ const InvalidDataContractEntropyError = require('../../../../../lib/errors/Inval
 describe('validateDataContractCreateTransitionStructureFactory', () => {
   let validateDataContract;
   let validateDataContractCreateTransitionStructure;
-  let rawDataContract;
   let rawStateTransition;
   let validateStateTransitionSignatureMock;
   let stateTransition;
@@ -29,10 +28,8 @@ describe('validateDataContractCreateTransitionStructureFactory', () => {
 
     dataContract = getDataContractFixture();
 
-    rawDataContract = dataContract.toJSON();
-
     stateTransition = new DataContractCreateTransition({
-      dataContract: dataContract.toJSON(),
+      dataContract: dataContract.toObject(),
       entropy: dataContract.getEntropy(),
     });
 
@@ -97,7 +94,9 @@ describe('validateDataContractCreateTransitionStructureFactory', () => {
 
     expect(error).to.equal(dataContractError);
 
-    expect(validateDataContract).to.be.calledOnceWith(rawDataContract);
+    delete dataContract.entropy;
+
+    expect(validateDataContract.getCall(0).args).to.have.deep.members([dataContract]);
 
     expect(validateStateTransitionSignatureMock).to.be.not.called();
 
@@ -128,7 +127,7 @@ describe('validateDataContractCreateTransitionStructureFactory', () => {
 
     expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(
       stateTransition,
-      dataContract.getOwnerId(),
+      dataContract.getOwnerId().toBuffer(),
     );
 
     expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(
@@ -189,11 +188,13 @@ describe('validateDataContractCreateTransitionStructureFactory', () => {
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
 
-    expect(validateDataContract).to.be.calledOnceWith(rawDataContract);
+    delete dataContract.entropy;
+
+    expect(validateDataContract).to.be.calledOnceWith(dataContract);
 
     expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(
       stateTransition,
-      dataContract.getOwnerId(),
+      dataContract.getOwnerId().toBuffer(),
     );
 
     expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(

@@ -109,7 +109,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getDataContractId()).to.equal(dataContract.getId());
+    expect(error.getDataContractId()).to.deep.equal(dataContract.getId());
 
     expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
@@ -257,7 +257,7 @@ describe('validateDocumentsBatchTransitionDataFactory', () => {
     replaceDocument.setRevision(1);
 
     const fetchedDocument = new Document(documents[0].toJSON(), dataContract);
-    fetchedDocument.ownerId = generateRandomId();
+    fetchedDocument.ownerId = generateRandomId().toBuffer();
 
     documentTransitions = getDocumentTransitionsFixture({
       create: [],

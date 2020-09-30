@@ -27,7 +27,9 @@ const generateRandomId = require('../../../lib/test/utils/generateRandomId');
 describe('validateDocumentFactory', () => {
   let dataContract;
   let rawDocuments;
-  let rawDocument;
+  let jsonDocument;
+  let document;
+  let documents;
   let validateDocument;
   let validator;
 
@@ -44,17 +46,20 @@ describe('validateDocumentFactory', () => {
       enrichDataContractWithBaseSchema,
     );
 
-    const documents = getDocumentsFixture(dataContract);
+    documents = getDocumentsFixture(dataContract);
     rawDocuments = documents.map((o) => o.toJSON());
-    [rawDocument] = rawDocuments;
+    [jsonDocument] = rawDocuments;
+
+    document = documents;
+    document.toJSON = this.sinonSandbox.stub().returns(jsonDocument);
   });
 
   describe('Base schema', () => {
     describe('$protocolVersion', () => {
       it('should be present', () => {
-        delete rawDocument.$protocolVersion;
+        delete jsonDocument.$protocolVersion;
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -66,9 +71,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be an integer', () => {
-        rawDocument.$protocolVersion = '1';
+        jsonDocument.$protocolVersion = '1';
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -79,9 +84,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should not be less than 0', () => {
-        rawDocument.$protocolVersion = -1;
+        jsonDocument.$protocolVersion = -1;
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -92,9 +97,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should not be greater than current Document protocol version (0)', () => {
-        rawDocument.$protocolVersion = 1;
+        jsonDocument.$protocolVersion = 1;
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -105,9 +110,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be base58 encoded', () => {
-        rawDocument.$id = '&'.repeat(44);
+        jsonDocument.$id = '&'.repeat(44);
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -120,9 +125,9 @@ describe('validateDocumentFactory', () => {
 
     describe('$id', () => {
       it('should be present', () => {
-        delete rawDocument.$id;
+        delete jsonDocument.$id;
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -134,9 +139,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be a string', () => {
-        rawDocument.$id = 1;
+        jsonDocument.$id = 1;
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -147,9 +152,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be no less than 42 chars', () => {
-        rawDocument.$id = '1'.repeat(41);
+        jsonDocument.$id = '1'.repeat(41);
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -160,9 +165,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be no longer than 44 chars', () => {
-        rawDocument.$id = '1'.repeat(45);
+        jsonDocument.$id = '1'.repeat(45);
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -173,9 +178,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be base58 encoded', () => {
-        rawDocument.$id = '&'.repeat(44);
+        jsonDocument.$id = '&'.repeat(44);
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -188,9 +193,9 @@ describe('validateDocumentFactory', () => {
 
     describe('$type', () => {
       it('should be present', () => {
-        delete rawDocument.$type;
+        delete jsonDocument.$type;
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectValidationError(
           result,
@@ -199,13 +204,13 @@ describe('validateDocumentFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.getRawDocument()).to.equal(rawDocument);
+        expect(error.getRawDocument()).to.equal(jsonDocument);
       });
 
       it('should be defined in Data Contract', () => {
-        rawDocument.$type = 'undefinedDocument';
+        jsonDocument.$type = 'undefinedDocument';
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectValidationError(
           result,
@@ -224,7 +229,7 @@ describe('validateDocumentFactory', () => {
 
         let error;
         try {
-          validateDocument(rawDocument, dataContract);
+          validateDocument(document, dataContract);
         } catch (e) {
           error = e;
         }
@@ -237,9 +242,9 @@ describe('validateDocumentFactory', () => {
 
     describe('$revision', () => {
       it('should be present', () => {
-        delete rawDocument.$revision;
+        delete jsonDocument.$revision;
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -251,9 +256,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be a number', () => {
-        rawDocument.$revision = 'string';
+        jsonDocument.$revision = 'string';
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -264,9 +269,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be an integer', () => {
-        rawDocument.$revision = 1.1;
+        jsonDocument.$revision = 1.1;
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -277,9 +282,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be greater or equal to one', () => {
-        rawDocument.$revision = -1;
+        jsonDocument.$revision = -1;
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -292,9 +297,9 @@ describe('validateDocumentFactory', () => {
 
     describe('$dataContractId', () => {
       it('should be present', () => {
-        delete rawDocument.$dataContractId;
+        delete jsonDocument.$dataContractId;
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -306,9 +311,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be a string', () => {
-        rawDocument.$dataContractId = 1;
+        jsonDocument.$dataContractId = 1;
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -319,9 +324,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be no less than 42 chars', () => {
-        rawDocument.$dataContractId = '1'.repeat(41);
+        jsonDocument.$dataContractId = '1'.repeat(41);
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -332,9 +337,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be no longer than 44 chars', () => {
-        rawDocument.$dataContractId = '1'.repeat(45);
+        jsonDocument.$dataContractId = '1'.repeat(45);
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -345,9 +350,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be base58 encoded', () => {
-        rawDocument.$dataContractId = '&'.repeat(44);
+        jsonDocument.$dataContractId = '&'.repeat(44);
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -360,9 +365,9 @@ describe('validateDocumentFactory', () => {
 
     describe('$ownerId', () => {
       it('should be present', () => {
-        delete rawDocument.$ownerId;
+        delete jsonDocument.$ownerId;
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -374,9 +379,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be a string', () => {
-        rawDocument.$ownerId = 1;
+        jsonDocument.$ownerId = 1;
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -387,9 +392,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be no less than 42 chars', () => {
-        rawDocument.$ownerId = '1'.repeat(41);
+        jsonDocument.$ownerId = '1'.repeat(41);
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -400,9 +405,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be no longer than 44 chars', () => {
-        rawDocument.$ownerId = '1'.repeat(45);
+        jsonDocument.$ownerId = '1'.repeat(45);
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -413,9 +418,9 @@ describe('validateDocumentFactory', () => {
       });
 
       it('should be base58 encoded', () => {
-        rawDocument.$ownerId = '&'.repeat(44);
+        jsonDocument.$ownerId = '&'.repeat(44);
 
-        const result = validateDocument(rawDocument, dataContract);
+        const result = validateDocument(document, dataContract);
 
         expectJsonSchemaError(result);
 
@@ -429,9 +434,9 @@ describe('validateDocumentFactory', () => {
 
   describe('Data Contract schema', () => {
     it('should return an error if the first document is not valid against Data Contract', () => {
-      rawDocuments[0].name = 1;
+      jsonDocument.name = 1;
 
-      const result = validateDocument(rawDocuments[0], dataContract);
+      const result = validateDocument(document, dataContract);
 
       expectJsonSchemaError(result);
 
@@ -441,10 +446,17 @@ describe('validateDocumentFactory', () => {
       expect(error.keyword).to.equal('type');
     });
 
-    it('should return an error if the second document is not valid against Data Contract', () => {
-      rawDocuments[1].undefined = 1;
+    it('should return an error if the second document is not valid against Data Contract', function it() {
+      // eslint-disable-next-line prefer-destructuring
+      document = documents[1];
 
-      const result = validateDocument(rawDocuments[1], dataContract);
+      // eslint-disable-next-line prefer-destructuring
+      jsonDocument = rawDocuments[1];
+      jsonDocument.undefined = 1;
+
+      document.toJSON = this.sinonSandbox.stub().returns(jsonDocument);
+
+      const result = validateDocument(document, dataContract);
 
       expectJsonSchemaError(result);
 
@@ -456,10 +468,10 @@ describe('validateDocumentFactory', () => {
   });
 
   it('should return invalid result if a document contractId is not equal to Data Contract ID', () => {
-    rawDocument.$dataContractId = generateRandomId();
+    jsonDocument.$dataContractId = generateRandomId().toString();
 
     const result = validateDocument(
-      rawDocument,
+      document,
       dataContract,
     );
 
@@ -468,17 +480,18 @@ describe('validateDocumentFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.getDataContract()).to.equal(dataContract);
-    expect(error.getRawDocument()).to.equal(rawDocument);
+    expect(error.getRawDocument()).to.equal(jsonDocument);
   });
 
   it('return invalid result if binary field exceeds `maxLength`', () => {
-    const document = getDocumentsFixture(dataContract)[8];
+    // eslint-disable-next-line prefer-destructuring
+    document = getDocumentsFixture(dataContract)[8];
 
     document.data.base64Field = new EncodedBuffer(Buffer.alloc(32), 'base64');
 
-    rawDocument = document.toJSON();
+    jsonDocument = document.toJSON();
 
-    const result = validateDocument(rawDocument, dataContract);
+    const result = validateDocument(document, dataContract);
 
     expectJsonSchemaError(result);
 
@@ -489,7 +502,7 @@ describe('validateDocumentFactory', () => {
   });
 
   it('should return valid result is a document is valid', () => {
-    const result = validateDocument(rawDocument, dataContract);
+    const result = validateDocument(document, dataContract);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();

@@ -21,7 +21,7 @@ describe('AbstractStateTransitionIdentitySigned', () => {
     const privateKeyModel = new PrivateKey();
     privateKeyBuffer = privateKeyModel.toBuffer();
     privateKeyHex = privateKeyModel.toBuffer().toString('hex');
-    const publicKey = privateKeyModel.toPublicKey().toBuffer().toString('base64');
+    const publicKey = privateKeyModel.toPublicKey().toBuffer();
     publicKeyId = 1;
 
     stateTransition = new StateTransitionMock();
@@ -109,8 +109,7 @@ describe('AbstractStateTransitionIdentitySigned', () => {
     it('should throw an error if we try to sign with wrong public key', () => {
       const publicKey = new PrivateKey()
         .toPublicKey()
-        .toBuffer()
-        .toString('base64');
+        .toBuffer();
 
       identityPublicKey.setData(publicKey);
 
@@ -120,7 +119,7 @@ describe('AbstractStateTransitionIdentitySigned', () => {
         expect.fail('Should throw InvalidSignaturePublicKeyError');
       } catch (e) {
         expect(e).to.be.instanceOf(InvalidSignaturePublicKeyError);
-        expect(e.getSignaturePublicKey()).to.be.equal(identityPublicKey.getData().toString());
+        expect(e.getSignaturePublicKey()).to.deep.equal(identityPublicKey.getData());
       }
     });
 
@@ -189,8 +188,7 @@ describe('AbstractStateTransitionIdentitySigned', () => {
       stateTransition.sign(identityPublicKey, privateKeyHex);
       const publicKey = new PrivateKey()
         .toPublicKey()
-        .toBuffer()
-        .toString('base64');
+        .toBuffer();
 
       identityPublicKey.setData(publicKey);
 

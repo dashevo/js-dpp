@@ -1,4 +1,5 @@
 const rewiremock = require('rewiremock/node');
+const bs58 = require('bs58');
 
 const Document = require('../../../lib/document/Document');
 const DocumentsBatchTransition = require('../../../lib/document/stateTransition/DocumentsBatchTransition');
@@ -10,6 +11,8 @@ const getDataContractFixture = require('../../../lib/test/fixtures/getDataContra
 const getDocumentTransitionsFixture = require('../../../lib/test/fixtures/getDocumentTransitionsFixture');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
+
+const EncodedBuffer = require('../../../lib/util/encoding/EncodedBuffer');
 
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 const InvalidDocumentError = require('../../../lib/document/errors/InvalidDocumentError');
@@ -43,7 +46,7 @@ describe('DocumentFactory', () => {
 
     documents = getDocumentsFixture(dataContract);
     ([,,, document] = documents);
-    rawDocument = document.toJSON();
+    rawDocument = document.toObject();
 
     decodeMock = this.sinonSandbox.stub();
     generateMock = this.sinonSandbox.stub();
@@ -76,12 +79,12 @@ describe('DocumentFactory', () => {
 
   describe('create', () => {
     it('should return new Document with specified type and data', () => {
-      const contractId = 'FQco85WbwNgb5ix8QQAH6wurMcgEC5ENSCv5ixG9cj12';
-      const entropy = '789';
+      const contractId = bs58.decode('FQco85WbwNgb5ix8QQAH6wurMcgEC5ENSCv5ixG9cj12');
+      const entropy = bs58.decode('789');
       const name = 'Cutie';
 
-      ownerId = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
-      dataContract.id = contractId;
+      ownerId = bs58.decode('5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq');
+      dataContract.id = EncodedBuffer.from(contractId, EncodedBuffer.ENCODING.BASE58);
 
       generateMock.returns(entropy);
 
@@ -98,15 +101,15 @@ describe('DocumentFactory', () => {
 
       expect(newDocument.get('name')).to.equal(name);
 
-      expect(newDocument.getDataContractId()).to.equal(contractId);
-      expect(newDocument.getOwnerId()).to.equal(ownerId);
+      expect(newDocument.getDataContractId().toBuffer()).to.deep.equal(contractId);
+      expect(newDocument.getOwnerId().toBuffer()).to.deep.equal(ownerId);
 
       expect(generateMock).to.have.been.calledOnce();
-      expect(newDocument.getEntropy()).to.equal(entropy);
+      expect(newDocument.getEntropy()).to.deep.equal(entropy);
 
       expect(newDocument.getRevision()).to.equal(DocumentCreateTransition.INITIAL_REVISION);
 
-      expect(newDocument.getId()).to.equal('B99gjrjq6R1FXwGUQnoP7VrmCDDT1PbKprUNzjVbxXfz');
+      expect(newDocument.getId()).to.deep.equal(bs58.decode('B99gjrjq6R1FXwGUQnoP7VrmCDDT1PbKprUNzjVbxXfz'));
 
       expect(newDocument.getCreatedAt().getTime()).to.be.equal(fakeTimeDate.getTime());
       expect(newDocument.getCreatedAt().getTime()).to.equal(newDocument.getUpdatedAt().getTime());
@@ -134,14 +137,12 @@ describe('DocumentFactory', () => {
       const result = await factory.createFromObject(rawDocument);
 
       expect(result).to.be.an.instanceOf(Document);
-      expect(result.toJSON()).to.deep.equal(rawDocument);
+      expect(result.toJSON()).to.deep.equal(document.toJSON());
 
       expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWith(rawDocument);
 
-      expect(validateDocumentMock).to.have.been.calledOnceWith(
-        rawDocument,
-        dataContract,
-        { skipValidation: false },
+      expect(validateDocumentMock.getCall(0).args).to.have.deep.members(
+        [new Document(rawDocument, dataContract), dataContract, { skipValidation: false }],
       );
     });
 
@@ -157,7 +158,7 @@ describe('DocumentFactory', () => {
       const result = await factory.createFromObject(rawDocument, { skipValidation: true });
 
       expect(result).to.be.an.instanceOf(Document);
-      expect(result.toJSON()).to.deep.equal(rawDocument);
+      expect(result.toJSON()).to.deep.equal(document.toJSON());
 
       expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(rawDocument);
       expect(validateDocumentMock).to.have.not.been.called();
@@ -185,7 +186,9 @@ describe('DocumentFactory', () => {
         expect(consensusError).to.equal(validationError);
 
         expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWith(rawDocument);
-        expect(validateDocumentMock).to.have.been.calledOnceWith(rawDocument, dataContract);
+        expect(validateDocumentMock.getCall(0).args).to.have.deep.members(
+          [new Document(rawDocument, dataContract), dataContract, { skipValidation: false }],
+        );
       }
     });
 
@@ -284,7 +287,7 @@ describe('DocumentFactory', () => {
     });
 
     it('should throw and error if documents have mixed owner ids', () => {
-      documents[0].ownerId = generateRandomId();
+      documents[0].ownerId = generateRandomId().toBuffer();
       try {
         factory.createStateTransition({
           create: documents,

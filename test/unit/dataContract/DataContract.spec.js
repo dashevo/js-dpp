@@ -1,4 +1,5 @@
 const rewiremock = require('rewiremock/node');
+const bs58 = require('bs58');
 
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 
@@ -51,9 +52,9 @@ describe('DataContract', () => {
         },
       });
 
-    ownerId = generateRandomId();
-    entropy = 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh';
-    contractId = 'ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgza';
+    ownerId = generateRandomId().toBuffer();
+    entropy = bs58.decode('ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgzh');
+    contractId = bs58.decode('ydhM7GjG4QUbcuXpZDVoi7TTn7LL8Rhgza');
 
     dataContract = new DataContract({
       $schema: DataContract.DEFAULTS.SCHEMA,
@@ -66,7 +67,7 @@ describe('DataContract', () => {
 
   describe('constructor', () => {
     it('should create new DataContract', () => {
-      const id = '5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq';
+      const id = bs58.decode('5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq');
 
       dataContract = new DataContract({
         $schema: DataContract.DEFAULTS.SCHEMA,
@@ -76,8 +77,8 @@ describe('DataContract', () => {
         definitions: {},
       });
 
-      expect(dataContract.id).to.equal(id);
-      expect(dataContract.ownerId).to.equal(ownerId);
+      expect(dataContract.id).to.deep.equal(id);
+      expect(dataContract.ownerId).to.deep.equal(ownerId);
       expect(dataContract.schema).to.equal(DataContract.DEFAULTS.SCHEMA);
       expect(dataContract.documents).to.equal(documents);
       expect(dataContract.definitions).to.deep.equal({});
@@ -88,7 +89,7 @@ describe('DataContract', () => {
     it('should return base58 encoded DataContract ID', () => {
       const result = dataContract.getId();
 
-      expect(result).to.equal(contractId);
+      expect(result).to.deep.equal(contractId);
     });
   });
 
@@ -99,7 +100,7 @@ describe('DataContract', () => {
 
       const result = dataContract.getJsonSchemaId();
 
-      expect(result).to.equal(dataContract.getId());
+      expect(result).to.equal(dataContract.getId().toString());
     });
   });
 
@@ -247,9 +248,9 @@ describe('DataContract', () => {
 
       expect(result).to.deep.equal({
         protocolVersion: dataContract.getProtocolVersion(),
-        $id: contractId,
+        $id: bs58.encode(contractId),
         $schema: DataContract.DEFAULTS.SCHEMA,
-        ownerId,
+        ownerId: bs58.encode(ownerId),
         documents,
       });
     });
@@ -266,8 +267,8 @@ describe('DataContract', () => {
       expect(result).to.deep.equal({
         protocolVersion: dataContract.getProtocolVersion(),
         $schema: DataContract.DEFAULTS.SCHEMA,
-        $id: contractId,
-        ownerId,
+        $id: bs58.encode(contractId),
+        ownerId: bs58.encode(ownerId),
         documents,
         definitions,
       });
@@ -316,7 +317,7 @@ describe('DataContract', () => {
       const result = dataContract.setEntropy(entropy);
 
       expect(result).to.equal(dataContract);
-      expect(dataContract.entropy).to.equal(entropy);
+      expect(dataContract.entropy).to.deep.equal(entropy);
     });
   });
 

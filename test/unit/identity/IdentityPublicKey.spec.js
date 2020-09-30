@@ -72,7 +72,7 @@ describe('IdentityPublicKey', () => {
 
   describe('#setData', () => {
     it('should set data', () => {
-      publicKey.setData('4w');
+      publicKey.setData(Buffer.from('4w', 'base64'));
 
       expect(publicKey.data.toString()).to.equal('4w');
     });

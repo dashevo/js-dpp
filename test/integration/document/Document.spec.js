@@ -19,9 +19,11 @@ describe('Document', () => {
 
       expect(result).to.deep.equal({
         $protocolVersion: document.getProtocolVersion(),
-        $dataContractId: dataContract.getId(),
-        $id: document.getId(),
-        $ownerId: getDocumentsFixture.ownerId,
+        $dataContractId: dataContract.getId().toString(),
+        $id: document.getId().toString(),
+        $ownerId: EncodedBuffer.from(
+          getDocumentsFixture.ownerId, EncodedBuffer.ENCODING.BASE58,
+        ).toString(),
         $revision: 1,
         $type: 'withContentEncoding',
         base64Field: document.getData().base64Field.toString(),
