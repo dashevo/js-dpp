@@ -7,6 +7,10 @@
       "maximum": 0,
       "$comment": "Maximum is the latest Identity TopUp Transition protocol version"
     },
+    "type": {
+      "type": "integer",
+      "const": 3
+    },
     "lockedOutPoint": {
       "type": "string",
       "contentEncoding": "base64",
@@ -20,11 +24,21 @@
       "minLength": 42,
       "maxLength": 44,
       "pattern": "^[123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$"
+    },
+    "signature": {
+      "type": "string",
+      "contentEncoding": "base64",
+      "minLength": 86,
+      "maxLength": 88,
+      "pattern": "^([A-Za-z0-9+/])+$"
     }
   },
+  "additionalProperties": false,
   "required": [
     "protocolVersion",
+    "type",
     "lockedOutPoint",
-    "identityId"
+    "identityId",
+    "signature"
   ]
 }

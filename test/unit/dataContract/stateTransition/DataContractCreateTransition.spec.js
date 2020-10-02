@@ -66,7 +66,7 @@ describe('DataContractCreateTransition', () => {
     });
   });
 
-  describe('#serialize', () => {
+  describe('#toBuffer', () => {
     it('should return serialized State Transition', () => {
       const serializedStateTransition = '123';
 

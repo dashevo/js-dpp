@@ -13,7 +13,7 @@ describe('entropy', () => {
       const randomBuffer = entropy.generate();
       const secondRandomBuffer = entropy.generate();
 
-      expect(Buffer.compare(randomBuffer, secondRandomBuffer)).to.not.equal(0);
+      expect(randomBuffer).to.not.deep.equal(secondRandomBuffer);
     });
   });
 

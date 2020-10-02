@@ -7,6 +7,10 @@
       "maximum": 0,
       "$comment": "Maximum is the latest Identity Create Transition protocol version"
     },
+    "type": {
+      "type": "integer",
+      "const": 2
+    },
     "lockedOutPoint": {
       "type": "string",
       "contentEncoding": "base64",
@@ -19,11 +23,21 @@
       "minItems": 1,
       "maxItems": 10,
       "uniqueItems": true
+    },
+    "signature": {
+      "type": "string",
+      "contentEncoding": "base64",
+      "minLength": 86,
+      "maxLength": 88,
+      "pattern": "^([A-Za-z0-9+/])+$"
     }
   },
+  "additionalProperties": false,
   "required": [
     "protocolVersion",
+    "type",
     "lockedOutPoint",
-    "publicKeys"
+    "publicKeys",
+    "signature"
   ]
 }

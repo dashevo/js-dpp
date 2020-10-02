@@ -33,6 +33,7 @@ const MissingDocumentTransitionActionError = require('../../../../../../lib/erro
 const InvalidDocumentTransitionActionError = require('../../../../../../lib/errors/InvalidDocumentTransitionActionError');
 const InvalidDataContractIdError = require('../../../../../../lib/errors/InvalidDataContractIdError');
 
+
 describe('validateDocumentsBatchTransitionStructureFactory', () => {
   let dataContract;
   let documents;
@@ -99,7 +100,224 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     );
   });
 
-  describe('document transitions', () => {
+  describe('protocolVersion', () => {
+    it('should be present', async () => {
+      delete rawStateTransition.protocolVersion;
+
+      const result = await validateDocumentsBatchTransitionStructureFactory(rawStateTransition);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('protocolVersion');
+    });
+
+    it('should be an integer', async () => {
+      rawStateTransition.protocolVersion = '1';
+
+      const result = await validateDocumentsBatchTransitionStructureFactory(rawStateTransition);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.protocolVersion');
+      expect(error.keyword).to.equal('type');
+    });
+
+    it('should not be less than 0', async () => {
+      rawStateTransition.protocolVersion = -1;
+
+      const result = await validateDocumentsBatchTransitionStructureFactory(rawStateTransition);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('minimum');
+      expect(error.dataPath).to.equal('.protocolVersion');
+    });
+
+    it('should not be greater than current version (0)', async () => {
+      rawStateTransition.protocolVersion = 1;
+
+      const result = await validateDocumentsBatchTransitionStructureFactory(rawStateTransition);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('maximum');
+      expect(error.dataPath).to.equal('.protocolVersion');
+    });
+  });
+
+  describe('ownerId', () => {
+    it('should be present', async () => {
+      delete rawStateTransition.ownerId;
+
+      const result = await validateDocumentsBatchTransitionStructureFactory(
+        rawStateTransition,
+      );
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('ownerId');
+    });
+
+    it('should be a string', async () => {
+      rawStateTransition.ownerId = 1;
+
+      const result = await validateDocumentsBatchTransitionStructureFactory(
+        rawStateTransition,
+      );
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.ownerId');
+      expect(error.keyword).to.equal('type');
+    });
+
+    it('should be no less than 42 chars', async () => {
+      rawStateTransition.ownerId = '1'.repeat(41);
+
+      const result = await validateStateTransitionStructure(
+        rawStateTransition,
+      );
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.ownerId');
+      expect(error.keyword).to.equal('minLength');
+    });
+
+    it('should be no longer than 44 chars', async () => {
+      rawStateTransition.ownerId = '1'.repeat(45);
+
+      const result = await validateStateTransitionStructure(
+        rawStateTransition,
+      );
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.ownerId');
+      expect(error.keyword).to.equal('maxLength');
+    });
+
+    it('should be base58 encoded', async () => {
+      rawStateTransition.ownerId = '&'.repeat(44);
+
+      const result = await validateStateTransitionStructure(
+        rawStateTransition,
+      );
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('pattern');
+      expect(error.dataPath).to.equal('.ownerId');
+    });
+  });
+
+  describe('transitions', () => {
+    it('should be present', async () => {
+      delete rawStateTransition.transitions;
+
+      const result = await validateStateTransitionStructure(
+        rawStateTransition,
+      );
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('transitions');
+
+      expect(extensionFunctionMock).to.not.be.called();
+    });
+
+    it('should be an array', async () => {
+      rawStateTransition.transitions = {};
+
+      const result = await validateStateTransitionStructure(
+        rawStateTransition,
+      );
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.transitions');
+      expect(error.keyword).to.equal('type');
+
+      expect(extensionFunctionMock).to.not.be.called();
+    });
+
+    it('should have at least one element', async () => {
+      rawStateTransition.transitions = [];
+
+      const result = await validateStateTransitionStructure(
+        rawStateTransition,
+      );
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.transitions');
+      expect(error.keyword).to.equal('minItems');
+      expect(error.params.limit).to.equal(1);
+
+      expect(extensionFunctionMock).to.not.be.called();
+    });
+
+    it('should have no more than 10 elements', async () => {
+      rawStateTransition.transitions = Array(11).fill({});
+
+      const result = await validateStateTransitionStructure(rawStateTransition);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.transitions');
+      expect(error.keyword).to.equal('maxItems');
+      expect(error.params.limit).to.equal(10);
+
+      expect(extensionFunctionMock).to.not.be.called();
+    });
+
+    it('should have objects as elements', async () => {
+      rawStateTransition.transitions = [1];
+
+      const result = await validateStateTransitionStructure(rawStateTransition);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.transitions[0]');
+      expect(error.keyword).to.equal('type');
+
+      expect(extensionFunctionMock).to.not.be.called();
+    });
+
     describe('create', () => {
       it('should return invalid result if there are documents with wrong generated $id', async () => {
         const [firstTransition] = rawStateTransition.transitions;

@@ -275,13 +275,13 @@ describe('DataContract', () => {
     });
   });
 
-  describe('#serialize', () => {
-    it('should return serialized DataContract', () => {
+  describe('#toBuffer', () => {
+    it('should return DataContract as a Buffer', () => {
       const serializedDocument = '123';
 
       encodeMock.returns(serializedDocument);
 
-      const result = dataContract.serialize();
+      const result = dataContract.toBuffer();
 
       expect(result).to.equal(serializedDocument);
 
