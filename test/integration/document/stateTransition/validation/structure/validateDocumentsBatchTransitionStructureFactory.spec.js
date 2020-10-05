@@ -36,7 +36,6 @@ const MissingDocumentTransitionActionError = require('../../../../../../lib/erro
 const InvalidDocumentTransitionActionError = require('../../../../../../lib/errors/InvalidDocumentTransitionActionError');
 const InvalidDataContractIdError = require('../../../../../../lib/errors/InvalidDataContractIdError');
 
-
 describe('validateDocumentsBatchTransitionStructureFactory', () => {
   let dataContract;
   let documents;
@@ -656,7 +655,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
           const [error] = result.getErrors();
 
           expect(error.getAction()).to.equal(firstDocumentTransition.$action);
-          expect(error.getRawDocumentTransition()).to.equal(firstDocumentTransition);
+          expect(error.getRawDocumentTransition()).to.deep.equal(firstDocumentTransition);
 
           expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
             dataContract.getId().toBuffer(),
@@ -797,12 +796,15 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
           });
 
           stateTransition = new DocumentsBatchTransition({
+            protocolVersion: Document.PROTOCOL_VERSION,
             ownerId,
             contractId: dataContract.getId(),
             transitions: documentTransitions.map((t) => t.toObject()),
+            signature: crypto.randomBytes(64),
+            signaturePublicKeyId: 0,
           }, [dataContract]);
 
-          rawStateTransition = stateTransition.toJSON();
+          rawStateTransition = stateTransition.toObject();
         });
 
         describe('$revision', () => {
