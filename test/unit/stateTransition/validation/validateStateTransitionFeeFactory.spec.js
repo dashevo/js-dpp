@@ -5,7 +5,7 @@ const createStateRepositoryMock = require('../../../../lib/test/mocks/createStat
 const getIdentityFixture = require('../../../../lib/test/fixtures/getIdentityFixture');
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
-const getIdentityCreateSTFixture = require('../../../../lib/test/fixtures/getIdentityCreateSTFixture');
+const getIdentityCreateTransitionFixture = require('../../../../lib/test/fixtures/getIdentityCreateTransitionFixture');
 const getDocumentTransitionsFixture = require('../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 const getIdentityTopUpTransitionFixture = require('../../../../lib/test/fixtures/getIdentityTopUpTransitionFixture');
 
@@ -32,7 +32,7 @@ describe('validateStateTransitionFeeFactory', () => {
   let output;
 
   beforeEach(function beforeEach() {
-    identityCreateST = getIdentityCreateSTFixture();
+    identityCreateST = getIdentityCreateTransitionFixture();
     identityTopUpST = getIdentityTopUpTransitionFixture();
 
     const stSize = Buffer.byteLength(identityCreateST.serialize({ skipSignature: true }));

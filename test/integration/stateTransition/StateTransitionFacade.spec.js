@@ -107,7 +107,7 @@ describe('StateTransitionFacade', () => {
 
       expect(result).to.be.an.instanceOf(DataContractCreateTransition);
 
-      expect(result.toJSON()).to.deep.equal(dataContractCreateTransition.toJSON());
+      expect(result.toObject()).to.deep.equal(dataContractCreateTransition.toObject());
     });
   });
 

@@ -2,38 +2,30 @@ const Ajv = require('ajv');
 
 const JsonSchemaValidator = require('../../../../../lib/validation/JsonSchemaValidator');
 
-const getIdentityCreateTransitionFixture = require('../../../../../lib/test/fixtures/getIdentityCreateTransitionFixture');
+const getIdentityTopUpTransitionFixture = require('../../../../../lib/test/fixtures/getIdentityTopUpTransitionFixture');
 
-const validateIdentityCreateTransitionStructureFactory = require(
-  '../../../../../lib/identity/stateTransitions/identityCreateTransition/validateIdentityCreateTransitionStructureFactory',
+const validateIdentityTopUpTransitionStructureFactory = require(
+  '../../../../../lib/identity/stateTransitions/identityTopUpTransition/validateIdentityTopUpTransitionStructureFactory',
 );
 
 const {
   expectJsonSchemaError,
-  expectValidationError,
 } = require('../../../../../lib/test/expect/expectError');
 
-const ValidationResult = require('../../../../../lib/validation/ValidationResult');
-const ConsensusError = require('../../../../../lib/errors/ConsensusError');
-
-describe('validateIdentityCreateTransitionStructureFactory', () => {
-  let validateIdentityCreateTransitionStructure;
+describe('validateIdentityTopUpTransitionStructureFactory', () => {
   let rawStateTransition;
   let stateTransition;
-  let validatePublicKeysMock;
+  let validateIdentityTopUpTransitionStructure;
 
-  beforeEach(function beforeEach() {
-    validatePublicKeysMock = this.sinonSandbox.stub().returns(new ValidationResult());
-
+  beforeEach(() => {
     const ajv = new Ajv();
     const jsonSchemaValidator = new JsonSchemaValidator(ajv);
 
-    validateIdentityCreateTransitionStructure = validateIdentityCreateTransitionStructureFactory(
+    validateIdentityTopUpTransitionStructure = validateIdentityTopUpTransitionStructureFactory(
       jsonSchemaValidator,
-      validatePublicKeysMock,
     );
 
-    stateTransition = getIdentityCreateTransitionFixture();
+    stateTransition = getIdentityTopUpTransitionFixture();
 
     const privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
 
@@ -46,7 +38,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should be present', async () => {
       delete rawStateTransition.protocolVersion;
 
-      const result = await validateIdentityCreateTransitionStructure(rawStateTransition);
+      const result = await validateIdentityTopUpTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -60,7 +52,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should be an integer', async () => {
       rawStateTransition.protocolVersion = '1';
 
-      const result = await validateIdentityCreateTransitionStructure(rawStateTransition);
+      const result = await validateIdentityTopUpTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -73,7 +65,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should not be less than 0', async () => {
       rawStateTransition.protocolVersion = -1;
 
-      const result = await validateIdentityCreateTransitionStructure(rawStateTransition);
+      const result = await validateIdentityTopUpTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -86,7 +78,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should not be greater than current version (0)', async () => {
       rawStateTransition.protocolVersion = 1;
 
-      const result = await validateIdentityCreateTransitionStructure(rawStateTransition);
+      const result = await validateIdentityTopUpTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -101,7 +93,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should be present', async () => {
       delete rawStateTransition.type;
 
-      const result = await validateIdentityCreateTransitionStructure(rawStateTransition);
+      const result = await validateIdentityTopUpTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -112,10 +104,10 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
       expect(error.params.missingProperty).to.equal('type');
     });
 
-    it('should be equal to 2', async () => {
+    it('should be equal to 3', async () => {
       rawStateTransition.type = 666;
 
-      const result = await validateIdentityCreateTransitionStructure(rawStateTransition);
+      const result = await validateIdentityTopUpTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -123,7 +115,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
 
       expect(error.dataPath).to.equal('.type');
       expect(error.keyword).to.equal('const');
-      expect(error.params.allowedValue).to.equal(2);
+      expect(error.params.allowedValue).to.equal(3);
     });
   });
 
@@ -131,7 +123,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should be present', async () => {
       delete rawStateTransition.lockedOutPoint;
 
-      const result = await validateIdentityCreateTransitionStructure(
+      const result = await validateIdentityTopUpTransitionStructure(
         rawStateTransition,
       );
 
@@ -147,7 +139,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should be a binary (encoded string)', async () => {
       rawStateTransition.lockedOutPoint = 1;
 
-      const result = await validateIdentityCreateTransitionStructure(rawStateTransition);
+      const result = await validateIdentityTopUpTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -161,7 +153,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should not be less than 36 bytes (48 characters) in length', async () => {
       rawStateTransition.lockedOutPoint = '1';
 
-      const result = await validateIdentityCreateTransitionStructure(
+      const result = await validateIdentityTopUpTransitionStructure(
         rawStateTransition,
       );
 
@@ -176,7 +168,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should not be more than 36 bytes (48 characters) in length', async () => {
       rawStateTransition.lockedOutPoint = Buffer.alloc(48).toString('base64');
 
-      const result = await validateIdentityCreateTransitionStructure(
+      const result = await validateIdentityTopUpTransitionStructure(
         rawStateTransition,
       );
 
@@ -191,7 +183,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should be base64 encoded', async () => {
       rawStateTransition.lockedOutPoint = '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&';
 
-      const result = await validateIdentityCreateTransitionStructure(
+      const result = await validateIdentityTopUpTransitionStructure(
         rawStateTransition,
       );
 
@@ -204,11 +196,12 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     });
   });
 
-  describe('publicKeys', () => {
-    it('should be present', async () => {
-      rawStateTransition.publicKeys = undefined;
 
-      const result = await validateIdentityCreateTransitionStructure(
+  describe('identityId', () => {
+    it('should be present', async () => {
+      delete rawStateTransition.identityId;
+
+      const result = await validateIdentityTopUpTransitionStructure(
         rawStateTransition,
       );
 
@@ -217,14 +210,14 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.dataPath).to.equal('');
-      expect(error.params.missingProperty).to.equal('publicKeys');
       expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('identityId');
     });
 
-    it('should not be empty', async () => {
-      rawStateTransition.publicKeys = [];
+    it('should be a binary (encoded string)', async () => {
+      rawStateTransition.identityId = 1;
 
-      const result = await validateIdentityCreateTransitionStructure(
+      const result = await validateIdentityTopUpTransitionStructure(
         rawStateTransition,
       );
 
@@ -232,18 +225,15 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.keyword).to.equal('minItems');
-      expect(error.dataPath).to.equal('.publicKeys');
+      expect(error.dataPath).to.equal('.identityId');
+      expect(error.keyword).to.equal('type');
+      expect(error.params.type).to.equal('string');
     });
 
-    it('should not have more than 10 items', async () => {
-      const [key] = rawStateTransition.publicKeys;
+    it('should be no less than 42 chars', async () => {
+      rawStateTransition.identityId = '1'.repeat(41);
 
-      for (let i = 0; i < 10; i++) {
-        rawStateTransition.publicKeys.push(key);
-      }
-
-      const result = await validateIdentityCreateTransitionStructure(
+      const result = await validateIdentityTopUpTransitionStructure(
         rawStateTransition,
       );
 
@@ -251,14 +241,14 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.keyword).to.equal('maxItems');
-      expect(error.dataPath).to.equal('.publicKeys');
+      expect(error.dataPath).to.equal('.identityId');
+      expect(error.keyword).to.equal('minLength');
     });
 
-    it('should be unique', async () => {
-      rawStateTransition.publicKeys.push(rawStateTransition.publicKeys[0]);
+    it('should be no longer than 44 chars', async () => {
+      rawStateTransition.identityId = '1'.repeat(45);
 
-      const result = await validateIdentityCreateTransitionStructure(
+      const result = await validateIdentityTopUpTransitionStructure(
         rawStateTransition,
       );
 
@@ -266,27 +256,23 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.keyword).to.equal('uniqueItems');
-      expect(error.dataPath).to.equal('.publicKeys');
+      expect(error.dataPath).to.equal('.identityId');
+      expect(error.keyword).to.equal('maxLength');
     });
 
-    it('should be valid', async () => {
-      const publicKeysError = new ConsensusError('test');
-      const publicKeysResult = new ValidationResult([
-        publicKeysError,
-      ]);
+    it('should be base58 encoded', async () => {
+      rawStateTransition.identityId = '&'.repeat(44);
 
-      validatePublicKeysMock.returns(publicKeysResult);
-
-      const result = await validateIdentityCreateTransitionStructure(
+      const result = await validateIdentityTopUpTransitionStructure(
         rawStateTransition,
       );
 
-      expectValidationError(result);
+      expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
 
-      expect(error).to.equal(publicKeysError);
+      expect(error.keyword).to.equal('pattern');
+      expect(error.dataPath).to.equal('.identityId');
     });
   });
 
@@ -294,7 +280,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should be present', async () => {
       delete rawStateTransition.signature;
 
-      const result = await validateIdentityCreateTransitionStructure(rawStateTransition);
+      const result = await validateIdentityTopUpTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -308,7 +294,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should be a binary (encoded string)', async () => {
       rawStateTransition.signature = 1;
 
-      const result = await validateIdentityCreateTransitionStructure(rawStateTransition);
+      const result = await validateIdentityTopUpTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -322,7 +308,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should have length of 65 bytes (87 chars)', async () => {
       rawStateTransition.signature = Buffer.alloc(10);
 
-      const result = await validateIdentityCreateTransitionStructure(rawStateTransition);
+      const result = await validateIdentityTopUpTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -336,7 +322,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
     it('should be base64 encoded', async () => {
       rawStateTransition.signature = '&'.repeat(87);
 
-      const result = await validateIdentityCreateTransitionStructure(rawStateTransition);
+      const result = await validateIdentityTopUpTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -348,12 +334,8 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
   });
 
   it('should return valid result', () => {
-    const result = validateIdentityCreateTransitionStructure(rawStateTransition);
+    const result = validateIdentityTopUpTransitionStructure(rawStateTransition);
 
     expect(result.isValid()).to.be.true();
-
-    expect(validatePublicKeysMock).to.be.calledOnceWithExactly(
-      rawStateTransition.publicKeys,
-    );
   });
 });

@@ -27,8 +27,8 @@
     "signature": {
       "type": "string",
       "contentEncoding": "base64",
-      "minLength": 86,
-      "maxLength": 86,
+      "minLength": 87,
+      "maxLength": 87,
       "pattern": "^([A-Za-z0-9+/])+$"
     }
   },

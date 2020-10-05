@@ -1,5 +1,4 @@
 const Ajv = require('ajv');
-const crypto = require('crypto');
 
 const Document = require('../../../../../../lib/document/Document');
 
@@ -67,7 +66,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
       ownerId,
       contractId: dataContract.getId(),
       transitions: documentTransitions.map((t) => t.toObject()),
-      signature: crypto.randomBytes(64),
+      signature: Buffer.alloc(65),
       signaturePublicKeyId: 0,
     }, [dataContract]);
 
@@ -800,7 +799,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
             ownerId,
             contractId: dataContract.getId(),
             transitions: documentTransitions.map((t) => t.toObject()),
-            signature: crypto.randomBytes(64),
+            signature: Buffer.alloc(65),
             signaturePublicKeyId: 0,
           }, [dataContract]);
 
@@ -928,7 +927,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
       expect(error.params.type).to.equal('string');
     });
 
-    it('should have length of 65 bytes (86 chars)', async () => {
+    it('should have length of 65 bytes (87 chars)', async () => {
       rawStateTransition.signature = Buffer.alloc(10);
 
       const result = await validateDocumentsBatchTransitionStructure(rawStateTransition);
@@ -939,11 +938,11 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
 
       expect(error.dataPath).to.equal('.signature');
       expect(error.keyword).to.equal('minLength');
-      expect(error.params.limit).to.equal(86);
+      expect(error.params.limit).to.equal(87);
     });
 
     it('should be base64 encoded', async () => {
-      rawStateTransition.signature = '&'.repeat(86);
+      rawStateTransition.signature = '&'.repeat(87);
 
       const result = await validateDocumentsBatchTransitionStructure(rawStateTransition);
 

@@ -4,7 +4,7 @@ const applyIdentityCreateTransitionFactory = require(
   '../../../../../lib/identity/stateTransitions/identityCreateTransition/applyIdentityCreateTransitionFactory',
 );
 
-const getIdentityCreateSTFixture = require('../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
+const getIdentityCreateTransitionFixture = require('../../../../../lib/test/fixtures/getIdentityCreateTransitionFixture');
 
 const { convertSatoshiToCredits } = require('../../../../../lib/identity/creditsConverter');
 
@@ -26,7 +26,7 @@ describe('applyIdentityCreateTransitionFactory', () => {
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
 
-    stateTransition = getIdentityCreateSTFixture();
+    stateTransition = getIdentityCreateTransitionFixture();
     applyIdentityCreateTransition = applyIdentityCreateTransitionFactory(
       stateRepositoryMock,
       fetchConfirmedAssetLockTransactionOutputMock,
