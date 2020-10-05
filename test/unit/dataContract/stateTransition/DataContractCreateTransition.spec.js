@@ -72,7 +72,7 @@ describe('DataContractCreateTransition', () => {
 
       encodeMock.returns(serializedStateTransition);
 
-      const result = stateTransition.serialize();
+      const result = stateTransition.toBuffer();
 
       expect(result).to.equal(serializedStateTransition);
 

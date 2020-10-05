@@ -47,9 +47,9 @@ describe('DataContractFacade', () => {
     });
   });
 
-  describe('createFromSerialized', () => {
+  describe('createFromBuffer', () => {
     it('should create DataContract from string', async () => {
-      const result = await dpp.dataContract.createFromSerialized(dataContract.toBuffer());
+      const result = await dpp.dataContract.createFromBuffer(dataContract.toBuffer());
 
       expect(result).to.be.an.instanceOf(DataContract);
 

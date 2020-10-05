@@ -78,12 +78,12 @@ describe('DocumentFacade', () => {
     });
   });
 
-  describe('createFromSerialized', () => {
+  describe('createFromBuffer', () => {
     it('should throw MissingOption if stateRepository is not set', async () => {
       dpp = new DashPlatformProtocol();
 
       try {
-        await dpp.document.createFromSerialized(document.toJSON());
+        await dpp.document.createFromBuffer(document.toJSON());
 
         expect.fail('MissingOption should be thrown');
       } catch (e) {
@@ -93,7 +93,7 @@ describe('DocumentFacade', () => {
     });
 
     it('should create Document from serialized', async () => {
-      const result = await dpp.document.createFromSerialized(document.serialize());
+      const result = await dpp.document.createFromBuffer(document.toBuffer());
 
       expect(result).to.be.an.instanceOf(Document);
 

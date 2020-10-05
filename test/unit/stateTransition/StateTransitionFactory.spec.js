@@ -114,19 +114,19 @@ describe('StateTransitionFactory', () => {
     });
   });
 
-  describe('createFromSerialized', () => {
+  describe('createFromBuffer', () => {
     beforeEach(function beforeEach() {
       this.sinonSandbox.stub(factory, 'createFromObject');
     });
 
     it('should return new State Transition from serialized contract', async () => {
-      const serializedStateTransition = stateTransition.serialize();
+      const serializedStateTransition = stateTransition.toBuffer();
 
       decodeMock.returns(rawStateTransition);
 
       factory.createFromObject.resolves(stateTransition);
 
-      const result = await factory.createFromSerialized(serializedStateTransition);
+      const result = await factory.createFromBuffer(serializedStateTransition);
 
       expect(result).to.equal(stateTransition);
 
@@ -138,12 +138,12 @@ describe('StateTransitionFactory', () => {
     it('should throw consensus error if `decode` fails', async () => {
       const parsingError = new Error('Something failed during parsing');
 
-      const serializedStateTransition = stateTransition.serialize();
+      const serializedStateTransition = stateTransition.toBuffer();
 
       decodeMock.throws(parsingError);
 
       try {
-        await factory.createFromSerialized(serializedStateTransition);
+        await factory.createFromBuffer(serializedStateTransition);
         expect.fail('Error was not thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(InvalidStateTransitionError);

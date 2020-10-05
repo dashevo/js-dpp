@@ -391,13 +391,13 @@ describe('Document', () => {
     });
   });
 
-  describe('#serialize', () => {
+  describe('#toBuffer', () => {
     it('should return serialized Document', () => {
       const serializedDocument = '123';
 
       encodeMock.returns(serializedDocument);
 
-      const result = document.serialize();
+      const result = document.toBuffer();
 
       expect(result).to.equal(serializedDocument);
 
@@ -409,14 +409,14 @@ describe('Document', () => {
 
   describe('#hash', () => {
     beforeEach(function beforeEach() {
-      Document.prototype.serialize = this.sinonSandbox.stub();
+      Document.prototype.toBuffer = this.sinonSandbox.stub();
     });
 
     it('should return Document hash', () => {
       const serializedDocument = '123';
       const hashedDocument = '456';
 
-      Document.prototype.serialize.returns(serializedDocument);
+      Document.prototype.toBuffer.returns(serializedDocument);
 
       hashMock.returns(hashedDocument);
 
@@ -424,7 +424,7 @@ describe('Document', () => {
 
       expect(result).to.equal(hashedDocument);
 
-      expect(Document.prototype.serialize).to.have.been.calledOnce();
+      expect(Document.prototype.toBuffer).to.have.been.calledOnce();
 
       expect(hashMock).to.have.been.calledOnceWith(serializedDocument);
     });

@@ -84,13 +84,13 @@ describe('DocumentsBatchTransition', () => {
     });
   });
 
-  describe('#serialize', () => {
+  describe('#toBuffer', () => {
     it('should return serialized Documents State Transition', () => {
       const serializedStateTransition = '123';
 
       encodeMock.returns(serializedStateTransition);
 
-      const result = stateTransition.serialize();
+      const result = stateTransition.toBuffer();
 
       expect(result).to.equal(serializedStateTransition);
 

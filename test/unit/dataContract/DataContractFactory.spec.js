@@ -124,19 +124,19 @@ describe('DataContractFactory', () => {
     });
   });
 
-  describe('createFromSerialized', () => {
+  describe('createFromBuffer', () => {
     beforeEach(function beforeEach() {
       this.sinonSandbox.stub(factory, 'createFromObject');
     });
 
     it('should return new Data Contract from serialized contract', async () => {
-      const serializedDataContract = dataContract.serialize();
+      const serializedDataContract = dataContract.toBuffer();
 
       decodeMock.returns(rawDataContract);
 
       factory.createFromObject.returns(dataContract);
 
-      const result = await factory.createFromSerialized(serializedDataContract);
+      const result = await factory.createFromBuffer(serializedDataContract);
 
       expect(result).to.equal(dataContract);
 
@@ -148,12 +148,12 @@ describe('DataContractFactory', () => {
     it('should throw consensus error if `decode` fails', async () => {
       const parsingError = new Error('Something failed during parsing');
 
-      const serializedDataContract = dataContract.serialize();
+      const serializedDataContract = dataContract.toBuffer();
 
       decodeMock.throws(parsingError);
 
       try {
-        await factory.createFromSerialized(serializedDataContract);
+        await factory.createFromBuffer(serializedDataContract);
         expect.fail('Error was not thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(InvalidDataContractError);

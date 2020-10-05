@@ -219,7 +219,7 @@ describe('DocumentFactory', () => {
     });
   });
 
-  describe('createFromSerialized', () => {
+  describe('createFromBuffer', () => {
     beforeEach(function beforeEach() {
       this.sinonSandbox.stub(factory, 'createFromObject');
       // eslint-disable-next-line prefer-destructuring
@@ -227,13 +227,13 @@ describe('DocumentFactory', () => {
     });
 
     it('should return new Document from serialized one', async () => {
-      const serializedDocument = document.serialize();
+      const serializedDocument = document.toBuffer();
 
       decodeMock.returns(document.toObject());
 
       factory.createFromObject.returns(document);
 
-      const result = await factory.createFromSerialized(serializedDocument);
+      const result = await factory.createFromBuffer(serializedDocument);
 
       expect(result).to.equal(document);
 
@@ -245,12 +245,12 @@ describe('DocumentFactory', () => {
     it('should throw consensus error if `decode` fails', async () => {
       const parsingError = new Error('Something failed during parsing');
 
-      const serializedDocument = document.serialize();
+      const serializedDocument = document.toBuffer();
 
       decodeMock.throws(parsingError);
 
       try {
-        await factory.createFromSerialized(serializedDocument);
+        await factory.createFromBuffer(serializedDocument);
         expect.fail('Error was not thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(InvalidDocumentError);
