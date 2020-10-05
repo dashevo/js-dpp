@@ -1,5 +1,7 @@
 const Ajv = require('ajv');
 
+const Document = require('../../../../../../lib/document/Document');
+
 const JsonSchemaValidator = require('../../../../../../lib/validation/JsonSchemaValidator');
 
 const generateRandomId = require('../../../../../../lib/test/utils/generateRandomId');
@@ -40,7 +42,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
   let rawStateTransition;
   let findDuplicatesByIdMock;
   let findDuplicatesByIndicesMock;
-  let validateStructure;
+  let validateDocumentsBatchTransitionStructure;
   let stateTransition;
   let validateStateTransitionSignatureMock;
   let ownerId;
@@ -61,6 +63,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     });
 
     stateTransition = new DocumentsBatchTransition({
+      protocolVersion: Document.PROTOCOL_VERSION,
       ownerId,
       contractId: dataContract.getId().toBuffer(),
       transitions: documentTransitions.map((t) => t.toObject()),
@@ -89,7 +92,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
 
     enrichSpy = this.sinonSandbox.spy(enrichDataContractWithBaseSchema);
 
-    validateStructure = validateDocumentsBatchTransitionStructureFactory(
+    validateDocumentsBatchTransitionStructure = validateDocumentsBatchTransitionStructureFactory(
       findDuplicatesByIdMock,
       findDuplicatesByIndicesMock,
       validateStateTransitionSignatureMock,
@@ -104,7 +107,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     it('should be present', async () => {
       delete rawStateTransition.protocolVersion;
 
-      const result = await validateDocumentsBatchTransitionStructureFactory(rawStateTransition);
+      const result = await validateDocumentsBatchTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -118,7 +121,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     it('should be an integer', async () => {
       rawStateTransition.protocolVersion = '1';
 
-      const result = await validateDocumentsBatchTransitionStructureFactory(rawStateTransition);
+      const result = await validateDocumentsBatchTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -131,7 +134,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     it('should not be less than 0', async () => {
       rawStateTransition.protocolVersion = -1;
 
-      const result = await validateDocumentsBatchTransitionStructureFactory(rawStateTransition);
+      const result = await validateDocumentsBatchTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -144,7 +147,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     it('should not be greater than current version (0)', async () => {
       rawStateTransition.protocolVersion = 1;
 
-      const result = await validateDocumentsBatchTransitionStructureFactory(rawStateTransition);
+      const result = await validateDocumentsBatchTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -155,11 +158,41 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     });
   });
 
+  describe('type', () => {
+    it('should be present', async () => {
+      delete rawStateTransition.type;
+
+      const result = await validateDocumentsBatchTransitionStructure(rawStateTransition);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('');
+      expect(error.keyword).to.equal('required');
+      expect(error.params.missingProperty).to.equal('type');
+    });
+
+    it('should be equal to current version (1)', async () => {
+      rawStateTransition.type = 666;
+
+      const result = await validateDocumentsBatchTransitionStructure(rawStateTransition);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.dataPath).to.equal('.type');
+      expect(error.keyword).to.equal('const');
+      expect(error.params.allowedValue).to.equal(1);
+    });
+  });
+
   describe('ownerId', () => {
     it('should be present', async () => {
       delete rawStateTransition.ownerId;
 
-      const result = await validateDocumentsBatchTransitionStructureFactory(
+      const result = await validateDocumentsBatchTransitionStructure(
         rawStateTransition,
       );
 
@@ -172,10 +205,10 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
       expect(error.params.missingProperty).to.equal('ownerId');
     });
 
-    it('should be a string', async () => {
+    it('should be a binary (encoded string)', async () => {
       rawStateTransition.ownerId = 1;
 
-      const result = await validateDocumentsBatchTransitionStructureFactory(
+      const result = await validateDocumentsBatchTransitionStructure(
         rawStateTransition,
       );
 
@@ -190,7 +223,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     it('should be no less than 42 chars', async () => {
       rawStateTransition.ownerId = '1'.repeat(41);
 
-      const result = await validateStateTransitionStructure(
+      const result = await validateDocumentsBatchTransitionStructure(
         rawStateTransition,
       );
 
@@ -205,7 +238,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     it('should be no longer than 44 chars', async () => {
       rawStateTransition.ownerId = '1'.repeat(45);
 
-      const result = await validateStateTransitionStructure(
+      const result = await validateDocumentsBatchTransitionStructure(
         rawStateTransition,
       );
 
@@ -220,7 +253,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     it('should be base58 encoded', async () => {
       rawStateTransition.ownerId = '&'.repeat(44);
 
-      const result = await validateStateTransitionStructure(
+      const result = await validateDocumentsBatchTransitionStructure(
         rawStateTransition,
       );
 
@@ -237,7 +270,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     it('should be present', async () => {
       delete rawStateTransition.transitions;
 
-      const result = await validateStateTransitionStructure(
+      const result = await validateDocumentsBatchTransitionStructure(
         rawStateTransition,
       );
 
@@ -255,7 +288,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     it('should be an array', async () => {
       rawStateTransition.transitions = {};
 
-      const result = await validateStateTransitionStructure(
+      const result = await validateDocumentsBatchTransitionStructure(
         rawStateTransition,
       );
 
@@ -272,7 +305,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     it('should have at least one element', async () => {
       rawStateTransition.transitions = [];
 
-      const result = await validateStateTransitionStructure(
+      const result = await validateDocumentsBatchTransitionStructure(
         rawStateTransition,
       );
 
@@ -290,7 +323,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     it('should have no more than 10 elements', async () => {
       rawStateTransition.transitions = Array(11).fill({});
 
-      const result = await validateStateTransitionStructure(rawStateTransition);
+      const result = await validateDocumentsBatchTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
@@ -306,7 +339,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
     it('should have objects as elements', async () => {
       rawStateTransition.transitions = [1];
 
-      const result = await validateStateTransitionStructure(rawStateTransition);
+      const result = await validateDocumentsBatchTransitionStructure(rawStateTransition);
 
       expectJsonSchemaError(result);
 
