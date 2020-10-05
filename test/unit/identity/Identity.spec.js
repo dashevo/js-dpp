@@ -87,10 +87,10 @@ describe('Identity', () => {
     });
   });
 
-  describe('#serialize', () => {
+  describe('#toBuffer', () => {
     it('should return encoded json object', () => {
       encodeMock.returns(42); // for example
-      const result = identity.serialize();
+      const result = identity.toBuffer();
 
       expect(encodeMock).to.have.been.calledOnceWith(identity.toJSON());
       expect(result).to.equal(42);

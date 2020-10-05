@@ -113,19 +113,19 @@ describe('IdentityFactory', () => {
     });
   });
 
-  describe('#createFromSerialized', () => {
+  describe('#createFromBuffer', () => {
     beforeEach(function beforeEach() {
       this.sinonSandbox.stub(factory, 'createFromObject');
     });
 
     it('should return new Identity from serialized one', () => {
-      const serializedIdentity = identity.serialize();
+      const serializedIdentity = identity.toBuffer();
 
       decodeMock.returns(identity.toJSON());
 
       factory.createFromObject.returns(identity);
 
-      const result = factory.createFromSerialized(serializedIdentity);
+      const result = factory.createFromBuffer(serializedIdentity);
 
       expect(result).to.equal(identity);
 
@@ -137,12 +137,12 @@ describe('IdentityFactory', () => {
     it('should throw consensus error if `decode` fails', () => {
       const parsingError = new Error('Something failed during parsing');
 
-      const serializedIdentity = identity.serialize();
+      const serializedIdentity = identity.toBuffer();
 
       decodeMock.throws(parsingError);
 
       try {
-        factory.createFromSerialized(serializedIdentity);
+        factory.createFromBuffer(serializedIdentity);
         expect.fail('Error was not thrown');
       } catch (e) {
         expect(e).to.be.an.instanceOf(InvalidIdentityError);

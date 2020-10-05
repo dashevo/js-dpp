@@ -67,15 +67,15 @@ describe('AbstractStateTransitionIdentitySigned', () => {
     });
   });
 
-  describe('#serialize', () => {
+  describe('#toBuffer', () => {
     it.skip('should return serialized data', () => {
-      const serializedData = stateTransition.serialize();
+      const serializedData = stateTransition.toBuffer();
 
       expect(serializedData.toString('hex')).to.be.equal('a4647479706500697369676e6174757265f66f70726f746f636f6c56657273696f6ef6747369676e61747572655075626c69634b65794964f6');
     });
 
     it.skip('should return serialized data without signature data', () => {
-      const serializedData = stateTransition.serialize({ skipSignature: true });
+      const serializedData = stateTransition.toBuffer({ skipSignature: true });
 
       expect(serializedData.toString('hex')).to.be.equal('a26474797065006f70726f746f636f6c56657273696f6ef6');
     });

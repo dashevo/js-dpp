@@ -69,9 +69,9 @@ describe('IdentityFacade', () => {
     });
   });
 
-  describe('#createFromSerialized', () => {
+  describe('#createFromBuffer', () => {
     it('should create Identity from string', () => {
-      const result = dpp.identity.createFromSerialized(identity.serialize());
+      const result = dpp.identity.createFromBuffer(identity.toBuffer());
 
       expect(result).to.be.an.instanceOf(Identity);
 

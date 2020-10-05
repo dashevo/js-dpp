@@ -111,13 +111,13 @@ describe('StateTransitionFacade', () => {
     });
   });
 
-  describe('createFromSerialized', () => {
+  describe('createFromBuffer', () => {
     it('should throw MissingOption if stateRepository is not set', async () => {
       dpp = new DashPlatformProtocol();
 
       try {
-        await dpp.stateTransition.createFromSerialized(
-          dataContractCreateTransition.serialize(),
+        await dpp.stateTransition.createFromBuffer(
+          dataContractCreateTransition.toBuffer(),
         );
 
         expect.fail('MissingOption should be thrown');
@@ -130,15 +130,15 @@ describe('StateTransitionFacade', () => {
     it('should skip checking for state repository if skipValidation is set', async () => {
       dpp = new DashPlatformProtocol();
 
-      await dpp.stateTransition.createFromSerialized(
-        dataContractCreateTransition.serialize(),
+      await dpp.stateTransition.createFromBuffer(
+        dataContractCreateTransition.toBuffer(),
         { skipValidation: true },
       );
     });
 
     it('should create State Transition from string', async () => {
-      const result = await dpp.stateTransition.createFromSerialized(
-        dataContractCreateTransition.serialize(),
+      const result = await dpp.stateTransition.createFromBuffer(
+        dataContractCreateTransition.toBuffer(),
       );
 
       expect(result).to.be.an.instanceOf(DataContractCreateTransition);

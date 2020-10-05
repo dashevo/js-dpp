@@ -35,7 +35,7 @@ describe('validateStateTransitionFeeFactory', () => {
     identityCreateST = getIdentityCreateSTFixture();
     identityTopUpST = getIdentityTopUpTransitionFixture();
 
-    const stSize = Buffer.byteLength(identityCreateST.serialize({ skipSignature: true }));
+    const stSize = Buffer.byteLength(identityCreateST.toBuffer({ skipSignature: true }));
 
     output = {
       satoshis: Math.ceil(stSize / RATIO),
@@ -59,7 +59,7 @@ describe('validateStateTransitionFeeFactory', () => {
       entropy: dataContract.getEntropy(),
     });
 
-    const serializedData = dataContractCreateTransition.serialize({ skipSignature: true });
+    const serializedData = dataContractCreateTransition.toBuffer({ skipSignature: true });
     identity.balance = Buffer.byteLength(serializedData) - 1;
 
     const result = await validateStateTransitionFee(dataContractCreateTransition);
@@ -77,7 +77,7 @@ describe('validateStateTransitionFeeFactory', () => {
       entropy: dataContract.getEntropy(),
     });
 
-    const serializedData = dataContractCreateTransition.serialize({ skipSignature: true });
+    const serializedData = dataContractCreateTransition.toBuffer({ skipSignature: true });
     identity.balance = Buffer.byteLength(serializedData);
 
     const result = await validateStateTransitionFee(dataContractCreateTransition);
@@ -99,7 +99,7 @@ describe('validateStateTransitionFeeFactory', () => {
       contractId: dataContract.getId(),
       transitions: documentTransitions.map((t) => t.toObject()),
     }, [dataContract]);
-    identity.balance = Buffer.byteLength(stateTransition.serialize({ skipSignature: true }));
+    identity.balance = Buffer.byteLength(stateTransition.toBuffer({ skipSignature: true }));
 
     const result = await validateStateTransitionFee(stateTransition);
 
@@ -139,7 +139,7 @@ describe('validateStateTransitionFeeFactory', () => {
 
     const stateTransitionMock = {
       getType: this.sinonSandbox.stub().returns(-1),
-      serialize: this.sinonSandbox.stub().returns(Buffer.alloc(0)),
+      toBuffer: this.sinonSandbox.stub().returns(Buffer.alloc(0)),
       toJSON: this.sinonSandbox.stub().returns(rawStateTransitionMock),
     };
     identity.balance = 0;
@@ -154,6 +154,6 @@ describe('validateStateTransitionFeeFactory', () => {
     }
 
     expect(stateTransitionMock.getType).to.be.calledOnce();
-    expect(stateTransitionMock.serialize).to.be.calledOnce();
+    expect(stateTransitionMock.toBuffer).to.be.calledOnce();
   });
 });

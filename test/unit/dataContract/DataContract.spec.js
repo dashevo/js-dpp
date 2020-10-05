@@ -291,14 +291,14 @@ describe('DataContract', () => {
 
   describe('#hash', () => {
     beforeEach(function beforeEach() {
-      DataContract.prototype.serialize = this.sinonSandbox.stub();
+      DataContract.prototype.toBuffer = this.sinonSandbox.stub();
     });
 
     it('should return DataContract hash', () => {
       const serializedDataContract = '123';
       const hashedDocument = '456';
 
-      DataContract.prototype.serialize.returns(serializedDataContract);
+      DataContract.prototype.toBuffer.returns(serializedDataContract);
 
       hashMock.returns(hashedDocument);
 
@@ -306,7 +306,7 @@ describe('DataContract', () => {
 
       expect(result).to.equal(hashedDocument);
 
-      expect(DataContract.prototype.serialize).to.have.been.calledOnce();
+      expect(DataContract.prototype.toBuffer).to.have.been.calledOnce();
 
       expect(hashMock).to.have.been.calledOnceWith(serializedDataContract);
     });
