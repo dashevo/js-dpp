@@ -1,7 +1,7 @@
 const getIdentityCreateSTFixture = require('../../../../../lib/test/fixtures/getIdentityCreateSTFixture');
 
-const validateIdentityCreateSTStructureFactory = require(
-  '../../../../../lib/identity/stateTransitions/identityCreateTransition/validateIdentityCreateSTStructureFactory',
+const validateIdentityCreateTransitionStructureFactory = require(
+  '../../../../../lib/identity/stateTransitions/identityCreateTransition/validateIdentityCreateTransitionStructureFactory',
 );
 
 const IdentityCreateTransition = require(
@@ -10,7 +10,7 @@ const IdentityCreateTransition = require(
 
 const ValidationResult = require('../../../../../lib/validation/ValidationResult');
 
-describe('validateIdentityCreateSTStructureFactory', () => {
+describe('validateIdentityCreateTransitionStructureFactory', () => {
   let validateIdentityCreateST;
   let rawStateTransition;
   let stateTransition;
@@ -19,7 +19,7 @@ describe('validateIdentityCreateSTStructureFactory', () => {
   beforeEach(function beforeEach() {
     validatePublicKeysMock = this.sinonSandbox.stub().returns(new ValidationResult());
 
-    validateIdentityCreateST = validateIdentityCreateSTStructureFactory(
+    validateIdentityCreateST = validateIdentityCreateTransitionStructureFactory(
       validatePublicKeysMock,
     );
 
