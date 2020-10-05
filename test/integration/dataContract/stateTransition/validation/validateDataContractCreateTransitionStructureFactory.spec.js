@@ -373,6 +373,38 @@ describe('validateDataContractCreateTransitionStructureFactory', () => {
       expect(error.dataPath).to.equal('.signature');
       expect(error.keyword).to.equal('pattern');
     });
+
+    it('should be valid', async () => {
+      const dataContractResult = new ValidationResult();
+
+      validateDataContractMock.returns(dataContractResult);
+
+      const type = 1;
+      const validationError = new InvalidIdentityPublicKeyTypeError(type);
+
+      const validateSignatureResult = new ValidationResult([
+        validationError,
+      ]);
+
+      validateStateTransitionSignatureMock.resolves(validateSignatureResult);
+
+      const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
+
+      expectValidationError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error).to.equal(validationError);
+
+      expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(
+        stateTransition,
+        rawDataContract.ownerId,
+      );
+
+      expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(
+        rawDataContract.ownerId,
+      );
+    });
   });
 
   describe('signaturePublicKeyId', () => {
@@ -401,38 +433,6 @@ describe('validateDataContractCreateTransitionStructureFactory', () => {
       expect(error.dataPath).to.equal('.signaturePublicKeyId');
       expect(error.keyword).to.equal('minimum');
     });
-  });
-
-  it('should return invalid result on invalid signature', async () => {
-    const dataContractResult = new ValidationResult();
-
-    validateDataContractMock.returns(dataContractResult);
-
-    const type = 1;
-    const validationError = new InvalidIdentityPublicKeyTypeError(type);
-
-    const validateSignatureResult = new ValidationResult([
-      validationError,
-    ]);
-
-    validateStateTransitionSignatureMock.resolves(validateSignatureResult);
-
-    const result = await validateDataContractCreateTransitionStructure(rawStateTransition);
-
-    expectValidationError(result);
-
-    const [error] = result.getErrors();
-
-    expect(error).to.equal(validationError);
-
-    expect(validateStateTransitionSignatureMock).to.be.calledOnceWith(
-      stateTransition,
-      rawDataContract.ownerId,
-    );
-
-    expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(
-      rawDataContract.ownerId,
-    );
   });
 
   it('should return valid result', async () => {
