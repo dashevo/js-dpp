@@ -457,7 +457,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
         });
 
         it('should no have duplicate IDs in the state transition', async () => {
-          const duplicates = [documentTransitions[0].toJSON()];
+          const duplicates = [documentTransitions[0].toObject()];
 
           findDuplicatesByIdMock.returns(duplicates);
 
@@ -870,7 +870,7 @@ describe('validateDocumentsBatchTransitionStructureFactory', () => {
       });
 
       it('should return invalid result if there are duplicate unique index values', async () => {
-        const duplicates = [documentTransitions[1].toJSON()];
+        const duplicates = [documentTransitions[1].toObject()];
 
         findDuplicatesByIndicesMock.returns(duplicates);
 

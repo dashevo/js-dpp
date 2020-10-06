@@ -37,22 +37,35 @@ describe('AbstractStateTransitionIdentitySigned', () => {
       .setData(publicKey);
   });
 
-  describe('#toJSON', () => {
-    it('should serialize data to JSON', () => {
-      const serializedData = stateTransition.toJSON();
+  describe('#toObject', () => {
+    it('should return raw state transition', () => {
+      const rawStateTransition = stateTransition.toObject();
 
-      expect(serializedData).to.deep.equal({
-        signaturePublicKeyId: null,
+      expect(rawStateTransition).to.deep.equal({
         protocolVersion,
-        signature: null,
+        signature: undefined,
+        signaturePublicKeyId: undefined,
         type: 0,
       });
     });
 
-    it('should serialize data to JSON without signature data', () => {
-      const serializedData = stateTransition.toJSON({ skipSignature: true });
+    it('should return raw state transition without signature ', () => {
+      const rawStateTransition = stateTransition.toObject({ skipSignature: true });
 
-      expect(serializedData).to.deep.equal({
+      expect(rawStateTransition).to.deep.equal({
+        protocolVersion,
+        type: 0,
+      });
+    });
+  });
+
+  describe('#toJSON', () => {
+    it('should return state transition as JSON', () => {
+      const jsonStateTransition = stateTransition.toJSON();
+
+      expect(jsonStateTransition).to.deep.equal({
+        signaturePublicKeyId: undefined,
+        signature: undefined,
         protocolVersion,
         type: 0,
       });

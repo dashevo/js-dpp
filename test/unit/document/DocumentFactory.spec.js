@@ -137,12 +137,12 @@ describe('DocumentFactory', () => {
       const result = await factory.createFromObject(rawDocument);
 
       expect(result).to.be.an.instanceOf(Document);
-      expect(result.toJSON()).to.deep.equal(document.toJSON());
+      expect(result.toObject()).to.deep.equal(document.toObject());
 
-      expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWith(rawDocument);
+      expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(rawDocument);
 
-      expect(validateDocumentMock.getCall(0).args).to.have.deep.members(
-        [new Document(rawDocument, dataContract), dataContract, { skipValidation: false }],
+      expect(validateDocumentMock).to.have.been.calledOnceWithExactly(
+        rawDocument, dataContract,
       );
     });
 
@@ -158,7 +158,7 @@ describe('DocumentFactory', () => {
       const result = await factory.createFromObject(rawDocument, { skipValidation: true });
 
       expect(result).to.be.an.instanceOf(Document);
-      expect(result.toJSON()).to.deep.equal(document.toJSON());
+      expect(result.toObject()).to.deep.equal(document.toObject());
 
       expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(rawDocument);
       expect(validateDocumentMock).to.have.not.been.called();
@@ -185,10 +185,8 @@ describe('DocumentFactory', () => {
         const [consensusError] = e.getErrors();
         expect(consensusError).to.equal(validationError);
 
-        expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWith(rawDocument);
-        expect(validateDocumentMock.getCall(0).args).to.have.deep.members(
-          [new Document(rawDocument, dataContract), dataContract, { skipValidation: false }],
-        );
+        expect(fetchAndValidateDataContractMock).to.have.been.calledOnceWithExactly(rawDocument);
+        expect(validateDocumentMock).to.have.been.calledOnceWithExactly(rawDocument, dataContract);
       }
     });
 

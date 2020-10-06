@@ -15,6 +15,8 @@ const {
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
 
 const ConsensusError = require('../../../../lib/errors/ConsensusError');
+const MissingStateTransitionTypeError = require('../../../../lib/errors/MissingStateTransitionTypeError');
+const InvalidStateTransitionTypeError = require('../../../../lib/errors/InvalidStateTransitionTypeError');
 
 describe('validateStateTransitionStructureFactory', () => {
   let validateStateTransitionStructure;
@@ -49,6 +51,34 @@ describe('validateStateTransitionStructureFactory', () => {
       validationFunctionsByType,
       createStateTransitionMock,
     );
+  });
+
+  it('should return invalid result if ST type is missed', async () => {
+    delete rawStateTransition.type;
+
+    const result = await validateStateTransitionStructure(rawStateTransition);
+
+    expectValidationError(result);
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.instanceof(MissingStateTransitionTypeError);
+
+    expect(validationFunctionMock).to.not.be.called();
+  });
+
+  it('should return invalid result if ST type is not valid', async () => {
+    rawStateTransition.type = 666;
+
+    const result = await validateStateTransitionStructure(rawStateTransition);
+
+    expectValidationError(result);
+
+    const [error] = result.getErrors();
+
+    expect(error).to.be.instanceof(InvalidStateTransitionTypeError);
+
+    expect(validationFunctionMock).to.not.be.called();
   });
 
   it('should return invalid result if ST is invalid against validation function', async () => {

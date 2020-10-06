@@ -49,7 +49,7 @@ describe('DataContractCreateTransition', () => {
     it('should return Data Contract', () => {
       const result = stateTransition.getDataContract();
 
-      expect(result.toJSON()).to.deep.equal(dataContract.toJSON());
+      expect(result.toObject()).to.deep.equal(dataContract.toObject());
     });
   });
 
@@ -59,8 +59,8 @@ describe('DataContractCreateTransition', () => {
         protocolVersion: DataContract.PROTOCOL_VERSION,
         type: stateTransitionTypes.DATA_CONTRACT_CREATE,
         dataContract: dataContract.toJSON(),
-        signaturePublicKeyId: null,
-        signature: null,
+        signaturePublicKeyId: undefined,
+        signature: undefined,
         entropy: dataContract.getEntropy().toString(),
       });
     });

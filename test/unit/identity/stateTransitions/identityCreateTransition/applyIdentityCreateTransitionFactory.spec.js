@@ -41,7 +41,7 @@ describe('applyIdentityCreateTransitionFactory', () => {
     const identity = new Identity({
       protocolVersion: Identity.PROTOCOL_VERSION,
       id: stateTransition.getIdentityId(),
-      publicKeys: stateTransition.getPublicKeys().map((key) => key.toJSON()),
+      publicKeys: stateTransition.getPublicKeys().map((key) => key.toObject()),
       balance,
       revision: 0,
     });

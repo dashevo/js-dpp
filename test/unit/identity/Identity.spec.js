@@ -92,7 +92,7 @@ describe('Identity', () => {
       encodeMock.returns(42); // for example
       const result = identity.toBuffer();
 
-      expect(encodeMock).to.have.been.calledOnceWith(identity.toJSON());
+      expect(encodeMock).to.have.been.calledOnceWith(identity.toObject());
       expect(result).to.equal(42);
     });
   });
@@ -107,7 +107,7 @@ describe('Identity', () => {
 
       const result = identity.hash();
 
-      expect(encodeMock).to.have.been.calledOnceWith(identity.toJSON());
+      expect(encodeMock).to.have.been.calledOnceWith(identity.toObject());
       expect(hashMock).to.have.been.calledOnceWith(buffer);
       expect(result).to.equal(bufferHex);
     });

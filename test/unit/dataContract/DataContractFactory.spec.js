@@ -24,7 +24,7 @@ describe('DataContractFactory', () => {
 
   beforeEach(function beforeEach() {
     dataContract = getDataContractFixture();
-    rawDataContract = dataContract.toJSON();
+    rawDataContract = dataContract.toObject();
 
     decodeMock = this.sinonSandbox.stub();
     validateDataContractMock = this.sinonSandbox.stub();
@@ -175,7 +175,7 @@ describe('DataContractFactory', () => {
 
       expect(result.getProtocolVersion()).to.equal(DataContract.PROTOCOL_VERSION);
       expect(result.getEntropy()).to.deep.equal(dataContract.getEntropy());
-      expect(result.getDataContract().toJSON()).to.deep.equal(dataContract.toJSON());
+      expect(result.getDataContract().toObject()).to.deep.equal(dataContract.toObject());
     });
   });
 });

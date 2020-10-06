@@ -24,10 +24,10 @@ describe('StateTransitionFactory', () => {
     const dataContract = getDataContractFixture();
 
     stateTransition = new DataContractCreateTransition({
-      dataContract: dataContract.toJSON(),
+      dataContract: dataContract.toObject(),
       entropy: dataContract.getEntropy(),
     });
-    rawStateTransition = stateTransition.toJSON();
+    rawStateTransition = stateTransition.toObject();
 
     decodeMock = this.sinonSandbox.stub();
 
@@ -93,23 +93,6 @@ describe('StateTransitionFactory', () => {
         expect(validateStateTransitionStructureMock).to.have.been.calledOnceWith(
           rawStateTransition,
         );
-      }
-    });
-
-
-    it('should throw InvalidStateTransitionError if stateTransition.toJSON throws ConsensusError', async function it() {
-      const error = new ConsensusError('json error');
-
-      stateTransition.toJSON = this.sinonSandbox.stub().throws(error);
-
-      try {
-        await factory.createFromObject(rawStateTransition);
-        expect.fail('Error was not thrown');
-      } catch (e) {
-        expect(e).to.be.an.instanceOf(InvalidStateTransitionError);
-
-        const [innerError] = e.getErrors();
-        expect(innerError).to.be.equal(error);
       }
     });
   });

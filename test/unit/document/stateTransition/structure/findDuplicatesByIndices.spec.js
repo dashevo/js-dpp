@@ -70,7 +70,7 @@ describe('findDuplicatesByIndices', () => {
     const [, , , william] = documents;
 
     let document = new Document({
-      ...william.toJSON(),
+      ...william.toObject(),
       $type: 'nonUniqueIndexDocument',
       $entropy: entropy.generate(),
     }, contract);
@@ -80,7 +80,7 @@ describe('findDuplicatesByIndices', () => {
     documents.push(document);
 
     document = new Document({
-      ...william.toJSON(),
+      ...william.toObject(),
       $type: 'singleDocument',
       $entropy: entropy.generate(),
     }, contract);
@@ -101,7 +101,7 @@ describe('findDuplicatesByIndices', () => {
 
     documentTransitions = getDocumentTransitionsFixture({
       create: documents,
-    }).map((t) => t.toJSON());
+    }).map((t) => t.toObject());
 
     const duplicates = findDuplicateDocumentsByIndices(documentTransitions, contract);
     expect(duplicates).to.have.deep.members(

@@ -65,8 +65,8 @@ describe('DocumentsBatchTransition', () => {
         type: stateTransitionTypes.DOCUMENTS_BATCH,
         ownerId: documents[0].getOwnerId().toString(),
         transitions: stateTransition.getTransitions().map((d) => d.toJSON()),
-        signaturePublicKeyId: null,
-        signature: null,
+        signaturePublicKeyId: undefined,
+        signature: undefined,
       });
     });
   });
@@ -78,8 +78,8 @@ describe('DocumentsBatchTransition', () => {
         type: stateTransitionTypes.DOCUMENTS_BATCH,
         ownerId: documents[0].getOwnerId(),
         transitions: stateTransition.getTransitions().map((d) => d.toObject()),
-        signaturePublicKeyId: null,
-        signature: null,
+        signaturePublicKeyId: undefined,
+        signature: undefined,
       });
     });
   });

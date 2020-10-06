@@ -55,7 +55,7 @@ describe('validateStateTransitionFeeFactory', () => {
 
   it('should return invalid result if balance is not enough', async () => {
     const dataContractCreateTransition = new DataContractCreateTransition({
-      dataContract: dataContract.toJSON(),
+      dataContract: dataContract.toObject(),
       entropy: dataContract.getEntropy(),
     });
 
@@ -73,7 +73,7 @@ describe('validateStateTransitionFeeFactory', () => {
 
   it('should return valid result for DataContractCreateTransition', async () => {
     const dataContractCreateTransition = new DataContractCreateTransition({
-      dataContract: dataContract.toJSON(),
+      dataContract: dataContract.toObject(),
       entropy: dataContract.getEntropy(),
     });
 
@@ -140,7 +140,7 @@ describe('validateStateTransitionFeeFactory', () => {
     const stateTransitionMock = {
       getType: this.sinonSandbox.stub().returns(-1),
       toBuffer: this.sinonSandbox.stub().returns(Buffer.alloc(0)),
-      toJSON: this.sinonSandbox.stub().returns(rawStateTransitionMock),
+      toObject: this.sinonSandbox.stub().returns(rawStateTransitionMock),
     };
     identity.balance = 0;
 

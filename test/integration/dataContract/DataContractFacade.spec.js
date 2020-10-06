@@ -39,11 +39,11 @@ describe('DataContractFacade', () => {
 
   describe('createFromObject', () => {
     it('should create DataContract from plain object', async () => {
-      const result = await dpp.dataContract.createFromObject(dataContract.toJSON());
+      const result = await dpp.dataContract.createFromObject(dataContract.toObject());
 
       expect(result).to.be.an.instanceOf(DataContract);
 
-      expect(result.toJSON()).to.deep.equal(dataContract.toJSON());
+      expect(result.toObject()).to.deep.equal(dataContract.toObject());
     });
   });
 
@@ -53,7 +53,7 @@ describe('DataContractFacade', () => {
 
       expect(result).to.be.an.instanceOf(DataContract);
 
-      expect(result.toJSON()).to.deep.equal(dataContract.toJSON());
+      expect(result.toObject()).to.deep.equal(dataContract.toObject());
     });
   });
 
@@ -65,7 +65,7 @@ describe('DataContractFacade', () => {
 
       expect(result).to.be.an.instanceOf(DataContractCreateTransition);
 
-      expect(result.toJSON()).to.deep.equal(stateTransition.toJSON());
+      expect(result.toObject()).to.deep.equal(stateTransition.toObject());
     });
   });
 

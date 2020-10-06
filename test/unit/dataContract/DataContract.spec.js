@@ -285,7 +285,7 @@ describe('DataContract', () => {
 
       expect(result).to.equal(serializedDocument);
 
-      expect(encodeMock).to.have.been.calledOnceWith(dataContract.toJSON());
+      expect(encodeMock).to.have.been.calledOnceWith(dataContract.toObject());
     });
   });
 

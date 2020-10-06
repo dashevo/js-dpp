@@ -81,7 +81,7 @@ describe('StateTransitionFacade', () => {
 
       try {
         await dpp.stateTransition.createFromObject(
-          dataContractCreateTransition.toJSON(),
+          dataContractCreateTransition.toObject(),
         );
 
         expect.fail('MissingOption should be thrown');
@@ -95,7 +95,7 @@ describe('StateTransitionFacade', () => {
       dpp = new DashPlatformProtocol();
 
       await dpp.stateTransition.createFromObject(
-        dataContractCreateTransition.toJSON(),
+        dataContractCreateTransition.toObject(),
         { skipValidation: true },
       );
     });
@@ -143,7 +143,7 @@ describe('StateTransitionFacade', () => {
 
       expect(result).to.be.an.instanceOf(DataContractCreateTransition);
 
-      expect(result.toJSON()).to.deep.equal(dataContractCreateTransition.toJSON());
+      expect(result.toObject()).to.deep.equal(dataContractCreateTransition.toObject());
     });
   });
 
@@ -154,7 +154,7 @@ describe('StateTransitionFacade', () => {
         'validateData',
       );
 
-      const rawStateTransition = dataContractCreateTransition.toJSON();
+      const rawStateTransition = dataContractCreateTransition.toObject();
       delete rawStateTransition.protocolVersion;
 
       const result = await dpp.stateTransition.validate(rawStateTransition);
@@ -223,7 +223,7 @@ describe('StateTransitionFacade', () => {
 
       try {
         await dpp.stateTransition.validateStructure(
-          dataContractCreateTransition.toJSON(),
+          dataContractCreateTransition.toObject(),
         );
 
         expect.fail('MissingOption should be thrown');
@@ -235,7 +235,7 @@ describe('StateTransitionFacade', () => {
 
     it('should validate State Transition', async () => {
       const result = await dpp.stateTransition.validateStructure(
-        dataContractCreateTransition.toJSON(),
+        dataContractCreateTransition.toObject(),
       );
 
       expect(result).to.be.an.instanceOf(ValidationResult);
@@ -267,15 +267,6 @@ describe('StateTransitionFacade', () => {
       expect(result).to.be.an.instanceOf(ValidationResult);
       expect(result.isValid()).to.be.true();
     });
-
-    it('should validate raw state transition data', async () => {
-      const rawStateTransition = dataContractCreateTransition.toJSON();
-
-      const result = await dpp.stateTransition.validateData(rawStateTransition);
-
-      expect(result).to.be.an.instanceOf(ValidationResult);
-      expect(result.isValid()).to.be.true();
-    });
   });
 
   describe('validateFee', () => {
@@ -298,15 +289,6 @@ describe('StateTransitionFacade', () => {
       const result = await dpp.stateTransition.validateFee(
         dataContractCreateTransition,
       );
-
-      expect(result).to.be.an.instanceOf(ValidationResult);
-      expect(result.isValid()).to.be.true();
-    });
-
-    it('should validate raw state transition data', async () => {
-      const rawStateTransition = dataContractCreateTransition.toJSON();
-
-      const result = await dpp.stateTransition.validateFee(rawStateTransition);
 
       expect(result).to.be.an.instanceOf(ValidationResult);
       expect(result.isValid()).to.be.true();

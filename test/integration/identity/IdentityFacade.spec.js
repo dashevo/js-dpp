@@ -1,7 +1,8 @@
-const bs58 = require('bs58');
 const crypto = require('crypto');
 
 const { PublicKey } = require('@dashevo/dashcore-lib');
+
+const EncodedBuffer = require('../../../lib/util/encoding/EncodedBuffer');
 
 const hash = require('../../../lib/util/hash');
 
@@ -39,8 +40,9 @@ describe('IdentityFacade', () => {
     it('should create Identity', () => {
       const lockedOutPoint = crypto.randomBytes(64);
 
-      identity.id = bs58.encode(
+      identity.id = EncodedBuffer.from(
         hash(lockedOutPoint),
+        EncodedBuffer.ENCODING.BASE58,
       );
 
       identity.setBalance(0);
@@ -55,13 +57,13 @@ describe('IdentityFacade', () => {
       );
 
       expect(result).to.be.an.instanceOf(Identity);
-      expect(result.toJSON()).to.deep.equal(identity.toJSON());
+      expect(result.toObject()).to.deep.equal(identity.toObject());
     });
   });
 
   describe('#createFromObject', () => {
     it('should create Identity from plain object', () => {
-      const result = dpp.identity.createFromObject(identity.toJSON());
+      const result = dpp.identity.createFromObject(identity.toObject());
 
       expect(result).to.be.an.instanceOf(Identity);
 

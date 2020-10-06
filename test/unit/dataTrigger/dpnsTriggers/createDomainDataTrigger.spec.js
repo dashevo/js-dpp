@@ -83,7 +83,7 @@ describe('createDomainDataTrigger', () => {
         'preorder',
         { where: [['saltedDomainHash', '==', saltedDomainHash]] },
       )
-      .resolves([preorderDocument.toJSON()]);
+      .resolves([preorderDocument.toObject()]);
 
     stateRepositoryMock.fetchTransaction.resolves(null);
 
