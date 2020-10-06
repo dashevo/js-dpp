@@ -120,6 +120,14 @@ describe('Identity', () => {
     });
   });
 
+  describe('#toObject', () => {
+    it('should return object representation', () => {
+      const json = identity.toObject();
+
+      expect(json).to.deep.equal(rawIdentity);
+    });
+  });
+
   describe('#getBalance', () => {
     it('should return set identity balance', () => {
       identity.balance = 42;

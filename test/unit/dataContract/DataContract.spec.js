@@ -274,6 +274,20 @@ describe('DataContract', () => {
     });
   });
 
+  describe('#toObject', () => {
+    it('should return DataContract as plain object', () => {
+      const result = dataContract.toObject();
+
+      expect(result).to.deep.equal({
+        protocolVersion: dataContract.getProtocolVersion(),
+        $id: contractId,
+        $schema: DataContract.DEFAULTS.SCHEMA,
+        ownerId,
+        documents,
+      });
+    });
+  });
+
   describe('#serialize', () => {
     it('should return serialized DataContract', () => {
       const serializedDocument = '123';
