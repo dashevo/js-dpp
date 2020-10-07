@@ -27,7 +27,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {string|null}
+**Returns**: {EncodedBuffer|null}
 
 ## .setSignature(signature)
 
@@ -37,7 +37,7 @@
 
 | parameters         | type                   | required           | Description                      |  
 |--------------------|------------------------|--------------------| -------------------------------- |
-| **signature**      | String                 | no                 |                                  |
+| **signature**      | Buffer                 | no                 |                                  |
 
 **Returns**: {AbstractStateTransition}
 
@@ -47,7 +47,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {string}
+**Returns**: {Buffer}
 
 ## .signByPrivateKey(privateKey)
 
@@ -87,33 +87,32 @@
 
 **Parameters**: 
 
-| parameters         | type                   | required           | Description                     |  
-|--------------------|------------------------|--------------------| --------------------------------|
-| **options**        | Object                 | no                |                                  |
+| parameters               | type                   | required           | Description                      |  
+|--------------------------|------------------------|--------------------| -------------------------------- |
+| **options**              | Object                 | no                 |                                  |
+| **options.skipSignature**| Boolean[=false]        | no                 |                                  |
+| **options.encodedBuffer**| Boolean[=false]        | no                 |                                  |
 
-**Returns**: {Object}
+**Returns**: {RawStateTransition}
 
-## .toJSON(options)
+## .toJSON()
 
 **Description**: Return state transition as JSON object
 
-**Parameters**: 
+**Parameters**: None.
 
-| parameters         | type                   | required           | Description                     |  
-|--------------------|------------------------|--------------------| --------------------------------|
-| **options**        | Object                 | no                |                                  |
-  
-**Returns**: {Object}
+**Returns**: {JsonStateTransition}
 
-## .serialize(options)
+## .toBuffer(options)
 
-**Description**: Return serialized State Transition
+**Description**: Return serialized State Transition as buffer
 
 **Parameters**:  
 
-| parameters         | type                   | required           | Description                      |  
-|--------------------|------------------------|--------------------| -------------------------------- |
-| **options**        | Object                 | no                 |                                  |
+| parameters               | type                   | required           | Description                      |  
+|--------------------------|------------------------|--------------------| -------------------------------- |
+| **options**              | Object                 | no                 |                                  |
+| **options.skipSignature**| Boolean[=false]        | no                 |                                  |
 
 **Returns**: {Buffer}
 

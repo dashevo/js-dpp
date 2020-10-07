@@ -6,17 +6,30 @@
 | parameters                            | type            | required           | Description               |  
 |---------------------------------------|-----------------|--------------------| --------------------------|
 | **rawDocument**                       | RawDocument     | yes                |                           |
-| **rawDocument.$id**                   | string          | yes                |                           |
+| **rawDocument.$id**                   | Buffer          | yes                |                           |
 | **rawDocument.$dataContractId**       | string          | yes                |                           |
 | **rawDocument.$protocolVersion**      | number          | yes                |                           |
 | **rawDocument.$type**                 | string          | yes                |                           |
-| **rawDocument.$ownerId**              | string          | yes                |                           |
+| **rawDocument.$ownerId**              | Buffer          | yes                |                           |
 | **rawDocument.$revision**             | number          | yes                |                           |
 | **rawDocument.$createdAt**            | number          | no                 |                           |
 | **rawDocument.$updatedAt**            | number          | no                 |                           |
 | **dataContract**                      | DataContract    | yes                |                           |
 
 **Returns**: A new valid instance of Document
+
+## Document.fromJSON(jsonDocument, dataContract)
+
+**Description**: Instantiate a Document.
+
+**Parameters**: 
+
+| parameters                            | type            | required           | Description               |  
+|---------------------------------------|-----------------|--------------------| --------------------------|
+| **jsonDocument**                      | JsonDocument    | yes                |                           |
+| **dataContract**                      | DataContract    | yes                |                           |  
+
+**Returns**: {Document} - A new valid instance of Document
 
 ## .getProtocolVersion()
 
@@ -32,7 +45,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {string}
+**Returns**: {EncodedBuffer}
 
 ## .getType()
 
@@ -48,7 +61,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {string}
+**Returns**: {EncodedBuffer}
 
 ## .getDataContract()
 
@@ -64,7 +77,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {string}
+**Returns**: {EncodedBuffer}
 
 ## .setRevision(revision)
 
@@ -94,7 +107,7 @@
 
 | parameters         | type                   | required           | Description                      |  
 |--------------------|------------------------|--------------------| -------------------------------- |
-| **entropy**        | string                 | yes                |                                  |
+| **entropy**        | Buffer                 | yes                |                                  |
 
 **Returns**: {Document}
 
@@ -104,7 +117,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {string}
+**Returns**: {EncodedBuffer}
 
 ## .setData(data)
 
@@ -128,7 +141,7 @@
 
 ## .get(path)
 
-**Description**: Retrives the field specified by path
+**Description**: Retrieves the field specified by path
 
 **Parameters**:  
 
@@ -197,7 +210,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {RawDocument}
+**Returns**: {JsonDocument}
 
 ## .toObject(options)
 
@@ -212,9 +225,9 @@
 
 **Returns**: {RawDocument}
 
-## .serialize()
+## .toBuffer()
 
-**Description**: Return serialized Document
+**Description**: Return serialized Document as buffer
 
 **Parameters**: None.  
 

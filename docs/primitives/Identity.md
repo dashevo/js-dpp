@@ -6,7 +6,7 @@
 | parameters                            | type                  | required           | Description               |  
 |---------------------------------------|-----------------------|--------------------| --------------------------|
 | **rawIdentity**                       | RawIdentity           | yes                |                           |
-| **rawIdentity.id**                    | string                | yes                |                           |
+| **rawIdentity.id**                    | Buffer                | yes                |                           |
 | **rawIdentity.protocolVersion**       | number                | yes                |                           |
 | **rawIdentity.publicKeys**            | RawIdentityPublicKey[]| yes                |                           |
 | **rawIdentity.balance**               | number                | yes                |                           |
@@ -28,7 +28,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {string}
+**Returns**: {Buffer}
 
 ## .setPublicKeys(publicKeys)
 
@@ -124,7 +124,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {number}
+**Returns**: {EncodedBuffer}
 
 ## .setRevision(revision)
 
@@ -146,6 +146,14 @@
 
 **Returns**: {number}
 
+## .toObject()
+
+**Description**: Return Identity as plain object
+
+**Parameters**: None.  
+
+**Returns**: {Object}
+
 ## .toJSON()
 
 **Description**: Return Identity as JSON object
@@ -154,9 +162,9 @@
 
 **Returns**: {RawIdentity}
 
-## .serialize()
+## .toBuffer()
 
-**Description**: Return serialized Identity
+**Description**: Return Identity as Buffer
 
 **Parameters**: None.  
 
