@@ -132,7 +132,7 @@
 
 **Parameters**:  
 
-| parameters         | type                   | required           | Description                                                                                                                                                                    |  
+| parameters         | type                   | required           | Description                      |  
 |--------------------|------------------------|--------------------| -------------------------------- |
 | **revision**       | number                 | yes                |                                  |
 

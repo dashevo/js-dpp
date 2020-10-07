@@ -13,7 +13,7 @@
 
 **Returns**: {DashPlatformProtocol}
 
-**Notes**: DPP will then provide multiples faces : 
+**Notes**: DPP will provide multiples facades: 
 - [dpp.dataContract](/usage/dataContract)
 - [dpp.document](/usage/document)
 - [dpp.identity](/usage/identity)

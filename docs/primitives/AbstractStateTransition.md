@@ -1,11 +1,12 @@
 **Usage**: `new AbstractStateTransition(rawStateTransition)`  
+
 **Description**: Instantiate a new AbstractStateTransition.
 
 **Parameters**:
 
 | parameters                            | type                  | required           | Description               |  
 |---------------------------------------|-----------------------|--------------------| --------------------------|
-| **rawStateTransition**                | RawIdentity           | yes                |                           |
+| **rawStateTransition**                | RawStateTransition    | yes                |                           |
 | **rawStateTransition.protocolVersion**| number                | yes                |                           |
 | **rawStateTransition.type**           | number                | yes                |                           |
 | **rawStateTransition.signature**      | string/null           | yes                |                           |
@@ -30,13 +31,13 @@
 
 ## .setSignature(signature)
 
-**Description**: Returns signature
+**Description**: Set signature
 
 **Parameters**: 
 
-| parameters         | type                   | required           | Description                                                                                                                                                                    |  
+| parameters         | type                   | required           | Description                      |  
 |--------------------|------------------------|--------------------| -------------------------------- |
-| **signature**      | String                 | no                |                                  |
+| **signature**      | String                 | no                 |                                  |
 
 **Returns**: {AbstractStateTransition}
 
@@ -54,7 +55,7 @@
 
 **Parameters**: 
 
-| parameters         | type                                | required | Description                                                                                                                                                                    |  
+| parameters         | type                                | required | Description                               |  
 |--------------------|-------------------------------------|----------| ----------------------------------------- |
 | **signature**      | string/Buffer/Uint8Array/PrivateKey | no       |  privateKey string must be hex or base58  |
 
@@ -66,7 +67,7 @@
 
 **Parameters**: 
 
-| parameters         | type                                | required | Description                                                                                                                                                                    |  
+| parameters         | type                                | required | Description                               |  
 |--------------------|-------------------------------------|----------| ----------------------------------------- |
 | **signature**      | string/Buffer/Uint8Array/PrivateKey | no       |  privateKey string must be hex or base58  |
 
@@ -86,8 +87,8 @@
 
 **Parameters**: 
 
-| parameters         | type                   | required           | Description                                                                                                                                                                    |  
-|--------------------|------------------------|--------------------| -------------------------------- |
+| parameters         | type                   | required           | Description                     |  
+|--------------------|------------------------|--------------------| --------------------------------|
 | **options**        | Object                 | no                |                                  |
 
 **Returns**: {Object}
@@ -98,8 +99,8 @@
 
 **Parameters**: 
 
-| parameters         | type                   | required           | Description                                                                                                                                                                    |  
-|--------------------|------------------------|--------------------| -------------------------------- |
+| parameters         | type                   | required           | Description                     |  
+|--------------------|------------------------|--------------------| --------------------------------|
 | **options**        | Object                 | no                |                                  |
   
 **Returns**: {Object}
@@ -110,10 +111,9 @@
 
 **Parameters**:  
 
-| parameters         | type                   | required           | Description                                                                                                                                                                    |  
+| parameters         | type                   | required           | Description                      |  
 |--------------------|------------------------|--------------------| -------------------------------- |
-| **options**        | Object                 | no                |                                  |
-
+| **options**        | Object                 | no                 |                                  |
 
 **Returns**: {Buffer}
 

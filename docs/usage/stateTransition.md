@@ -60,7 +60,7 @@ Returns : {ValidationResult}
 
 | parameters                   | type            | required | Description                                             |  
 |------------------------------|-----------------|----------| --------------------------------------------------------|
-| **stateTransition**          | DataContractCreateTransition/RawDataContractCreateTransition/DocumentsBatchTransition/RawDocumentsBatchTransition   | yes      |                                                         |
+| **stateTransition**          | DataContractCreateTransition/RawDataContractCreateTransition/DocumentsBatchTransition/RawDocumentsBatchTransition | yes      |                                                         |
 
 Returns : {ValidationResult}
 
@@ -94,8 +94,8 @@ Returns : {ValidationResult}
 
 **Parameters**:
 
-| parameters                   | type                    | required | Description                                             |  
-|------------------------------|-------------------------|----------| --------------------------------------------------------|
-| **stateTransition**          | AbstractStateTransition | yes      |                                                         |
+| parameters                   | type                    | required | Description                                      |  
+|------------------------------|-------------------------|----------| -------------------------------------------------|
+| **stateTransition**          | AbstractStateTransition | yes      |                                                  |
 
 Returns : {Promise<void>}

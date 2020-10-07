@@ -12,7 +12,7 @@
 | **rawDocument.$type**                 | string          | yes                |                           |
 | **rawDocument.$ownerId**              | string          | yes                |                           |
 | **rawDocument.$revision**             | number          | yes                |                           |
-| **rawDocument.$createdAt**            | number          | no                |                           |
+| **rawDocument.$createdAt**            | number          | no                 |                           |
 | **rawDocument.$updatedAt**            | number          | no                 |                           |
 | **dataContract**                      | DataContract    | yes                |                           |
 
@@ -72,7 +72,7 @@
 
 **Parameters**:  
 
-| parameters         | type                   | required           | Description                                                                                                                                                                    |  
+| parameters         | type                   | required           | Description                      |  
 |--------------------|------------------------|--------------------| -------------------------------- |
 | **revision**       | number                 | yes                |                                  |
 
@@ -92,7 +92,7 @@
 
 **Parameters**:  
 
-| parameters         | type                   | required           | Description                                                                                                                                                                    |  
+| parameters         | type                   | required           | Description                      |  
 |--------------------|------------------------|--------------------| -------------------------------- |
 | **entropy**        | string                 | yes                |                                  |
 
@@ -112,7 +112,7 @@
 
 **Parameters**:  
 
-| parameters         | type                   | required           | Description                                                                                                                                                                    |  
+| parameters         | type                   | required           | Description                      |  
 |--------------------|------------------------|--------------------| -------------------------------- |
 | **data**           | Object                 | yes                |                                  |
 
@@ -132,7 +132,7 @@
 
 **Parameters**:  
 
-| parameters         | type                   | required           | Description                                                                                                                                                                    |  
+| parameters         | type                   | required           | Description                      |  
 |--------------------|------------------------|--------------------| -------------------------------- |
 | **path**           | String                 | yes                |                                  |
 
@@ -144,7 +144,7 @@
 
 **Parameters**:  
 
-| parameters         | type                   | required           | Description                                                                                                                                                                    |  
+| parameters         | type                   | required           | Description                      |  
 |--------------------|------------------------|--------------------| -------------------------------- |
 | **path**           | String                 | yes                |                                  |
 | **value**          | *                      | yes                |                                  |
@@ -157,7 +157,7 @@
 
 **Parameters**:  
 
-| parameters         | type                   | required           | Description                                                                                                                                                                    |  
+| parameters         | type                   | required           | Description                      |  
 |--------------------|------------------------|--------------------| -------------------------------- |
 | **date**           | Date                   | yes                |                                  |
 
@@ -177,7 +177,7 @@
 
 **Parameters**:  
 
-| parameters         | type                   | required           | Description                                                                                                                                                                    |  
+| parameters         | type                   | required           | Description                      |  
 |--------------------|------------------------|--------------------| -------------------------------- |
 | **date**           | Date                   | yes                |                                  |
 
@@ -205,7 +205,7 @@
 
 **Parameters**:  
 
-| parameters                | type                   | required           | Description                                                                                                                                                                    |  
+| parameters                | type                   | required           | Description                      |  
 |---------------------------|------------------------|--------------------| -------------------------------- |
 | **options**               | Object                 | no                 |                                  |
 | **options.encodedBuffer** | boolean[=false]        | no                 |                                  |
