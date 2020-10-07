@@ -7,7 +7,7 @@ This method will generate the entropy and dataContractId for the user.
 
 | parameters                   | type            | required  | Description                                            |  
 |------------------------------|-----------------|-----------| -------------------------------------------------------|
-| **ownerId**                  | String          | yes       |                                                        |
+| **ownerId**                  | Buffer          | yes       |                                                        |
 | **documents**                | Object          | yes       |                                                        |
 
 Returns : {[DataContract](/primitives/DataContract)}
@@ -23,19 +23,19 @@ By default, the provided rawDataContract will be validated.
 |------------------------------|-----------------|----------| --------------------------------------------------------|
 | **rawDataContract**          | RawDataContract | yes      |                                                         |
 | **options**                  | Object          | no       |                                                         |
-| **options.skipValidation**   | boolean[=false]  | no       |                                                         |
+| **options.skipValidation**   | boolean[=false] | no       |                                                         |
 
 Returns : {Promise<[DataContract](/primitives/DataContract)>}
 
-## dpp.dataContract.createFromSerialized(payload, options)
+## dpp.dataContract.createFromBuffer(buffer, options)
 
-**Description**: Instantiate a new Data Contract from string/buffer.
+**Description**: Instantiate a new Data Contract from buffer.
 
 **Parameters**:
 
 | parameters                   | type            | required | Description                                             |  
 |------------------------------|-----------------|----------| --------------------------------------------------------|
-| **payload**                  | Buffer/string   | yes      |                                                         |
+| **buffer**                   | Buffer          | yes      |                                                         |
 | **options**                  | Object          | no       |                                                         |
 | **options.skipValidation**   | boolean[=false] | no       |                                                         |
 
@@ -63,4 +63,4 @@ Returns : {DataContractCreateTransition}
 |------------------------------|------------------------------|----------| --------------------------------------------------------|
 | **dataContract**             | DataContract/RawDataContract | yes      |                                                         |
 
-Returns : {DataContractCreateTransition}
+Returns : {Promise<ValidationResult>}

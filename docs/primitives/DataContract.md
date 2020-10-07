@@ -3,15 +3,15 @@
 
 **Parameters**:
 
-| parameters                                | type            | required           | Description               |  
-|-------------------------------------------|-----------------|--------------------| --------------------------|
-| **rawDataContract**                       | RawDataContract | yes                |                           |
-| **rawDataContract.$id**                   | string          | yes                |                           |
-| **rawDataContract.$schema**               | string          | yes                |                           |
-| **rawDataContract.protocolVersion**       | number          | yes                |                           |
-| **rawDataContract.ownerId**               | string          | yes                |                           |
-| **rawDataContract.documents**             | Object<str, obj>| yes                |                           |
-| **rawDataContract.definitions**           | Object<str, obj>| no                 |                           |
+| parameters                            | type             | required           | Description               |  
+|---------------------------------------|------------------|--------------------| --------------------------|
+| **rawDataContract**                   | RawDataContract  | yes                |                           |
+| **rawDataContract.$id**               | Buffer           | yes                |                           |
+| **rawDataContract.$schema**           | string           | yes                |                           |
+| **rawDataContract.protocolVersion**   | number           | yes                |                           |
+| **rawDataContract.ownerId**           | Buffer           | yes                |                           |
+| **rawDataContract.documents**         | Object<str, obj> | yes                |                           |
+| **rawDataContract.definitions**       | Object<str, obj> | no                 |                           |
 
 **Returns**: A new valid instance of DataContract
 
@@ -29,7 +29,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {string}
+**Returns**: {EncodedBuffer}
 
 ## .getOwnerId()
 
@@ -37,11 +37,19 @@
 
 **Parameters**: None.  
 
-**Returns**: {string}
+**Returns**: {EncodedBuffer}
 
 ## .getJsonSchemaId()
 
 **Description**: Get Data Contract JSON Schema ID
+
+**Parameters**: None.  
+
+**Returns**: {string}
+
+## .getJsonMetaSchema()
+
+**Description**: Get Data Contract JSON Meta Schema
 
 **Parameters**: None.  
 
@@ -59,17 +67,9 @@
 
 **Returns**: {DataContract}
 
-## .getJsonMetaSchema()
-
-**Description**: Get Data Contract JSON Meta Schema
-
-**Parameters**: None.  
-
-**Returns**: {string}
-
 ## .setDocuments(documents)
 
-**Description**: Allow to set documents for this DataContract (overwrite previous value).
+**Description**: Set documents for this DataContract (overwrite previous value).
 
 **Parameters**:  
 
@@ -81,7 +81,7 @@
 
 ## .getDocuments()
 
-**Description**: Get Data Contract JSON Meta Schema
+**Description**: Get Data Contract documents
 
 **Parameters**: None.  
 
@@ -168,17 +168,30 @@
 
 **Returns**: {Object}
 
-## .toJSON()
+## .toObject(options)
 
 **Description**: Return Data Contract as plain object
 
-**Parameters**: None.  
+**Parameters**:  
+
+| parameters                | type    | required | Description                      |  
+|---------------------------|---------|----------| -------------------------------- |
+| **options**               | Object  | no       |                                  |
+| **options.encodedBuffer** | Boolean | no       |                                  |
 
 **Returns**: {RawDataContract}
 
-## .serialize()
+## .toJSON()
 
-**Description**: Return serialized Data Contract
+**Description**: Return Data Contract as JSON object
+
+**Parameters**: None.  
+
+**Returns**: {JsonDataContract}
+
+## .toBuffer()
+
+**Description**: Return Data Contract as a Buffer
 
 **Parameters**: None.  
 
@@ -200,7 +213,7 @@
 
 | parameters         | type                   | required           | Description                      |  
 |--------------------|------------------------|--------------------| -------------------------------- |
-| **entropy**        | string                 | yes                |                                  |
+| **entropy**        | Buffer                 | yes                |                                  |
 
 **Returns**: {DataContract}
 
@@ -210,4 +223,4 @@
 
 **Parameters**: None.  
 
-**Returns**: {string}
+**Returns**: {EncodedBuffer}
