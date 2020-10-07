@@ -1,7 +1,9 @@
 - Usage
     - [dpp.dataContract](usage/dataContract.md)
     - [dpp.document](usage/document.md)
+    - [dpp.identity](usage/identity.md)
 - Primitives
     - [DataContract](primitives/DataContract.md)
     - [Document](primitives/Document.md)
+    - [Identity](primitives/Identity.md)
 - [License](https://github.com/dashevo/js-dpp/blob/master/LICENSE)
