@@ -1,4 +1,5 @@
 - Usage
+    - [new DashPlatformProtocol()](usage/DashPlatformProtocol.md)
     - [dpp.dataContract](usage/dataContract.md)
     - [dpp.document](usage/document.md)
     - [dpp.identity](usage/identity.md)
