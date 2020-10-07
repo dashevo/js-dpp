@@ -1,5 +1,7 @@
 - Usage
     - [dpp.dataContract](usage/dataContract.md)
+    - [dpp.document](usage/document.md)
 - Primitives
     - [DataContract](primitives/DataContract.md)
+    - [Document](primitives/Document.md)
 - [License](https://github.com/dashevo/js-dpp/blob/master/LICENSE)
