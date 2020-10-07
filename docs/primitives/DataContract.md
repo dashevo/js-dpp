@@ -3,15 +3,15 @@
 
 **Parameters**:
 
-| parameters                                | type            | required           | Description                       |  
-|-------------------------------------------|-----------------|--------------------| ----------------------------------|
-| **rawDataContract**                       | RawDataContract | yes                |                                   |
-| **rawDataContract.$id**                   | string          | yes                |                                   |
-| **rawDataContract.$schema**               | string          | yes                |                                   |
-| **rawDataContract.protocolVersion**       | number          | yes                |                                   |
-| **rawDataContract.ownerId**               | string          | yes                |                                   |
-| **rawDataContract.documents**             | Object<str, obj>| yes                |                                   |
-| **rawDataContract.definitions**           | Object<str, obj>| no                 |                                   |
+| parameters                                | type            | required           | Description               |  
+|-------------------------------------------|-----------------|--------------------| --------------------------|
+| **rawDataContract**                       | RawDataContract | yes                |                           |
+| **rawDataContract.$id**                   | string          | yes                |                           |
+| **rawDataContract.$schema**               | string          | yes                |                           |
+| **rawDataContract.protocolVersion**       | number          | yes                |                           |
+| **rawDataContract.ownerId**               | string          | yes                |                           |
+| **rawDataContract.documents**             | Object<str, obj>| yes                |                           |
+| **rawDataContract.definitions**           | Object<str, obj>| no                 |                           |
 
 **Returns**: A new valid instance of DataContract
 
@@ -53,9 +53,9 @@
 
 **Parameters**:  
 
-| parameters                                | type            | required           | Description                                                                                                                                                                    |  
-|-------------------------------------------|-----------------|--------------------| -------------------------------- |
-| **schema**                                | string          | yes                |                                  |
+| parameters            | type            | required           | Description                                                                                                                                                                    |  
+|-----------------------|-----------------|--------------------| -------------------------------- |
+| **schema**            | string          | yes                |                                  |
 
 **Returns**: {DataContract}
 
