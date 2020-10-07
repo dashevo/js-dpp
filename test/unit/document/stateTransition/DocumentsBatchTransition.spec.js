@@ -4,10 +4,6 @@ const getDataContractFixture = require('../../../../lib/test/fixtures/getDataCon
 const getDocumentsFixture = require('../../../../lib/test/fixtures/getDocumentsFixture');
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
-const DocumentsBatchTransition = require(
-  '../../../../lib/document/stateTransition/DocumentsBatchTransition',
-);
-
 describe('DocumentsBatchTransition', () => {
   let stateTransition;
   let documents;
@@ -120,20 +116,6 @@ describe('DocumentsBatchTransition', () => {
       const result = stateTransition.getOwnerId();
 
       expect(result).to.deep.equal(getDocumentsFixture.ownerId);
-    });
-  });
-
-  describe('#fromJSON', () => {
-    it('should create an instance using plain object converted from JSON', async () => {
-      const rawStateTransition = stateTransition.toJSON();
-
-      const result = DocumentsBatchTransition.fromJSON(
-        rawStateTransition, [dataContract],
-      );
-
-      expect(result.toJSON()).to.deep.equal(
-        stateTransition.toJSON(),
-      );
     });
   });
 });
