@@ -53,7 +53,7 @@ describe('validateStateTransitionStructureFactory', () => {
     );
   });
 
-  it('should return invalid result if ST type is missed', async () => {
+  it('should return invalid result if ST type is missing', async () => {
     delete rawStateTransition.type;
 
     const result = await validateStateTransitionStructure(rawStateTransition);
