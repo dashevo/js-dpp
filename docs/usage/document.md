@@ -8,7 +8,7 @@ This method will generate the entropy and dataContractId for the user.
 | parameters                   | type            | required  | Description                                            |  
 |------------------------------|-----------------|-----------| -------------------------------------------------------|
 | **dataContract**             | DataContract    | yes       |                                                        |
-| **ownerId**                  | string          | yes       |                                                        |
+| **ownerId**                  | Buffer          | yes       |                                                        |
 | **type**                     | string          | yes       |                                                        |
 | **data**                     | Object[={}]     | no        |                                                        |
 
@@ -28,33 +28,17 @@ By default, the provided Document will be validated.
 | **options.skipValidation**   | boolean[=false] | no       |                                                         |
 | **options.action**           | boolean         | no       |                                                         |
 
-Returns : {[Document](/primitives/Document)}
+Returns : {Promise<[Document](/primitives/Document)>}
 
-## dpp.document.createFromJson(rawDocument, options)
+## dpp.document.createFromBuffer(buffer, options)
 
-**Description**: Instantiate a new Document from JSON.   
-By default, the provided Document will be validated. 
-
-**Parameters**:
-
-| parameters                   | type            | required | Description                                             |  
-|------------------------------|-----------------|----------| --------------------------------------------------------|
-| **rawDocument**              | RawDocument     | yes      |                                                         |
-| **options**                  | Object          | no       |                                                         |
-| **options.skipValidation**   | boolean[=false] | no       |                                                         |
-| **options.action**           | boolean         | no       |                                                         |
-
-Returns : {[Document](/primitives/Document)}
-
-## dpp.document.createFromSerialized(payload, options)
-
-**Description**: Instantiate a new Data Contract from string/buffer.
+**Description**: Instantiate a new Document from buffer.   
 
 **Parameters**:
 
 | parameters                   | type            | required | Description                                             |  
 |------------------------------|-----------------|----------| --------------------------------------------------------|
-| **payload**                  | Buffer/string   | yes      |                                                         |
+| **buffer**                   | Buffer          | yes      |                                                         |
 | **options**                  | Object          | no       |                                                         |
 | **options.skipValidation**   | boolean[=false] | no       |                                                         |
 | **options.action**           | boolean         | no       |                                                         |
@@ -75,3 +59,15 @@ Returns : {Promise<[Document](/primitives/Document)>}
 | **documents.delete**         | Document[]      | no       |                                                         |
 
 Returns : {DocumentsBatchTransition}
+
+## dpp.document.validate(document)
+
+**Description**: Validate document
+
+**Parameters**:
+
+| parameters      | type                 | required | Description                                             |  
+|-----------------|----------------------|----------| --------------------------------------------------------|
+| **document**    | Document/RawDocument | yes      |                                                         |
+
+Returns : {Promise<ValidationResult>}

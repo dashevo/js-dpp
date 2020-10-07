@@ -4,11 +4,11 @@
 
 **Parameters**:
 
-| parameters                   | type            | required | Description                                             |  
-|------------------------------|-----------------|----------| --------------------------------------------------------|
-| **rawStateTransition**       | RawDataContractCreateTransition/RawDocumentsBatchTransition     | yes      |                                                         |
-| **options**                  | Object          | no       |                                                         |
-| **options.skipValidation**   | boolean[=false] | no       |                                                         |
+| parameters                   | type                                                        | required | Description                                             |  
+|------------------------------|-------------------------------------------------------------|----------| --------------------------------------------------------|
+| **rawStateTransition**       | RawDataContractCreateTransition/RawDocumentsBatchTransition | yes      |                                                         |
+| **options**                  | Object                                                      | no       |                                                         |
+| **options.skipValidation**   | boolean[=false]                                             | no       |                                                         |
 
 Returns : {RawDataContractCreateTransition|DocumentsBatchTransition}
 
@@ -18,23 +18,23 @@ Returns : {RawDataContractCreateTransition|DocumentsBatchTransition}
 
 **Parameters**:
 
-| parameters                   | type            | required | Description                                             |  
-|------------------------------|-----------------|----------| --------------------------------------------------------|
-| **rawStateTransition**       | RawDataContractCreateTransition/RawDocumentsBatchTransition     | yes      |                                                         |
-| **options**                  | Object          | no       |                                                         |
-| **options.skipValidation**   | boolean[=false] | no       |                                                         |
+| parameters                   | type                                                        | required | Description                                             |  
+|------------------------------|-------------------------------------------------------------|----------| --------------------------------------------------------|
+| **rawStateTransition**       | RawDataContractCreateTransition/RawDocumentsBatchTransition | yes      |                                                         |
+| **options**                  | Object                                                      | no       |                                                         |
+| **options.skipValidation**   | boolean[=false]                                             | no       |                                                         |
 
 Returns : {RawDataContractCreateTransition|DocumentsBatchTransition}
 
-## dpp.stateTransition.createFromSerialized(payload, options)
+## dpp.stateTransition.createFromBuffer(buffer, options)
 
-**Description**: Create State Transition from string/buffer.
+**Description**: Create State Transition from buffer.
 
 **Parameters**:
 
 | parameters                   | type            | required | Description                                             |  
 |------------------------------|-----------------|----------| --------------------------------------------------------|
-| **payload**                  | Buffer/string   | yes      |                                                         |
+| **buffer**                   | Buffer          | yes      |                                                         |
 | **options**                  | Object          | no       |                                                         |
 | **options.skipValidation**   | boolean[=false] | no       |                                                         |
 
@@ -46,9 +46,9 @@ Returns : {RawDataContractCreateTransition|DocumentsBatchTransition}
 
 **Parameters**:
 
-| parameters                   | type            | required | Description                                             |  
-|------------------------------|-----------------|----------| --------------------------------------------------------|
-| **stateTransition**          | DataContractCreateTransition/RawDataContractCreateTransition/DocumentsBatchTransition/RawDocumentsBatchTransition   | yes      |                                                         |
+| parameters                   | type                                      | required | Description                                             |  
+|------------------------------|-------------------------------------------|----------| --------------------------------------------------------|
+| **stateTransition**          | RawStateTransition/AbstractStateTransition| yes      |                                                         |
 
 Returns : {ValidationResult}
 
@@ -58,9 +58,9 @@ Returns : {ValidationResult}
 
 **Parameters**:
 
-| parameters                   | type            | required | Description                                             |  
-|------------------------------|-----------------|----------| --------------------------------------------------------|
-| **stateTransition**          | DataContractCreateTransition/RawDataContractCreateTransition/DocumentsBatchTransition/RawDocumentsBatchTransition | yes      |                                                         |
+| parameters                   | type                                       | required | Description                                             |  
+|------------------------------|--------------------------------------------|----------| --------------------------------------------------------|
+| **stateTransition**          | AbstractStateTransition/RawStateTransition | yes      |                                                         |
 
 Returns : {ValidationResult}
 
@@ -70,9 +70,9 @@ Returns : {ValidationResult}
 
 **Parameters**:
 
-| parameters                   | type            | required | Description                                             |  
-|------------------------------|-----------------|----------| --------------------------------------------------------|
-| **stateTransition**          | DataContractCreateTransition/DocumentsBatchTransition/IdentityCreateTransition/RawDataContractCreateTransition/RawDocumentsBatchTransition/RawIdentityCreateTransition/RawIdentityTopUpTransition   | yes      |                                                         |
+| parameters                   | type                      | required | Description                                             |  
+|------------------------------|---------------------------|----------| --------------------------------------------------------|
+| **stateTransition**          | AbstractStateTransition   | yes      |                                                         |
 
 Returns : {ValidationResult}
 
@@ -82,9 +82,9 @@ Returns : {ValidationResult}
 
 **Parameters**:
 
-| parameters                   | type            | required | Description                                             |  
-|------------------------------|-----------------|----------| --------------------------------------------------------|
-| **stateTransition**          | StateTransition | yes      |                                                         |
+| parameters                   | type                    | required | Description                                             |  
+|------------------------------|-------------------------|----------| --------------------------------------------------------|
+| **stateTransition**          | AbstractStateTransition | yes      |                                                         |
 
 Returns : {ValidationResult}
 

@@ -9,7 +9,7 @@
 | **options**                                               | Object             | no       |                                                        |
 | **options.stateRepository**                               | StateRepository    | no       |                                                        |
 | **options.jsonSchemaValidator**                           | JsonSchemaValidator| no       |                                                        |
-| **options.identities.skipAssetLockConfirmationValidation**| boolean            | no       |                                                        |
+| **options.identities.skipAssetLockConfirmationValidation**| boolean[=false]    | no       |                                                        |
 
 **Returns**: {DashPlatformProtocol}
 

@@ -25,15 +25,15 @@ Returns : {[Identity](/primitives/Identity)}
 
 Returns : {[Identity](/primitives/Identity)}
 
-## dpp.identity.createFromSerialized(serializedIdentity, options)
+## dpp.identity.createFromBuffer(buffer, options)
 
-**Description**: Instantiate a new Identity from string/buffer.
+**Description**: Instantiate a new Identity from buffer.
 
 **Parameters**:
 
 | parameters                   | type            | required | Description                                             |  
 |------------------------------|-----------------|----------| --------------------------------------------------------|
-| **serializedIdentity**       | Buffer/string   | yes      |                                                         |
+| **buffer**                   | Buffer          | yes      |                                                         |
 | **options**                  | Object          | no       |                                                         |
 | **options.skipValidation**   | boolean[=false] | no       |                                                         |
 
