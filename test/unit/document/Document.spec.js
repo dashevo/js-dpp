@@ -8,7 +8,7 @@ const DocumentCreateTransition = require(
   '../../../lib/document/stateTransition/documentTransition/DocumentCreateTransition',
 );
 
-const EncodedBuffer = require('../../../lib/Identifier');
+const Identifier = require('../../../lib/Identifier');
 
 describe('Document', () => {
   let lodashGetMock;
