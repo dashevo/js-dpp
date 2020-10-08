@@ -221,7 +221,6 @@ describe('executeDataTriggersFactory', () => {
     childDocument.dataContract.id = dataContractId;
     childDocument.ownerId = Identifier.from(
       getDocumentsFixture.ownerId,
-      Identifier.ENCODING.BASE58,
     );
 
     documentTransitions = getDocumentTransitionsFixture({

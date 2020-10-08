@@ -84,7 +84,7 @@ describe('DocumentFactory', () => {
       const name = 'Cutie';
 
       ownerId = bs58.decode('5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq');
-      dataContract.id = Identifier.from(contractId, Identifier.ENCODING.BASE58);
+      dataContract.id = Identifier.from(contractId);
 
       generateEntropyMock.returns(entropy);
 

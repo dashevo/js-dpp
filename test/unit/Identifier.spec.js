@@ -88,35 +88,29 @@ describe('Identifier', () => {
 
   describe('#from', () => {
     it('should create an instance using buffer', async () => {
-      const encoding = Identifier.ENCODING.BASE58;
-
-      const encodedBuffer = Identifier.from(buffer, encoding);
+      const encodedBuffer = Identifier.from(buffer);
 
       expect(encodedBuffer).to.be.an.instanceOf(Identifier);
       expect(encodedBuffer.toBuffer()).to.deep.equal(buffer);
-      expect(encodedBuffer.getEncoding()).to.equal(encoding);
     });
 
     it('should create an instance using base64 string representation', () => {
-      const encoding = Identifier.ENCODING.BASE64;
+      const encoding = 'base64';
       const data = buffer.toString('base64').replace(/=/g, '');
 
       const encodedBuffer = Identifier.from(data, encoding);
 
       expect(encodedBuffer).to.be.an.instanceOf(Identifier);
       expect(encodedBuffer.toBuffer()).to.deep.equal(buffer);
-      expect(encodedBuffer.getEncoding()).to.equal(encoding);
     });
 
     it('should create an instance using base58 string representation', () => {
-      const encoding = Identifier.ENCODING.BASE58;
       const data = bs58.encode(buffer);
 
-      const encodedBuffer = Identifier.from(data, encoding);
+      const encodedBuffer = Identifier.from(data);
 
       expect(encodedBuffer).to.be.an.instanceOf(Identifier);
       expect(encodedBuffer.toBuffer()).to.deep.equal(buffer);
-      expect(encodedBuffer.getEncoding()).to.equal(encoding);
     });
   });
 });

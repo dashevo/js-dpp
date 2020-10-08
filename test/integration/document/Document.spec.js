@@ -22,7 +22,7 @@ describe('Document', () => {
         $dataContractId: dataContract.getId().toString(),
         $id: document.getId().toString(),
         $ownerId: Identifier.from(
-          getDocumentsFixture.ownerId, Identifier.ENCODING.BASE58,
+          getDocumentsFixture.ownerId,
         ).toString(),
         $revision: 1,
         $type: 'withByteArrays',

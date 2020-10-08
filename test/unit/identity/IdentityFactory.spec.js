@@ -61,7 +61,6 @@ describe('IdentityFactory', () => {
 
       identity.id = Identifier.from(
         hash(lockedOutPoint),
-        Identifier.ENCODING.BASE58,
       );
 
       identity.setBalance(0);

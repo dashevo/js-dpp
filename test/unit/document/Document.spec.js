@@ -70,7 +70,7 @@ describe('Document', () => {
 
     rawDocument = {
       $protocolVersion: Document.PROTOCOL_VERSION,
-      $id: Identifier.from('D3AT6rBtyTqx3hXFckwtP81ncu49y5ndE7ot9JkuNSeB', Identifier.ENCODING.BASE58).toBuffer(),
+      $id: Identifier.from('D3AT6rBtyTqx3hXFckwtP81ncu49y5ndE7ot9JkuNSeB').toBuffer(),
       $type: 'test',
       $dataContractId: dataContract.getId(),
       $ownerId: ownerId,
@@ -93,7 +93,7 @@ describe('Document', () => {
       };
 
       rawDocument = {
-        $id: Identifier('id', Identifier.ENCODING.BASE58).toBuffer(),
+        $id: Identifier(Buffer.alloc(32)).toBuffer(),
         $type: 'test',
         ...data,
       };

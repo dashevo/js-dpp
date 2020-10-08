@@ -123,11 +123,9 @@ describe('IdentityTopUpTransition', () => {
         type: stateTransitionTypes.IDENTITY_TOP_UP,
         lockedOutPoint: Identifier.from(
           rawStateTransition.lockedOutPoint,
-          Identifier.ENCODING.BASE64,
         ).toString(),
         identityId: Identifier.from(
           rawStateTransition.identityId,
-          Identifier.ENCODING.BASE58,
         ).toString(),
         signature: undefined,
       });
