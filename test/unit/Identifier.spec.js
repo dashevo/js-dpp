@@ -119,20 +119,4 @@ describe('Identifier', () => {
       expect(encodedBuffer.getEncoding()).to.equal(encoding);
     });
   });
-
-
-
-  it('should throw InvalidBufferEncodingError if encoding in unknown', () => {
-    const encoding = 'myEncoding';
-
-    try {
-      // eslint-disable-next-line no-new
-      new Identifier(buffer, encoding);
-
-      expect.fail('Should throw InvalidBufferEncodingError');
-    } catch (e) {
-      expect(e).to.be.an.instanceOf(InvalidBufferEncodingError);
-      expect(e.getEncoding()).to.equal(encoding);
-    }
-  });
 });

@@ -8,7 +8,7 @@ const InvalidSignatureTypeError = require('../../../lib/stateTransition/errors/I
 const InvalidSignaturePublicKeyError = require('../../../lib/stateTransition/errors/InvalidSignaturePublicKeyError');
 const StateTransitionIsNotSignedError = require('../../../lib/stateTransition/errors/StateTransitionIsNotSignedError');
 const PublicKeyMismatchError = require('../../../lib/stateTransition/errors/PublicKeyMismatchError');
-const EncodedBuffer = require('../../../lib/Identifier');
+const Identifier = require('../../../lib/Identifier');
 
 describe('AbstractStateTransitionIdentitySigned', () => {
   let stateTransition;

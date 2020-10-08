@@ -1,5 +1,5 @@
 const Document = require('../../../lib/document/Document');
-const EncodedBuffer = require('../../../lib/Identifier');
+const Identifier = require('../../../lib/Identifier');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
