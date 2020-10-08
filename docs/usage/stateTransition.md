@@ -66,7 +66,7 @@ Returns : {ValidationResult}
 
 ## dpp.stateTransition.validateDate(stateTransition)
 
-**Description**: Validate State Transition Structure
+**Description**: Validate State Transition Date
 
 **Parameters**:
 
