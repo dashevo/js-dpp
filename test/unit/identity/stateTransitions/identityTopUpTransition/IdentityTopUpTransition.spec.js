@@ -121,12 +121,8 @@ describe('IdentityTopUpTransition', () => {
       expect(jsonStateTransition).to.deep.equal({
         protocolVersion: 0,
         type: stateTransitionTypes.IDENTITY_TOP_UP,
-        lockedOutPoint: Identifier.from(
-          rawStateTransition.lockedOutPoint,
-        ).toString(),
-        identityId: Identifier.from(
-          rawStateTransition.identityId,
-        ).toString(),
+        lockedOutPoint: rawStateTransition.lockedOutPoint.toString('base64'),
+        identityId: Identifier(rawStateTransition.identityId).toString(),
         signature: undefined,
       });
     });

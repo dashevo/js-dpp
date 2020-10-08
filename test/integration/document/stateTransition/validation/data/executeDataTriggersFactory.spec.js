@@ -1,6 +1,8 @@
 const bs58 = require('bs58');
 const AbstractDocumentTransition = require('../../../../../../lib/document/stateTransition/documentTransition/AbstractDocumentTransition');
 
+const generateRandomIdentifier = require('../../../../../../lib/test/utils/generateRandomIdentifier');
+
 const DataTrigger = require('../../../../../../lib/dataTrigger/DataTrigger');
 const DataTriggerExecutionResult = require('../../../../../../lib/dataTrigger/DataTriggerExecutionResult');
 const DataTriggerExecutionContext = require('../../../../../../lib/dataTrigger/DataTriggerExecutionContext');
@@ -162,7 +164,7 @@ describe('executeDataTriggersFactory', () => {
       .returns([throwingDataTriggerMock]);
 
     context = new DataTriggerExecutionContext(
-      null, 'id', contractMock, stateTransitionHeaderMock,
+      null, generateRandomIdentifier(), contractMock, stateTransitionHeaderMock,
     );
 
     const dataTriggerExecutionResults = await executeDataTriggers(

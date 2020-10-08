@@ -1123,6 +1123,10 @@ describe('validateDataContractFactory', () => {
           expect(error.dataPath).to.equal('.documents[\'withByteArrays\'].properties[\'byteArrayField\']');
           expect(error.keyword).to.equal('dependencies');
         });
+
+        it('should be present if contentMediaType is "application/x.dash.dpp.identifier"');
+
+        it('should be 32 bytes long if contentMediaType is "application/x.dash.dpp.identifier"');
       });
 
       describe('maxBytesLength', () => {
@@ -1167,6 +1171,10 @@ describe('validateDataContractFactory', () => {
           expect(error.dataPath).to.equal('.documents[\'withByteArrays\'].properties[\'byteArrayField\']');
           expect(error.keyword).to.equal('dependencies');
         });
+
+        it('should be present if contentMediaType is "application/x.dash.dpp.identifier"');
+
+        it('should be 32 bytes long if contentMediaType is "application/x.dash.dpp.identifier"');
       });
     });
   });

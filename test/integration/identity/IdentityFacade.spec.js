@@ -47,7 +47,7 @@ describe('IdentityFacade', () => {
       identity.setBalance(0);
 
       const publicKeys = identity.getPublicKeys().map(
-        (identityPublicKey) => new PublicKey(identityPublicKey.getData().toBuffer()),
+        (identityPublicKey) => new PublicKey(identityPublicKey.getData()),
       );
 
       const result = dpp.identity.create(
@@ -99,7 +99,7 @@ describe('IdentityFacade', () => {
 
       expect(stateTransition).to.be.instanceOf(IdentityCreateTransition);
       expect(stateTransition.getPublicKeys()).to.equal(identity.getPublicKeys());
-      expect(stateTransition.getLockedOutPoint().toBuffer()).to.deep.equal(lockedOutPoint);
+      expect(stateTransition.getLockedOutPoint()).to.deep.equal(lockedOutPoint);
     });
   });
 
@@ -114,7 +114,7 @@ describe('IdentityFacade', () => {
 
       expect(stateTransition).to.be.instanceOf(IdentityTopUpTransition);
       expect(stateTransition.getIdentityId()).to.be.deep.equal(identity.getId());
-      expect(stateTransition.getLockedOutPoint().toBuffer()).to.deep.equal(lockedOutPoint);
+      expect(stateTransition.getLockedOutPoint()).to.deep.equal(lockedOutPoint);
     });
   });
 });

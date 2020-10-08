@@ -23,7 +23,7 @@ const InvalidInitialRevisionError = require('../../../lib/document/errors/Invali
 const ConsensusError = require('../../../lib/errors/ConsensusError');
 const SerializedObjectParsingError = require('../../../lib/errors/SerializedObjectParsingError');
 
-const generateRandomId = require('../../../lib/test/utils/generateRandomId');
+const generateRandomIdentifier = require('../../../lib/test/utils/generateRandomIdentifier');
 
 describe('DocumentFactory', () => {
   let decodeMock;
@@ -285,7 +285,7 @@ describe('DocumentFactory', () => {
     });
 
     it('should throw and error if documents have mixed owner ids', () => {
-      documents[0].ownerId = generateRandomId().toBuffer();
+      documents[0].ownerId = generateRandomIdentifier().toBuffer();
       try {
         factory.createStateTransition({
           create: documents,

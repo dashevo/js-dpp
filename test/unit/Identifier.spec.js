@@ -79,9 +79,9 @@ describe('Identifier', () => {
     });
 
     it('should return a string encoded with specified encoding', () => {
-      const encodedBuffer = new Identifier(buffer);
+      const identifier = new Identifier(buffer);
 
-      const string = encodedBuffer.toString('base64');
+      const string = identifier.toString('base64');
 
       expect(string).to.equal(buffer.toString('base64'));
     });
@@ -104,10 +104,10 @@ describe('Identifier', () => {
     it('should create an instance with a base58 string', () => {
       const string = bs58.encode(buffer);
 
-      const encodedBuffer = Identifier.from(string);
+      const identifier = Identifier.from(string);
 
-      expect(encodedBuffer).to.be.an.instanceOf(Identifier);
-      expect(encodedBuffer).to.deep.equal(buffer);
+      expect(identifier).to.be.an.instanceOf(Identifier);
+      expect(identifier).to.deep.equal(buffer);
     });
 
     it('should create an instance with a base64 string', () => {
