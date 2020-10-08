@@ -1,5 +1,5 @@
 const Document = require('../../../lib/document/Document');
-const EncodedBuffer = require('../../../lib/util/encoding/EncodedBuffer');
+const EncodedBuffer = require('../../../lib/Identifier');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
@@ -21,8 +21,8 @@ describe('Document', () => {
         $protocolVersion: document.getProtocolVersion(),
         $dataContractId: dataContract.getId().toString(),
         $id: document.getId().toString(),
-        $ownerId: EncodedBuffer.from(
-          getDocumentsFixture.ownerId, EncodedBuffer.ENCODING.BASE58,
+        $ownerId: Identifier.from(
+          getDocumentsFixture.ownerId, Identifier.ENCODING.BASE58,
         ).toString(),
         $revision: 1,
         $type: 'withByteArrays',
@@ -59,7 +59,7 @@ describe('Document', () => {
         byteArrayField: document.getData().byteArrayField,
       });
 
-      expect(result.byteArrayField).to.be.an.instanceOf(EncodedBuffer);
+      expect(result.byteArrayField).to.be.an.instanceOf(Identifier);
     });
   });
 

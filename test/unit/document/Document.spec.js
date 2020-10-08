@@ -8,7 +8,7 @@ const DocumentCreateTransition = require(
   '../../../lib/document/stateTransition/documentTransition/DocumentCreateTransition',
 );
 
-const EncodedBuffer = require('../../../lib/util/encoding/EncodedBuffer');
+const EncodedBuffer = require('../../../lib/Identifier');
 
 describe('Document', () => {
   let lodashGetMock;
@@ -70,7 +70,7 @@ describe('Document', () => {
 
     rawDocument = {
       $protocolVersion: Document.PROTOCOL_VERSION,
-      $id: EncodedBuffer.from('D3AT6rBtyTqx3hXFckwtP81ncu49y5ndE7ot9JkuNSeB', EncodedBuffer.ENCODING.BASE58).toBuffer(),
+      $id: Identifier.from('D3AT6rBtyTqx3hXFckwtP81ncu49y5ndE7ot9JkuNSeB', Identifier.ENCODING.BASE58).toBuffer(),
       $type: 'test',
       $dataContractId: dataContract.getId(),
       $ownerId: ownerId,
@@ -93,7 +93,7 @@ describe('Document', () => {
       };
 
       rawDocument = {
-        $id: EncodedBuffer('id', EncodedBuffer.ENCODING.BASE58).toBuffer(),
+        $id: Identifier('id', Identifier.ENCODING.BASE58).toBuffer(),
         $type: 'test',
         ...data,
       };
@@ -335,7 +335,7 @@ describe('Document', () => {
 
       expect(result).to.equal(document);
 
-      const valueToSet = new EncodedBuffer(buffer, EncodedBuffer.ENCODING.BASE64);
+      const valueToSet = new Identifier(buffer, Identifier.ENCODING.BASE64);
 
       expect(lodashSetMock).to.have.been.calledOnceWith(document.data, path, valueToSet);
     });
@@ -350,7 +350,7 @@ describe('Document', () => {
 
       expect(result).to.equal(document);
 
-      const valueToSet = new EncodedBuffer(value.byteArrayProperty, 'base64');
+      const valueToSet = new Identifier(value.byteArrayProperty, 'base64');
 
       expect(lodashSetMock).to.have.been.calledTwice();
       expect(lodashSetMock.getCall(0).args).to.have.deep.members(

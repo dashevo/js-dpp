@@ -12,7 +12,7 @@ const getDocumentTransitionsFixture = require('../../../lib/test/fixtures/getDoc
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
-const EncodedBuffer = require('../../../lib/util/encoding/EncodedBuffer');
+const EncodedBuffer = require('../../../lib/Identifier');
 
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 const InvalidDocumentError = require('../../../lib/document/errors/InvalidDocumentError');
@@ -84,7 +84,7 @@ describe('DocumentFactory', () => {
       const name = 'Cutie';
 
       ownerId = bs58.decode('5zcXZpTLWFwZjKjq3ME5KVavtZa9YUaZESVzrndehBhq');
-      dataContract.id = EncodedBuffer.from(contractId, EncodedBuffer.ENCODING.BASE58);
+      dataContract.id = Identifier.from(contractId, Identifier.ENCODING.BASE58);
 
       generateMock.returns(entropy);
 

@@ -16,7 +16,7 @@ const dpnsUpdateDomainDataTrigger = require('../../../../../../lib/dataTrigger/d
 
 const executeDataTriggersFactory = require('../../../../../../lib/document/stateTransition/validation/data/executeDataTriggersFactory');
 
-const EncodedBuffer = require('../../../../../../lib/util/encoding/EncodedBuffer');
+const EncodedBuffer = require('../../../../../../lib/Identifier');
 
 describe('executeDataTriggersFactory', () => {
   let childDocument;
@@ -219,9 +219,9 @@ describe('executeDataTriggersFactory', () => {
     const dataContractId = getDataContractFixture().getId();
     childDocument.dataContractId = dataContractId;
     childDocument.dataContract.id = dataContractId;
-    childDocument.ownerId = EncodedBuffer.from(
+    childDocument.ownerId = Identifier.from(
       getDocumentsFixture.ownerId,
-      EncodedBuffer.ENCODING.BASE58,
+      Identifier.ENCODING.BASE58,
     );
 
     documentTransitions = getDocumentTransitionsFixture({
