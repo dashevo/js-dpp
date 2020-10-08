@@ -14,6 +14,7 @@ describe('Identifier', () => {
       const identifier = new Identifier(buffer);
 
       expect(identifier).to.be.deep.equal(buffer);
+      expect(identifier).to.be.an.instanceOf(Identifier);
     });
 
     it('should throw error if first argument is not Buffer', () => {
@@ -31,11 +32,9 @@ describe('Identifier', () => {
 
   describe('#toBuffer', () => {
     it('should return a new normal Buffer', () => {
-      const identifier = new Identifier(buffer, Identifier.ENCODING.BASE64);
+      const identifier = new Identifier(buffer);
 
-      const data = identifier.toBuffer();
-
-      expect(data).to.deep.equal(buffer);
+      expect(identifier.toBuffer()).to.deep.equal(buffer);
     });
   });
 
@@ -70,11 +69,13 @@ describe('Identifier', () => {
 
   describe('#toString', () => {
     it('should return a base58 encoded string by default', () => {
+      const base58string = bs58.encode(buffer);
+
       const identifier = new Identifier(buffer);
 
       const string = identifier.toString();
 
-      expect(string).to.equal(buffer.toString('base64').replace(/=/g, ''));
+      expect(string).to.equal(base58string);
     });
 
     it('should return a string encoded with specified encoding', () => {
@@ -87,30 +88,35 @@ describe('Identifier', () => {
   });
 
   describe('#from', () => {
-    it('should create an instance using buffer', async () => {
-      const encodedBuffer = Identifier.from(buffer);
+    it('should create an instance from Buffer', async () => {
+      const identifier = Identifier.from(buffer);
 
-      expect(encodedBuffer).to.be.an.instanceOf(Identifier);
-      expect(encodedBuffer.toBuffer()).to.deep.equal(buffer);
+      expect(identifier).to.be.an.instanceOf(Identifier);
+      expect(identifier).to.deep.equal(buffer);
     });
 
-    it('should create an instance using base64 string representation', () => {
-      const encoding = 'base64';
-      const data = buffer.toString('base64').replace(/=/g, '');
-
-      const encodedBuffer = Identifier.from(data, encoding);
-
-      expect(encodedBuffer).to.be.an.instanceOf(Identifier);
-      expect(encodedBuffer.toBuffer()).to.deep.equal(buffer);
+    it('should throw error if buffer is passed among with encoding', async () => {
+      expect(
+        () => Identifier.from(buffer, 'base64'),
+      ).to.throw(TypeError, 'encoding accepted only with type string');
     });
 
-    it('should create an instance using base58 string representation', () => {
-      const data = bs58.encode(buffer);
+    it('should create an instance with a base58 string', () => {
+      const string = bs58.encode(buffer);
 
-      const encodedBuffer = Identifier.from(data);
+      const encodedBuffer = Identifier.from(string);
 
       expect(encodedBuffer).to.be.an.instanceOf(Identifier);
-      expect(encodedBuffer.toBuffer()).to.deep.equal(buffer);
+      expect(encodedBuffer).to.deep.equal(buffer);
+    });
+
+    it('should create an instance with a base64 string', () => {
+      const string = buffer.toString('base64');
+
+      const identifier = Identifier.from(string, 'base64');
+
+      expect(identifier).to.be.an.instanceOf(Identifier);
+      expect(identifier).to.deep.equal(buffer);
     });
   });
 });
