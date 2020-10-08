@@ -14,6 +14,7 @@ describe('Identifier', () => {
       const identifier = new Identifier(buffer);
 
       expect(identifier).to.be.deep.equal(buffer);
+      expect(identifier).to.be.an.instanceOf(Identifier);
     });
 
     it('should throw error if first argument is not Buffer', () => {
@@ -87,21 +88,27 @@ describe('Identifier', () => {
   });
 
   describe('#from', () => {
-    it('should create an instance using buffer', async () => {
-      const encoding = Identifier.ENCODING.BASE58;
+    it('should create an instance from Buffer', async () => {
+      const identifier = Identifier.from(buffer);
 
-      const encodedBuffer = Identifier.from(buffer, encoding);
+      expect(identifier).to.be.an.instanceOf(Identifier);
+      expect(identifier.toBuffer()).to.deep.equal(buffer);
+      expect(identifier.getEncoding()).to.equal(encoding);
+    });
 
-      expect(encodedBuffer).to.be.an.instanceOf(Identifier);
-      expect(encodedBuffer.toBuffer()).to.deep.equal(buffer);
-      expect(encodedBuffer.getEncoding()).to.equal(encoding);
+    it('should throw error an instance from Buffer', async () => {
+      const identifier = Identifier.from(buffer);
+
+      expect(identifier).to.be.an.instanceOf(Identifier);
+      expect(identifier.toBuffer()).to.deep.equal(buffer);
+      expect(identifier.getEncoding()).to.equal(encoding);
     });
 
     it('should create an instance using base64 string representation', () => {
       const encoding = Identifier.ENCODING.BASE64;
       const data = buffer.toString('base64').replace(/=/g, '');
 
-      const encodedBuffer = Identifier.from(data, encoding);
+      const encodedBuffer = Identifier.from(data);
 
       expect(encodedBuffer).to.be.an.instanceOf(Identifier);
       expect(encodedBuffer.toBuffer()).to.deep.equal(buffer);
