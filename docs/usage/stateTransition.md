@@ -78,7 +78,7 @@ Returns : {ValidationResult}
 
 ## dpp.stateTransition.validateFee(stateTransition)
 
-**Description**: Validate State Transition Structure
+**Description**: Validate State Transition Fee
 
 **Parameters**:
 
