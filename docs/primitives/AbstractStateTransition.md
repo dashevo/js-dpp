@@ -91,7 +91,7 @@
 |--------------------------|------------------------|--------------------| -------------------------------- |
 | **options**              | Object                 | no                 |                                  |
 | **options.skipSignature**| Boolean[=false]        | no                 |                                  |
-| **options.keepIdentifiers**| Boolean[=false]        | no                 |                                  |
+| **options.skipIdentifiersConversion**| Boolean[=false]        | no                 |                                  |
 
 **Returns**: {RawStateTransition}
 

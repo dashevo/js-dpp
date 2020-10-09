@@ -46,7 +46,7 @@ describe('Document', () => {
     });
 
     it('should return raw document with Identifiers', () => {
-      const result = document.toObject({ keepIdentifiers: true });
+      const result = document.toObject({ skipIdentifiersConversion: true });
 
       expect(result).to.deep.equal({
         $protocolVersion: document.getProtocolVersion(),

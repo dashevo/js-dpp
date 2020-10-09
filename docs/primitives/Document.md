@@ -221,7 +221,7 @@
 | parameters                | type                   | required           | Description                      |  
 |---------------------------|------------------------|--------------------| -------------------------------- |
 | **options**               | Object                 | no                 |                                  |
-| **options.keepIdentifiers** | boolean[=false]        | no                 |                                  |
+| **options.skipIdentifiersConversion** | boolean[=false]        | no                 |                                  |
 
 **Returns**: {RawDocument}
 
