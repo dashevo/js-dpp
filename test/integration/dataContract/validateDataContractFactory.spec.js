@@ -1124,9 +1124,31 @@ describe('validateDataContractFactory', () => {
           expect(error.keyword).to.equal('dependencies');
         });
 
-        it('should be present if contentMediaType is "application/x.dash.dpp.identifier"');
+        it('should be present if contentMediaType is "application/x.dash.dpp.identifier"', async () => {
+          delete rawDataContract.documents.withByteArrays.properties.identifierField.minBytesLength;
 
-        it('should be 32 bytes long if contentMediaType is "application/x.dash.dpp.identifier"');
+          const result = await validateDataContract(rawDataContract);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.documents[\'withByteArrays\'].properties[\'identifierField\']');
+          expect(error.keyword).to.equal('required');
+        });
+
+        it('should be 32 bytes long if contentMediaType is "application/x.dash.dpp.identifier"', async () => {
+          rawDataContract.documents.withByteArrays.properties.identifierField.minBytesLength = 31;
+
+          const result = await validateDataContract(rawDataContract);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.documents[\'withByteArrays\'].properties[\'identifierField\'].minBytesLength');
+          expect(error.keyword).to.equal('const');
+        });
       });
 
       describe('maxBytesLength', () => {
@@ -1172,9 +1194,31 @@ describe('validateDataContractFactory', () => {
           expect(error.keyword).to.equal('dependencies');
         });
 
-        it('should be present if contentMediaType is "application/x.dash.dpp.identifier"');
+        it('should be present if contentMediaType is "application/x.dash.dpp.identifier"', async () => {
+          delete rawDataContract.documents.withByteArrays.properties.identifierField.maxBytesLength;
 
-        it('should be 32 bytes long if contentMediaType is "application/x.dash.dpp.identifier"');
+          const result = await validateDataContract(rawDataContract);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.documents[\'withByteArrays\'].properties[\'identifierField\']');
+          expect(error.keyword).to.equal('required');
+        });
+
+        it('should be 32 bytes long if contentMediaType is "application/x.dash.dpp.identifier"', async () => {
+          rawDataContract.documents.withByteArrays.properties.identifierField.maxBytesLength = 31;
+
+          const result = await validateDataContract(rawDataContract);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.dataPath).to.equal('.documents[\'withByteArrays\'].properties[\'identifierField\'].maxBytesLength');
+          expect(error.keyword).to.equal('const');
+        });
       });
     });
   });
