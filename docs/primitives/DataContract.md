@@ -156,7 +156,7 @@
 
 **Returns**: {Object<string, Object>} - definitions
 
-## .getEncodedProperties(type)
+## .getBinaryProperties(type)
 
 **Description**: Get properties with `contentEncoding` constraint
 

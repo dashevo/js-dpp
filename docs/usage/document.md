@@ -1,7 +1,8 @@
 ## dpp.document.create(dataContract, ownerId, type, data = {})
 
 **Description**: Instantiate a new Document.   
-This method will generate the entropy and dataContractId for the user. 
+This method will generate the entropy and dataContractId for the user.   
+Will also validate document upon creation.
 
 **Parameters**:
 
