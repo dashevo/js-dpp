@@ -29,7 +29,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {EncodedBuffer}
+**Returns**: {Identifier}
 
 ## .getOwnerId()
 
@@ -37,7 +37,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {EncodedBuffer}
+**Returns**: {Identifier}
 
 ## .getJsonSchemaId()
 
@@ -223,4 +223,4 @@
 
 **Parameters**: None.  
 
-**Returns**: {EncodedBuffer}
+**Returns**: {Buffer}

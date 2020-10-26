@@ -27,7 +27,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {EncodedBuffer|null}
+**Returns**: {Buuffer}
 
 ## .setSignature(signature)
 
@@ -87,10 +87,10 @@
 
 **Parameters**: 
 
-| parameters               | type                   | required           | Description                      |  
-|--------------------------|------------------------|--------------------| -------------------------------- |
-| **options**              | Object                 | no                 |                                  |
-| **options.skipSignature**| Boolean[=false]        | no                 |                                  |
+| parameters                           | type                   | required           | Description                      |  
+|--------------------------------------|------------------------|--------------------| -------------------------------- |
+| **options**                          | Object                 | no                 |                                  |
+| **options.skipSignature**            | Boolean[=false]        | no                 |                                  |
 | **options.skipIdentifiersConversion**| Boolean[=false]        | no                 |                                  |
 
 **Returns**: {RawStateTransition}

@@ -28,7 +28,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {Buffer}
+**Returns**: {Identifier}
 
 ## .setPublicKeys(publicKeys)
 
@@ -124,7 +124,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {EncodedBuffer}
+**Returns**: {Buffer}
 
 ## .setRevision(revision)
 
