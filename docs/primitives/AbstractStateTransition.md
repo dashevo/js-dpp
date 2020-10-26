@@ -27,7 +27,7 @@
 
 **Parameters**: None.  
 
-**Returns**: {Buuffer}
+**Returns**: {Buffer}
 
 ## .setSignature(signature)
 
