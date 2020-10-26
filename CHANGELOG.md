@@ -1,4 +1,4 @@
-# [0.16.0](https://github.com/dashevo/js-dpp/compare/v0.16.0-dev.10...v0.16.0) (2020-10-26)
+# [0.16.0](https://github.com/dashevo/js-dpp/compare/v0.15.0...v0.16.0) (2020-10-26)
 
 
 ### Features
