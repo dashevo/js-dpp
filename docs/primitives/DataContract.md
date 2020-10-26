@@ -199,11 +199,11 @@
 
 ## .hash()
 
-**Description**: Returns hex string with Data Contract hash
+**Description**: Returns Data Contract hash
 
 **Parameters**: None.  
 
-**Returns**: {string}
+**Returns**: {Buffer}
 
 ## .setEntropy(entropy)
 

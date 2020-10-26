@@ -118,8 +118,8 @@
 
 ## .hash()
 
-**Description**: Returns hex string hash
+**Description**: Returns state transition hash
 
 **Parameters**: None.  
 
-**Returns**: {string}
+**Returns**: {Buffer}

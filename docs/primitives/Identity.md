@@ -172,8 +172,8 @@
 
 ## .hash()
 
-**Description**: Returns hex string with Identity hash
+**Description**: Returns Identity hash
 
 **Parameters**: None.  
 
-**Returns**: {string}
+**Returns**: {Buffer}

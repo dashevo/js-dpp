@@ -235,8 +235,8 @@
 
 ## .hash()
 
-**Description**: Returns hex string with Document hash
+**Description**: Returns Document hash
 
 **Parameters**: None.  
 
-**Returns**: {string}
+**Returns**: {Buffer}
