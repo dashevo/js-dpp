@@ -287,6 +287,5 @@ describe('validateAssetLockStructureFactory', () => {
 
     expect(args[0]).to.be.deep.equal(rawAssetLock);
     expect(args[1].toBuffer()).to.be.deep.equal(transaction.toBuffer());
-    expect(args[2]).to.be.deep.equal(rawAssetLock.outputIndex);
   });
 });
