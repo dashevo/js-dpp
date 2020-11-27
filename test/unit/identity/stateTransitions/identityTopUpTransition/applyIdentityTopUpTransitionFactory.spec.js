@@ -20,6 +20,7 @@ describe('applyIdentityTopUpTransitionFactory', () => {
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
     stateRepositoryMock.fetchIdentity.resolves(identity);
+    stateRepositoryMock.storeAssetLockTransactionOutPoint.resolves(identity);
 
     stateTransition = getIdentityTopUpTransitionFixture();
 
@@ -43,5 +44,12 @@ describe('applyIdentityTopUpTransitionFactory', () => {
     expect(stateRepositoryMock.storeIdentity).to.have.been.calledOnceWithExactly(
       identity,
     );
+
+    const assetLock = stateTransition.getAssetLock();
+
+    expect(stateRepositoryMock.storeAssetLockTransactionOutPoint).to.have.been
+      .calledOnceWithExactly(
+        assetLock.getTransaction().getOutPointBuffer(assetLock.getOutputIndex()),
+      );
   });
 });
