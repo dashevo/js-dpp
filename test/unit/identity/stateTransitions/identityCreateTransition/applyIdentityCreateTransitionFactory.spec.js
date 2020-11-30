@@ -50,5 +50,12 @@ describe('applyIdentityCreateTransitionFactory', () => {
       identity.getId(),
       publicKeyHashes,
     );
+
+    const assetLock = stateTransition.getAssetLock();
+
+    expect(stateRepositoryMock.storeAssetLockTransactionOutPoint).to.have.been
+      .calledOnceWithExactly(
+        assetLock.getTransaction().getOutPointBuffer(assetLock.getOutputIndex()),
+      );
   });
 });

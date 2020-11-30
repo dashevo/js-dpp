@@ -20,7 +20,6 @@ describe('applyIdentityTopUpTransitionFactory', () => {
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
     stateRepositoryMock.fetchIdentity.resolves(identity);
-    stateRepositoryMock.storeAssetLockTransactionOutPoint.resolves(identity);
 
     stateTransition = getIdentityTopUpTransitionFixture();
 
