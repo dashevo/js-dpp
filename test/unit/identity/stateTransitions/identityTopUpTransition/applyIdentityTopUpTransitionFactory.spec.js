@@ -44,11 +44,9 @@ describe('applyIdentityTopUpTransitionFactory', () => {
       identity,
     );
 
-    const assetLock = stateTransition.getAssetLock();
-
     expect(stateRepositoryMock.storeAssetLockTransactionOutPoint).to.have.been
       .calledOnceWithExactly(
-        assetLock.getTransaction().getOutPointBuffer(assetLock.getOutputIndex()),
+        stateTransition.getAssetLock().getOutPoint(),
       );
   });
 });
