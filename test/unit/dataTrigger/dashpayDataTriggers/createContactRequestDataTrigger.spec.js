@@ -67,7 +67,7 @@ describe('createContactRequestDataTrigger', () => {
   });
 
   it('should fail with out of window error', async () => {
-    contactRequestDocument.data.coreHeightCreatedAt = 42 - 6;
+    contactRequestDocument.data.coreHeightCreatedAt = 10;
 
     [documentTransition] = getDocumentTransitionFixture({
       create: [contactRequestDocument],
