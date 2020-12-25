@@ -211,6 +211,17 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(stateRepositoryMock.fetchSMLStore).to.be.calledOnceWithExactly();
       expect(instantLockMock.verify).to.be.calledOnceWithExactly(smlStore);
     });
+
+    it('should have valid signature (in case of error)', async () => {
+      instantLockMock.verify.throws(new Error());
+
+      const result = await validateInstantAssetLockProofStructure(rawProof, transaction);
+
+      expectValidationError(result, InvalidIdentityAssetLockProofSignatureError);
+
+      expect(stateRepositoryMock.fetchSMLStore).to.be.calledOnceWithExactly();
+      expect(instantLockMock.verify).to.be.calledOnceWithExactly(smlStore);
+    });
   });
 
   it('should skip signature verification if skipAssetLockProofSignatureVerification passed', async () => {
