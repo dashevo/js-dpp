@@ -118,4 +118,14 @@ describe('DocumentsBatchTransition', () => {
       expect(result).to.deep.equal(getDocumentsFixture.ownerId);
     });
   });
+
+  describe('#getModifiedDataIds', () => {
+    it('should return ids of affected documents', () => {
+      const expectedIds = documents.map((doc) => doc.getId());
+      const result = stateTransition.getModifiedDataIds();
+
+      expect(result.length).to.be.equal(10);
+      expect(result).to.be.deep.equal(expectedIds);
+    });
+  });
 });
