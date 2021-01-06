@@ -128,4 +128,22 @@ describe('DocumentsBatchTransition', () => {
       expect(result).to.be.deep.equal(expectedIds);
     });
   });
+
+  describe('#isDataContractStateTransition', () => {
+    it('should return false', () => {
+      expect(stateTransition.isDataContractStateTransition()).to.be.false();
+    });
+  });
+
+  describe('#isDocumentStateTransition', () => {
+    it('should return true', () => {
+      expect(stateTransition.isDocumentStateTransition()).to.be.true();
+    });
+  });
+
+  describe('#isIdentityStateTransition', () => {
+    it('should return false', () => {
+      expect(stateTransition.isIdentityStateTransition()).to.be.false();
+    });
+  });
 });

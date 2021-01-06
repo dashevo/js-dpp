@@ -121,4 +121,22 @@ describe('DataContractCreateTransition', () => {
       expect(contractId).to.be.deep.equal(dataContract.getId());
     });
   });
+
+  describe('#isDataContractStateTransition', () => {
+    it('should return true', () => {
+      expect(stateTransition.isDataContractStateTransition()).to.be.true();
+    });
+  });
+
+  describe('#isDocumentStateTransition', () => {
+    it('should return false', () => {
+      expect(stateTransition.isDocumentStateTransition()).to.be.false();
+    });
+  });
+
+  describe('#isIdentityStateTransition', () => {
+    it('should return false', () => {
+      expect(stateTransition.isIdentityStateTransition()).to.be.false();
+    });
+  });
 });

@@ -172,4 +172,22 @@ describe('IdentityCreateTransition', () => {
       );
     });
   });
+
+  describe('#isDataContractStateTransition', () => {
+    it('should return false', () => {
+      expect(stateTransition.isDataContractStateTransition()).to.be.false();
+    });
+  });
+
+  describe('#isDocumentStateTransition', () => {
+    it('should return false', () => {
+      expect(stateTransition.isDocumentStateTransition()).to.be.false();
+    });
+  });
+
+  describe('#isIdentityStateTransition', () => {
+    it('should return true', () => {
+      expect(stateTransition.isIdentityStateTransition()).to.be.true();
+    });
+  });
 });
