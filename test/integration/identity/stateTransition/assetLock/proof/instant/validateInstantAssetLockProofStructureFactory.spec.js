@@ -56,12 +56,9 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       },
     );
 
-    const skipAssetLockProofSignatureVerification = false;
-
     validateInstantAssetLockProofStructure = validateInstantAssetLockProofStructureFactory(
       jsonSchemaValidator,
       stateRepositoryMock,
-      skipAssetLockProofSignatureVerification,
     );
   });
 
@@ -207,24 +204,6 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
 
       expect(stateRepositoryMock.verifyInstantLock).to.be.calledOnce();
     });
-  });
-
-  it('should skip signature verification if skipAssetLockProofSignatureVerification passed', async () => {
-    const skipAssetLockProofSignatureVerification = true;
-
-    validateInstantAssetLockProofStructure = validateInstantAssetLockProofStructureFactory(
-      jsonSchemaValidator,
-      stateRepositoryMock,
-      skipAssetLockProofSignatureVerification,
-    );
-
-    const result = await validateInstantAssetLockProofStructure(rawProof, transaction);
-
-    expect(result).to.be.an.instanceOf(ValidationResult);
-    expect(result.isValid()).to.be.true();
-
-    expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-    expect(instantLockMock.verify).to.not.be.called();
   });
 
   it('should return valid result', async () => {
