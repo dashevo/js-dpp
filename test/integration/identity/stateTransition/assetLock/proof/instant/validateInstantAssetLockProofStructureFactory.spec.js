@@ -22,7 +22,6 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
   let InstantLockClassMock;
   let instantLockMock;
   let validateInstantAssetLockProofStructure;
-  let smlStore;
   let jsonSchemaValidator;
   let validateInstantAssetLockProofStructureFactory;
 
@@ -37,9 +36,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
 
-    smlStore = {};
-
-    stateRepositoryMock.fetchSMLStore.resolves(smlStore);
+    stateRepositoryMock.verifyInstantLock.resolves(true);
 
     instantLockMock = {
       txid: assetLock.getTransaction().id,
@@ -82,7 +79,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('required');
       expect(error.params.missingProperty).to.equal('type');
 
-      expect(stateRepositoryMock.fetchSMLStore).to.not.be.called();
+      expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
     });
 
@@ -98,7 +95,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.dataPath).to.equal('.type');
       expect(error.keyword).to.equal('const');
 
-      expect(stateRepositoryMock.fetchSMLStore).to.not.be.called();
+      expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
     });
   });
@@ -117,7 +114,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('required');
       expect(error.params.missingProperty).to.equal('instantLock');
 
-      expect(stateRepositoryMock.fetchSMLStore).to.not.be.called();
+      expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
     });
 
@@ -135,7 +132,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
 
       expect(byteArrayError.keyword).to.equal('byteArray');
 
-      expect(stateRepositoryMock.fetchSMLStore).to.not.be.called();
+      expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
     });
 
@@ -151,7 +148,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.dataPath).to.equal('.instantLock');
       expect(error.keyword).to.equal('minItems');
 
-      expect(stateRepositoryMock.fetchSMLStore).to.not.be.called();
+      expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
     });
 
@@ -167,7 +164,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.dataPath).to.equal('.instantLock');
       expect(error.keyword).to.equal('maxItems');
 
-      expect(stateRepositoryMock.fetchSMLStore).to.not.be.called();
+      expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
     });
 
@@ -186,7 +183,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
 
       expect(error.message).to.equal(`Invalid asset lock proof: ${instantLockError.message}`);
 
-      expect(stateRepositoryMock.fetchSMLStore).to.not.be.called();
+      expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
     });
 
@@ -197,19 +194,18 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
 
       expectValidationError(result, IdentityAssetLockProofMismatchError);
 
-      expect(stateRepositoryMock.fetchSMLStore).to.not.be.called();
+      expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
     });
 
     it('should have valid signature', async () => {
-      instantLockMock.verify.resolves(false);
+      stateRepositoryMock.verifyInstantLock.resolves(false);
 
       const result = await validateInstantAssetLockProofStructure(rawProof, transaction);
 
       expectValidationError(result, InvalidIdentityAssetLockProofSignatureError);
 
-      expect(stateRepositoryMock.fetchSMLStore).to.be.calledOnceWithExactly();
-      expect(instantLockMock.verify).to.be.calledOnceWithExactly(smlStore);
+      expect(stateRepositoryMock.verifyInstantLock).to.be.calledOnce();
     });
   });
 
@@ -227,7 +223,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
 
-    expect(stateRepositoryMock.fetchSMLStore).to.not.be.called();
+    expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
     expect(instantLockMock.verify).to.not.be.called();
   });
 
@@ -237,7 +233,6 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
 
-    expect(stateRepositoryMock.fetchSMLStore).to.be.calledOnceWithExactly();
-    expect(instantLockMock.verify).to.be.calledOnceWithExactly(smlStore);
+    expect(stateRepositoryMock.verifyInstantLock).to.be.calledOnce();
   });
 });
