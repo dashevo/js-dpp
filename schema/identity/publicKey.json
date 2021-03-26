@@ -36,6 +36,7 @@
       "then": {
         "properties": {
           "data": {
+            "type": "array",
             "byteArray": true,
             "minItems": 33,
             "maxItems": 33
@@ -54,6 +55,7 @@
       "then": {
         "properties": {
           "data": {
+            "type": "array",
             "byteArray": true,
             "minItems": 48,
             "maxItems": 48
