@@ -1,4 +1,4 @@
-const Ajv = require('ajv');
+const Ajv = require('ajv').default;
 
 const addByteArrayKeyword = require('../../../../../lib/ajv/keywords/byteArray/addByteArrayKeyword');
 const byteArray = require('../../../../../lib/ajv/keywords/byteArray/byteArray');
@@ -100,7 +100,7 @@ describe('addByteArrayKeyword', () => {
         const [error, byteArrayError] = ajv.errors;
 
         expect(error.keyword).to.equal('type');
-        expect(error.schemaPath).to.equal('#/items/type');
+        expect(error.schemaPath).to.equal('#/byteArray/items/type');
         expect(error.message).to.equal('should be integer');
 
         expect(byteArrayError.keyword).to.equal('byteArray');
@@ -119,7 +119,7 @@ describe('addByteArrayKeyword', () => {
         const [error, byteArrayError] = ajv.errors;
 
         expect(error.keyword).to.equal('minimum');
-        expect(error.schemaPath).to.equal('#/items/minimum');
+        expect(error.schemaPath).to.equal('#/byteArray/items/minimum');
         expect(error.message).to.equal('should be >= 0');
 
         expect(byteArrayError.keyword).to.equal('byteArray');
@@ -138,7 +138,7 @@ describe('addByteArrayKeyword', () => {
         const [error, byteArrayError] = ajv.errors;
 
         expect(error.keyword).to.equal('maximum');
-        expect(error.schemaPath).to.equal('#/items/maximum');
+        expect(error.schemaPath).to.equal('#/byteArray/items/maximum');
         expect(error.message).to.equal('should be <= 255');
 
         expect(byteArrayError.keyword).to.equal('byteArray');

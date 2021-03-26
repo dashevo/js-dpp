@@ -85,7 +85,7 @@ describe('validateIdentityTopUpTransitionStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.protocolVersion');
+      expect(error.dataPath).to.equal('/protocolVersion');
       expect(error.keyword).to.equal('type');
     });
 
@@ -99,7 +99,7 @@ describe('validateIdentityTopUpTransitionStructureFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('minimum');
-      expect(error.dataPath).to.equal('.protocolVersion');
+      expect(error.dataPath).to.equal('/protocolVersion');
     });
 
     it('should not be greater than current version (0)', async () => {
@@ -112,7 +112,7 @@ describe('validateIdentityTopUpTransitionStructureFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.keyword).to.equal('maximum');
-      expect(error.dataPath).to.equal('.protocolVersion');
+      expect(error.dataPath).to.equal('/protocolVersion');
     });
   });
 
@@ -140,7 +140,7 @@ describe('validateIdentityTopUpTransitionStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.type');
+      expect(error.dataPath).to.equal('/type');
       expect(error.keyword).to.equal('const');
       expect(error.params.allowedValue).to.equal(3);
     });
@@ -172,7 +172,7 @@ describe('validateIdentityTopUpTransitionStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.assetLock');
+      expect(error.dataPath).to.equal('/assetLock');
       expect(error.keyword).to.equal('type');
     });
 
@@ -228,7 +228,7 @@ describe('validateIdentityTopUpTransitionStructureFactory', () => {
 
       const [error, byteArrayError] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.identityId[0]');
+      expect(error.dataPath).to.equal('/identityId/0');
       expect(error.keyword).to.equal('type');
 
       expect(byteArrayError.keyword).to.equal('byteArray');
@@ -245,7 +245,7 @@ describe('validateIdentityTopUpTransitionStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.identityId');
+      expect(error.dataPath).to.equal('/identityId');
       expect(error.keyword).to.equal('minItems');
     });
 
@@ -260,7 +260,7 @@ describe('validateIdentityTopUpTransitionStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.identityId');
+      expect(error.dataPath).to.equal('/identityId');
       expect(error.keyword).to.equal('maxItems');
     });
 
@@ -314,7 +314,7 @@ describe('validateIdentityTopUpTransitionStructureFactory', () => {
 
       const [error, byteArrayError] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.signature[0]');
+      expect(error.dataPath).to.equal('/signature/0');
       expect(error.keyword).to.equal('type');
 
       expect(byteArrayError.keyword).to.equal('byteArray');
@@ -329,7 +329,7 @@ describe('validateIdentityTopUpTransitionStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.signature');
+      expect(error.dataPath).to.equal('/signature');
       expect(error.keyword).to.equal('minItems');
     });
 
@@ -342,7 +342,7 @@ describe('validateIdentityTopUpTransitionStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.signature');
+      expect(error.dataPath).to.equal('/signature');
       expect(error.keyword).to.equal('maxItems');
     });
 

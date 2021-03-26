@@ -77,7 +77,7 @@ describe('validateAssetLockStructureFactory', () => {
 
       const [error, byteArrayError] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.transaction[0]');
+      expect(error.dataPath).to.equal('/transaction/0');
       expect(error.keyword).to.equal('type');
 
       expect(byteArrayError.keyword).to.equal('byteArray');
@@ -92,7 +92,7 @@ describe('validateAssetLockStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.transaction');
+      expect(error.dataPath).to.equal('/transaction');
       expect(error.keyword).to.equal('minItems');
     });
 
@@ -105,7 +105,7 @@ describe('validateAssetLockStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.transaction');
+      expect(error.dataPath).to.equal('/transaction');
       expect(error.keyword).to.equal('maxItems');
     });
 
@@ -146,7 +146,7 @@ describe('validateAssetLockStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.outputIndex');
+      expect(error.dataPath).to.equal('/outputIndex');
       expect(error.keyword).to.equal('type');
     });
 
@@ -159,7 +159,7 @@ describe('validateAssetLockStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.outputIndex');
+      expect(error.dataPath).to.equal('/outputIndex');
       expect(error.keyword).to.equal('minimum');
     });
 
@@ -224,7 +224,7 @@ describe('validateAssetLockStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.proof');
+      expect(error.dataPath).to.equal('/proof');
       expect(error.keyword).to.equal('type');
     });
 
@@ -238,7 +238,7 @@ describe('validateAssetLockStructureFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.proof');
+        expect(error.dataPath).to.equal('/proof');
         expect(error.keyword).to.equal('required');
         expect(error.params.missingProperty).to.equal('type');
       });
@@ -252,7 +252,7 @@ describe('validateAssetLockStructureFactory', () => {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('.proof.type');
+        expect(error.dataPath).to.equal('/proof/type');
         expect(error.keyword).to.equal('enum');
       });
     });
