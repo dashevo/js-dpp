@@ -12,7 +12,7 @@ const getIdentityFixture = require('../../../lib/test/fixtures/getIdentityFixtur
 
 const createStateRepositoryMock = require('../../../lib/test/mocks/createStateRepositoryMock');
 const InstantAssetLockProof = require('../../../lib/identity/stateTransitions/assetLock/proof/instant/InstantAssetLockProof');
-const getAssetLockFixture = require('../../../lib/test/fixtures/getAssetLockFixture');
+const getAssetLockFixture = require('../../../lib/test/fixtures/getInstantAssetLockFixture');
 
 describe('IdentityFacade', () => {
   let dpp;

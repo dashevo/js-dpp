@@ -6,7 +6,7 @@ const JsonSchemaValidator = require('../../../../../lib/validation/JsonSchemaVal
 
 const validateAssetLockStructureFactory = require('../../../../../lib/identity/stateTransitions/assetLock/validateAssetLockStructureFactory');
 
-const getAssetLockFixture = require('../../../../../lib/test/fixtures/getAssetLockFixture');
+const getAssetLockFixture = require('../../../../../lib/test/fixtures/getInstantAssetLockFixture');
 
 const InvalidIdentityAssetLockTransactionOutputError = require(
   '../../../../../lib/errors/InvalidIdentityAssetLockTransactionOutputError',

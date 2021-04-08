@@ -15,7 +15,7 @@ const SerializedObjectParsingError = require('../../../lib/errors/SerializedObje
 const InvalidIdentityError = require(
   '../../../lib/identity/errors/InvalidIdentityError',
 );
-const getAssetLockFixture = require('../../../lib/test/fixtures/getAssetLockFixture');
+const getAssetLockFixture = require('../../../lib/test/fixtures/getInstantAssetLockFixture');
 const InstantAssetLockProof = require('../../../lib/identity/stateTransitions/assetLock/proof/instant/InstantAssetLockProof');
 
 describe('IdentityFactory', () => {

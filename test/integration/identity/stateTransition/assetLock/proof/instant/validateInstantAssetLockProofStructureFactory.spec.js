@@ -2,7 +2,7 @@ const rewiremock = require('rewiremock/node');
 
 const createAjv = require('../../../../../../../lib/ajv/createAjv');
 
-const getAssetLockFixture = require('../../../../../../../lib/test/fixtures/getAssetLockFixture');
+const getInstantAssetLockFixture = require('../../../../../../../lib/test/fixtures/getInstantAssetLockFixture');
 const JsonSchemaValidator = require('../../../../../../../lib/validation/JsonSchemaValidator');
 const createStateRepositoryMock = require('../../../../../../../lib/test/mocks/createStateRepositoryMock');
 const InvalidIdentityAssetLockProofError = require('../../../../../../../lib/errors/InvalidIdentityAssetLockProofError');
@@ -26,7 +26,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
   let validateInstantAssetLockProofStructureFactory;
 
   beforeEach(function beforeEach() {
-    const assetLock = getAssetLockFixture();
+    const assetLock = getInstantAssetLockFixture();
     transaction = assetLock.getTransaction();
 
     rawProof = assetLock.getProof()
