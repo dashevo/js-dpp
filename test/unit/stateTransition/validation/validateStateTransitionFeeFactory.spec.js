@@ -150,7 +150,10 @@ describe('validateStateTransitionFeeFactory', () => {
     beforeEach(() => {
       identityCreateTransition = getIdentityCreateTransitionFixture();
 
-      const { satoshis } = identityCreateTransition.getAssetLock().getOutput();
+      const { satoshis } = identityCreateTransition
+        .getAssetLock()
+        .getProof()
+        .getOutput();
 
       outputAmount = satoshis * RATIO;
     });
@@ -195,7 +198,10 @@ describe('validateStateTransitionFeeFactory', () => {
     beforeEach(() => {
       identityTopUpTransition = getIdentityTopUpTransitionFixture();
 
-      const { satoshis } = identityTopUpTransition.getAssetLock().getOutput();
+      const { satoshis } = identityTopUpTransition
+        .getAssetLock()
+        .getProof()
+        .getOutput();
 
       outputAmount = satoshis * RATIO;
     });

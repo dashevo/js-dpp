@@ -28,7 +28,9 @@ describe('applyIdentityCreateTransitionFactory', () => {
   it('should store identity created from state transition', async () => {
     await applyIdentityCreateTransition(stateTransition);
 
-    const balance = convertSatoshiToCredits(stateTransition.getAssetLock().getOutput().satoshis);
+    const balance = convertSatoshiToCredits(
+      stateTransition.getAssetLock().getProof().getOutput().satoshis,
+    );
 
     const identity = new Identity({
       protocolVersion: Identity.PROTOCOL_VERSION,
@@ -53,7 +55,7 @@ describe('applyIdentityCreateTransitionFactory', () => {
 
     expect(stateRepositoryMock.storeAssetLockTransactionOutPoint).to.have.been
       .calledOnceWithExactly(
-        stateTransition.getAssetLock().getOutPoint(),
+        stateTransition.getAssetLock().getProof().getOutPoint(),
       );
   });
 });

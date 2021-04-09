@@ -1,12 +1,11 @@
-const { Transaction } = require('@dashevo/dashcore-lib');
-
 const createAjv = require('../../../../../lib/ajv/createAjv');
 
 const JsonSchemaValidator = require('../../../../../lib/validation/JsonSchemaValidator');
 
 const validateAssetLockStructureFactory = require('../../../../../lib/identity/stateTransitions/assetLock/validateAssetLockStructureFactory');
 
-const getAssetLockFixture = require('../../../../../lib/test/fixtures/getInstantAssetLockFixture');
+const getInstantAssetLockFixture = require('../../../../../lib/test/fixtures/getInstantAssetLockFixture');
+const getChainAssetLockFixture = require('../../../../../lib/test/fixtures/getChainAssetLockFixture');
 
 const InvalidIdentityAssetLockTransactionOutputError = require(
   '../../../../../lib/errors/InvalidIdentityAssetLockTransactionOutputError',
@@ -21,19 +20,20 @@ const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 const ValidationResult = require('../../../../../lib/validation/ValidationResult');
 
 const createStateRepositoryMock = require('../../../../../lib/test/mocks/createStateRepositoryMock');
-const IdentityAssetLockTransactionOutPointAlreadyExistsError = require('../../../../../lib/errors/IdentityAssetLockTransactionOutPointAlreadyExistsError');
 
 describe('validateAssetLockStructureFactory', () => {
   let validateAssetLockStructure;
-  let assetLock;
+  let instantAssetLock;
+  let chainAssetLock;
   let rawAssetLock;
   let proofValidationFunctionMock;
   let stateRepositoryMock;
 
   beforeEach(function beforeEach() {
-    assetLock = getAssetLockFixture();
+    instantAssetLock = getInstantAssetLockFixture();
+    chainAssetLock = getChainAssetLockFixture();
 
-    rawAssetLock = assetLock.toObject();
+    rawAssetLock = instantAssetLock.toObject();
 
     const jsonSchemaValidator = new JsonSchemaValidator(createAjv());
 
@@ -41,10 +41,10 @@ describe('validateAssetLockStructureFactory', () => {
 
     const proofValidationFunctionsByType = {
       0: proofValidationFunctionMock,
+      1: proofValidationFunctionMock,
     };
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
-    stateRepositoryMock.checkAssetLockTransactionOutPointExists.resolves(false);
 
     validateAssetLockStructure = validateAssetLockStructureFactory(
       jsonSchemaValidator,
@@ -54,129 +54,97 @@ describe('validateAssetLockStructureFactory', () => {
   });
 
   describe('transaction', () => {
-    it('should be present', async () => {
-      delete rawAssetLock.transaction;
+    describe('chain', () => {
+      beforeEach(() => {
+        rawAssetLock = chainAssetLock.toObject();
+        stateRepositoryMock.fetchTransaction.resolves(
+          instantAssetLock.proof.transaction.toBuffer(),
+        );
+      });
 
-      const result = await validateAssetLockStructure(rawAssetLock);
+      it('should be valid', async () => {
+        proofValidationFunctionMock.resolves(
+          new ValidationResult(),
+        );
 
-      expectJsonSchemaError(result);
+        stateRepositoryMock.fetchTransaction.resolves(Buffer.alloc(100, 1));
 
-      const [error] = result.getErrors();
+        const result = await validateAssetLockStructure(rawAssetLock);
 
-      expect(error.dataPath).to.equal('');
-      expect(error.keyword).to.equal('required');
-      expect(error.params.missingProperty).to.equal('transaction');
+        expectValidationError(result, InvalidIdentityAssetLockTransactionError);
+
+        const [error] = result.getErrors();
+
+        expect(error.message).to.equal('Invalid asset lock transaction: Unknown special transaction type');
+      });
+
+      it('should point to specific output in transaction', async () => {
+        proofValidationFunctionMock.resolves(
+          new ValidationResult(),
+        );
+
+        const outPoint = {
+          outpointHash: '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
+          outpointIndex: 42,
+        };
+
+        const binaryTransactionHash = Buffer.from(outPoint.outpointHash, 'hex');
+        const indexBuffer = Buffer.alloc(4);
+
+        indexBuffer.writeUInt32LE(outPoint.outpointIndex, 0);
+
+        rawAssetLock.proof.outPoint = Buffer.concat([binaryTransactionHash, indexBuffer]);
+
+        const result = await validateAssetLockStructure(rawAssetLock);
+
+        expectValidationError(result, IdentityAssetLockTransactionOutputNotFoundError);
+
+        const [error] = result.getErrors();
+
+        expect(error.getOutputIndex()).to.equal(outPoint.outpointIndex);
+      });
     });
 
-    it('should be a byte array', async () => {
-      rawAssetLock.transaction = new Array(65).fill('string');
+    describe('instant', () => {
+      it('should be valid', async () => {
+        proofValidationFunctionMock.resolves(
+          new ValidationResult(),
+        );
 
-      const result = await validateAssetLockStructure(rawAssetLock);
+        rawAssetLock.proof.transaction = Buffer.alloc(100, 1);
 
-      expectJsonSchemaError(result, 2);
+        const result = await validateAssetLockStructure(rawAssetLock);
 
-      const [error, byteArrayError] = result.getErrors();
+        expectValidationError(result, InvalidIdentityAssetLockTransactionError);
 
-      expect(error.dataPath).to.equal('.transaction[0]');
-      expect(error.keyword).to.equal('type');
+        const [error] = result.getErrors();
 
-      expect(byteArrayError.keyword).to.equal('byteArray');
-    });
+        expect(error.message).to.equal('Invalid asset lock transaction: Unknown special transaction type');
+      });
 
-    it('should be not shorter than 1 byte', async () => {
-      rawAssetLock.transaction = Buffer.alloc(0);
+      it('should point to specific output in transaction', async () => {
+        proofValidationFunctionMock.resolves(
+          new ValidationResult(),
+        );
 
-      const result = await validateAssetLockStructure(rawAssetLock);
+        rawAssetLock.proof.outputIndex = 10;
 
-      expectJsonSchemaError(result);
+        const result = await validateAssetLockStructure(rawAssetLock);
 
-      const [error] = result.getErrors();
+        expectValidationError(result, IdentityAssetLockTransactionOutputNotFoundError);
 
-      expect(error.dataPath).to.equal('.transaction');
-      expect(error.keyword).to.equal('minItems');
-    });
+        const [error] = result.getErrors();
 
-    it('should be not longer than 100 Kb', async () => {
-      rawAssetLock.transaction = Buffer.alloc(100001);
-
-      const result = await validateAssetLockStructure(rawAssetLock);
-
-      expectJsonSchemaError(result);
-
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.equal('.transaction');
-      expect(error.keyword).to.equal('maxItems');
-    });
-
-    it('should be valid', async () => {
-      rawAssetLock.transaction = Buffer.alloc(100, 1);
-
-      const result = await validateAssetLockStructure(rawAssetLock);
-
-      expectValidationError(result, InvalidIdentityAssetLockTransactionError);
-
-      const [error] = result.getErrors();
-
-      expect(error.message).to.equal('Invalid asset lock transaction: Unknown special transaction type');
-    });
-  });
-
-  describe('outputIndex', () => {
-    it('should be present', async () => {
-      delete rawAssetLock.outputIndex;
-
-      const result = await validateAssetLockStructure(rawAssetLock);
-
-      expectJsonSchemaError(result);
-
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.equal('');
-      expect(error.keyword).to.equal('required');
-      expect(error.params.missingProperty).to.equal('outputIndex');
-    });
-
-    it('should be an integer', async () => {
-      rawAssetLock.outputIndex = 1.1;
-
-      const result = await validateAssetLockStructure(rawAssetLock);
-
-      expectJsonSchemaError(result, 1);
-
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.equal('.outputIndex');
-      expect(error.keyword).to.equal('type');
-    });
-
-    it('should be not less than 0', async () => {
-      rawAssetLock.outputIndex = -1;
-
-      const result = await validateAssetLockStructure(rawAssetLock);
-
-      expectJsonSchemaError(result);
-
-      const [error] = result.getErrors();
-
-      expect(error.dataPath).to.equal('.outputIndex');
-      expect(error.keyword).to.equal('minimum');
-    });
-
-    it('should point to specific output in transaction', async () => {
-      rawAssetLock.outputIndex = 10;
-
-      const result = await validateAssetLockStructure(rawAssetLock);
-
-      expectValidationError(result, IdentityAssetLockTransactionOutputNotFoundError);
-
-      const [error] = result.getErrors();
-
-      expect(error.getOutputIndex()).to.equal(rawAssetLock.outputIndex);
+        expect(error.getOutputIndex()).to.equal(rawAssetLock.proof.outputIndex);
+      });
     });
 
     it('should point to output with OR_RETURN', async () => {
-      rawAssetLock.outputIndex = 1;
+      proofValidationFunctionMock.resolves(
+        new ValidationResult(),
+      );
+
+      rawAssetLock.proof.outputIndex = 1;
 
       const result = await validateAssetLockStructure(rawAssetLock);
 
@@ -188,7 +156,11 @@ describe('validateAssetLockStructureFactory', () => {
     });
 
     it('should point to output with public key hash', async () => {
-      rawAssetLock.outputIndex = 2;
+      proofValidationFunctionMock.resolves(
+        new ValidationResult(),
+      );
+
+      rawAssetLock.proof.outputIndex = 2;
 
       const result = await validateAssetLockStructure(rawAssetLock);
 
@@ -256,29 +228,6 @@ describe('validateAssetLockStructureFactory', () => {
         expect(error.keyword).to.equal('enum');
       });
     });
-
-    it('should return invalid result if asset lock transaction outPoint exists', async () => {
-      proofValidationFunctionMock.resolves(
-        new ValidationResult(),
-      );
-
-      stateRepositoryMock.checkAssetLockTransactionOutPointExists.resolves(true);
-
-      const result = await validateAssetLockStructure(rawAssetLock);
-
-      expectValidationError(result);
-
-      const outPointBuffer = new Transaction(rawAssetLock.transaction)
-        .getOutPointBuffer(rawAssetLock.outputIndex);
-
-      expect(stateRepositoryMock.checkAssetLockTransactionOutPointExists)
-        .to.be.calledOnceWithExactly(outPointBuffer);
-
-      const [error] = result.getErrors();
-
-      expect(error).to.be.an.instanceOf(IdentityAssetLockTransactionOutPointAlreadyExistsError);
-      expect(error.getOutPoint()).to.deep.equal(outPointBuffer);
-    });
   });
 
   it('should return invalid result if proof is not valid', async () => {
@@ -310,13 +259,10 @@ describe('validateAssetLockStructureFactory', () => {
     expect(result.getData()).to.be.instanceOf(Buffer);
     expect(result.getData()).to.have.lengthOf(20);
 
-    const transaction = new Transaction(rawAssetLock.transaction);
-
     expect(proofValidationFunctionMock).to.be.calledOnce();
 
     const { args } = proofValidationFunctionMock.getCall(0);
 
     expect(args[0]).to.be.deep.equal(rawAssetLock.proof);
-    expect(args[1].toBuffer()).to.be.deep.equal(transaction.toBuffer());
   });
 });

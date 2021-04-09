@@ -16,14 +16,12 @@ const ValidationResult = require('../../../../../../../lib/validation/Validation
 
 describe('validateChainAssetLockProofStructureFactory', () => {
   let rawProof;
-  let transaction;
   let stateRepositoryMock;
   let validateChainAssetLockProofStructure;
   let jsonSchemaValidator;
 
   beforeEach(function beforeEach() {
     const assetLock = getChainAssetLockFixture();
-    transaction = assetLock.getTransaction();
 
     rawProof = assetLock.getProof()
       .toObject();
@@ -45,7 +43,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     it('should be present', async () => {
       delete rawProof.type;
 
-      const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+      const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectJsonSchemaError(result);
 
@@ -62,7 +60,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     it('should be equal to 1', async () => {
       rawProof.type = -1;
 
-      const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+      const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectJsonSchemaError(result);
 
@@ -80,7 +78,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     it('should be preset', async () => {
       delete rawProof.height;
 
-      const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+      const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectJsonSchemaError(result);
 
@@ -97,7 +95,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     it('should be an integer', async () => {
       rawProof.height = 1.5;
 
-      const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+      const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectJsonSchemaError(result);
 
@@ -113,7 +111,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     it('should be a number', async () => {
       rawProof.height = '42';
 
-      const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+      const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectJsonSchemaError(result);
 
@@ -129,7 +127,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     it('should be greater 0', async () => {
       rawProof.height = 0;
 
-      const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+      const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectJsonSchemaError(result);
 
@@ -145,7 +143,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     it('should be less 4294967296', async () => {
       rawProof.height = 4294967296;
 
-      const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+      const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectJsonSchemaError(result);
 
@@ -161,14 +159,15 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     it('should be valid', async () => {
       stateRepositoryMock.verifyChainLockHeight.resolves(false);
 
-      const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+      const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectValidationError(result, InvalidIdentityAssetLockProofHeightError);
       const [error] = result.getErrors();
 
       expect(error.getHeight()).to.equal(rawProof.height);
 
-      expect(stateRepositoryMock.verifyChainLockHeight).to.be.calledOnceWithExactly(rawProof.height);
+      expect(stateRepositoryMock.verifyChainLockHeight)
+        .to.be.calledOnceWithExactly(rawProof.height);
       expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.not.be.called();
     });
   });
@@ -177,7 +176,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     it('should be preset', async () => {
       delete rawProof.outPoint;
 
-      const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+      const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectJsonSchemaError(result);
 
@@ -194,7 +193,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     it('should be a byte array', async () => {
       rawProof.outPoint = new Array(36).fill('string');
 
-      const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+      const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectJsonSchemaError(result, 2);
 
@@ -212,7 +211,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     it('should be not shorter than 36 bytes', async () => {
       rawProof.outPoint = Buffer.alloc(35);
 
-      const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+      const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectJsonSchemaError(result);
 
@@ -228,7 +227,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     it('should be not longer than 36 bytes', async () => {
       rawProof.outPoint = Buffer.alloc(37);
 
-      const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+      const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectJsonSchemaError(result);
 
@@ -244,25 +243,29 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     it('should be valid', async () => {
       stateRepositoryMock.verifyChainLockOutPointIsNotUsed.resolves(false);
 
-      const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+      const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectValidationError(result, InvalidIdentityAssetLockProofOutPointError);
       const [error] = result.getErrors();
 
       expect(error.getOutPoint()).to.deep.equal(rawProof.outPoint);
 
-      expect(stateRepositoryMock.verifyChainLockHeight).to.be.calledOnceWithExactly(rawProof.height);
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.be.calledOnceWithExactly(rawProof.outPoint);
+      expect(stateRepositoryMock.verifyChainLockHeight)
+        .to.be.calledOnceWithExactly(rawProof.height);
+      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed)
+        .to.be.calledOnceWithExactly(rawProof.outPoint);
     });
   });
 
   it('should return valid result', async () => {
-    const result = await validateChainAssetLockProofStructure(rawProof, transaction);
+    const result = await validateChainAssetLockProofStructure(rawProof);
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
 
-    expect(stateRepositoryMock.verifyChainLockHeight).to.be.calledOnceWithExactly(rawProof.height);
-    expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.be.calledOnceWithExactly(rawProof.outPoint);
+    expect(stateRepositoryMock.verifyChainLockHeight)
+      .to.be.calledOnceWithExactly(rawProof.height);
+    expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed)
+      .to.be.calledOnceWithExactly(rawProof.outPoint);
   });
 });

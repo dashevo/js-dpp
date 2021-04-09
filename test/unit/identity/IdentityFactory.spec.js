@@ -67,8 +67,6 @@ describe('IdentityFactory', () => {
       });
 
       const result = factory.create(
-        assetLock.getTransaction(),
-        assetLock.getOutputIndex(),
         assetLock.getProof(),
         publicKeys,
       );
@@ -156,8 +154,9 @@ describe('IdentityFactory', () => {
   describe('#createInstantAssetLockProof', () => {
     it('should create instant asset lock proof from InstantLock', () => {
       const instantLock = assetLock.getProof().getInstantLock();
+      const assetLockTransaction = assetLock.getProof().getTransaction();
 
-      const result = factory.createInstantAssetLockProof(instantLock);
+      const result = factory.createInstantAssetLockProof(instantLock, assetLockTransaction);
 
       expect(result).to.be.instanceOf(InstantAssetLockProof);
       expect(result.getInstantLock()).to.deep.equal(instantLock);
@@ -179,8 +178,6 @@ describe('IdentityFactory', () => {
       const stateTransition = factory
         .createIdentityTopUpTransition(
           identity.getId(),
-          assetLock.getTransaction(),
-          assetLock.getOutputIndex(),
           assetLock.getProof(),
         );
 

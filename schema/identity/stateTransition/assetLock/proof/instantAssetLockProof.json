@@ -10,11 +10,23 @@
       "byteArray": true,
       "minItems": 165,
       "maxItems": 100000
+    },
+    "transaction": {
+      "type": "array",
+      "byteArray": true,
+      "minItems": 1,
+      "maxItems": 100000
+    },
+    "outputIndex": {
+      "type": "integer",
+      "minimum": 0
     }
   },
   "additionalProperties": false,
   "required": [
     "type",
-    "instantLock"
+    "instantLock",
+    "transaction",
+    "outputIndex"
   ]
 }

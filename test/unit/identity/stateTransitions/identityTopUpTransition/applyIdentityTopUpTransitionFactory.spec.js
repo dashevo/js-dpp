@@ -32,7 +32,7 @@ describe('applyIdentityTopUpTransitionFactory', () => {
     const balanceBeforeTopUp = identity.getBalance();
 
     const balanceToTopUp = convertSatoshiToCredits(
-      stateTransition.getAssetLock().getOutput().satoshis,
+      stateTransition.getAssetLock().getProof().getOutput().satoshis,
     );
 
     await applyIdentityTopUpTransition(stateTransition);
@@ -46,7 +46,7 @@ describe('applyIdentityTopUpTransitionFactory', () => {
 
     expect(stateRepositoryMock.storeAssetLockTransactionOutPoint).to.have.been
       .calledOnceWithExactly(
-        stateTransition.getAssetLock().getOutPoint(),
+        stateTransition.getAssetLock().getProof().getOutPoint(),
       );
   });
 });

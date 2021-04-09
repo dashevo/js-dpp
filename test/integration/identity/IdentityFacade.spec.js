@@ -44,8 +44,6 @@ describe('IdentityFacade', () => {
       );
 
       const result = dpp.identity.create(
-        assetLock.getTransaction(),
-        assetLock.getOutputIndex(),
         assetLock.getProof(),
         publicKeys,
       );
@@ -87,8 +85,9 @@ describe('IdentityFacade', () => {
   describe('#createInstantAssetLockProof', () => {
     it('should create instant asset lock proof from InstantLock', () => {
       const instantLock = assetLock.getProof().getInstantLock();
+      const assetLockTransaction = assetLock.getProof().getTransaction();
 
-      const result = dpp.identity.createInstantAssetLockProof(instantLock);
+      const result = dpp.identity.createInstantAssetLockProof(instantLock, assetLockTransaction);
 
       expect(result).to.be.instanceOf(InstantAssetLockProof);
       expect(result.getInstantLock()).to.deep.equal(instantLock);
@@ -110,8 +109,6 @@ describe('IdentityFacade', () => {
       const stateTransition = dpp.identity
         .createIdentityTopUpTransition(
           identity.getId(),
-          assetLock.getTransaction(),
-          assetLock.getOutputIndex(),
           assetLock.getProof(),
         );
 
