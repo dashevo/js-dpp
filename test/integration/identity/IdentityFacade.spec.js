@@ -86,8 +86,13 @@ describe('IdentityFacade', () => {
     it('should create instant asset lock proof from InstantLock', () => {
       const instantLock = assetLock.getProof().getInstantLock();
       const assetLockTransaction = assetLock.getProof().getTransaction();
+      const outputIndex = assetLock.getProof().getOutputIndex();
 
-      const result = dpp.identity.createInstantAssetLockProof(instantLock, assetLockTransaction);
+      const result = dpp.identity.createInstantAssetLockProof(
+        instantLock,
+        assetLockTransaction,
+        outputIndex,
+      );
 
       expect(result).to.be.instanceOf(InstantAssetLockProof);
       expect(result.getInstantLock()).to.deep.equal(instantLock);
