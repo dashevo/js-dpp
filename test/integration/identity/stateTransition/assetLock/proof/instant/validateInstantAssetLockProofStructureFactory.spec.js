@@ -4,7 +4,7 @@ const { Transaction } = require('@dashevo/dashcore-lib');
 
 const createAjv = require('../../../../../../../lib/ajv/createAjv');
 
-const getInstantAssetLockFixture = require('../../../../../../../lib/test/fixtures/getInstantAssetLockFixture');
+const getInstantAssetLockFixture = require('../../../../../../../lib/test/fixtures/getInstantAssetLockProofFixture');
 const JsonSchemaValidator = require('../../../../../../../lib/validation/JsonSchemaValidator');
 const createStateRepositoryMock = require('../../../../../../../lib/test/mocks/createStateRepositoryMock');
 const InvalidIdentityAssetLockProofError = require('../../../../../../../lib/errors/InvalidIdentityAssetLockProofError');

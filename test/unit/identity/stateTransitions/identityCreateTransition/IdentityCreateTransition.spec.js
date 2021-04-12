@@ -6,7 +6,6 @@ const stateTransitionTypes = require(
 
 const Identity = require('../../../../../lib/identity/Identity');
 const IdentityCreateTransition = require('../../../../../lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition');
-const AssetLock = require('../../../../../lib/identity/stateTransitions/assetLock/AssetLock');
 const Identifier = require('../../../../../lib/identifier/Identifier');
 
 const getIdentityCreateTransitionFixture = require('../../../../../lib/test/fixtures/getIdentityCreateTransitionFixture');
@@ -22,8 +21,8 @@ describe('IdentityCreateTransition', () => {
 
   describe('#constructor', () => {
     it('should create an instance with specified data', () => {
-      expect(stateTransition.getAssetLock().toObject()).to.deep.equal(
-        rawStateTransition.assetLock,
+      expect(stateTransition.getAssetLockProof().toObject()).to.deep.equal(
+        rawStateTransition.assetLockProof,
       );
 
       expect(stateTransition.publicKeys).to.deep.equal([
@@ -39,39 +38,29 @@ describe('IdentityCreateTransition', () => {
   });
 
   describe('#setAssetLock', () => {
-    it('should set asset lock', () => {
-      const newAssetLock = new AssetLock({
-        transaction: rawStateTransition.assetLock.transaction,
-        outputIndex: 2,
-        proof: rawStateTransition.assetLock.proof,
-      });
+    it('should set asset lock proof', () => {
+      stateTransition.setAssetLockProof(rawStateTransition.assetLock.proof);
 
-      stateTransition.setAssetLock(newAssetLock);
-
-      expect(stateTransition.assetLock).to.deep.equal(newAssetLock);
+      expect(stateTransition.assetLockProof).to.deep.equal(rawStateTransition.assetLock.proof);
     });
 
     it('should set `identityId`', () => {
       expect(stateTransition.identityId).to.deep.equal(
-        stateTransition.getAssetLock().createIdentifier(),
+        stateTransition.getAssetLockProof().createIdentifier(),
       );
 
-      const newAssetLock = new AssetLock({
-        transaction: rawStateTransition.assetLock.transaction,
-        outputIndex: 2,
-        proof: rawStateTransition.assetLock.proof,
-      });
+      stateTransition.setAssetLockProof(rawStateTransition.assetLock.proof);
 
-      stateTransition.setAssetLock(newAssetLock);
-
-      expect(stateTransition.identityId).to.deep.equal(newAssetLock.createIdentifier());
+      expect(stateTransition.identityId).to.deep.equal(
+        rawStateTransition.assetLock.proof.createIdentifier(),
+      );
     });
   });
 
   describe('#getAssetLock', () => {
     it('should return currently set locked OutPoint', () => {
-      expect(stateTransition.getAssetLock().toObject()).to.deep.equal(
-        rawStateTransition.assetLock,
+      expect(stateTransition.getAssetLockProof().toObject()).to.deep.equal(
+        rawStateTransition.assetLockProof,
       );
     });
   });
@@ -107,7 +96,7 @@ describe('IdentityCreateTransition', () => {
   describe('#getIdentityId', () => {
     it('should return identity id', () => {
       expect(stateTransition.getIdentityId()).to.deep.equal(
-        stateTransition.getAssetLock().createIdentifier(),
+        stateTransition.getAssetLockProof().createIdentifier(),
       );
     });
   });
@@ -152,7 +141,7 @@ describe('IdentityCreateTransition', () => {
       expect(jsonStateTransition).to.deep.equal({
         protocolVersion: Identity.PROTOCOL_VERSION,
         type: stateTransitionTypes.IDENTITY_CREATE,
-        assetLock: stateTransition.getAssetLock().toJSON(),
+        assetLockProof: stateTransition.getAssetLockProof().toJSON(),
         publicKeys: stateTransition.getPublicKeys().map((k) => k.toJSON()),
         signature: undefined,
       });

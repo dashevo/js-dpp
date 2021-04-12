@@ -1,6 +1,6 @@
 const createAjv = require('../../../../../../../lib/ajv/createAjv');
 
-const getChainAssetLockFixture = require('../../../../../../../lib/test/fixtures/getChainAssetLockFixture');
+const getChainAssetLockFixture = require('../../../../../../../lib/test/fixtures/getChainAssetLockProofFixture');
 const JsonSchemaValidator = require('../../../../../../../lib/validation/JsonSchemaValidator');
 const createStateRepositoryMock = require('../../../../../../../lib/test/mocks/createStateRepositoryMock');
 const InvalidIdentityAssetLockProofHeightError = require('../../../../../../../lib/errors/InvalidIdentityAssetLockProofHeightError');
