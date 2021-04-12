@@ -144,7 +144,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(instantLockMock.verify).to.not.be.called();
     });
 
-    it('should be not shorter than 160 bytes', async () => {
+    it('should not be shorter than 160 bytes', async () => {
       rawProof.instantLock = Buffer.alloc(159);
 
       const result = await validateInstantAssetLockProofStructure(rawProof);
@@ -161,7 +161,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(instantLockMock.verify).to.not.be.called();
     });
 
-    it('should be not longer than 100 Kb', async () => {
+    it('should not be longer than 100 Kb', async () => {
       rawProof.instantLock = Buffer.alloc(100001);
 
       const result = await validateInstantAssetLockProofStructure(rawProof);
@@ -258,7 +258,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(instantLockMock.verify).to.not.be.called();
     });
 
-    it('should be not shorter than 1 byte', async () => {
+    it('should not be shorter than 1 byte', async () => {
       rawProof.transaction = Buffer.alloc(0);
 
       const result = await validateInstantAssetLockProofStructure(rawProof);
@@ -275,7 +275,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(instantLockMock.verify).to.not.be.called();
     });
 
-    it('should be not longer than 100 Kb', async () => {
+    it('should not be longer than 100 Kb', async () => {
       rawProof.transaction = Buffer.alloc(100001);
 
       const result = await validateInstantAssetLockProofStructure(rawProof);
@@ -376,7 +376,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(instantLockMock.verify).to.not.be.called();
     });
 
-    it('should be not less than 0', async () => {
+    it('should not be less than 0', async () => {
       rawProof.outputIndex = -1;
 
       const result = await validateInstantAssetLockProofStructure(rawProof);
