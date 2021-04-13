@@ -31,7 +31,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
 
     stateRepositoryMock.verifyChainLockHeight.resolves(true);
-    stateRepositoryMock.verifyChainLockOutPointIsNotUsed.resolves(true);
+    stateRepositoryMock.isAssetLockTransactionOutPointNotUsed.resolves(true);
 
     validateChainAssetLockProofStructure = validateChainAssetLockProofStructureFactory(
       jsonSchemaValidator,
@@ -54,7 +54,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.params.missingProperty).to.equal('type');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
     });
 
     it('should be equal to 1', async () => {
@@ -70,7 +70,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('const');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
     });
   });
 
@@ -89,7 +89,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.params.missingProperty).to.equal('coreChainLockedHeight');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
     });
 
     it('should be an integer', async () => {
@@ -105,7 +105,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('type');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
     });
 
     it('should be a number', async () => {
@@ -121,7 +121,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('type');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
     });
 
     it('should be greater than 0', async () => {
@@ -137,7 +137,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('minimum');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
     });
 
     it('should be less than 4294967296', async () => {
@@ -153,7 +153,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('maximum');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
     });
 
     it('should be valid', async () => {
@@ -168,7 +168,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
       expect(stateRepositoryMock.verifyChainLockHeight)
         .to.be.calledOnceWithExactly(rawProof.height);
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
     });
   });
 
@@ -187,7 +187,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.params.missingProperty).to.equal('outPoint');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
     });
 
     it('should be a byte array', async () => {
@@ -205,7 +205,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(byteArrayError.keyword).to.equal('byteArray');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
     });
 
     it('should not be shorter than 36 bytes', async () => {
@@ -221,7 +221,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('minItems');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
     });
 
     it('should not be longer than 36 bytes', async () => {
@@ -237,11 +237,11 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('maxItems');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
     });
 
     it('should be valid', async () => {
-      stateRepositoryMock.verifyChainLockOutPointIsNotUsed.resolves(false);
+      stateRepositoryMock.isAssetLockTransactionOutPointNotUsed.resolves(false);
 
       const result = await validateChainAssetLockProofStructure(rawProof);
 
@@ -252,7 +252,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
       expect(stateRepositoryMock.verifyChainLockHeight)
         .to.be.calledOnceWithExactly(rawProof.height);
-      expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed)
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed)
         .to.be.calledOnceWithExactly(rawProof.outPoint);
     });
   });
@@ -265,7 +265,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
     expect(stateRepositoryMock.verifyChainLockHeight)
       .to.be.calledOnceWithExactly(rawProof.height);
-    expect(stateRepositoryMock.verifyChainLockOutPointIsNotUsed)
+    expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed)
       .to.be.calledOnceWithExactly(rawProof.outPoint);
   });
 });
