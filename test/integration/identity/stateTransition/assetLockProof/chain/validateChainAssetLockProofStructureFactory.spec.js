@@ -1,18 +1,18 @@
-const createAjv = require('../../../../../../../lib/ajv/createAjv');
+const createAjv = require('../../../../../../lib/ajv/createAjv');
 
-const getChainAssetLockFixture = require('../../../../../../../lib/test/fixtures/getChainAssetLockProofFixture');
-const JsonSchemaValidator = require('../../../../../../../lib/validation/JsonSchemaValidator');
-const createStateRepositoryMock = require('../../../../../../../lib/test/mocks/createStateRepositoryMock');
-const InvalidIdentityAssetLockProofHeightError = require('../../../../../../../lib/errors/InvalidIdentityAssetLockProofHeightError');
-const InvalidIdentityAssetLockProofOutPointError = require('../../../../../../../lib/errors/InvalidIdentityAssetLockProofOutPointError');
+const getChainAssetLockFixture = require('../../../../../../lib/test/fixtures/getChainAssetLockProofFixture');
+const JsonSchemaValidator = require('../../../../../../lib/validation/JsonSchemaValidator');
+const createStateRepositoryMock = require('../../../../../../lib/test/mocks/createStateRepositoryMock');
+const InvalidIdentityAssetLockProofCoreHeightError = require('../../../../../../lib/errors/InvalidIdentityAssetLockProofCoreHeightError');
+const IdentityAssetLockProofOutPointIsAlreadyUsedError = require('../../../../../../lib/errors/IdentityAssetLockProofOutPointIsAlreadyUsedError');
 
 const { expectValidationError, expectJsonSchemaError } = require(
-  '../../../../../../../lib/test/expect/expectError',
+  '../../../../../../lib/test/expect/expectError',
 );
 
-const validateChainAssetLockProofStructureFactory = require('../../../../../../../lib/identity/stateTransitions/assetLock/proof/chain/validateChainAssetLockProofStructureFactory');
+const validateChainAssetLockProofStructureFactory = require('../../../../../../lib/identity/stateTransitions/assetLockProof/chain/validateChainAssetLockProofStructureFactory');
 
-const ValidationResult = require('../../../../../../../lib/validation/ValidationResult');
+const ValidationResult = require('../../../../../../lib/validation/ValidationResult');
 
 describe('validateChainAssetLockProofStructureFactory', () => {
   let rawProof;
@@ -31,7 +31,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
 
     stateRepositoryMock.verifyChainLockHeight.resolves(true);
-    stateRepositoryMock.isAssetLockTransactionOutPointNotUsed.resolves(true);
+    stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed.resolves(true);
 
     validateChainAssetLockProofStructure = validateChainAssetLockProofStructureFactory(
       jsonSchemaValidator,
@@ -54,7 +54,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.params.missingProperty).to.equal('type');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
     });
 
     it('should be equal to 1', async () => {
@@ -70,7 +70,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('const');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
     });
   });
 
@@ -89,7 +89,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.params.missingProperty).to.equal('coreChainLockedHeight');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
     });
 
     it('should be an integer', async () => {
@@ -105,7 +105,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('type');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
     });
 
     it('should be a number', async () => {
@@ -121,7 +121,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('type');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
     });
 
     it('should be greater than 0', async () => {
@@ -137,7 +137,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('minimum');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
     });
 
     it('should be less than 4294967296', async () => {
@@ -153,7 +153,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('maximum');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
     });
 
     it('should be valid', async () => {
@@ -161,14 +161,14 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
       const result = await validateChainAssetLockProofStructure(rawProof);
 
-      expectValidationError(result, InvalidIdentityAssetLockProofHeightError);
+      expectValidationError(result, InvalidIdentityAssetLockProofCoreHeightError);
       const [error] = result.getErrors();
 
       expect(error.getHeight()).to.equal(rawProof.height);
 
       expect(stateRepositoryMock.verifyChainLockHeight)
         .to.be.calledOnceWithExactly(rawProof.height);
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
     });
   });
 
@@ -187,7 +187,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.params.missingProperty).to.equal('outPoint');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
     });
 
     it('should be a byte array', async () => {
@@ -205,7 +205,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(byteArrayError.keyword).to.equal('byteArray');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
     });
 
     it('should not be shorter than 36 bytes', async () => {
@@ -221,7 +221,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('minItems');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
     });
 
     it('should not be longer than 36 bytes', async () => {
@@ -237,22 +237,22 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('maxItems');
 
       expect(stateRepositoryMock.verifyChainLockHeight).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed).to.not.be.called();
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
     });
 
     it('should be valid', async () => {
-      stateRepositoryMock.isAssetLockTransactionOutPointNotUsed.resolves(false);
+      stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed.resolves(false);
 
       const result = await validateChainAssetLockProofStructure(rawProof);
 
-      expectValidationError(result, InvalidIdentityAssetLockProofOutPointError);
+      expectValidationError(result, IdentityAssetLockProofOutPointIsAlreadyUsedError);
       const [error] = result.getErrors();
 
       expect(error.getOutPoint()).to.deep.equal(rawProof.outPoint);
 
       expect(stateRepositoryMock.verifyChainLockHeight)
         .to.be.calledOnceWithExactly(rawProof.height);
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed)
+      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed)
         .to.be.calledOnceWithExactly(rawProof.outPoint);
     });
   });
@@ -265,7 +265,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
     expect(stateRepositoryMock.verifyChainLockHeight)
       .to.be.calledOnceWithExactly(rawProof.height);
-    expect(stateRepositoryMock.isAssetLockTransactionOutPointNotUsed)
+    expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed)
       .to.be.calledOnceWithExactly(rawProof.outPoint);
   });
 });

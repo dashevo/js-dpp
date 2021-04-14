@@ -44,7 +44,7 @@ describe('applyIdentityTopUpTransitionFactory', () => {
       identity,
     );
 
-    expect(stateRepositoryMock.storeAssetLockTransactionOutPoint).to.have.been
+    expect(stateRepositoryMock.markAssetLockTransactionOutPointAsUsed).to.have.been
       .calledOnceWithExactly(
         stateTransition.getAssetLock().getProof().getOutPoint(),
       );

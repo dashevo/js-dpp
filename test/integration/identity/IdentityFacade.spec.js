@@ -11,7 +11,7 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 const getIdentityFixture = require('../../../lib/test/fixtures/getIdentityFixture');
 
 const createStateRepositoryMock = require('../../../lib/test/mocks/createStateRepositoryMock');
-const InstantAssetLockProof = require('../../../lib/identity/stateTransitions/assetLock/proof/instant/InstantAssetLockProof');
+const InstantAssetLockProof = require('../../../lib/identity/stateTransitions/assetLockProof/instant/InstantAssetLockProof');
 const getAssetLockFixture = require('../../../lib/test/fixtures/getInstantAssetLockProofFixture');
 
 describe('IdentityFacade', () => {

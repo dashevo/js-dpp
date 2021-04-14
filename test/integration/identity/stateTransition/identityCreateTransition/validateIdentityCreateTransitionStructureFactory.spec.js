@@ -171,7 +171,7 @@ describe('validateIdentityCreateTransitionStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.dataPath).to.equal('.assetLock');
+      expect(error.dataPath).to.equal('.assetLockProof');
       expect(error.keyword).to.equal('type');
     });
 

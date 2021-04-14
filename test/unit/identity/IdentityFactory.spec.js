@@ -16,7 +16,7 @@ const InvalidIdentityError = require(
   '../../../lib/identity/errors/InvalidIdentityError',
 );
 const getAssetLockFixture = require('../../../lib/test/fixtures/getInstantAssetLockProofFixture');
-const InstantAssetLockProof = require('../../../lib/identity/stateTransitions/assetLock/proof/instant/InstantAssetLockProof');
+const InstantAssetLockProof = require('../../../lib/identity/stateTransitions/assetLockProof/instant/InstantAssetLockProof');
 
 describe('IdentityFactory', () => {
   let factory;
