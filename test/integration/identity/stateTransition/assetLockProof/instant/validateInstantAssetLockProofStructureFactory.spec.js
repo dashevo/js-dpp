@@ -17,8 +17,6 @@ const { expectValidationError, expectJsonSchemaError } = require(
 
 const ValidationResult = require('../../../../../../lib/validation/ValidationResult');
 const InvalidIdentityAssetLockTransactionError = require('../../../../../../lib/errors/InvalidIdentityAssetLockTransactionError');
-const IdentityAssetLockTransactionOutPointAlreadyExistsError = require('../../../../../../lib/errors/IdentityAssetLockTransactionOutPointAlreadyExistsError');
-const IdentityAssetLockTransactionOutputNotFoundError = require('../../../../../../lib/errors/IdentityAssetLockTransactionOutputNotFoundError');
 
 describe('validateInstantAssetLockProofStructureFactory', () => {
   let rawProof;
@@ -29,19 +27,19 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
   let validateInstantAssetLockProofStructure;
   let jsonSchemaValidator;
   let validateInstantAssetLockProofStructureFactory;
+  let validateAssetLockTransactionResult;
+  let publicKeyHash;
+  let validateAssetLockTransactionMock;
 
   beforeEach(function beforeEach() {
     const assetLock = getInstantAssetLockFixture();
-    transaction = assetLock.getProof().getTransaction();
+    transaction = assetLock.getTransaction();
 
-    rawProof = assetLock.getProof()
-      .toObject();
+    rawProof = assetLock.toObject();
 
     jsonSchemaValidator = new JsonSchemaValidator(createAjv());
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
-    stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed.resolves(true);
-
     stateRepositoryMock.verifyInstantLock.resolves(true);
 
     instantLockMock = {
@@ -54,18 +52,30 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
     };
 
     validateInstantAssetLockProofStructureFactory = rewiremock.proxy(
-      '../../../../../../../lib/identity/stateTransitions/assetLockProof/proof/instant/validateInstantAssetLockProofStructureFactory',
+      '../../../../../../lib/identity/stateTransitions/assetLockProof/instant/validateInstantAssetLockProofStructureFactory',
       {
-        '../../../../../../../node_modules/@dashevo/dashcore-lib': {
+        '../../../../../../node_modules/@dashevo/dashcore-lib': {
           InstantLock: InstantLockClassMock,
           Transaction,
         },
       },
     );
 
+    publicKeyHash = Buffer.from('152073ca2300a86b510fa2f123d3ea7da3af68dc', 'hex');
+
+    validateAssetLockTransactionResult = new ValidationResult();
+    validateAssetLockTransactionResult.setData({
+      publicKeyHash,
+      transaction,
+    });
+    validateAssetLockTransactionMock = this.sinonSandbox.stub().resolves(
+      validateAssetLockTransactionResult,
+    );
+
     validateInstantAssetLockProofStructure = validateInstantAssetLockProofStructureFactory(
       jsonSchemaValidator,
       stateRepositoryMock,
+      validateAssetLockTransactionMock,
     );
   });
 
@@ -84,8 +94,8 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.params.missingProperty).to.equal('type');
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should be equal to 0', async () => {
@@ -101,8 +111,8 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('const');
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
   });
 
@@ -121,8 +131,8 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.params.missingProperty).to.equal('instantLock');
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should be a byte array', async () => {
@@ -140,8 +150,8 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(byteArrayError.keyword).to.equal('byteArray');
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should not be shorter than 160 bytes', async () => {
@@ -157,8 +167,8 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('minItems');
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should not be longer than 100 Kb', async () => {
@@ -174,8 +184,8 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('maxItems');
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should be valid', async () => {
@@ -193,8 +203,8 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.message).to.equal(`Invalid asset lock proof: ${instantLockError.message}`);
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should lock the same transaction', async () => {
@@ -204,9 +214,9 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
 
       expectValidationError(result, IdentityAssetLockProofMismatchError);
 
-      expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
+      expect(stateRepositoryMock.verifyInstantLock).to.be.calledOnce();
       expect(instantLockMock.verify).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.be.calledOnce();
     });
 
     it('should have valid signature', async () => {
@@ -217,6 +227,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expectValidationError(result, InvalidIdentityAssetLockProofSignatureError);
 
       expect(stateRepositoryMock.verifyInstantLock).to.be.calledOnce();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
   });
 
@@ -235,8 +246,8 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.params.missingProperty).to.equal('transaction');
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should be a byte array', async () => {
@@ -254,8 +265,8 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(byteArrayError.keyword).to.equal('byteArray');
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should not be shorter than 1 byte', async () => {
@@ -271,8 +282,8 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('minItems');
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should not be longer than 100 Kb', async () => {
@@ -288,12 +299,13 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('maxItems');
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
-    it('should be valid', async () => {
-      rawProof.transaction = Buffer.alloc(100, 1);
+    it('should should be valid', async () => {
+      validateAssetLockTransactionResult.addError(new InvalidIdentityAssetLockTransactionError('Unknown special transaction type'));
+      validateAssetLockTransactionMock.resolves(validateAssetLockTransactionResult);
 
       const result = await validateInstantAssetLockProofStructure(rawProof);
 
@@ -303,40 +315,9 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
 
       expect(error.message).to.equal('Invalid asset lock transaction: Unknown special transaction type');
 
-      expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
+      expect(stateRepositoryMock.verifyInstantLock).to.be.calledOnce();
       expect(instantLockMock.verify).to.not.be.called();
-    });
-
-    it('should return invalid result if asset lock transaction outPoint exists', async () => {
-      stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed.resolves(false);
-
-      const result = await validateInstantAssetLockProofStructure(rawProof);
-
-      expectValidationError(result);
-
-      const outPointBuffer = new Transaction(rawProof.transaction)
-        .getOutPointBuffer(rawProof.outputIndex);
-
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed)
-        .to.be.calledOnceWithExactly(outPointBuffer);
-
-      const [error] = result.getErrors();
-
-      expect(error).to.be.an.instanceOf(IdentityAssetLockTransactionOutPointAlreadyExistsError);
-      expect(error.getOutPoint()).to.deep.equal(outPointBuffer);
-    });
-
-    it('should point to specific output in transaction', async () => {
-      rawProof.outputIndex = 10;
-
-      const result = await validateInstantAssetLockProofStructure(rawProof);
-
-      expectValidationError(result, IdentityAssetLockTransactionOutputNotFoundError);
-
-      const [error] = result.getErrors();
-
-      expect(error.getOutputIndex()).to.equal(rawProof.outputIndex);
+      expect(validateAssetLockTransactionMock).to.be.calledOnce();
     });
   });
 
@@ -355,7 +336,6 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.params.missingProperty).to.equal('outputIndex');
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
     });
 
@@ -372,7 +352,6 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('type');
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
     });
 
@@ -389,7 +368,6 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('minimum');
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
-      expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();
     });
   });
@@ -399,6 +377,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
 
     expect(result).to.be.an.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.true();
+    expect(result.getData()).to.deep.equal(publicKeyHash);
 
     expect(stateRepositoryMock.verifyInstantLock).to.be.calledOnce();
   });

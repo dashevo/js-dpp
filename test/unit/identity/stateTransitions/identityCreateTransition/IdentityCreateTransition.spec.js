@@ -9,6 +9,7 @@ const IdentityCreateTransition = require('../../../../../lib/identity/stateTrans
 const Identifier = require('../../../../../lib/identifier/Identifier');
 
 const getIdentityCreateTransitionFixture = require('../../../../../lib/test/fixtures/getIdentityCreateTransitionFixture');
+const InstantAssetLockProof = require('../../../../../lib/identity/stateTransitions/assetLockProof/instant/InstantAssetLockProof');
 
 describe('IdentityCreateTransition', () => {
   let rawStateTransition;
@@ -37,27 +38,28 @@ describe('IdentityCreateTransition', () => {
     });
   });
 
-  describe('#setAssetLock', () => {
+  describe('#setAssetLockProof', () => {
     it('should set asset lock proof', () => {
-      stateTransition.setAssetLockProof(rawStateTransition.assetLock.proof);
+      stateTransition.setAssetLockProof(
+        new InstantAssetLockProof(rawStateTransition.assetLockProof),
+      );
 
-      expect(stateTransition.assetLockProof).to.deep.equal(rawStateTransition.assetLock.proof);
+      expect(stateTransition.assetLockProof.toObject())
+        .to.deep.equal(rawStateTransition.assetLockProof);
     });
 
     it('should set `identityId`', () => {
-      expect(stateTransition.identityId).to.deep.equal(
-        stateTransition.getAssetLockProof().createIdentifier(),
+      stateTransition.setAssetLockProof(
+        new InstantAssetLockProof(rawStateTransition.assetLockProof),
       );
 
-      stateTransition.setAssetLockProof(rawStateTransition.assetLock.proof);
-
       expect(stateTransition.identityId).to.deep.equal(
-        rawStateTransition.assetLock.proof.createIdentifier(),
+        stateTransition.getAssetLockProof().createIdentifier(),
       );
     });
   });
 
-  describe('#getAssetLock', () => {
+  describe('#getAssetLockProof', () => {
     it('should return currently set locked OutPoint', () => {
       expect(stateTransition.getAssetLockProof().toObject()).to.deep.equal(
         rawStateTransition.assetLockProof,
@@ -116,7 +118,7 @@ describe('IdentityCreateTransition', () => {
       expect(rawStateTransition).to.deep.equal({
         protocolVersion: Identity.PROTOCOL_VERSION,
         type: stateTransitionTypes.IDENTITY_CREATE,
-        assetLock: rawStateTransition.assetLock,
+        assetLockProof: rawStateTransition.assetLockProof,
         publicKeys: rawStateTransition.publicKeys,
         signature: undefined,
       });
@@ -128,7 +130,7 @@ describe('IdentityCreateTransition', () => {
       expect(rawStateTransition).to.deep.equal({
         protocolVersion: Identity.PROTOCOL_VERSION,
         type: stateTransitionTypes.IDENTITY_CREATE,
-        assetLock: rawStateTransition.assetLock,
+        assetLockProof: rawStateTransition.assetLockProof,
         publicKeys: rawStateTransition.publicKeys,
       });
     });

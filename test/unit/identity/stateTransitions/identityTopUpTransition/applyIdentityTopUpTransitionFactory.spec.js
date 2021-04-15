@@ -14,6 +14,7 @@ describe('applyIdentityTopUpTransitionFactory', () => {
   let applyIdentityTopUpTransition;
   let stateRepositoryMock;
   let identity;
+  let fetchAssetLockTransactionOutputMock;
 
   beforeEach(function beforeEach() {
     identity = getIdentityFixture();
@@ -23,8 +24,13 @@ describe('applyIdentityTopUpTransitionFactory', () => {
 
     stateTransition = getIdentityTopUpTransitionFixture();
 
+    const output = stateTransition.getAssetLockProof().getOutput();
+
+    fetchAssetLockTransactionOutputMock = this.sinonSandbox.stub().resolves(output);
+
     applyIdentityTopUpTransition = applyIdentityTopUpTransitionFactory(
       stateRepositoryMock,
+      fetchAssetLockTransactionOutputMock,
     );
   });
 
@@ -32,7 +38,7 @@ describe('applyIdentityTopUpTransitionFactory', () => {
     const balanceBeforeTopUp = identity.getBalance();
 
     const balanceToTopUp = convertSatoshiToCredits(
-      stateTransition.getAssetLock().getProof().getOutput().satoshis,
+      stateTransition.getAssetLockProof().getOutput().satoshis,
     );
 
     await applyIdentityTopUpTransition(stateTransition);
@@ -46,7 +52,10 @@ describe('applyIdentityTopUpTransitionFactory', () => {
 
     expect(stateRepositoryMock.markAssetLockTransactionOutPointAsUsed).to.have.been
       .calledOnceWithExactly(
-        stateTransition.getAssetLock().getProof().getOutPoint(),
+        stateTransition.getAssetLockProof().getOutPoint(),
       );
+
+    expect(fetchAssetLockTransactionOutputMock)
+      .to.be.calledOnceWithExactly(stateTransition.getAssetLockProof());
   });
 });

@@ -20,7 +20,7 @@
   "additionalProperties": false,
   "required": [
     "type",
-    "height",
+    "coreChainLockedHeight",
     "outPoint"
   ]
 }

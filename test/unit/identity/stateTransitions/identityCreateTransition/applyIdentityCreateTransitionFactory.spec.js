@@ -14,14 +14,21 @@ describe('applyIdentityCreateTransitionFactory', () => {
   let stateTransition;
   let applyIdentityCreateTransition;
   let stateRepositoryMock;
+  let fetchAssetLockTransactionOutputMock;
+  let output;
 
   beforeEach(function beforeEach() {
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
 
     stateTransition = getIdentityCreateTransitionFixture();
 
+    output = stateTransition.getAssetLockProof().getOutput();
+
+    fetchAssetLockTransactionOutputMock = this.sinonSandbox.stub().resolves(output);
+
     applyIdentityCreateTransition = applyIdentityCreateTransitionFactory(
       stateRepositoryMock,
+      fetchAssetLockTransactionOutputMock,
     );
   });
 
@@ -29,7 +36,7 @@ describe('applyIdentityCreateTransitionFactory', () => {
     await applyIdentityCreateTransition(stateTransition);
 
     const balance = convertSatoshiToCredits(
-      stateTransition.getAssetLock().getProof().getOutput().satoshis,
+      output.satoshis,
     );
 
     const identity = new Identity({
@@ -55,7 +62,10 @@ describe('applyIdentityCreateTransitionFactory', () => {
 
     expect(stateRepositoryMock.markAssetLockTransactionOutPointAsUsed).to.have.been
       .calledOnceWithExactly(
-        stateTransition.getAssetLock().getProof().getOutPoint(),
+        stateTransition.getAssetLockProof().getOutPoint(),
       );
+
+    expect(fetchAssetLockTransactionOutputMock)
+      .to.be.calledOnceWithExactly(stateTransition.getAssetLockProof());
   });
 });

@@ -25,6 +25,7 @@ describe('validateStateTransitionFeeFactory', () => {
   let identity;
   let dataContract;
   let calculateStateTransitionFeeMock;
+  let fetchAssetLockTransactionOutputMock;
 
   beforeEach(function beforeEach() {
     identity = getIdentityFixture();
@@ -32,11 +33,15 @@ describe('validateStateTransitionFeeFactory', () => {
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
     stateRepositoryMock.fetchIdentity.resolves(identity);
 
+    const output = getIdentityCreateTransitionFixture().getAssetLockProof().getOutput();
+
     calculateStateTransitionFeeMock = this.sinonSandbox.stub().returns(2);
+    fetchAssetLockTransactionOutputMock = this.sinonSandbox.stub().resolves(output);
 
     validateStateTransitionFee = validateStateTransitionFeeFactory(
       stateRepositoryMock,
       calculateStateTransitionFeeMock,
+      fetchAssetLockTransactionOutputMock,
     );
 
     dataContract = getDataContractFixture();
@@ -151,8 +156,7 @@ describe('validateStateTransitionFeeFactory', () => {
       identityCreateTransition = getIdentityCreateTransitionFixture();
 
       const { satoshis } = identityCreateTransition
-        .getAssetLock()
-        .getProof()
+        .getAssetLockProof()
         .getOutput();
 
       outputAmount = satoshis * RATIO;
@@ -174,6 +178,20 @@ describe('validateStateTransitionFeeFactory', () => {
       expect(calculateStateTransitionFeeMock).to.be.calledOnceWithExactly(
         identityCreateTransition,
       );
+    });
+
+    it('should throw an error if output could not be fetched', async () => {
+      const error = new Error('some error');
+
+      fetchAssetLockTransactionOutputMock.throws(error);
+
+      try {
+        await validateStateTransitionFee(identityCreateTransition);
+
+        expect.fail('should throw an error');
+      } catch (e) {
+        expect(error).to.equal(error);
+      }
     });
 
     it('should return valid result', async () => {
@@ -199,8 +217,7 @@ describe('validateStateTransitionFeeFactory', () => {
       identityTopUpTransition = getIdentityTopUpTransitionFixture();
 
       const { satoshis } = identityTopUpTransition
-        .getAssetLock()
-        .getProof()
+        .getAssetLockProof()
         .getOutput();
 
       outputAmount = satoshis * RATIO;
@@ -226,6 +243,20 @@ describe('validateStateTransitionFeeFactory', () => {
       expect(calculateStateTransitionFeeMock).to.be.calledOnceWithExactly(
         identityTopUpTransition,
       );
+    });
+
+    it('should throw an error if output could not be fetched', async () => {
+      const error = new Error('some error');
+
+      fetchAssetLockTransactionOutputMock.throws(error);
+
+      try {
+        await validateStateTransitionFee(identityTopUpTransition);
+
+        expect.fail('should throw an error');
+      } catch (e) {
+        expect(error).to.equal(error);
+      }
     });
 
     it('should return valid result', async () => {

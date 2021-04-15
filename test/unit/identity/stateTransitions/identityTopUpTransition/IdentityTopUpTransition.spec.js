@@ -32,11 +32,11 @@ describe('IdentityTopUpTransition', () => {
     });
   });
 
-  describe('#setAssetLock', () => {
+  describe('#setAssetLockProof', () => {
     it('should set asset lock proof', () => {
-      stateTransition.setAssetLockProof(rawStateTransition.assetLock.proof);
+      stateTransition.setAssetLockProof(rawStateTransition.assetLockProof);
 
-      expect(stateTransition.assetLockProof).to.deep.equal(rawStateTransition.assetLock.proof);
+      expect(stateTransition.assetLockProof).to.deep.equal(rawStateTransition.assetLockProof);
     });
   });
 
