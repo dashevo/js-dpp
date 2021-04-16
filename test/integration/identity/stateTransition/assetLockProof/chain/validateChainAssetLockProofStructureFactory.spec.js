@@ -3,7 +3,7 @@ const createAjv = require('../../../../../../lib/ajv/createAjv');
 const getChainAssetLockFixture = require('../../../../../../lib/test/fixtures/getChainAssetLockProofFixture');
 const JsonSchemaValidator = require('../../../../../../lib/validation/JsonSchemaValidator');
 const createStateRepositoryMock = require('../../../../../../lib/test/mocks/createStateRepositoryMock');
-const InvalidIdentityAssetLockProofCoreHeightError = require('../../../../../../lib/errors/InvalidIdentityAssetLockProofCoreHeightError');
+const InvalidAssetLockProofCoreChainHeightError = require('../../../../../../lib/errors/InvalidAssetLockProofCoreChainHeightError');
 
 const { expectValidationError, expectJsonSchemaError } = require(
   '../../../../../../lib/test/expect/expectError',
@@ -12,6 +12,7 @@ const { expectValidationError, expectJsonSchemaError } = require(
 const validateChainAssetLockProofStructureFactory = require('../../../../../../lib/identity/stateTransitions/assetLockProof/chain/validateChainAssetLockProofStructureFactory');
 const ValidationResult = require('../../../../../../lib/validation/ValidationResult');
 const IdentityAssetLockTransactionIsNotFoundError = require('../../../../../../lib/errors/IdentityAssetLockTransactionIsNotFoundError');
+const ConsensusError = require('../../../../../../lib/errors/ConsensusError');
 
 describe('validateChainAssetLockProofStructureFactory', () => {
   let rawProof;
@@ -173,14 +174,14 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     });
 
     it('should be less or equal to consensus core height', async () => {
-      rawProof.coreChainLockedHeight = 43;
+      rawProof.coreChainLockedHeight = 41;
 
       const result = await validateChainAssetLockProofStructure(rawProof);
 
-      expectValidationError(result, InvalidIdentityAssetLockProofCoreHeightError);
+      expectValidationError(result, InvalidAssetLockProofCoreChainHeightError);
       const [error] = result.getErrors();
 
-      expect(error.getProofCoreChainLockedHeight()).to.equal(43);
+      expect(error.getProofCoreChainLockedHeight()).to.equal(41);
       expect(error.getCurrentCoreChainLockedHeight()).to.equal(42);
 
       expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(
@@ -273,6 +274,18 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       );
       expect(validateAssetLockTransactionMock).to.not.be.called();
     });
+
+    it('should point to valid transaction', async () => {
+      const consensusError = new ConsensusError('test');
+      validateAssetLockTransactionResult.addError(consensusError);
+
+      const result = await validateChainAssetLockProofStructure(rawProof);
+
+      expectValidationError(result, ConsensusError);
+      const [error] = result.getErrors();
+
+      expect(error).to.deep.equal(consensusError);
+    });
   });
 
   it('should return valid result', async () => {
@@ -286,7 +299,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
     );
     expect(validateAssetLockTransactionMock).to.be.calledOnceWithExactly(
-      rawTransaction,
+      Buffer.from(rawTransaction, 'hex'),
       0,
     );
   });
