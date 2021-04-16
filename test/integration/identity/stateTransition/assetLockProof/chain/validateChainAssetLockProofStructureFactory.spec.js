@@ -21,9 +21,10 @@ describe('validateChainAssetLockProofStructureFactory', () => {
   let validateAssetLockTransactionMock;
   let validateAssetLockTransactionResult;
   let publicKeyHash;
+  let rawTransaction;
 
   beforeEach(function beforeEach() {
-    const rawTransaction = '030000000137feb5676d0851337ea3c9a992496aab7a0b3eee60aeeb9774000b7f4bababa5000000006b483045022100d91557de37645c641b948c6cd03b4ae3791a63a650db3e2fee1dcf5185d1b10402200e8bd410bf516ca61715867666d31e44495428ce5c1090bf2294a829ebcfa4ef0121025c3cc7fbfc52f710c941497fd01876c189171ea227458f501afcb38a297d65b4ffffffff021027000000000000166a14152073ca2300a86b510fa2f123d3ea7da3af68dcf77cb0090a0000001976a914152073ca2300a86b510fa2f123d3ea7da3af68dc88ac00000000';
+    rawTransaction = '030000000137feb5676d0851337ea3c9a992496aab7a0b3eee60aeeb9774000b7f4bababa5000000006b483045022100d91557de37645c641b948c6cd03b4ae3791a63a650db3e2fee1dcf5185d1b10402200e8bd410bf516ca61715867666d31e44495428ce5c1090bf2294a829ebcfa4ef0121025c3cc7fbfc52f710c941497fd01876c189171ea227458f501afcb38a297d65b4ffffffff021027000000000000166a14152073ca2300a86b510fa2f123d3ea7da3af68dcf77cb0090a0000001976a914152073ca2300a86b510fa2f123d3ea7da3af68dc88ac00000000';
 
     const assetLock = getChainAssetLockFixture();
 
@@ -33,10 +34,10 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
     stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
 
-    stateRepositoryMock.fetchLatestPlatformBlockHeader.resolves({
-      coreChainLockedHeight: 42,
+    stateRepositoryMock.fetchTransaction.resolves({
+      hex: rawTransaction,
+      height: 42,
     });
-    stateRepositoryMock.fetchTransaction.resolves(rawTransaction);
 
     publicKeyHash = Buffer.from('152073ca2300a86b510fa2f123d3ea7da3af68dc', 'hex');
 
@@ -69,8 +70,8 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('required');
       expect(error.params.missingProperty).to.equal('type');
 
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.not.be.called();
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should be equal to 1', async () => {
@@ -85,7 +86,6 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.dataPath).to.equal('.type');
       expect(error.keyword).to.equal('const');
 
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.not.be.called();
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
     });
   });
@@ -104,8 +104,8 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('required');
       expect(error.params.missingProperty).to.equal('coreChainLockedHeight');
 
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.not.be.called();
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should be an integer', async () => {
@@ -120,8 +120,8 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.dataPath).to.equal('.coreChainLockedHeight');
       expect(error.keyword).to.equal('type');
 
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.not.be.called();
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should be a number', async () => {
@@ -136,8 +136,8 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.dataPath).to.equal('.coreChainLockedHeight');
       expect(error.keyword).to.equal('type');
 
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.not.be.called();
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should be greater than 0', async () => {
@@ -152,8 +152,8 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.dataPath).to.equal('.coreChainLockedHeight');
       expect(error.keyword).to.equal('minimum');
 
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.not.be.called();
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should be less than 4294967296', async () => {
@@ -168,11 +168,11 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.dataPath).to.equal('.coreChainLockedHeight');
       expect(error.keyword).to.equal('maximum');
 
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.not.be.called();
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
-    it('should be valid', async () => {
+    it('should be less or equal to consensus core height', async () => {
       rawProof.coreChainLockedHeight = 43;
 
       const result = await validateChainAssetLockProofStructure(rawProof);
@@ -183,8 +183,10 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.getProofCoreChainLockedHeight()).to.equal(43);
       expect(error.getCurrentCoreChainLockedHeight()).to.equal(42);
 
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.be.calledOnce();
-      expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
+      expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(
+        '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
+      );
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
   });
 
@@ -202,8 +204,8 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.keyword).to.equal('required');
       expect(error.params.missingProperty).to.equal('outPoint');
 
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.not.be.called();
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should be a byte array', async () => {
@@ -220,8 +222,8 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
       expect(byteArrayError.keyword).to.equal('byteArray');
 
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.not.be.called();
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should not be shorter than 36 bytes', async () => {
@@ -236,8 +238,8 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.dataPath).to.equal('.outPoint');
       expect(error.keyword).to.equal('minItems');
 
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.not.be.called();
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
     it('should not be longer than 36 bytes', async () => {
@@ -252,11 +254,11 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.dataPath).to.equal('.outPoint');
       expect(error.keyword).to.equal('maxItems');
 
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.not.be.called();
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
 
-    it('should be valid', async () => {
+    it('should point to existing transaction', async () => {
       stateRepositoryMock.fetchTransaction.resolves(null);
 
       const result = await validateChainAssetLockProofStructure(rawProof);
@@ -266,10 +268,10 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
       expect(error.getOutPoint()).to.deep.equal(rawProof.outPoint);
 
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.be.calledOnce();
       expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(
         '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
       );
+      expect(validateAssetLockTransactionMock).to.not.be.called();
     });
   });
 
@@ -280,9 +282,12 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     expect(result.isValid()).to.be.true();
     expect(result.getData()).to.deep.equal(publicKeyHash);
 
-    expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.be.calledOnce();
     expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(
       '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
+    );
+    expect(validateAssetLockTransactionMock).to.be.calledOnceWithExactly(
+      rawTransaction,
+      0,
     );
   });
 });

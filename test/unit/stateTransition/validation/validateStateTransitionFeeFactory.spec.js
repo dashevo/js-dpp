@@ -75,6 +75,8 @@ describe('validateStateTransitionFeeFactory', () => {
       expect(calculateStateTransitionFeeMock).to.be.calledOnceWithExactly(
         dataContractCreateTransition,
       );
+
+      expect(fetchAssetLockTransactionOutputMock).to.not.be.called();
     });
 
     it('should return valid result', async () => {
@@ -91,6 +93,8 @@ describe('validateStateTransitionFeeFactory', () => {
       expect(calculateStateTransitionFeeMock).to.be.calledOnceWithExactly(
         dataContractCreateTransition,
       );
+
+      expect(fetchAssetLockTransactionOutputMock).to.not.be.called();
     });
   });
 
@@ -129,6 +133,8 @@ describe('validateStateTransitionFeeFactory', () => {
       expect(calculateStateTransitionFeeMock).to.be.calledOnceWithExactly(
         documentsBatchTransition,
       );
+
+      expect(fetchAssetLockTransactionOutputMock).to.not.be.called();
     });
 
     it('should return valid result', async () => {
@@ -145,6 +151,8 @@ describe('validateStateTransitionFeeFactory', () => {
       expect(calculateStateTransitionFeeMock).to.be.calledOnceWithExactly(
         documentsBatchTransition,
       );
+
+      expect(fetchAssetLockTransactionOutputMock).to.not.be.called();
     });
   });
 
@@ -178,20 +186,10 @@ describe('validateStateTransitionFeeFactory', () => {
       expect(calculateStateTransitionFeeMock).to.be.calledOnceWithExactly(
         identityCreateTransition,
       );
-    });
 
-    it('should throw an error if output could not be fetched', async () => {
-      const error = new Error('some error');
-
-      fetchAssetLockTransactionOutputMock.throws(error);
-
-      try {
-        await validateStateTransitionFee(identityCreateTransition);
-
-        expect.fail('should throw an error');
-      } catch (e) {
-        expect(error).to.equal(error);
-      }
+      expect(fetchAssetLockTransactionOutputMock).to.be.calledOnceWithExactly(
+        identityCreateTransition.getAssetLockProof(),
+      );
     });
 
     it('should return valid result', async () => {
@@ -205,6 +203,10 @@ describe('validateStateTransitionFeeFactory', () => {
 
       expect(calculateStateTransitionFeeMock).to.be.calledOnceWithExactly(
         identityCreateTransition,
+      );
+
+      expect(fetchAssetLockTransactionOutputMock).to.be.calledOnceWithExactly(
+        identityCreateTransition.getAssetLockProof(),
       );
     });
   });
@@ -243,20 +245,10 @@ describe('validateStateTransitionFeeFactory', () => {
       expect(calculateStateTransitionFeeMock).to.be.calledOnceWithExactly(
         identityTopUpTransition,
       );
-    });
 
-    it('should throw an error if output could not be fetched', async () => {
-      const error = new Error('some error');
-
-      fetchAssetLockTransactionOutputMock.throws(error);
-
-      try {
-        await validateStateTransitionFee(identityTopUpTransition);
-
-        expect.fail('should throw an error');
-      } catch (e) {
-        expect(error).to.equal(error);
-      }
+      expect(fetchAssetLockTransactionOutputMock).to.be.calledOnceWithExactly(
+        identityTopUpTransition.getAssetLockProof(),
+      );
     });
 
     it('should return valid result', async () => {
@@ -274,6 +266,10 @@ describe('validateStateTransitionFeeFactory', () => {
 
       expect(calculateStateTransitionFeeMock).to.be.calledOnceWithExactly(
         identityTopUpTransition,
+      );
+
+      expect(fetchAssetLockTransactionOutputMock).to.be.calledOnceWithExactly(
+        identityTopUpTransition.getAssetLockProof(),
       );
     });
   });
@@ -299,6 +295,8 @@ describe('validateStateTransitionFeeFactory', () => {
 
       expect(calculateStateTransitionFeeMock).to.be.calledOnceWithExactly(stateTransitionMock);
       expect(stateRepositoryMock.fetchIdentity).to.not.be.called();
+
+      expect(fetchAssetLockTransactionOutputMock).to.not.be.called();
     }
   });
 });

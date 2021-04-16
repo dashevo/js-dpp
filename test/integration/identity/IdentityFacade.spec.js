@@ -100,6 +100,8 @@ describe('IdentityFacade', () => {
 
       expect(result).to.be.instanceOf(InstantAssetLockProof);
       expect(result.getInstantLock()).to.deep.equal(instantLock);
+      expect(result.getTransaction().toObject()).to.deep.equal(assetLockTransaction.toObject());
+      expect(result.getOutputIndex()).to.equal(outputIndex);
     });
   });
 
