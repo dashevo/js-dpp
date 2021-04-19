@@ -37,7 +37,7 @@ describe('validateAssetLockTransactionFactory', () => {
 
     stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed.returns(false);
 
-    TransactionClassMock = function () {
+    TransactionClassMock = function transactionClassMock() {
       this.outputs = transactionInstance.outputs;
     };
 
@@ -89,7 +89,7 @@ describe('validateAssetLockTransactionFactory', () => {
   it('should point to output with OR_RETURN', async function it() {
     const isDataOut = this.sinonSandbox.stub().returns(false);
 
-    TransactionClassMock = function () {
+    TransactionClassMock = function transactionClassMock() {
       this.outputs = [{
         script: {
           isDataOut,
@@ -116,7 +116,7 @@ describe('validateAssetLockTransactionFactory', () => {
     const isDataOut = this.sinonSandbox.stub().returns(true);
     const getData = this.sinonSandbox.stub().returns('');
 
-    TransactionClassMock = function () {
+    TransactionClassMock = function transactionClassMock() {
       this.outputs = [{
         script: {
           isDataOut,
