@@ -12,7 +12,7 @@ const validateChainAssetLockProofStructureFactory = require('../../../../../../l
 const ValidationResult = require('../../../../../../lib/validation/ValidationResult');
 const IdentityAssetLockTransactionIsNotFoundError = require('../../../../../../lib/errors/IdentityAssetLockTransactionIsNotFoundError');
 const ConsensusError = require('../../../../../../lib/errors/ConsensusError');
-const InvalidIdentityAssetLockProofCoreHeightError = require('../../../../../../lib/errors/InvalidAssetLockProofCoreChainHeightError');
+const InvalidAssetLockProofCoreChainHeightError = require('../../../../../../lib/errors/InvalidAssetLockProofCoreChainHeightError');
 const InvalidAssetLockProofTransactionHeightError = require('../../../../../../lib/errors/InvalidAssetLockProofTransactionHeightError');
 
 describe('validateChainAssetLockProofStructureFactory', () => {
@@ -308,14 +308,14 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error).to.deep.equal(consensusError);
     });
 
-    it('should has valid height', async () => {
+    it('should point to transaction from block lower than core chain locked height', async () => {
       stateRepositoryMock.fetchLatestPlatformBlockHeader.resolves({
         coreChainLockedHeight: 43,
       });
 
       const result = await validateChainAssetLockProofStructure(rawProof);
 
-      expectValidationError(result, InvalidIdentityAssetLockProofCoreHeightError);
+      expectValidationError(result, InvalidAssetLockProofCoreChainHeightError);
       const [error] = result.getErrors();
 
       expect(error.getProofCoreChainLockedHeight()).to.equal(42);
