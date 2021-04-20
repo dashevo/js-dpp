@@ -186,24 +186,17 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     });
 
     it('should be less or equal to consensus core height', async () => {
-      rawProof.coreChainLockedHeight = 41;
       stateRepositoryMock.fetchLatestPlatformBlockHeader.resolves({
-        coreChainLockedHeight: 41,
+        coreChainLockedHeight: 43,
       });
 
       const result = await validateChainAssetLockProofStructure(rawProof);
 
-      expectValidationError(result, InvalidAssetLockProofTransactionHeightError);
+      expectValidationError(result, InvalidAssetLockProofCoreChainHeightError);
       const [error] = result.getErrors();
 
-      expect(error.getProofCoreChainLockedHeight()).to.equal(41);
-      expect(error.getTransactionHeight()).to.equal(42);
-
-      expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(
-        '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
-      );
-      expect(validateAssetLockTransactionMock).to.not.be.called();
-      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.be.calledOnce();
+      expect(error.getProofCoreChainLockedHeight()).to.equal(42);
+      expect(error.getCurrentCoreChainLockedHeight()).to.equal(43);
     });
   });
 
@@ -309,17 +302,24 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     });
 
     it('should point to transaction from block lower than core chain locked height', async () => {
+      rawProof.coreChainLockedHeight = 41;
       stateRepositoryMock.fetchLatestPlatformBlockHeader.resolves({
-        coreChainLockedHeight: 43,
+        coreChainLockedHeight: 41,
       });
 
       const result = await validateChainAssetLockProofStructure(rawProof);
 
-      expectValidationError(result, InvalidAssetLockProofCoreChainHeightError);
+      expectValidationError(result, InvalidAssetLockProofTransactionHeightError);
       const [error] = result.getErrors();
 
-      expect(error.getProofCoreChainLockedHeight()).to.equal(42);
-      expect(error.getCurrentCoreChainLockedHeight()).to.equal(43);
+      expect(error.getProofCoreChainLockedHeight()).to.equal(41);
+      expect(error.getTransactionHeight()).to.equal(42);
+
+      expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(
+        '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
+      );
+      expect(validateAssetLockTransactionMock).to.not.be.called();
+      expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.be.calledOnce();
     });
   });
 
