@@ -3,7 +3,6 @@ const createAjv = require('../../../../../../lib/ajv/createAjv');
 const getChainAssetLockFixture = require('../../../../../../lib/test/fixtures/getChainAssetLockProofFixture');
 const JsonSchemaValidator = require('../../../../../../lib/validation/JsonSchemaValidator');
 const createStateRepositoryMock = require('../../../../../../lib/test/mocks/createStateRepositoryMock');
-const InvalidAssetLockProofCoreChainHeightError = require('../../../../../../lib/errors/InvalidAssetLockProofCoreChainHeightError');
 
 const { expectValidationError, expectJsonSchemaError } = require(
   '../../../../../../lib/test/expect/expectError',
@@ -14,6 +13,7 @@ const ValidationResult = require('../../../../../../lib/validation/ValidationRes
 const IdentityAssetLockTransactionIsNotFoundError = require('../../../../../../lib/errors/IdentityAssetLockTransactionIsNotFoundError');
 const ConsensusError = require('../../../../../../lib/errors/ConsensusError');
 const InvalidIdentityAssetLockProofCoreHeightError = require('../../../../../../lib/errors/InvalidAssetLockProofCoreChainHeightError');
+const InvalidAssetLockProofTransactionHeightError = require('../../../../../../lib/errors/InvalidAssetLockProofTransactionHeightError');
 
 describe('validateChainAssetLockProofStructureFactory', () => {
   let rawProof;
@@ -41,7 +41,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     });
 
     stateRepositoryMock.fetchTransaction.resolves({
-      hex: rawTransaction,
+      data: Buffer.from(rawTransaction, 'hex'),
       height: 42,
     });
 
@@ -193,11 +193,11 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
       const result = await validateChainAssetLockProofStructure(rawProof);
 
-      expectValidationError(result, InvalidAssetLockProofCoreChainHeightError);
+      expectValidationError(result, InvalidAssetLockProofTransactionHeightError);
       const [error] = result.getErrors();
 
       expect(error.getProofCoreChainLockedHeight()).to.equal(41);
-      expect(error.getCurrentCoreChainLockedHeight()).to.equal(42);
+      expect(error.getTransactionHeight()).to.equal(42);
 
       expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(
         '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
