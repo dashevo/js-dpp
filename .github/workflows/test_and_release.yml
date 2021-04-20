@@ -46,6 +46,7 @@ jobs:
     name: Release NPM package
     runs-on: ubuntu-20.04
     needs: test
+    if: ${{ github.event_name == 'release' }}
     steps:
       - uses: actions/checkout@v2
 
@@ -77,7 +78,6 @@ jobs:
             const semver = require(`${process.env.GITHUB_WORKSPACE}/node_modules/semver`);
             const tag = context.payload.release.tag_name;
             return (tag.includes('dev') ? `${semver.major(tag)}.${semver.minor(tag)}-dev` : 'latest');
-
 
       - name: Publish NPM package
         uses: JS-DevTools/npm-publish@v1
