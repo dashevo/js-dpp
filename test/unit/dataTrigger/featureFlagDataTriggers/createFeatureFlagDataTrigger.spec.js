@@ -77,10 +77,5 @@ describe('createFeatureFlagDataTrigger', () => {
 
     expect(result).to.be.an.instanceOf(DataTriggerExecutionResult);
     expect(result.isOk()).to.be.true();
-
-    // const [error] = result.getErrors();
-
-    // expect(error).to.be.an.instanceOf(DataTriggerConditionError);
-    // expect(error.message).to.equal('Normalized label doesn\'t match label');
   });
 });
