@@ -187,7 +187,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
     it('should be less or equal to consensus core height', async () => {
       stateRepositoryMock.fetchLatestPlatformBlockHeader.resolves({
-        coreChainLockedHeight: 43,
+        coreChainLockedHeight: 41,
       });
 
       const result = await validateChainAssetLockProofStructure(rawProof);
@@ -196,7 +196,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.getProofCoreChainLockedHeight()).to.equal(42);
-      expect(error.getCurrentCoreChainLockedHeight()).to.equal(43);
+      expect(error.getCurrentCoreChainLockedHeight()).to.equal(41);
     });
   });
 
