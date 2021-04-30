@@ -1,7 +1,6 @@
 # [0.19.0](https://github.com/dashevo/js-dpp/compare/v0.18.0...v0.19.0) (2021-04-30)
 
 
-
 ### Features
 
 * add data triggers for feature flags documents ([#297](https://github.com/dashevo/js-dpp/issues/297))
