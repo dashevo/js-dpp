@@ -3,14 +3,17 @@
 
 ### Features
 
-* add data triggers for feature flags documents ([#297](https://github.com/dashevo/js-dpp/issues/297))([#302](https://github.com/dashevo/js-dpp/issues/302))
+* add data triggers for feature flags documents ([#297](https://github.com/dashevo/js-dpp/issues/297), [#302](https://github.com/dashevo/js-dpp/issues/302))
 * ChainLock Asset Lock proof ([#296](https://github.com/dashevo/js-dpp/issues/296))
 * use `verifyInstantLock` instead of `fetchSMLStore` ([#294](https://github.com/dashevo/js-dpp/issues/294))
 
 
-### Breaking changes
+### BREAKING CHANGES
 
-* `AssetLock` class was removed. New `ChainAssetLock` proof type was added. `InstantAssetLockProof` schema was changed.
+* `AssetLock` class was removed.
+* `InstantAssetLockProof` requires `transaction` and `outputIndex` property.
+* `IdentityCreateTransition` schema changed. `assetLock` property renamed to `assetLockProof` and expect `InstantAssetLockProof` or `ChainAssetLockProof`. `transaction` and `outputIndex` properties are removed.
+* `IdentityTopUpTransition` schema changed. `assetLock` property renamed to `assetLockProof` and expect `InstantAssetLockProof` or `ChainAssetLockProof`. `transaction` and `outputIndex` properties are removed.
 
 
 
