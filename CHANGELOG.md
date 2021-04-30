@@ -1,3 +1,20 @@
+# [0.19.0](https://github.com/dashevo/js-dpp/compare/v0.18.0...v0.19.0) (2021-04-30)
+
+
+
+### Features
+
+* add data triggers for feature flags documents ([#297](https://github.com/dashevo/js-dpp/issues/297))
+* ChainLock Asset Lock proof ([#296](https://github.com/dashevo/js-dpp/issues/296))
+* use `verifyInstantLock` instead of `fetchSMLStore` ([#294](https://github.com/dashevo/js-dpp/issues/294))
+
+
+### Bug Fixes
+
+* height check was missing in feature flag data trigger ([#302](https://github.com/dashevo/js-dpp/issues/302))
+
+
+
 # [0.18.0](https://github.com/dashevo/js-dpp/compare/v0.17.0...v0.18.0) (2021-03-03)
 
 
