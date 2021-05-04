@@ -44,7 +44,6 @@
     "@dashevo/dashpay-contract": "^1.0.0",
     "@dashevo/dpns-contract": "~0.3.0-dev.6",
     "@dashevo/drive-grpc": "~0.3.0",
-    "@dashevo/feature-flags-contract": "0.1.0-dev.1",
     "babel-loader": "^8.1.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
@@ -71,6 +70,7 @@
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^8.0.0",
     "@dashevo/dashcore-lib": "~0.19.21",
+    "@dashevo/feature-flags-contract": "0.1.0",
     "ajv": "^6.12.0",
     "bs58": "^4.0.1",
     "cbor": "^5.0.1",
