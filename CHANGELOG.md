@@ -1,3 +1,12 @@
+## [0.19.2](https://github.com/dashevo/js-dpp/compare/v0.19.1...v0.19.2) (2021-05-20)
+
+
+### Bug Fixes
+
+* Cbor not decoding buffers properly in browsers ([#306](https://github.com/dashevo/js-dpp/issues/308))
+
+
+
 ## [0.19.1](https://github.com/dashevo/js-dpp/compare/v0.19.0...v0.19.1) (2021-05-04)
 
 
