@@ -1,3 +1,40 @@
+## [0.19.2](https://github.com/dashevo/js-dpp/compare/v0.19.1...v0.19.2) (2021-05-20)
+
+
+### Bug Fixes
+
+* Cbor not decoding buffers properly in browsers ([#306](https://github.com/dashevo/js-dpp/issues/308))
+
+
+
+## [0.19.1](https://github.com/dashevo/js-dpp/compare/v0.19.0...v0.19.1) (2021-05-04)
+
+
+### Bug Fixes
+
+* `topLevelIdentity.getId` is not a function ([#306](https://github.com/dashevo/js-dpp/issues/306))
+
+
+
+# [0.19.0](https://github.com/dashevo/js-dpp/compare/v0.18.0...v0.19.0) (2021-04-30)
+
+
+### Features
+
+* add data triggers for feature flags documents ([#297](https://github.com/dashevo/js-dpp/issues/297), [#302](https://github.com/dashevo/js-dpp/issues/302))
+* ChainLock Asset Lock proof ([#296](https://github.com/dashevo/js-dpp/issues/296))
+* use `verifyInstantLock` instead of `fetchSMLStore` ([#294](https://github.com/dashevo/js-dpp/issues/294))
+
+
+### BREAKING CHANGES
+
+* `AssetLock` class was removed.
+* `InstantAssetLockProof` requires `transaction` and `outputIndex` property.
+* `IdentityCreateTransition` schema changed. `assetLock` property renamed to `assetLockProof` and expect `InstantAssetLockProof` or `ChainAssetLockProof`. `transaction` and `outputIndex` properties are removed.
+* `IdentityTopUpTransition` schema changed. `assetLock` property renamed to `assetLockProof` and expect `InstantAssetLockProof` or `ChainAssetLockProof`. `transaction` and `outputIndex` properties are removed.
+
+
+
 # [0.18.0](https://github.com/dashevo/js-dpp/compare/v0.17.0...v0.18.0) (2021-03-03)
 
 

@@ -12,7 +12,7 @@
       "type": "integer",
       "const": 3
     },
-    "assetLock": {
+    "assetLockProof": {
       "type": "object"
     },
     "identityId": {
@@ -33,7 +33,7 @@
   "required": [
     "protocolVersion",
     "type",
-    "assetLock",
+    "assetLockProof",
     "identityId",
     "signature"
   ]
