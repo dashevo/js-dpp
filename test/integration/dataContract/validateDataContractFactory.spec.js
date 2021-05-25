@@ -898,6 +898,9 @@ describe('validateDataContractFactory', function main() {
             something: {
               type: 'array',
               uniqueItems: true,
+              items: {
+                type: 'string',
+              },
             },
           },
           additionalProperties: false,
@@ -911,7 +914,7 @@ describe('validateDataContractFactory', function main() {
 
         expect(error.dataPath).to.equal('/documents/indexedDocument/properties/something');
         expect(error.keyword).to.equal('required');
-        expect(error.params.missingProperty).to.equal('maxItems');
+        expect(error.params.missingProperty).to.equal('items');
       });
 
       it('should have `maxItems` no bigger than 100000 if `uniqueItems` is used', async () => {
@@ -922,6 +925,9 @@ describe('validateDataContractFactory', function main() {
               type: 'array',
               uniqueItems: true,
               maxItems: 200000,
+              items: {
+                type: 'string',
+              },
             },
           },
           additionalProperties: false,
@@ -933,7 +939,7 @@ describe('validateDataContractFactory', function main() {
 
         const [error] = result.getErrors();
 
-        expect(error.dataPath).to.equal('/documents/indexedDocument/properties/something/maxItems');
+        expect(error.dataPath).to.equal('/documents/indexedDocument/properties/something');
         expect(error.keyword).to.equal('maximum');
       });
 
@@ -957,7 +963,7 @@ describe('validateDataContractFactory', function main() {
         const [error] = result.getErrors();
 
         expect(error.message).to.be.a('string').and.satisfy((msg) => (
-          msg.startsWith('unknown format "lalala" is used')
+          msg.startsWith('unknown format "lalala" ignored in schema')
         ));
       });
 

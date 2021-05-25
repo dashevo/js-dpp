@@ -66,7 +66,7 @@ describe('addByteArrayKeyword', () => {
 
           expect.fail('should fail with keyword schema error');
         } catch (e) {
-          expect(e.message).to.equal('keyword schema is invalid: data should be boolean');
+          expect(e.message).to.equal('keyword value is invalid: data should be boolean');
         }
       });
 
@@ -81,7 +81,7 @@ describe('addByteArrayKeyword', () => {
 
           expect.fail('should fail with keyword schema error');
         } catch (e) {
-          expect(e.message).to.equal('keyword schema is invalid: data should be equal to constant');
+          expect(e.message).to.equal('keyword value is invalid: data should be equal to constant');
         }
       });
     });
