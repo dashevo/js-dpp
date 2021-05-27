@@ -101,8 +101,6 @@ describe('validatePublicKeysFactory', () => {
 
       const result = validatePublicKeys(rawPublicKeys);
 
-      console.dir(result);
-
       expectJsonSchemaError(result);
 
       const [error] = result.getErrors();
