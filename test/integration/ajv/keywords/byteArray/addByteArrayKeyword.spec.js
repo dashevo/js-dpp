@@ -15,7 +15,7 @@ describe('addByteArrayKeyword', () => {
 
     expect(
       ajv.getKeyword('byteArray'),
-    ).to.equal(byteArray);
+    ).to.deep.equal(byteArray);
   });
 
   describe('byteArray', () => {
