@@ -46,6 +46,13 @@ describe('validateDataContractFactory', function main() {
 
   describe('protocolVersion', () => {
     it('should be present', async () => {
+      rawDataContract = {
+        documents: {
+          zalupa: {
+            type: 'object',
+          },
+        },
+      };
       delete rawDataContract.protocolVersion;
 
       const result = await validateDataContract(rawDataContract);
@@ -466,7 +473,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result);
+        expectJsonSchemaError(result, 2);
 
         const [error] = result.getErrors();
 
@@ -510,7 +517,6 @@ describe('validateDataContractFactory', function main() {
               properties: {
                 something: {
                   type: 'object',
-                  additionalProperties: false,
                 },
               },
               additionalProperties: false,
@@ -521,7 +527,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result, 3);
+        expectJsonSchemaError(result, 5);
 
         const [error] = result.getErrors();
 
@@ -579,7 +585,7 @@ describe('validateDataContractFactory', function main() {
 
             const result = await validateDataContract(rawDataContract);
 
-            expectJsonSchemaError(result, 2);
+            expectJsonSchemaError(result, 3);
 
             const errors = result.getErrors();
 
@@ -605,7 +611,7 @@ describe('validateDataContractFactory', function main() {
 
             const result = await validateDataContract(rawDataContract);
 
-            expectJsonSchemaError(result, 2);
+            expectJsonSchemaError(result, 4);
 
             const errors = result.getErrors();
 
@@ -666,7 +672,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result, 3);
+        expectJsonSchemaError(result, 4);
 
         const [error] = result.getErrors();
 
@@ -699,7 +705,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result);
+        expectJsonSchemaError(result, 2);
 
         const [error] = result.getErrors();
 
@@ -719,7 +725,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result);
+        expectJsonSchemaError(result, 2);
 
         const [error] = result.getErrors();
 
@@ -744,7 +750,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result, 0);
+        expectJsonSchemaError(result, 2);
       });
 
       it('should have additionalItems for arrays', async () => {
@@ -767,7 +773,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result);
+        expectJsonSchemaError(result, 2);
 
         const [error] = result.getErrors();
 
@@ -823,7 +829,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result, 3);
+        expectJsonSchemaError(result, 5);
 
         const [shouldBeAnObjectError, shouldEqualConstant] = result.getErrors();
 
@@ -843,7 +849,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result);
+        expectJsonSchemaError(result, 2);
 
         const [error] = result.getErrors();
 
@@ -898,9 +904,6 @@ describe('validateDataContractFactory', function main() {
             something: {
               type: 'array',
               uniqueItems: true,
-              items: {
-                type: 'string',
-              },
             },
           },
           additionalProperties: false,
@@ -908,7 +911,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result);
+        expectJsonSchemaError(result, 2);
 
         const [error] = result.getErrors();
 
@@ -935,7 +938,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result);
+        expectJsonSchemaError(result, 2);
 
         const [error] = result.getErrors();
 
@@ -981,7 +984,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result);
+        expectJsonSchemaError(result, 2);
 
         const [error] = result.getErrors();
 
@@ -1005,7 +1008,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result);
+        expectJsonSchemaError(result, 2);
 
         const [error] = result.getErrors();
 
@@ -1027,7 +1030,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result);
+        expectJsonSchemaError(result, 2);
 
         const [error] = result.getErrors();
 
@@ -1051,7 +1054,7 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result);
+        expectJsonSchemaError(result, 2);
 
         const [error] = result.getErrors();
 
@@ -1065,7 +1068,7 @@ describe('validateDataContractFactory', function main() {
 
           const result = await validateDataContract(rawDataContract);
 
-          expectJsonSchemaError(result);
+          expectJsonSchemaError(result, 2);
 
           const [error] = result.getErrors();
 
@@ -1079,7 +1082,7 @@ describe('validateDataContractFactory', function main() {
 
           const result = await validateDataContract(rawDataContract);
 
-          expectJsonSchemaError(result);
+          expectJsonSchemaError(result, 2);
 
           const [error] = result.getErrors();
 
@@ -1093,7 +1096,7 @@ describe('validateDataContractFactory', function main() {
 
           const result = await validateDataContract(rawDataContract);
 
-          expectJsonSchemaError(result);
+          expectJsonSchemaError(result, 2);
 
           const [error] = result.getErrors();
 
@@ -1108,7 +1111,7 @@ describe('validateDataContractFactory', function main() {
 
           const result = await validateDataContract(rawDataContract);
 
-          expectJsonSchemaError(result);
+          expectJsonSchemaError(result, 2);
 
           const [error] = result.getErrors();
 
@@ -1124,7 +1127,7 @@ describe('validateDataContractFactory', function main() {
 
             const result = await validateDataContract(rawDataContract);
 
-            expectJsonSchemaError(result);
+            expectJsonSchemaError(result, 2);
 
             const [error] = result.getErrors();
 
@@ -1137,7 +1140,7 @@ describe('validateDataContractFactory', function main() {
 
             const result = await validateDataContract(rawDataContract);
 
-            expectJsonSchemaError(result);
+            expectJsonSchemaError(result, 2);
 
             const [error] = result.getErrors();
 
@@ -1150,7 +1153,7 @@ describe('validateDataContractFactory', function main() {
 
             const result = await validateDataContract(rawDataContract);
 
-            expectJsonSchemaError(result);
+            expectJsonSchemaError(result, 2);
 
             const [error] = result.getErrors();
 
