@@ -9,6 +9,7 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 const validateDataContractFactory = require('../../../lib/dataContract/validateDataContractFactory');
 const validateDataContractMaxDepthFactory = require('../../../lib/dataContract/stateTransition/validation/validateDataContractMaxDepthFactory');
 const enrichDataContractWithBaseSchema = require('../../../lib/dataContract/enrichDataContractWithBaseSchema');
+const validateDocumentSchemaPatterns = require('../../../lib/document/validateDocumentSchemaPatterns');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
@@ -41,6 +42,7 @@ describe('validateDataContractFactory', function main() {
       jsonSchemaValidator,
       validateDataContractMaxDepth,
       enrichDataContractWithBaseSchema,
+      validateDocumentSchemaPatterns,
     );
   });
 
@@ -1057,6 +1059,29 @@ describe('validateDataContractFactory', function main() {
 
         expect(error.dataPath).to.equal('/documents/indexedDocument/properties/something/maxLength');
         expect(error.keyword).to.equal('maximum');
+      });
+
+      it('should not have incompatible patterns', async () => {
+        rawDataContract.documents.indexedDocument = {
+          type: 'object',
+          properties: {
+            something: {
+              type: 'string',
+              // pattern: '^((?!-|_)[a-zA-Z0-9-_]{0,62}[a-zA-Z0-9])$',
+            },
+          },
+          additionalProperties: false,
+        };
+
+        const result = await validateDataContract(rawDataContract);
+
+        expectJsonSchemaError(result);
+
+        const [error] = result.getErrors();
+
+        expect(error.getPattern()).to.equal('^((?!-|_)[a-zA-Z0-9-_]{0,62}[a-zA-Z0-9])$');
+        expect(error.getPath()).to.equal('/properties/bar');
+        expect(error.getOriginalErrorMessage()).to.equal('invalid perl operator: (?!');
       });
 
       describe('byteArray', () => {
