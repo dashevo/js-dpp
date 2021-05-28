@@ -124,7 +124,7 @@
           "propertyNames": { "format": "regex" },
           "default": {}
         },
-        "dependencies": {
+        "dependentSchemas": {
           "type": "object",
           "additionalProperties": {
             "oneOf": [
@@ -154,7 +154,7 @@
           "const": true
         }
       },
-      "dependencies": {
+      "dependentSchemas": {
         "byteArray": {
           "description": "should be used only with array type",
           "properties": {
@@ -450,7 +450,7 @@
               "propertyNames": { "format": "regex" },
               "default": {}
             },
-            "dependencies": {
+            "dependentSchemas": {
               "type": "object",
               "additionalProperties": {
                 "oneOf": [
