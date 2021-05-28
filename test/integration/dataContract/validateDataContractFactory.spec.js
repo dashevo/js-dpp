@@ -337,7 +337,7 @@ describe('validateDataContractFactory', function main() {
     });
 
     it('should have valid property names', async () => {
-      const validNames = ['validName', 'valid_name', 'valid-name', 'abc', '123abc', 'abc123', 'ValidName',
+      const validNames = ['validName', 'valid_name', 'valid-name', 'abc', 'ab12c', 'abc123', 'ValidName',
         'abcdefghigklmnopqrstuvwxyz01234567890abcdefghigklmnopqrstuvwxyz', 'abc_gbf_gdb', 'abc-gbf-gdb'];
 
       await Promise.all(
@@ -354,7 +354,7 @@ describe('validateDataContractFactory', function main() {
     });
 
     it('should return an invalid result if a property has invalid format', async () => {
-      const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test'];
+      const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test', '123abci', 'ab'];
 
       await Promise.all(
         invalidNames.map(async (name) => {
@@ -417,7 +417,7 @@ describe('validateDataContractFactory', function main() {
     });
 
     it('should have valid property names (document types)', async () => {
-      const validNames = ['validName', 'valid_name', 'valid-name', 'abc', '123abc', 'abc123', 'ValidName', 'validName',
+      const validNames = ['validName', 'valid_name', 'valid-name', 'abc', 'a123123bc', 'ab123c', 'ValidName', 'validName',
         'abcdefghigklmnopqrstuvwxyz01234567890abcdefghigklmnopqrstuvwxyz', 'abc_gbf_gdb', 'abc-gbf-gdb'];
 
       await Promise.all(
@@ -432,7 +432,7 @@ describe('validateDataContractFactory', function main() {
     });
 
     it('should return an invalid result if a property (document type) has invalid format', async () => {
-      const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test'];
+      const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test', '123abc', 'ab'];
 
       await Promise.all(
         invalidNames.map(async (name) => {
@@ -539,7 +539,7 @@ describe('validateDataContractFactory', function main() {
       });
 
       it('should have valid property names', async () => {
-        const validNames = ['validName', 'valid_name', 'valid-name', 'abc', '123abc', 'abc123', 'ValidName', 'validName',
+        const validNames = ['validName', 'valid_name', 'valid-name', 'abc', 'a123bc', 'abc123', 'ValidName', 'validName',
           'abcdefghigklmnopqrstuvwxyz01234567890abcdefghigklmnopqrstuvwxyz', 'abc_gbf_gdb', 'abc-gbf-gdb'];
 
         await Promise.all(
@@ -556,7 +556,7 @@ describe('validateDataContractFactory', function main() {
       });
 
       it('should have valid nested property names', async () => {
-        const validNames = ['validName', 'valid_name', 'valid-name', 'abc', '123abc', 'abc123', 'ValidName', 'validName',
+        const validNames = ['validName', 'valid_name', 'valid-name', 'abc', 'a123bc', 'abc123', 'ValidName', 'validName',
           'abcdefghigklmnopqrstuvwxyz01234567890abcdefghigklmnopqrstuvwxyz', 'abc_gbf_gdb', 'abc-gbf-gdb'];
 
         rawDataContract.documents.niceDocument.properties.something = {
@@ -579,7 +579,7 @@ describe('validateDataContractFactory', function main() {
       });
 
       it('should return an invalid result if a property has invalid format', async () => {
-        const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test'];
+        const invalidNames = ['-invalidname', '_invalidname', 'invalidname-', 'invalidname_', '*(*&^', '$test', '123abc', 'ab'];
 
         await Promise.all(
           invalidNames.map(async (name) => {
@@ -1057,7 +1057,8 @@ describe('validateDataContractFactory', function main() {
           properties: {
             something: {
               type: 'string',
-              // pattern: '^((?!-|_)[a-zA-Z0-9-_]{0,62}[a-zA-Z0-9])$',
+              maxLength: 100,
+              pattern: '^((?!-|_)[a-zA-Z0-9-_]{0,62}[a-zA-Z0-9])$',
             },
           },
           additionalProperties: false,
@@ -1069,7 +1070,7 @@ describe('validateDataContractFactory', function main() {
 
         const [error] = result.getErrors();
 
-        expect(error.getPattern()).to.equal('^((?!-|_)[a-zA-Z0-9-_]{0,62}[a-zA-Z0-9])$');
+        expect(error.getPattern()).to.equal('^[a-zA-Z][a-zA-Z0-9-_]{1,62}[a-zA-Z0-9]$');
         expect(error.getPath()).to.equal('/properties/bar');
         expect(error.getOriginalErrorMessage()).to.equal('invalid perl operator: (?!');
       });
