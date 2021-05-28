@@ -1,10 +1,10 @@
-const validateDocumentSchemaPatterns = require('../../../lib/document/validateDocumentSchemaPatterns');
+const validateDataContractPatterns = require('../../../lib/dataContract/validateDataContractPatterns');
 const { expectValidationError } = require(
   '../../../lib/test/expect/expectError',
 );
 const IncompatibleRe2PatternError = require('../../../lib/document/errors/IncompatibleRe2PatternError');
 
-describe('validateDocumentSchemaPatterns', () => {
+describe('validateDataContractPatterns', () => {
   it('should return valid result', () => {
     const schema = {
       type: 'object',
@@ -19,7 +19,7 @@ describe('validateDocumentSchemaPatterns', () => {
       additionalProperties: false,
     };
 
-    const result = validateDocumentSchemaPatterns(schema);
+    const result = validateDataContractPatterns(schema);
 
     expect(result.isValid()).to.be.true();
   });
@@ -38,7 +38,7 @@ describe('validateDocumentSchemaPatterns', () => {
       additionalProperties: false,
     };
 
-    const result = validateDocumentSchemaPatterns(schema);
+    const result = validateDataContractPatterns(schema);
 
     expectValidationError(result, IncompatibleRe2PatternError);
     const [error] = result.getErrors();

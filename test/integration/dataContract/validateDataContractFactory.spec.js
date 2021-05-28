@@ -9,7 +9,7 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 const validateDataContractFactory = require('../../../lib/dataContract/validateDataContractFactory');
 const validateDataContractMaxDepthFactory = require('../../../lib/dataContract/stateTransition/validation/validateDataContractMaxDepthFactory');
 const enrichDataContractWithBaseSchema = require('../../../lib/dataContract/enrichDataContractWithBaseSchema');
-const validateDocumentSchemaPatterns = require('../../../lib/document/validateDocumentSchemaPatterns');
+const validateDocumentSchemaPatterns = require('../../../lib/dataContract/validateDataContractPatterns');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
@@ -22,6 +22,7 @@ const SystemPropertyIndexAlreadyPresentError = require('../../../lib/errors/Syst
 const UniqueIndicesLimitReachedError = require('../../../lib/errors/UniqueIndicesLimitReachedError');
 const InvalidIndexedPropertyConstraintError = require('../../../lib/errors/InvalidIndexedPropertyConstraintError');
 const InvalidCompoundIndexError = require('../../../lib/errors/InvalidCompoundIndexError');
+const IncompatibleRe2PatternError = require('../../../lib/document/errors/IncompatibleRe2PatternError');
 
 describe('validateDataContractFactory', function main() {
   this.timeout(10000);
@@ -1066,12 +1067,12 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result);
+        expectValidationError(result, IncompatibleRe2PatternError);
 
         const [error] = result.getErrors();
 
-        expect(error.getPattern()).to.equal('^[a-zA-Z][a-zA-Z0-9-_]{1,62}[a-zA-Z0-9]$');
-        expect(error.getPath()).to.equal('/properties/bar');
+        expect(error.getPattern()).to.equal('^((?!-|_)[a-zA-Z0-9-_]{0,62}[a-zA-Z0-9])$');
+        expect(error.getPath()).to.equal('/documents/indexedDocument/properties/something');
         expect(error.getOriginalErrorMessage()).to.equal('invalid perl operator: (?!');
       });
 
