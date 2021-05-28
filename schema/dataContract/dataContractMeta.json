@@ -203,18 +203,13 @@
                   "type": {
                     "anyOf": [
                       {
-                        "enum": [
-                          "object",
-                          "array"
-                        ]
+                        "type": "string",
+                        "enum": ["object", "array"]
                       },
                       {
                         "type": "array",
                         "contains": {
-                          "enum": [
-                            "object",
-                            "array"
-                          ]
+                          "enum": ["object", "array"]
                         }
                       }
                     ]
@@ -230,9 +225,7 @@
                 "maximum": 100000
               }
             },
-            "required": [
-              "maxItems"
-            ]
+            "required": ["maxItems"]
           }
         },
         "pattern": {
@@ -257,9 +250,7 @@
               "maximum": 50000
             }
           },
-          "required": [
-            "maxLength"
-          ]
+          "required": ["maxLength"]
         }
       },
       "allOf": [
@@ -272,10 +263,18 @@
             },
             "required": ["type"],
             "not": {
+              "properties": {
+                "byteArray": true
+              },
               "required": ["byteArray"]
             }
           },
           "then": {
+            "properties": {
+              "items": {
+                "$ref": "#/$defs/documentSchema/properties/items"
+              }
+            },
             "required": ["items"]
           }
         },
@@ -292,6 +291,11 @@
             "required": ["type", "items"]
           },
           "then": {
+            "properties": {
+              "additionalItems": {
+                "$ref": "#/$defs/documentSchema/properties/additionalItems"
+              }
+            },
             "required": ["additionalItems"]
           }
         },
@@ -305,15 +309,33 @@
             "not": {
               "anyOf": [
                 {
+                  "properties": {
+                    "$ref": {
+                      "$ref": "#/$defs/documentSchema/properties/$ref"
+                    }
+                  },
                   "required": ["$ref"]
                 },
                 {
+                  "properties": {
+                    "byteArray": {
+                      "$ref": "#/$defs/documentSchema/properties/byteArray"
+                    }
+                  },
                   "required": ["byteArray"]
                 }
               ]
             }
           },
           "then": {
+            "properties": {
+              "properties": {
+                "$ref": "#/$defs/documentProperties"
+              },
+              "additionalProperties": {
+                "$ref": "#/$defs/documentSchema/properties/additionalProperties"
+              }
+            },
             "required": ["properties", "additionalProperties"]
           }
         }
@@ -437,28 +459,7 @@
                 ]
               }
             },
-            "const": true,
-            "if": {
-              "$ref": "#/$defs/documentSchema"
-            },
-            "then": {
-              "$ref": "#/$defs/documentSchema"
-            },
-            "else": {
-              "$ref": "#/$defs/documentSchema"
-            },
-            "allOf": {
-              "$ref": "#/$defs/documentSchemaArray"
-            },
-            "anyOf": {
-              "$ref": "#/$defs/documentSchemaArray"
-            },
-            "oneOf": {
-              "$ref": "#/$defs/documentSchemaArray"
-            },
-            "not": {
-              "$ref": "#/$defs/documentSchema"
-            }
+            "const": true
           },
           "if": {
             "properties": {
@@ -467,10 +468,21 @@
               }
             },
             "not": {
+              "properties": {
+                "$ref": true
+              },
               "required": ["$ref"]
             }
           },
           "then": {
+            "properties": {
+              "properties": {
+                "$ref": "#/$defs/documentProperties"
+              },
+              "additionalProperties": {
+                "$ref": "#/$defs/documentSchema/properties/additionalProperties"
+              }
+            },
             "required": ["properties", "additionalProperties"]
           },
           "minProperties": 1,
