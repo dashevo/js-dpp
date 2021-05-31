@@ -1,4 +1,5 @@
 const $RefParser = require('@apidevtools/json-schema-ref-parser');
+const Re2 = require('re2');
 
 const createAjv = require('../../../lib/ajv/createAjv');
 
@@ -1029,7 +1030,11 @@ describe('validateDataContractFactory', function main() {
         expect(error.params.missingProperty).to.equal('maxLength');
       });
 
-      it('should have `maxLength` no bigger than 50000 if `format` is used', async () => {
+      it('should have `maxLength` no bigger than 50000 if `format` is used', async function it() {
+        if (Re2.constructor.name !== 'Re2') {
+          this.skip();
+        }
+
         rawDataContract.documents.indexedDocument = {
           type: 'object',
           properties: {
@@ -1052,7 +1057,11 @@ describe('validateDataContractFactory', function main() {
         expect(error.keyword).to.equal('maximum');
       });
 
-      it('should not have incompatible patterns', async () => {
+      it('should not have incompatible patterns', async function it() {
+        if (Re2.constructor.name !== 'Re2') {
+          this.skip();
+        }
+
         rawDataContract.documents.indexedDocument = {
           type: 'object',
           properties: {

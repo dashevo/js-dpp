@@ -71,6 +71,7 @@
     "@dashevo/feature-flags-contract": "0.1.0",
     "ajv": "^7.2.4",
     "ajv-formats": "^2.1.0",
+    "bignumber.js": "^9.0.1",
     "bs58": "^4.0.1",
     "cbor": "^7.0.5",
     "json-schema-traverse": "^1.0.0",

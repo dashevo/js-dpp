@@ -1,3 +1,4 @@
+const Re2 = require('re2');
 const validateDataContractPatterns = require('../../../lib/dataContract/validateDataContractPatterns');
 const { expectValidationError } = require(
   '../../../lib/test/expect/expectError',
@@ -24,7 +25,11 @@ describe('validateDataContractPatterns', () => {
     expect(result.isValid()).to.be.true();
   });
 
-  it('should return invalid result on incompatible pattern', () => {
+  it('should return invalid result on incompatible pattern', function it() {
+    if (Re2.constructor.name !== 'Re2') {
+      this.skip();
+    }
+
     const schema = {
       type: 'object',
       properties: {
