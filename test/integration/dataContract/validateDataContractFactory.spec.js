@@ -1,5 +1,4 @@
 const $RefParser = require('@apidevtools/json-schema-ref-parser');
-const Re2 = require('re2');
 
 const createAjv = require('../../../lib/ajv/createAjv');
 
@@ -1031,7 +1030,7 @@ describe('validateDataContractFactory', function main() {
       });
 
       it('should have `maxLength` no bigger than 50000 if `format` is used', async function it() {
-        if (Re2.constructor.name !== 'Re2') {
+        if (global.window) {
           this.skip();
         }
 
@@ -1058,7 +1057,7 @@ describe('validateDataContractFactory', function main() {
       });
 
       it('should not have incompatible patterns', async function it() {
-        if (Re2.constructor.name !== 'Re2') {
+        if (global.window) {
           this.skip();
         }
 
