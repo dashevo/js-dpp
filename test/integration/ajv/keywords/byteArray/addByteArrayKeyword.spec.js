@@ -1,4 +1,4 @@
-const Ajv = require('ajv').default;
+const { default: Ajv } = require('ajv');
 
 const addByteArrayKeyword = require('../../../../../lib/ajv/keywords/byteArray/addByteArrayKeyword');
 const byteArray = require('../../../../../lib/ajv/keywords/byteArray/byteArray');
