@@ -11,11 +11,6 @@ const commonJSConfig = {
   node: {
     fs: 'empty',
   },
-  resolve: {
-    alias: {
-      [path.join(__dirname, 'node_modules/re2/re2.js')]: path.join(`${__dirname}/lib/util/RegExp.js`),
-    },
-  },
   module: {
     rules: [
       {

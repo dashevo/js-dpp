@@ -1,10 +1,22 @@
-const validateDataContractPatterns = require('../../../lib/dataContract/validateDataContractPatterns');
+const validateDataContractPatternsFactory = require('../../../lib/dataContract/validateDataContractPatternsFactory');
 const { expectValidationError } = require(
   '../../../lib/test/expect/expectError',
 );
 const IncompatibleRe2PatternError = require('../../../lib/document/errors/IncompatibleRe2PatternError');
+const getRE2Class = require('../../../lib/util/getRE2Class');
 
-describe('validateDataContractPatterns', () => {
+describe('validateDataContractPatternsFactory', () => {
+  let validateDataContractPatterns;
+  let RE2;
+
+  before(async () => {
+    RE2 = await getRE2Class();
+  });
+
+  beforeEach(() => {
+    validateDataContractPatterns = validateDataContractPatternsFactory(RE2);
+  });
+
   it('should return valid result', () => {
     const schema = {
       type: 'object',
@@ -24,11 +36,7 @@ describe('validateDataContractPatterns', () => {
     expect(result.isValid()).to.be.true();
   });
 
-  it('should return invalid result on incompatible pattern', function it() {
-    if (global.window) {
-      this.skip();
-    }
-
+  it('should return invalid result on incompatible pattern', () => {
     const schema = {
       type: 'object',
       properties: {
@@ -49,6 +57,8 @@ describe('validateDataContractPatterns', () => {
 
     expect(error.getPattern()).to.equal('^((?!-|_)[a-zA-Z0-9-_]{0,62}[a-zA-Z0-9])$');
     expect(error.getPath()).to.equal('/properties/bar');
-    expect(error.getOriginalErrorMessage()).to.equal('invalid perl operator: (?!');
+    expect(error.getOriginalErrorMessage()).to.be.a('string').and.satisfy((msg) => (
+      msg.startsWith('Invalid regular expression')
+    ));
   });
 });

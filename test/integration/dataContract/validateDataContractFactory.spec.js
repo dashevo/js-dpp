@@ -9,7 +9,7 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 const validateDataContractFactory = require('../../../lib/dataContract/validateDataContractFactory');
 const validateDataContractMaxDepthFactory = require('../../../lib/dataContract/stateTransition/validation/validateDataContractMaxDepthFactory');
 const enrichDataContractWithBaseSchema = require('../../../lib/dataContract/enrichDataContractWithBaseSchema');
-const validateDocumentSchemaPatterns = require('../../../lib/dataContract/validateDataContractPatterns');
+const validateDataContractPatternsFactory = require('../../../lib/dataContract/validateDataContractPatternsFactory');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
@@ -23,6 +23,7 @@ const UniqueIndicesLimitReachedError = require('../../../lib/errors/UniqueIndice
 const InvalidIndexedPropertyConstraintError = require('../../../lib/errors/InvalidIndexedPropertyConstraintError');
 const InvalidCompoundIndexError = require('../../../lib/errors/InvalidCompoundIndexError');
 const IncompatibleRe2PatternError = require('../../../lib/document/errors/IncompatibleRe2PatternError');
+const getRE2Class = require('../../../lib/util/getRE2Class');
 
 describe('validateDataContractFactory', function main() {
   this.timeout(10000);
@@ -30,20 +31,28 @@ describe('validateDataContractFactory', function main() {
   let dataContract;
   let rawDataContract;
   let validateDataContract;
+  let RE2;
 
-  beforeEach(() => {
+  before(async () => {
+    RE2 = await getRE2Class();
+  });
+
+  beforeEach(async () => {
     dataContract = getDataContractFixture();
     rawDataContract = dataContract.toObject();
 
-    const jsonSchemaValidator = new JsonSchemaValidator(createAjv());
+    const jsonSchemaValidator = new JsonSchemaValidator(await createAjv());
 
     const validateDataContractMaxDepth = validateDataContractMaxDepthFactory($RefParser);
+
+    const validateDataContractPatterns = validateDataContractPatternsFactory(RE2);
 
     validateDataContract = validateDataContractFactory(
       jsonSchemaValidator,
       validateDataContractMaxDepth,
       enrichDataContractWithBaseSchema,
-      validateDocumentSchemaPatterns,
+      validateDataContractPatterns,
+      RE2,
     );
   });
 
@@ -1029,11 +1038,7 @@ describe('validateDataContractFactory', function main() {
         expect(error.params.missingProperty).to.equal('maxLength');
       });
 
-      it('should have `maxLength` no bigger than 50000 if `format` is used', async function it() {
-        if (global.window) {
-          this.skip();
-        }
-
+      it('should have `maxLength` no bigger than 50000 if `format` is used', async () => {
         rawDataContract.documents.indexedDocument = {
           type: 'object',
           properties: {
@@ -1056,11 +1061,7 @@ describe('validateDataContractFactory', function main() {
         expect(error.keyword).to.equal('maximum');
       });
 
-      it('should not have incompatible patterns', async function it() {
-        if (global.window) {
-          this.skip();
-        }
-
+      it('should not have incompatible patterns', async () => {
         rawDataContract.documents.indexedDocument = {
           type: 'object',
           properties: {
@@ -1081,7 +1082,9 @@ describe('validateDataContractFactory', function main() {
 
         expect(error.getPattern()).to.equal('^((?!-|_)[a-zA-Z0-9-_]{0,62}[a-zA-Z0-9])$');
         expect(error.getPath()).to.equal('/documents/indexedDocument/properties/something');
-        expect(error.getOriginalErrorMessage()).to.equal('invalid perl operator: (?!');
+        expect(error.getOriginalErrorMessage()).to.be.a('string').and.satisfy((msg) => (
+          msg.startsWith('Invalid regular expression')
+        ));
       });
 
       describe('byteArray', () => {

@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const webpack = require('webpack');
-const path = require('path');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const RewiremockPlugin = require('rewiremock/webpack/plugin');
 
@@ -19,11 +18,6 @@ module.exports = (config) => {
       mode: 'development',
       optimization: {
         minimize: false,
-      },
-      resolve: {
-        alias: {
-          [path.join(__dirname, 'node_modules/re2/re2.js')]: path.join(`${__dirname}/lib/util/RegExp.js`),
-        },
       },
       plugins: [
         new webpack.NamedModulesPlugin(),

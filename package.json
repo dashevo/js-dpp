@@ -82,6 +82,6 @@
     "lodash.mergewith": "^4.6.2",
     "lodash.set": "^4.3.2",
     "long": "^4.0.0",
-    "re2": "^1.16.0"
+    "re2-wasm": "^1.0.1"
   }
 }
