@@ -11,7 +11,6 @@
     "test:coverage": "NODE_ENV=test nyc --check-coverage --stmts=98 --branch=94 --funcs=95 --lines=98 mocha 'test/unit/**/*.spec.js' 'test/integration/**/*.spec.js'",
     "prepublishOnly": "npm run build"
   },
-  "browser": "dist/DashPlatformProtocol.min.js",
   "main": "lib/DashPlatformProtocol.js",
   "contributors": [
     {
