@@ -1,3 +1,4 @@
+const getRE2Class = require('@dashevo/re2-wasm').default;
 const $RefParser = require('@apidevtools/json-schema-ref-parser');
 
 const createAjv = require('../../../lib/ajv/createAjv');
@@ -23,7 +24,6 @@ const UniqueIndicesLimitReachedError = require('../../../lib/errors/UniqueIndice
 const InvalidIndexedPropertyConstraintError = require('../../../lib/errors/InvalidIndexedPropertyConstraintError');
 const InvalidCompoundIndexError = require('../../../lib/errors/InvalidCompoundIndexError');
 const IncompatibleRe2PatternError = require('../../../lib/document/errors/IncompatibleRe2PatternError');
-const getRE2Class = require('../../../lib/util/getRE2Class');
 
 describe('validateDataContractFactory', function main() {
   this.timeout(10000);

@@ -1,9 +1,10 @@
+const getRE2Class = require('@dashevo/re2-wasm').default;
+
 const validateDataContractPatternsFactory = require('../../../lib/dataContract/validateDataContractPatternsFactory');
 const { expectValidationError } = require(
   '../../../lib/test/expect/expectError',
 );
 const IncompatibleRe2PatternError = require('../../../lib/document/errors/IncompatibleRe2PatternError');
-const getRE2Class = require('../../../lib/util/getRE2Class');
 
 describe('validateDataContractPatternsFactory', () => {
   let validateDataContractPatterns;

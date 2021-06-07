@@ -1,7 +1,8 @@
+const getRE2Class = require('@dashevo/re2-wasm').default;
+
 const getPropertyDefinitionByPathFactory = require(
   '../../../lib/dataContract/getPropertyDefinitionByPathFactory',
 );
-const getRE2Class = require('../../../lib/util/getRE2Class');
 
 describe('getPropertyDefinitionByPathFactory', () => {
   let schema;
