@@ -68,8 +68,9 @@
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^8.0.0",
-    "@dashevo/dashcore-lib": "~0.19.23",
+    "@dashevo/dashcore-lib": "~0.19.24",
     "@dashevo/feature-flags-contract": "0.1.0",
+    "@dashevo/re2-wasm": "~1.0.2",
     "ajv": "^7.2.4",
     "ajv-formats": "^2.1.0",
     "bignumber.js": "^9.0.1",
@@ -81,7 +82,6 @@
     "lodash.get": "^4.4.2",
     "lodash.mergewith": "^4.6.2",
     "lodash.set": "^4.3.2",
-    "long": "^4.0.0",
-    "re2-wasm": "^1.0.1"
+    "long": "^4.0.0"
   }
 }
