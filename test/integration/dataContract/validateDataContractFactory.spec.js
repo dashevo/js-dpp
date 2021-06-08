@@ -1136,12 +1136,11 @@ describe('validateDataContractFactory', function main() {
 
           const result = await validateDataContract(rawDataContract);
 
-          expectJsonSchemaError(result, 2);
+          expectJsonSchemaError(result, 1);
 
           const [error] = result.getErrors();
 
-          expect(error.schemaPath).to.equal('#/dependencies/byteArray/not');
-          expect(error.keyword).to.equal('not');
+          expect(error.message).to.equal("'byteArray' should not be used with 'items'");
         });
       });
 
