@@ -523,18 +523,18 @@ describe('validateDataContractFactory', function main() {
       it('should have nested "properties"', async () => {
         rawDataContract.documents.niceDocument.properties.object = {
           type: 'array',
-          items: [
+          prefixItems: [
             {
-              type: 'object',
-              properties: {
-                something: {
-                  type: 'object',
-                },
-              },
-              additionalProperties: false,
+              type: 'string',
+              // properties: {
+              //   something: {
+              //     type: 'object',
+              //   },
+              // },
+              // additionalProperties: false,
             },
           ],
-          additionalItems: false,
+          items: false,
         };
 
         const result = await validateDataContract(rawDataContract);
@@ -669,7 +669,7 @@ describe('validateDataContractFactory', function main() {
       it('should have nested "additionalProperties" defined', async () => {
         rawDataContract.documents.niceDocument.properties.object = {
           type: 'array',
-          items: [
+          prefixItems: [
             {
               type: 'object',
               properties: {
@@ -679,7 +679,7 @@ describe('validateDataContractFactory', function main() {
               },
             },
           ],
-          additionalItems: false,
+          items: false,
         };
 
         const result = await validateDataContract(rawDataContract);
@@ -746,6 +746,7 @@ describe('validateDataContractFactory', function main() {
         expect(error.params.missingProperty).to.equal('items');
       });
 
+      // TODO: maybe this is no longer valid
       it('should have additionalItems for arrays', async () => {
         rawDataContract.documents.new = {
           properties: {
@@ -775,13 +776,13 @@ describe('validateDataContractFactory', function main() {
         expect(error.params.missingProperty).to.equal('additionalItems');
       });
 
-      it('should have additionalItems disabled for arrays', async () => {
+      it('should have items disabled for arrays', async () => {
         rawDataContract.documents.new = {
           type: 'object',
           properties: {
             something: {
               type: 'array',
-              items: [
+              prefixItems: [
                 {
                   type: 'string',
                 },
@@ -790,7 +791,7 @@ describe('validateDataContractFactory', function main() {
                 },
               ],
               minItems: 2,
-              additionalItems: false,
+              items: false,
             },
           },
           additionalProperties: false,
@@ -801,12 +802,12 @@ describe('validateDataContractFactory', function main() {
         expectJsonSchemaError(result, 0);
       });
 
-      it('should not have additionalItems enabled for arrays', async () => {
+      it('should not have items enabled for arrays', async () => {
         rawDataContract.documents.new = {
           properties: {
             something: {
               type: 'array',
-              items: [
+              prefixItems: [
                 {
                   type: 'string',
                 },
@@ -814,7 +815,7 @@ describe('validateDataContractFactory', function main() {
                   type: 'number',
                 },
               ],
-              additionalItems: true,
+              items: true,
             },
           },
           additionalProperties: false,
@@ -827,12 +828,12 @@ describe('validateDataContractFactory', function main() {
         const [shouldBeAnObjectError, shouldEqualConstant] = result.getErrors();
 
         expect(shouldBeAnObjectError.instancePath).to.equal(
-          '/documents/new/properties/something/additionalItems',
+          '/documents/new/properties/something/items',
         );
         expect(shouldBeAnObjectError.keyword).to.equal('type');
 
         expect(shouldEqualConstant.instancePath).to.equal(
-          '/documents/new/properties/something/additionalItems',
+          '/documents/new/properties/something/item',
         );
         expect(shouldEqualConstant.keyword).to.equal('const');
       });
@@ -1593,13 +1594,13 @@ describe('validateDataContractFactory', function main() {
 
         indexedDocumentDefinition.properties.arrayProperty = {
           type: 'array',
-          items: [{
+          prefixItems: [{
             type: 'string',
           }, {
             type: 'number',
           }],
           minItems: 2,
-          additionalItems: false,
+          items: false,
         };
 
         indexedDocumentDefinition.required.push('arrayProperty');

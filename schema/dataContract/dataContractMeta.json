@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schema.dash.org/dpp-0-4-0/meta/data-contract",
   "type": "object",
   "$defs": {
@@ -37,121 +37,72 @@
           "minLength": 1
         },
         "$comment": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/core#/properties/$comment"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/core#/properties/$comment"
         },
         "description": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/meta-data#/properties/description"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/meta-data#/properties/description"
         },
         "examples": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/meta-data#/properties/examples"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/meta-data#/properties/examples"
         },
         "multipleOf": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/multipleOf"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/multipleOf"
         },
         "maximum": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/maximum"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/maximum"
         },
         "exclusiveMaximum": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/exclusiveMaximum"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/exclusiveMaximum"
         },
         "minimum": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/minimum"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/minimum"
         },
         "exclusiveMinimum": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/exclusiveMinimum"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/exclusiveMinimum"
         },
         "maxLength": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/maxLength"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/maxLength"
         },
         "minLength": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/minLength"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/minLength"
         },
         "pattern": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/pattern"
-        },
-        "additionalItems": {
-          "oneOf": [
-            {
-              "$ref": "#/$defs/documentSchema"
-            },
-            {
-              "type": "boolean",
-              "const": false
-            }
-          ]
-        },
-        "unevaluatedItems": {
-          "oneOf": [
-            {
-              "$ref": "#/$defs/documentSchema"
-            },
-            {
-              "type": "boolean",
-              "const": false
-            }
-          ]
-        },
-        "items": {
-          "oneOf": [
-            {
-              "$ref": "#/$defs/documentSchemaArray"
-            },
-            {
-              "$ref": "#/$defs/documentSchema"
-            }
-          ]
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/pattern"
         },
         "maxItems": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/maxItems"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/maxItems"
         },
         "minItems": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/minItems"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/minItems"
         },
         "uniqueItems": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/uniqueItems"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/uniqueItems"
         },
         "contains": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/applicator#/properties/contains"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/applicator#/properties/contains"
         },
         "maxProperties": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/maxProperties"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/maxProperties"
         },
         "minProperties": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/minProperties"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/minProperties"
         },
         "required": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/required"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/required"
         },
         "additionalProperties": {
           "type": "boolean",
           "const": false
         },
-        "unevaluatedProperties": {
-          "oneOf": [
-            {
-              "$ref": "#/$defs/documentSchema"
-            },
-            {
-              "type": "boolean",
-              "const": false
-            }
-          ]
-        },
         "properties": {
           "$ref": "#/$defs/documentProperties"
-        },
-        "patternProperties": {
-          "type": "object",
-          "additionalProperties": { "$ref": "#/$defs/documentSchema" },
-          "propertyNames": { "format": "regex" },
-          "default": {}
         },
         "dependentSchemas": {
           "type": "object",
           "additionalProperties": {
             "oneOf": [
               { "$ref": "#/$defs/documentSchema" },
-              { "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/$defs/stringArray" }
+              { "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/$defs/stringArray" }
             ]
           }
         },
@@ -163,17 +114,20 @@
           "uniqueItems": true
         },
         "type": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/type"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/type"
         },
         "format": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/format#/properties/format"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/format-annotation#/properties/format"
         },
         "contentMediaType": {
-          "$ref": "https://json-schema.org/draft/2019-09/meta/content#/properties/contentMediaType"
+          "$ref": "https://json-schema.org/draft/2020-12/meta/content#/properties/contentMediaType"
         },
         "byteArray": {
           "type": "boolean",
           "const": true
+        },
+        "prefixItems": {
+          "$ref": "https://json-schema.org/draft/2020-12/meta/applicator#/properties/prefixItems"
         }
       },
       "dependentSchemas": {
@@ -284,6 +238,43 @@
         {
           "if": {
             "properties": {
+              "prefixItems": {
+                "$ref": "#/$defs/documentSchema/properties/prefixItems"
+              }
+            },
+            "required": ["prefixItems"]
+          },
+          "then": {
+            "properties": {
+              "items": {
+                "type": "boolean",
+                "const": false
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "prefixItems": {
+                "$ref": "#/$defs/documentSchema/properties/prefixItems"
+              }
+            },
+            "not": {
+              "required": ["prefixItems"]
+            }
+          },
+          "then": {
+            "properties": {
+              "items": {
+                "$ref": "#/$defs/documentSchema"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
               "type": {
                 "const": "array"
               }
@@ -298,9 +289,7 @@
           },
           "then": {
             "properties": {
-              "items": {
-                "$ref": "#/$defs/documentSchema/properties/items"
-              }
+              "items": true
             },
             "required": ["items"]
           }
@@ -311,19 +300,20 @@
               "type": {
                 "const": "array"
               },
-              "items": {
+              "prefixItems": {
                 "type": "array"
               }
             },
-            "required": ["type", "items"]
+            "required": ["type", "prefixItems"]
           },
           "then": {
             "properties": {
-              "additionalItems": {
-                "$ref": "#/$defs/documentSchema/properties/additionalItems"
+              "items": {
+                "type": "boolean",
+                "const": false
               }
             },
-            "required": ["additionalItems"]
+            "required": ["items"]
           }
         },
         {
@@ -447,22 +437,22 @@
               "minLength": 1
             },
             "$comment": {
-              "$ref": "https://json-schema.org/draft/2019-09/meta/core#/properties/$comment"
+              "$ref": "https://json-schema.org/draft/2020-12/meta/core#/properties/$comment"
             },
             "description": {
-              "$ref": "https://json-schema.org/draft/2019-09/meta/meta-data#/properties/description"
+              "$ref": "https://json-schema.org/draft/2020-12/meta/meta-data#/properties/description"
             },
             "examples": {
-              "$ref": "https://json-schema.org/draft/2019-09/meta/meta-data#/properties/examples"
+              "$ref": "https://json-schema.org/draft/2020-12/meta/meta-data#/properties/examples"
             },
             "maxProperties": {
-              "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/maxProperties"
+              "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/maxProperties"
             },
             "minProperties": {
-              "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/minProperties"
+              "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/minProperties"
             },
             "required": {
-              "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/properties/required"
+              "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/required"
             },
             "additionalProperties": {
               "type": "boolean",
@@ -482,7 +472,7 @@
               "additionalProperties": {
                 "oneOf": [
                   { "$ref": "#/$defs/documentSchema" },
-                  { "$ref": "https://json-schema.org/draft/2019-09/meta/validation#/$defs/stringArray" }
+                  { "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/$defs/stringArray" }
                 ]
               }
             },
