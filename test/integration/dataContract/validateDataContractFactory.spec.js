@@ -26,7 +26,7 @@ const InvalidCompoundIndexError = require('../../../lib/errors/InvalidCompoundIn
 const IncompatibleRe2PatternError = require('../../../lib/document/errors/IncompatibleRe2PatternError');
 
 describe('validateDataContractFactory', function main() {
-  this.timeout(10000);
+  this.timeout(30000);
 
   let dataContract;
   let rawDataContract;
@@ -525,13 +525,13 @@ describe('validateDataContractFactory', function main() {
           type: 'array',
           prefixItems: [
             {
-              type: 'string',
-              // properties: {
-              //   something: {
-              //     type: 'object',
-              //   },
-              // },
-              // additionalProperties: false,
+              type: 'object',
+              properties: {
+                something: {
+                  type: 'object',
+                },
+              },
+              additionalProperties: false,
             },
           ],
           items: false,
@@ -539,11 +539,11 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result, 6);
+        expectJsonSchemaError(result, 3);
 
         const [error] = result.getErrors();
 
-        expect(error.instancePath).to.equal('/documents/niceDocument/properties/object/items/0/properties/something');
+        expect(error.instancePath).to.equal('/documents/niceDocument/properties/object/prefixItems/0/properties/something');
         expect(error.keyword).to.equal('required');
         expect(error.params.missingProperty).to.equal('properties');
       });
@@ -684,11 +684,11 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result, 5);
+        expectJsonSchemaError(result, 2);
 
         const [error] = result.getErrors();
 
-        expect(error.instancePath).to.equal('/documents/niceDocument/properties/object/items/0');
+        expect(error.instancePath).to.equal('/documents/niceDocument/properties/object/prefixItems/0');
         expect(error.keyword).to.equal('required');
         expect(error.params.missingProperty).to.equal('additionalProperties');
       });
@@ -746,8 +746,7 @@ describe('validateDataContractFactory', function main() {
         expect(error.params.missingProperty).to.equal('items');
       });
 
-      // TODO: maybe this is no longer valid
-      it('should have additionalItems for arrays', async () => {
+      it('should have sub schema in items for arrays', async () => {
         rawDataContract.documents.new = {
           properties: {
             something: {
@@ -767,16 +766,16 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result, 2);
+        expectJsonSchemaError(result, 3);
 
         const [error] = result.getErrors();
 
-        expect(error.instancePath).to.equal('/documents/new/properties/something');
-        expect(error.keyword).to.equal('required');
-        expect(error.params.missingProperty).to.equal('additionalItems');
+        expect(error.instancePath).to.equal('/documents/new/properties/something/items');
+        expect(error.keyword).to.equal('type');
+        expect(error.params.type).to.equal('object');
       });
 
-      it('should have items disabled for arrays', async () => {
+      it('should have items if prefixItems is used for arrays', async () => {
         rawDataContract.documents.new = {
           type: 'object',
           properties: {
@@ -791,7 +790,6 @@ describe('validateDataContractFactory', function main() {
                 },
               ],
               minItems: 2,
-              items: false,
             },
           },
           additionalProperties: false,
@@ -799,10 +797,16 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result, 0);
+        expectJsonSchemaError(result, 2);
+
+        const [error] = result.getErrors();
+
+        expect(error.instancePath).to.equal('/documents/new/properties/something');
+        expect(error.keyword).to.equal('required');
+        expect(error.params.missingProperty).to.equal('items');
       });
 
-      it('should not have items enabled for arrays', async () => {
+      it('should not have items disabled if prefixItems is used for arrays', async () => {
         rawDataContract.documents.new = {
           properties: {
             something: {
@@ -823,19 +827,13 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result, 5);
+        expectJsonSchemaError(result, 2);
 
-        const [shouldBeAnObjectError, shouldEqualConstant] = result.getErrors();
+        const [error] = result.getErrors();
 
-        expect(shouldBeAnObjectError.instancePath).to.equal(
-          '/documents/new/properties/something/items',
-        );
-        expect(shouldBeAnObjectError.keyword).to.equal('type');
-
-        expect(shouldEqualConstant.instancePath).to.equal(
-          '/documents/new/properties/something/item',
-        );
-        expect(shouldEqualConstant.keyword).to.equal('const');
+        expect(error.instancePath).to.equal('/documents/new/properties/something/items');
+        expect(error.keyword).to.equal('const');
+        expect(error.params.allowedValue).to.equal(false);
       });
 
       it('should return invalid result if "default" keyword is used', async () => {
@@ -848,7 +846,7 @@ describe('validateDataContractFactory', function main() {
         const [error] = result.getErrors();
 
         expect(error.instancePath).to.equal('/documents/indexedDocument/properties/firstName');
-        expect(error.keyword).to.equal('additionalProperties');
+        expect(error.keyword).to.equal('unevaluatedProperties');
       });
 
       it('should return invalid result if remote `$ref` is used', async () => {
@@ -887,8 +885,8 @@ describe('validateDataContractFactory', function main() {
         const [error] = result.getErrors();
 
         expect(error.instancePath).to.equal('/documents/indexedDocument');
-        expect(error.keyword).to.equal('additionalProperties');
-        expect(error.params.additionalProperty).to.equal('propertyNames');
+        expect(error.keyword).to.equal('unevaluatedProperties');
+        expect(error.params.unevaluatedProperty).to.equal('propertyNames');
       });
 
       it('should have `maxItems` if `uniqueItems` is used', async () => {
@@ -1594,11 +1592,14 @@ describe('validateDataContractFactory', function main() {
 
         indexedDocumentDefinition.properties.arrayProperty = {
           type: 'array',
-          prefixItems: [{
-            type: 'string',
-          }, {
-            type: 'number',
-          }],
+          prefixItems: [
+            {
+              type: 'string',
+            },
+            {
+              type: 'number',
+            },
+          ],
           minItems: 2,
           items: false,
         };

@@ -7,7 +7,13 @@
       "type": "object",
       "patternProperties": {
         "^[a-zA-Z][a-zA-Z0-9-_]{1,62}[a-zA-Z0-9]$": {
-          "$ref": "#/$defs/documentSchema"
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "#/$defs/documentSchema"
+            }
+          ],
+          "unevaluatedProperties": false
         }
       },
       "propertyNames": {
@@ -20,7 +26,13 @@
       "type": "array",
       "minItems": 1,
       "items": {
-        "$ref": "#/$defs/documentSchema"
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/$defs/documentSchema"
+          }
+        ],
+        "unevaluatedProperties": false
       }
     },
     "documentSchema": {
@@ -127,8 +139,9 @@
           "const": true
         },
         "prefixItems": {
-          "$ref": "https://json-schema.org/draft/2020-12/meta/applicator#/properties/prefixItems"
-        }
+          "$ref": "#/$defs/documentSchemaArray"
+        },
+        "items": true
       },
       "dependentSchemas": {
         "byteArray": {
@@ -232,6 +245,16 @@
             }
           },
           "required": ["maxLength"]
+        },
+        "prefixItems": {
+          "description": "ensure all array item schemas are defined",
+          "properties": {
+            "items": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": ["items"]
         }
       },
       "allOf": [
@@ -242,25 +265,10 @@
                 "$ref": "#/$defs/documentSchema/properties/prefixItems"
               }
             },
-            "required": ["prefixItems"]
-          },
-          "then": {
-            "properties": {
-              "items": {
-                "type": "boolean",
-                "const": false
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "prefixItems": {
-                "$ref": "#/$defs/documentSchema/properties/prefixItems"
-              }
-            },
             "not": {
+              "properties": {
+                "prefixItems": true
+              },
               "required": ["prefixItems"]
             }
           },
@@ -324,24 +332,10 @@
               }
             },
             "not": {
-              "anyOf": [
-                {
-                  "properties": {
-                    "$ref": {
-                      "$ref": "#/$defs/documentSchema/properties/$ref"
-                    }
-                  },
-                  "required": ["$ref"]
-                },
-                {
-                  "properties": {
-                    "byteArray": {
-                      "$ref": "#/$defs/documentSchema/properties/byteArray"
-                    }
-                  },
-                  "required": ["byteArray"]
-                }
-              ]
+              "properties": {
+                "$ref": true
+              },
+              "required": ["$ref"]
             }
           },
           "then": {
@@ -356,8 +350,7 @@
             "required": ["properties", "additionalProperties"]
           }
         }
-      ],
-      "additionalProperties": false
+      ]
     }
   },
   "properties": {
@@ -390,121 +383,54 @@
       "patternProperties": {
         "^[a-zA-Z][a-zA-Z0-9-_]{1,62}[a-zA-Z0-9]$": {
           "type": "object",
-          "properties": {
-            "indices": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "properties": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "patternProperties": {
-                        "^[a-zA-Z$][a-zA-Z0-9-_\\.]{1,62}[a-zA-Z0-9]$": {
-                          "type": "string",
-                          "enum": ["asc", "desc"]
-                        }
+          "allOf": [
+            {
+              "properties": {
+                "indices": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "properties": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "patternProperties": {
+                            "^[a-zA-Z$][a-zA-Z0-9-_\\.]{1,62}[a-zA-Z0-9]$": {
+                              "type": "string",
+                              "enum": ["asc", "desc"]
+                            }
+                          },
+                          "propertyNames": {
+                            "pattern": "^[a-zA-Z$][a-zA-Z0-9-_\\.]{1,62}[a-zA-Z0-9]$"
+                          },
+                          "minProperties": 1,
+                          "maxProperties": 1,
+                          "additionalProperties": false
+                        },
+                        "minItems": 1,
+                        "maxItems": 10
                       },
-                      "minProperties": 1,
-                      "maxProperties": 1,
-                      "additionalProperties": false
+                      "unique": {
+                        "type": "boolean"
+                      }
                     },
-                    "minItems": 1,
-                    "maxItems": 10
+                    "required": ["properties"],
+                    "additionalProperties": false
                   },
-                  "unique": {
-                    "type": "boolean"
-                  }
+                  "minItems": 1,
+                  "maxItems": 10
                 },
-                "required": ["properties"],
-                "additionalProperties": false
-              },
-              "minItems": 1,
-              "maxItems": 10
-            },
-            "type": {
-              "const": "object"
-            },
-            "$id": {
-              "type": "string",
-              "pattern": "^#",
-              "minLength": 1
-            },
-            "$ref": {
-              "type": "string",
-              "pattern": "^#",
-              "minLength": 1
-            },
-            "$comment": {
-              "$ref": "https://json-schema.org/draft/2020-12/meta/core#/properties/$comment"
-            },
-            "description": {
-              "$ref": "https://json-schema.org/draft/2020-12/meta/meta-data#/properties/description"
-            },
-            "examples": {
-              "$ref": "https://json-schema.org/draft/2020-12/meta/meta-data#/properties/examples"
-            },
-            "maxProperties": {
-              "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/maxProperties"
-            },
-            "minProperties": {
-              "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/minProperties"
-            },
-            "required": {
-              "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/properties/required"
-            },
-            "additionalProperties": {
-              "type": "boolean",
-              "const": false
-            },
-            "properties": {
-              "$ref": "#/$defs/documentProperties"
-            },
-            "patternProperties": {
-              "type": "object",
-              "additionalProperties": { "$ref": "#/$defs/documentSchema" },
-              "propertyNames": { "format": "regex" },
-              "default": {}
-            },
-            "dependentSchemas": {
-              "type": "object",
-              "additionalProperties": {
-                "oneOf": [
-                  { "$ref": "#/$defs/documentSchema" },
-                  { "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/$defs/stringArray" }
-                ]
+                "type": {
+                  "const": "object"
+                }
               }
             },
-            "const": true
-          },
-          "if": {
-            "properties": {
-              "type": {
-                "const": "object"
-              }
-            },
-            "not": {
-              "properties": {
-                "$ref": true
-              },
-              "required": ["$ref"]
+            {
+              "$ref": "#/$defs/documentSchema"
             }
-          },
-          "then": {
-            "properties": {
-              "properties": {
-                "$ref": "#/$defs/documentProperties"
-              },
-              "additionalProperties": {
-                "$ref": "#/$defs/documentSchema/properties/additionalProperties"
-              }
-            },
-            "required": ["properties", "additionalProperties"]
-          },
-          "minProperties": 1,
-          "maxProperties": 100,
-          "additionalProperties": false
+          ],
+          "unevaluatedProperties": false
         }
       },
       "propertyNames": {
