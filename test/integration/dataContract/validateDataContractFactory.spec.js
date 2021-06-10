@@ -1667,7 +1667,7 @@ describe('validateDataContractFactory', function main() {
     });
   });
 
-  describe('dependentRequired',  () => {
+  describe('dependentRequired', () => {
     it('should be an object', async () => {
       rawDataContract.documents.niceDocument = {
         type: 'object',
@@ -1716,6 +1716,56 @@ describe('validateDataContractFactory', function main() {
       expect(error.keyword).to.equal('type');
       expect(error.instancePath).to.equal('/documents/niceDocument/dependentRequired/zxy');
       expect(error.message).to.equal('must be array');
+    });
+
+    it('should have an array of strings', async () => {
+      rawDataContract.documents.niceDocument = {
+        type: 'object',
+        properties: {
+          abc: {
+            type: 'string',
+          },
+        },
+        additionalProperties: false,
+        dependentRequired: {
+          zxy: [1, '2'],
+        },
+      };
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('type');
+      expect(error.instancePath).to.equal('/documents/niceDocument/dependentRequired/zxy/0');
+      expect(error.message).to.equal('must be string');
+    });
+
+    it('should have an array of unique strings', async () => {
+      rawDataContract.documents.niceDocument = {
+        type: 'object',
+        properties: {
+          abc: {
+            type: 'string',
+          },
+        },
+        additionalProperties: false,
+        dependentRequired: {
+          zxy: ['1', '2', '2'],
+        },
+      };
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('uniqueItems');
+      expect(error.instancePath).to.equal('/documents/niceDocument/dependentRequired/zxy');
+      expect(error.message).to.equal('must NOT have duplicate items (items ## 2 and 1 are identical)');
     });
   });
 
