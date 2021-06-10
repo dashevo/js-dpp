@@ -26,7 +26,7 @@ const InvalidCompoundIndexError = require('../../../lib/errors/InvalidCompoundIn
 const IncompatibleRe2PatternError = require('../../../lib/document/errors/IncompatibleRe2PatternError');
 
 describe('validateDataContractFactory', function main() {
-  this.timeout(30000);
+  this.timeout(15000);
 
   let dataContract;
   let rawDataContract;
@@ -1587,7 +1587,7 @@ describe('validateDataContractFactory', function main() {
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
 
-      it('should return invalid result if index property is array with many item $defs', async () => {
+      it('should return invalid result if index property is array with different item definitions', async () => {
         const indexedDocumentDefinition = rawDataContract.documents.indexedDocument;
 
         indexedDocumentDefinition.properties.arrayProperty = {
