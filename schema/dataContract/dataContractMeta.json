@@ -112,10 +112,13 @@
         "dependentSchemas": {
           "type": "object",
           "additionalProperties": {
-            "oneOf": [
-              { "$ref": "#/$defs/documentSchema" },
-              { "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/$defs/stringArray" }
-            ]
+            "$ref": "#/$defs/documentSchema"
+          }
+        },
+        "dependentRequired": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "https://json-schema.org/draft/2020-12/meta/validation#/$defs/stringArray"
           }
         },
         "const": true,
