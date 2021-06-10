@@ -1642,6 +1642,83 @@ describe('validateDataContractFactory', function main() {
     });
   });
 
+  describe('dependentSchemas', () => {
+    it('should be an object', async () => {
+      rawDataContract.documents.niceDocument = {
+        type: 'object',
+        properties: {
+          abc: {
+            type: 'string',
+          },
+        },
+        additionalProperties: false,
+        dependentSchemas: 'string',
+      };
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('type');
+      expect(error.instancePath).to.equal('/documents/niceDocument/dependentSchemas');
+      expect(error.message).to.equal('must be object');
+    });
+  });
+
+  describe('dependentRequired',  () => {
+    it('should be an object', async () => {
+      rawDataContract.documents.niceDocument = {
+        type: 'object',
+        properties: {
+          abc: {
+            type: 'string',
+          },
+        },
+        additionalProperties: false,
+        dependentRequired: 'string',
+      };
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('type');
+      expect(error.instancePath).to.equal('/documents/niceDocument/dependentRequired');
+      expect(error.message).to.equal('must be object');
+    });
+
+    it('should have an array value', async () => {
+      rawDataContract.documents.niceDocument = {
+        type: 'object',
+        properties: {
+          abc: {
+            type: 'string',
+          },
+        },
+        additionalProperties: false,
+        dependentRequired: {
+          zxy: {
+            type: 'number',
+          },
+        },
+      };
+
+      const result = await validateDataContract(rawDataContract);
+
+      expectJsonSchemaError(result);
+
+      const [error] = result.getErrors();
+
+      expect(error.keyword).to.equal('type');
+      expect(error.instancePath).to.equal('/documents/niceDocument/dependentRequired/zxy');
+      expect(error.message).to.equal('must be array');
+    });
+  });
+
   it('should return invalid result with circular $ref pointer', async () => {
     rawDataContract.$defs.object = { $ref: '#/$defs/object' };
 
