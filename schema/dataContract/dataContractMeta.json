@@ -247,7 +247,7 @@
           "required": ["maxLength"]
         },
         "prefixItems": {
-          "description": "ensure all array item schemas are defined",
+          "$comment": "array must not contain undefined item sub schemas",
           "properties": {
             "items": {
               "type": "boolean",
@@ -259,28 +259,7 @@
       },
       "allOf": [
         {
-          "if": {
-            "properties": {
-              "prefixItems": {
-                "$ref": "#/$defs/documentSchema/properties/prefixItems"
-              }
-            },
-            "not": {
-              "properties": {
-                "prefixItems": true
-              },
-              "required": ["prefixItems"]
-            }
-          },
-          "then": {
-            "properties": {
-              "items": {
-                "$ref": "#/$defs/documentSchema"
-              }
-            }
-          }
-        },
-        {
+          "$comment": "array must contain items",
           "if": {
             "properties": {
               "type": {
@@ -303,28 +282,25 @@
           }
         },
         {
+          "$comment": "array without prefixItems must contain items sub schema",
           "if": {
-            "properties": {
-              "type": {
-                "const": "array"
+            "not": {
+              "properties": {
+                "prefixItems": true
               },
-              "prefixItems": {
-                "type": "array"
-              }
-            },
-            "required": ["type", "prefixItems"]
+              "required": ["prefixItems"]
+            }
           },
           "then": {
             "properties": {
               "items": {
-                "type": "boolean",
-                "const": false
+                "$ref": "#/$defs/documentSchema"
               }
-            },
-            "required": ["items"]
+            }
           }
         },
         {
+          "$comment": "all object properties must be defined",
           "if": {
             "properties": {
               "type": {
