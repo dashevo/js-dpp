@@ -6,10 +6,17 @@ const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixt
 describe('Document', () => {
   let document;
   let dataContract;
+  let metadataFixture;
 
   beforeEach(() => {
     dataContract = getDataContractFixture();
     [document] = getDocumentsFixture(dataContract).slice(8);
+
+    metadataFixture = {
+      height: 42,
+    };
+
+    document.setMetadata(metadataFixture);
   });
 
   describe('#toJSON', () => {
@@ -63,6 +70,24 @@ describe('Document', () => {
       expect(result.$id).to.be.an.instanceOf(Identifier);
       expect(result.$ownerId).to.be.an.instanceOf(Identifier);
       expect(result.identifierField).to.be.an.instanceOf(Identifier);
+    });
+  });
+
+  describe('#setMetadata', () => {
+    it('should set metadata', () => {
+      const otherMetadata = {
+        height: 43,
+      };
+
+      document.setMetadata(otherMetadata);
+
+      expect(document.metadata).to.deep.equal(otherMetadata);
+    });
+  });
+
+  describe('#getMetadata', () => {
+    it('should get metadata', () => {
+      expect(document.getMetadata()).to.deep.equal(metadataFixture);
     });
   });
 });

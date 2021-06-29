@@ -10,6 +10,7 @@ describe('Identity', () => {
   let Identity;
   let hashMock;
   let encodeMock;
+  let metadataFixture;
 
   beforeEach(function beforeEach() {
     hashMock = this.sinonSandbox.stub();
@@ -40,6 +41,12 @@ describe('Identity', () => {
     };
 
     identity = new Identity(rawIdentity);
+
+    metadataFixture = {
+      height: 42,
+    };
+
+    identity.setMetadata(metadataFixture);
   });
 
   describe('#constructor', () => {
@@ -170,6 +177,24 @@ describe('Identity', () => {
 
       expect(result).to.equal(40);
       expect(identity.balance).to.equal(40);
+    });
+  });
+
+  describe('#setMetadata', () => {
+    it('should set metadata', () => {
+      const otherMetadata = {
+        height: 43,
+      };
+
+      identity.setMetadata(otherMetadata);
+
+      expect(identity.metadata).to.deep.equal(otherMetadata);
+    });
+  });
+
+  describe('#getMetadata', () => {
+    it('should get metadata', () => {
+      expect(identity.getMetadata()).to.deep.equal(metadataFixture);
     });
   });
 });

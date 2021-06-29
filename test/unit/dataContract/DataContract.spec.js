@@ -19,6 +19,7 @@ describe('DataContract', () => {
   let entropy;
   let contractId;
   let getBinaryPropertiesFromSchemaMock;
+  let metadataFixture;
 
   beforeEach(function beforeEach() {
     hashMock = this.sinonSandbox.stub();
@@ -66,6 +67,12 @@ describe('DataContract', () => {
       documents,
       $defs: {},
     });
+
+    metadataFixture = {
+      height: 42,
+    };
+
+    dataContract.setMetadata(metadataFixture);
   });
 
   describe('constructor', () => {
@@ -367,6 +374,24 @@ describe('DataContract', () => {
       } catch (e) {
         expect(e).to.be.an.instanceOf(InvalidDocumentTypeError);
       }
+    });
+  });
+
+  describe('#setMetadata', () => {
+    it('should set metadata', () => {
+      const otherMetadata = {
+        height: 43,
+      };
+
+      dataContract.setMetadata(otherMetadata);
+
+      expect(dataContract.metadata).to.deep.equal(otherMetadata);
+    });
+  });
+
+  describe('#getMetadata', () => {
+    it('should get metadata', () => {
+      expect(dataContract.getMetadata()).to.deep.equal(metadataFixture);
     });
   });
 });
