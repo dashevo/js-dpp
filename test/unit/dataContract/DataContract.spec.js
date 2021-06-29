@@ -6,6 +6,7 @@ const Identifier = require('../../../lib/identifier/Identifier');
 const InvalidDocumentTypeError = require('../../../lib/errors/InvalidDocumentTypeError');
 
 const generateRandomIdentifier = require('../../../lib/test/utils/generateRandomIdentifier');
+const Metadata = require('../../../lib/Metadata');
 
 describe('DataContract', () => {
   let hashMock;
@@ -68,9 +69,7 @@ describe('DataContract', () => {
       $defs: {},
     });
 
-    metadataFixture = {
-      height: 42,
-    };
+    metadataFixture = new Metadata(42, 0);
 
     dataContract.setMetadata(metadataFixture);
   });
@@ -379,9 +378,7 @@ describe('DataContract', () => {
 
   describe('#setMetadata', () => {
     it('should set metadata', () => {
-      const otherMetadata = {
-        height: 43,
-      };
+      const otherMetadata = new Metadata(43, 1);
 
       dataContract.setMetadata(otherMetadata);
 

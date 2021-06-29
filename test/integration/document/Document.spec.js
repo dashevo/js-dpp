@@ -1,4 +1,5 @@
 const Identifier = require('../../../lib/identifier/Identifier');
+const Metadata = require('../../../lib/Metadata');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../lib/test/fixtures/getDocumentsFixture');
@@ -12,9 +13,7 @@ describe('Document', () => {
     dataContract = getDataContractFixture();
     [document] = getDocumentsFixture(dataContract).slice(8);
 
-    metadataFixture = {
-      height: 42,
-    };
+    metadataFixture = new Metadata(42, 0);
 
     document.setMetadata(metadataFixture);
   });
@@ -75,9 +74,7 @@ describe('Document', () => {
 
   describe('#setMetadata', () => {
     it('should set metadata', () => {
-      const otherMetadata = {
-        height: 43,
-      };
+      const otherMetadata = new Metadata(43, 1);
 
       document.setMetadata(otherMetadata);
 

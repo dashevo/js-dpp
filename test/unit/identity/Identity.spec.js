@@ -3,6 +3,7 @@ const rewiremock = require('rewiremock/node');
 const generateRandomIdentifier = require('../../../lib/test/utils/generateRandomIdentifier');
 
 const IdentityPublicKey = require('../../../lib/identity/IdentityPublicKey');
+const Metadata = require('../../../lib/Metadata');
 
 describe('Identity', () => {
   let rawIdentity;
@@ -42,9 +43,7 @@ describe('Identity', () => {
 
     identity = new Identity(rawIdentity);
 
-    metadataFixture = {
-      height: 42,
-    };
+    metadataFixture = new Metadata(42, 0);
 
     identity.setMetadata(metadataFixture);
   });
@@ -182,9 +181,7 @@ describe('Identity', () => {
 
   describe('#setMetadata', () => {
     it('should set metadata', () => {
-      const otherMetadata = {
-        height: 43,
-      };
+      const otherMetadata = new Metadata(43, 1);
 
       identity.setMetadata(otherMetadata);
 
