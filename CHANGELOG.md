@@ -4,11 +4,21 @@
 ### Features
 
 * add metadata to document, data contract and identity ([#318](https://github.com/dashevo/js-dpp/issues/318))
-* update @dashevo/re2-wasm to 1.0.4 ([#317](https://github.com/dashevo/js-dpp/issues/317))
-* initialization will run only once ([#315](https://github.com/dashevo/js-dpp/issues/315))
-* update JSON Schema to draft 2020-12 ([#312](https://github.com/dashevo/js-dpp/issues/312))
-* replace RegExp with RE2 ([#311](https://github.com/dashevo/js-dpp/issues/311))
-* integrate AJV v7 ([#310](https://github.com/dashevo/js-dpp/issues/310))
+* prevent possible ReDoS attacks for Data Contracts ([#311](https://github.com/dashevo/js-dpp/issues/311), [#317](https://github.com/dashevo/js-dpp/issues/317), [#315](https://github.com/dashevo/js-dpp/issues/315))
+* strcit data contract JSON schema validation ([#310](https://github.com/dashevo/js-dpp/issues/310), [#312](https://github.com/dashevo/js-dpp/issues/312))
+
+
+### BREAKING CHANGES
+
+* `dependencies` is not supported. Use `dependentRequired` and `dependentSchema` instead
+* `additionalitems` is not supported. Use `items: false` and `prefixItems` instead
+* `patternProperties` is prohibited for Data Contract
+* error messages and properties are changed according to the new JSON Schema spec
+* `pattern` keyword accept only RE2 compatible regular expressions
+* Document type and properties minimum length is 3 chars
+* `definitions` is now defined using `$defs` keyword
+* JSON Schema strict validation is enabled . Previous contract schemas invalid in case they are not respecting strict mode constraints (reference this link for more information)
+* usage of `if`, `then`, `else`, `allOf`, `anyOf`, `oneOf` not in document root properties is prohibited
 
 
 
