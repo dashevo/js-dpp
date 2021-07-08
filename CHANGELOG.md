@@ -17,7 +17,7 @@
 * `pattern` keyword accept only RE2 compatible regular expressions
 * Document type and properties minimum length is 3 chars
 * `definitions` is now defined using `$defs` keyword
-* JSON Schema strict validation is enabled . Previous contract schemas invalid in case they are not respecting strict mode constraints (reference this link for more information)
+* JSON Schema strict validation is enabled . Previous contract schemas invalid in case they are not respecting strict mode constraints (reference [this link](https://ajv.js.org/strict-mode.html) for more information)
 * usage of `if`, `then`, `else`, `allOf`, `anyOf`, `oneOf` not in document root properties is prohibited
 
 
