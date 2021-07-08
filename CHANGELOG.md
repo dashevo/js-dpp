@@ -6,6 +6,9 @@
 * add metadata to document, data contract and identity ([#318](https://github.com/dashevo/js-dpp/issues/318))
 * update @dashevo/re2-wasm to 1.0.4 ([#317](https://github.com/dashevo/js-dpp/issues/317))
 * initialization will run only once ([#315](https://github.com/dashevo/js-dpp/issues/315))
+* update JSON Schema to draft 2020-12 ([#312](https://github.com/dashevo/js-dpp/issues/312))
+* replace RegExp with RE2 ([#311](https://github.com/dashevo/js-dpp/issues/311))
+* integrate AJV v7 ([#310](https://github.com/dashevo/js-dpp/issues/310))
 
 
 
