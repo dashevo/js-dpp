@@ -1,3 +1,14 @@
+# [0.20.0](https://github.com/dashevo/js-dpp/compare/v0.19.2...v0.20.0) (2021-07-08)
+
+
+### Features
+
+* add metadata to document, data contract and identity ([#318](https://github.com/dashevo/js-dpp/issues/318))
+* update @dashevo/re2-wasm to 1.0.4 ([#317](https://github.com/dashevo/js-dpp/issues/317))
+* initialization will run only once ([#315](https://github.com/dashevo/js-dpp/issues/315))
+
+
+
 ## [0.19.2](https://github.com/dashevo/js-dpp/compare/v0.19.1...v0.19.2) (2021-05-20)
 
 
