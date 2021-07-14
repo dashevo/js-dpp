@@ -1,3 +1,12 @@
+## [0.20.1](https://github.com/dashevo/js-dpp/compare/v0.20.0...v0.20.1) (2021-07-14)
+
+
+### Features
+
+* remove verify SML flag triggers ([#324](https://github.com/dashevo/js-dpp/issues/324))
+
+
+
 # [0.20.0](https://github.com/dashevo/js-dpp/compare/v0.19.2...v0.20.0) (2021-07-08)
 
 
