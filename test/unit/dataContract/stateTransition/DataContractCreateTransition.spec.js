@@ -114,7 +114,8 @@ describe('DataContractCreateTransition', () => {
       protocolVersionUInt32.writeUInt32BE(stateTransition.protocolVersion, 0);
 
       expect(hashMock).to.have.been.calledOnceWith(
-        Buffer.concat([protocolVersionUInt32, serializedDocument]));
+        Buffer.concat([protocolVersionUInt32, serializedDocument]),
+      );
     });
   });
 
