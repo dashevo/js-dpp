@@ -28,6 +28,7 @@
 * `definitions` is now defined using `$defs` keyword
 * JSON Schema strict validation is enabled. Previous contract schemas invalid in case they are not respecting strict mode constraints (reference [this link](https://ajv.js.org/strict-mode.html) for more information)
 * usage of `if`, `then`, `else`, `allOf`, `anyOf`, `oneOf`, `patternProperties` in document properties is prohibited
+* `.initialize()` must be called before using DashPlatformProtocol
 
 
 
