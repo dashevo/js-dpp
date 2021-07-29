@@ -66,4 +66,14 @@ describe('DashPlatformProtocol', () => {
       expect(dpp.protocolVersion).to.equal(42);
     });
   });
+
+  describe('getProtocolVersion', () => {
+    it('should get protocol version', () => {
+      expect(dpp.getProtocolVersion()).to.equal(protocolVersion);
+
+      dpp.setProtocolVersion(42);
+
+      expect(dpp.getProtocolVersion()).to.equal(42);
+    });
+  });
 });
