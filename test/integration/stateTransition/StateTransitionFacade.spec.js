@@ -39,12 +39,16 @@ describe('StateTransitionFacade', () => {
 
     dataContract = getDataContractFixture();
 
-    const dataContractFactory = new DataContractFactory(undefined);
+    const dataContractFactory = new DataContractFactory({
+      getProtocolVersion: () => 0,
+    }, undefined);
 
     dataContractCreateTransition = dataContractFactory.createStateTransition(dataContract);
     dataContractCreateTransition.sign(identityPublicKey, privateKey);
 
-    const documentFactory = new DocumentFactory(undefined, undefined);
+    const documentFactory = new DocumentFactory({
+      getProtocolVersion: () => 0,
+    }, undefined, undefined);
 
     documentsBatchTransition = documentFactory.createStateTransition({
       create: getDocumentsFixture(dataContract),

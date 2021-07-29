@@ -72,6 +72,9 @@ describe('DocumentFactory', () => {
     });
 
     factory = new DocumentFactory(
+      {
+        getProtocolVersion: () => 0,
+      },
       validateDocumentMock,
       fetchAndValidateDataContractMock,
     );

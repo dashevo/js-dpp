@@ -24,7 +24,9 @@ describe('DocumentsBatchTransition', () => {
       '../../../../lib/util/serializer': serializerMock,
     });
 
-    const factory = new DocumentFactory(undefined, undefined);
+    const factory = new DocumentFactory({
+      getProtocolVersion: () => 0,
+    }, undefined, undefined);
     stateTransition = factory.createStateTransition({
       create: documents,
     });

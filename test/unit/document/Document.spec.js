@@ -43,7 +43,9 @@ describe('Document', () => {
 
     const ownerId = generateRandomIdentifier().toBuffer();
 
-    const dataContractFactory = new DataContractFactory(() => {});
+    const dataContractFactory = new DataContractFactory({
+      getProtocolVersion: () => 0,
+    }, () => {});
 
     dataContract = dataContractFactory.create(ownerId, {
       test: {

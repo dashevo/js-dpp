@@ -47,6 +47,9 @@ describe('DataContractFactory', () => {
     });
 
     factory = new DataContractFactory(
+      {
+        getProtocolVersion: () => 0,
+      },
       validateDataContractMock,
     );
   });

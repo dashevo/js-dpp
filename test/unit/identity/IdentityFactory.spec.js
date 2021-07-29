@@ -47,7 +47,9 @@ describe('IdentityFactory', () => {
       },
     );
 
-    factory = new IdentityFactory(validateIdentityMock);
+    factory = new IdentityFactory({
+      getProtocolVersion: () => 0,
+    }, validateIdentityMock);
 
     identity = getIdentityFixture();
     identity.id = instantAssetLockProof.createIdentifier();

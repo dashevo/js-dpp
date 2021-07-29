@@ -38,7 +38,9 @@ describe('validateStateTransitionStructureFactory', () => {
 
     const privateKey = '9b67f852093bc61cea0eeca38599dbfba0de28574d2ed9b99d10d33dc1bde7b2';
 
-    dataContractFactory = new DataContractFactory(undefined);
+    dataContractFactory = new DataContractFactory({
+      getProtocolVersion: () => 0,
+    }, undefined);
 
     stateTransition = dataContractFactory.createStateTransition(dataContract);
     stateTransition.signByPrivateKey(privateKey);

@@ -21,7 +21,9 @@ describe('validateStateTransitionDataFactory', () => {
   beforeEach(function beforeEach() {
     validateDataContractSTDataMock = this.sinonSandbox.stub();
 
-    const dataContractFactory = new DataContractFactory(undefined);
+    const dataContractFactory = new DataContractFactory({
+      getProtocolVersion: () => 0,
+    }, undefined);
 
     const dataContract = getDataContractFixture();
     stateTransition = dataContractFactory.createStateTransition(dataContract);
