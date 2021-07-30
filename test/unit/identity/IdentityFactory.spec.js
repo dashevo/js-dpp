@@ -18,6 +18,7 @@ const InvalidIdentityError = require(
 const getInstantAssetLockProofFixture = require('../../../lib/test/fixtures/getInstantAssetLockProofFixture');
 const InstantAssetLockProof = require('../../../lib/identity/stateTransitions/assetLockProof/instant/InstantAssetLockProof');
 const getChainAssetLockProofFixture = require('../../../lib/test/fixtures/getChainAssetLockProofFixture');
+const createDPPMock = require('../../../lib/test/mocks/createDPPMock');
 
 describe('IdentityFactory', () => {
   let factory;
@@ -47,9 +48,7 @@ describe('IdentityFactory', () => {
       },
     );
 
-    factory = new IdentityFactory({
-      getProtocolVersion: () => 0,
-    }, validateIdentityMock);
+    factory = new IdentityFactory(createDPPMock(), validateIdentityMock);
 
     identity = getIdentityFixture();
     identity.id = instantAssetLockProof.createIdentifier();

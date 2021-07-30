@@ -21,9 +21,7 @@ describe('DataContractFacade', () => {
 
     dataContract = getDataContractFixture();
 
-    dataContractFactory = new DataContractFactory({
-      getProtocolVersion: () => 0,
-    }, undefined);
+    dataContractFactory = new DataContractFactory(dpp, undefined);
   });
 
   describe('create', () => {
