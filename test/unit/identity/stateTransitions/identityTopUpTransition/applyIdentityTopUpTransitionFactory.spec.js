@@ -1,5 +1,5 @@
 const applyIdentityTopUpTransitionFactory = require(
-  '../../../../../lib/identity/stateTransitions/identityTopUpTransition/applyIdentityTopUpTransitionFactory',
+  '../../../../../lib/identity/stateTransition/IdentityTopUpTransition/applyIdentityTopUpTransitionFactory',
 );
 
 const getIdentityFixture = require('../../../../../lib/test/fixtures/getIdentityFixture');

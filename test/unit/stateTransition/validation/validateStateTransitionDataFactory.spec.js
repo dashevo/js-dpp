@@ -1,6 +1,6 @@
 const stateTransitionTypes = require('../../../../lib/stateTransition/stateTransitionTypes');
 
-const validateStateTransitionDataFactory = require('../../../../lib/stateTransition/validation/validateStateTransitionDataFactory');
+const validateStateTransitionDataFactory = require('../../../../lib/stateTransition/validation/validateStateTransitionStateFactory');
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 

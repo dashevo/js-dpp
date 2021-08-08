@@ -2,7 +2,7 @@ const { PrivateKey } = require('@dashevo/dashcore-lib');
 
 const DashPlatformProtocol = require('../../../lib/DashPlatformProtocol');
 
-const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition');
+const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition/DataContractCreateTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 

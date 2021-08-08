@@ -1,4 +1,4 @@
-const findDuplicateDocuments = require('../../../../../lib/document/stateTransition/validation/structure/findDuplicatesById');
+const findDuplicateDocuments = require('../../../../../lib/document/stateTransition/DocumentsBatchTransition/validation/basic/findDuplicatesById');
 
 const getDocumentTransitionsFixture = require('../../../../../lib/test/fixtures/getDocumentTransitionsFixture');
 

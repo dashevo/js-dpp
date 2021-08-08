@@ -2,7 +2,7 @@ const rewiremock = require('rewiremock/node');
 
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
-const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition');
+const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition/DataContractCreateTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 

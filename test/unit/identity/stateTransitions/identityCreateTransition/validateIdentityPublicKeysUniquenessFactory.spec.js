@@ -1,5 +1,5 @@
 const validateIdentityPublicKeyUniquenessFactory = require(
-  '../../../../../lib/identity/stateTransitions/identityCreateTransition/validateIdentityPublicKeysUniquenessFactory',
+  '../../../../../lib/identity/stateTransition/IdentityCreateTransition/validation/state/validateIdentityPublicKeysUniquenessFactory',
 );
 
 const IdentityPublicKeyAlreadyExistsError = require(

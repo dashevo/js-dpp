@@ -1,5 +1,5 @@
-const validateDataContractCreateTransitionDataFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractCreateTransitionDataFactory');
-const DataContractCreateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractCreateTransition');
+const validateDataContractCreateTransitionDataFactory = require('../../../../../lib/dataContract/stateTransition/DataContractCreateTransition/validation/state/validateDataContractCreateTransitionStateFactory');
+const DataContractCreateTransition = require('../../../../../lib/dataContract/stateTransition/DataContractCreateTransition/DataContractCreateTransition');
 
 const createStateRepositoryMock = require('../../../../../lib/test/mocks/createStateRepositoryMock');
 const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');

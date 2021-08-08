@@ -1,4 +1,4 @@
-const validateSignatureAgainstAssetLockPublicKeyFactory = require('../../../../lib/identity/stateTransitions/validateSignatureAgainstAssetLockPublicKeyFactory');
+const validateSignatureAgainstAssetLockPublicKeyFactory = require('../../../../lib/stateTransition/validation/validateStateTransitionKeySignatureFactory');
 
 const getIdentityCreateTransitionFixture = require('../../../../lib/test/fixtures/getIdentityCreateTransitionFixture');
 const InvalidStateTransitionSignatureError = require('../../../../lib/errors/InvalidStateTransitionSignatureError');

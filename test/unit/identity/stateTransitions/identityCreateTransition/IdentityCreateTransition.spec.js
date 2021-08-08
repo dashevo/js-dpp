@@ -5,11 +5,11 @@ const stateTransitionTypes = require(
 );
 
 const { protocolVersion } = require('../../../../../lib/protocolVersion');
-const IdentityCreateTransition = require('../../../../../lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition');
+const IdentityCreateTransition = require('../../../../../lib/identity/stateTransition/IdentityCreateTransition/IdentityCreateTransition');
 const Identifier = require('../../../../../lib/identifier/Identifier');
 
 const getIdentityCreateTransitionFixture = require('../../../../../lib/test/fixtures/getIdentityCreateTransitionFixture');
-const InstantAssetLockProof = require('../../../../../lib/identity/stateTransitions/assetLockProof/instant/InstantAssetLockProof');
+const InstantAssetLockProof = require('../../../../../lib/identity/stateTransition/assetLockProof/instant/InstantAssetLockProof');
 
 describe('IdentityCreateTransition', () => {
   let rawStateTransition;

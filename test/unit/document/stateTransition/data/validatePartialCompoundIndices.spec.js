@@ -1,4 +1,4 @@
-const validatePartialCompoundIndices = require('../../../../../lib/document/stateTransition/validation/data/validatePartialCompoundIndices');
+const validatePartialCompoundIndices = require('../../../../../lib/document/stateTransition/DocumentsBatchTransition/validation/basic/validatePartialCompoundIndices');
 const InconsistentCompoundIndexDataError = require('../../../../../lib/errors/InconsistentCompoundIndexDataError');
 
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');

@@ -1,6 +1,6 @@
 const Document = require('../../../../../lib/document/Document');
 
-const findDuplicateDocumentsByIndices = require('../../../../../lib/document/stateTransition/validation/structure/findDuplicatesByIndices');
+const findDuplicateDocumentsByIndices = require('../../../../../lib/document/stateTransition/DocumentsBatchTransition/validation/basic/findDuplicatesByIndices');
 
 const getDataContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');

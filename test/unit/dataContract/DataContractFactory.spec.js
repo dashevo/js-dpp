@@ -5,7 +5,7 @@ const getDataContractFixture = require('../../../lib/test/fixtures/getDataContra
 const DataContract = require('../../../lib/dataContract/DataContract');
 const { protocolVersion } = require('../../../lib/protocolVersion');
 
-const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition');
+const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition/DataContractCreateTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 

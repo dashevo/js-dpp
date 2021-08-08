@@ -1,11 +1,11 @@
 const DataContractCreateTransition = require(
-  '../../../../lib/dataContract/stateTransition/DataContractCreateTransition',
+  '../../../../lib/dataContract/stateTransition/DataContractCreateTransition/DataContractCreateTransition',
 );
 
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');
 
 const applyDataContractCreateTransitionFactory = require(
-  '../../../../lib/dataContract/stateTransition/applyDataContractCreateTransitionFactory',
+  '../../../../lib/dataContract/stateTransition/DataContractCreateTransition/applyDataContractCreateTransitionFactory',
 );
 
 const createStateRepositoryMock = require('../../../../lib/test/mocks/createStateRepositoryMock');

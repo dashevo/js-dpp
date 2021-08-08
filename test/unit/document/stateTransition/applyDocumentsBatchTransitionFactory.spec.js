@@ -1,10 +1,10 @@
 const Document = require('../../../../lib/document/Document');
 const DocumentsBatchTransition = require(
-  '../../../../lib/document/stateTransition/DocumentsBatchTransition',
+  '../../../../lib/document/stateTransition/DocumentsBatchTransition/DocumentsBatchTransition',
 );
 
 const applyDocumentsBatchTransitionFactory = require(
-  '../../../../lib/document/stateTransition/applyDocumentsBatchTransitionFactory',
+  '../../../../lib/document/stateTransition/DocumentsBatchTransition/applyDocumentsBatchTransitionFactory',
 );
 
 const getDataContractFixture = require('../../../../lib/test/fixtures/getDataContractFixture');

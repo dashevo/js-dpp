@@ -3,7 +3,7 @@ const { expectValidationError } = require(
 );
 
 const validateIdentityCreateTransitionDataFactory = require(
-  '../../../../../lib/identity/stateTransitions/identityCreateTransition/validateIdentityCreateTransitionDataFactory',
+  '../../../../../lib/identity/stateTransition/IdentityCreateTransition/validation/state/validateIdentityCreateTransitionStateFactory',
 );
 
 const getIdentityCreateTransitionFixture = require('../../../../../lib/test/fixtures/getIdentityCreateTransitionFixture');

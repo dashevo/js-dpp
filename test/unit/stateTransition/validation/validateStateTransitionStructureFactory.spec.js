@@ -1,4 +1,4 @@
-const validateStateTransitionStructureFactory = require('../../../../lib/stateTransition/validation/validateStateTransitionStructureFactory');
+const validateStateTransitionStructureFactory = require('../../../../lib/stateTransition/validation/validateStateTransitionBasicFactory');
 
 const DataContractFactory = require('../../../../lib/dataContract/DataContractFactory');
 

@@ -1,7 +1,7 @@
 const Identity = require('../../../../../lib/identity/Identity');
 
 const applyIdentityCreateTransitionFactory = require(
-  '../../../../../lib/identity/stateTransitions/identityCreateTransition/applyIdentityCreateTransitionFactory',
+  '../../../../../lib/identity/stateTransition/IdentityCreateTransition/applyIdentityCreateTransitionFactory',
 );
 
 const getIdentityCreateTransitionFixture = require('../../../../../lib/test/fixtures/getIdentityCreateTransitionFixture');

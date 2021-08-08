@@ -7,7 +7,7 @@ const JsonSchemaValidator = require('../../../../../lib/validation/JsonSchemaVal
 const getIdentityTopUpTransitionFixture = require('../../../../../lib/test/fixtures/getIdentityTopUpTransitionFixture');
 
 const validateIdentityTopUpTransitionStructureFactory = require(
-  '../../../../../lib/identity/stateTransitions/identityTopUpTransition/validateIdentityTopUpTransitionStructureFactory',
+  '../../../../../lib/identity/stateTransition/IdentityTopUpTransition/validation/basic/validateIdentityTopUpTransitionBasicFactory',
 );
 
 const {
@@ -20,8 +20,8 @@ const ValidationResult = require('../../../../../lib/validation/ValidationResult
 const ConsensusError = require('../../../../../lib/errors/ConsensusError');
 const IdentityNotFoundError = require('../../../../../lib/errors/IdentityNotFoundError');
 const Identifier = require('../../../../../lib/identifier/Identifier');
-const ChainAssetLockProof = require('../../../../../lib/identity/stateTransitions/assetLockProof/chain/ChainAssetLockProof');
-const InstantAssetLockProof = require('../../../../../lib/identity/stateTransitions/assetLockProof/instant/InstantAssetLockProof');
+const ChainAssetLockProof = require('../../../../../lib/identity/stateTransition/assetLockProof/chain/ChainAssetLockProof');
+const InstantAssetLockProof = require('../../../../../lib/identity/stateTransition/assetLockProof/instant/InstantAssetLockProof');
 
 describe('validateIdentityTopUpTransitionStructureFactory', () => {
   let rawStateTransition;

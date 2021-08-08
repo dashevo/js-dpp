@@ -1,4 +1,4 @@
-const verifyDocumentsUniquenessByIndicesFactory = require('../../../../../lib/document/stateTransition/validation/data/validateDocumentsUniquenessByIndicesFactory');
+const verifyDocumentsUniquenessByIndicesFactory = require('../../../../../lib/document/stateTransition/DocumentsBatchTransition/validation/state/validateDocumentsUniquenessByIndicesFactory');
 
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
 const getContractFixture = require('../../../../../lib/test/fixtures/getDataContractFixture');

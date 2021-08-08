@@ -1,7 +1,7 @@
-const validateDocumentsBatchTransitionDataFactory = require('../../../../../lib/document/stateTransition/validation/data/validateDocumentsBatchTransitionDataFactory');
+const validateDocumentsBatchTransitionDataFactory = require('../../../../../lib/document/stateTransition/DocumentsBatchTransition/validation/state/validateDocumentsBatchTransitionStateFactory');
 
 const Document = require('../../../../../lib/document/Document');
-const DocumentsBatchTransition = require('../../../../../lib/document/stateTransition/DocumentsBatchTransition');
+const DocumentsBatchTransition = require('../../../../../lib/document/stateTransition/DocumentsBatchTransition/DocumentsBatchTransition');
 
 const DataTriggerExecutionContext = require('../../../../../lib/dataTrigger/DataTriggerExecutionContext');
 const DataTriggerExecutionError = require('../../../../../lib/errors/DataTriggerExecutionError');
