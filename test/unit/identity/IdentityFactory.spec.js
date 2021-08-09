@@ -43,8 +43,8 @@ describe('IdentityFactory', () => {
           decode: decodeMock,
         },
         '../../../lib/identity/Identity': Identity,
-        '../../../lib/identity/stateTransitions/identityCreateTransition/IdentityCreateTransition': IdentityCreateTransition,
-        '../../../lib/identity/stateTransitions/identityTopUpTransition/IdentityTopUpTransition': IdentityTopUpTransition,
+        '../../../lib/identity/stateTransition/IdentityCreateTransition/IdentityCreateTransition': IdentityCreateTransition,
+        '../../../lib/identity/stateTransition/IdentityTopUpTransition/IdentityTopUpTransition': IdentityTopUpTransition,
       },
     );
 

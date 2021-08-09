@@ -1,20 +1,23 @@
 const validateStateTransitionSignatureFactory = require('../../../../lib/stateTransition/validation/validateStateTransitionIdentitySignatureFactory');
-const createStateRepositoryMock = require('../../../../lib/test/mocks/createStateRepositoryMock');
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
 const IdentityPublicKey = require('../../../../lib/identity/IdentityPublicKey');
 const InvalidIdentityPublicKeyTypeError = require('../../../../lib/errors/InvalidIdentityPublicKeyTypeError');
 const InvalidStateTransitionSignatureError = require('../../../../lib/errors/InvalidStateTransitionSignatureError');
 const MissingPublicKeyError = require('../../../../lib/errors/MissingPublicKeyError');
 const generateRandomIdentifier = require('../../../../lib/test/utils/generateRandomIdentifier');
+const ConsensusError = require('../../../../lib/errors/ConsensusError');
+
+const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 
 describe('validateStateTransitionIdentitySignatureFactory', () => {
-  let validateStateTransitionSignature;
-  let stateRepositoryMock;
+  let validateStateTransitionIdentitySignature;
   let stateTransition;
   let ownerId;
   let identity;
   let identityPublicKey;
   let publicKeyId;
+  let validateIdentityExistenceResult;
+  let validateIdentityExistenceMock;
 
   beforeEach(function beforeEach() {
     ownerId = generateRandomIdentifier();
@@ -23,6 +26,7 @@ describe('validateStateTransitionIdentitySignatureFactory', () => {
       verifySignature: this.sinonSandbox.stub().returns(true),
       getSignaturePublicKeyId: this.sinonSandbox.stub().returns(publicKeyId),
       getSignature: this.sinonSandbox.stub(),
+      getOwnerId: this.sinonSandbox.stub().returns(ownerId),
     };
 
     identityPublicKey = {
@@ -35,18 +39,21 @@ describe('validateStateTransitionIdentitySignatureFactory', () => {
       getPublicKeyById,
     };
 
-    stateRepositoryMock = createStateRepositoryMock(this.sinonSandbox);
-    stateRepositoryMock.fetchIdentity.resolves(identity);
+    validateIdentityExistenceResult = new ValidationResult();
+    validateIdentityExistenceResult.setData(identity);
 
-    validateStateTransitionSignature = validateStateTransitionSignatureFactory(
-      stateRepositoryMock,
+    validateIdentityExistenceMock = this.sinonSandbox.stub().resolves(
+      validateIdentityExistenceResult,
+    );
+
+    validateStateTransitionIdentitySignature = validateStateTransitionSignatureFactory(
+      validateIdentityExistenceMock,
     );
   });
 
   it('should pass properly signed state transition', async () => {
-    const result = await validateStateTransitionSignature(
+    const result = await validateStateTransitionIdentitySignature(
       stateTransition,
-      ownerId,
     );
 
     expect(result).to.be.instanceOf(ValidationResult);
@@ -55,11 +62,35 @@ describe('validateStateTransitionIdentitySignatureFactory', () => {
     expect(result.getErrors()).to.be.an('array');
     expect(result.getErrors()).to.be.empty();
 
-    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(ownerId);
+    expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(ownerId);
     expect(identity.getPublicKeyById).to.be.calledOnceWithExactly(publicKeyId);
     expect(identityPublicKey.getType).to.be.calledOnce();
     expect(stateTransition.getSignaturePublicKeyId).to.be.calledOnce();
     expect(stateTransition.verifySignature).to.be.calledOnceWithExactly(identityPublicKey);
+    expect(stateTransition.getOwnerId).to.be.calledOnceWithExactly();
+  });
+
+  it('should return invalid result if owner id doesn\'t exist', async () => {
+    const consensusError = new ConsensusError('error');
+
+    validateIdentityExistenceResult.addError(consensusError);
+
+    const result = await validateStateTransitionIdentitySignature(
+      stateTransition,
+    );
+
+    expectValidationError(result);
+
+    const [error] = result.getErrors();
+
+    expect(error).to.equal(consensusError);
+
+    expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(ownerId);
+    expect(identity.getPublicKeyById).to.not.be.called();
+    expect(identityPublicKey.getType).to.not.be.called();
+    expect(stateTransition.getSignaturePublicKeyId).to.not.be.called();
+    expect(stateTransition.verifySignature).to.not.be.called();
+    expect(stateTransition.getOwnerId).to.be.calledOnceWithExactly();
   });
 
   it("should return MissingPublicKeyError if the identity doesn't have a matching public key", async () => {
@@ -67,14 +98,13 @@ describe('validateStateTransitionIdentitySignatureFactory', () => {
     identityPublicKey.getType.returns(type);
     identity.getPublicKeyById.returns(undefined);
 
-    const result = await validateStateTransitionSignature(
+    const result = await validateStateTransitionIdentitySignature(
       stateTransition,
-      ownerId,
     );
 
     expect(result).to.be.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.false();
-    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(ownerId);
+    expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(ownerId);
     expect(identity.getPublicKeyById).to.be.calledOnceWithExactly(publicKeyId);
     expect(stateTransition.getSignaturePublicKeyId).to.be.calledTwice();
     expect(stateTransition.verifySignature).to.not.be.called();
@@ -92,14 +122,13 @@ describe('validateStateTransitionIdentitySignatureFactory', () => {
     const type = IdentityPublicKey.TYPES.ECDSA_SECP256K1 + 1;
     identityPublicKey.getType.returns(type);
 
-    const result = await validateStateTransitionSignature(
+    const result = await validateStateTransitionIdentitySignature(
       stateTransition,
-      ownerId,
     );
 
     expect(result).to.be.instanceOf(ValidationResult);
     expect(result.isValid()).to.be.false();
-    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(ownerId);
+    expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(ownerId);
     expect(identity.getPublicKeyById).to.be.calledOnceWithExactly(publicKeyId);
     expect(identityPublicKey.getType).to.be.calledTwice();
     expect(stateTransition.getSignaturePublicKeyId).to.be.calledOnce();
@@ -117,9 +146,8 @@ describe('validateStateTransitionIdentitySignatureFactory', () => {
   it('should return InvalidStateTransitionSignatureError if signature is invalid', async () => {
     stateTransition.verifySignature.returns(false);
 
-    const result = await validateStateTransitionSignature(
+    const result = await validateStateTransitionIdentitySignature(
       stateTransition,
-      ownerId,
     );
 
     expect(result).to.be.instanceOf(ValidationResult);
@@ -133,7 +161,7 @@ describe('validateStateTransitionIdentitySignatureFactory', () => {
     expect(error).to.be.instanceOf(InvalidStateTransitionSignatureError);
     expect(error.getRawStateTransition()).to.equal(stateTransition);
 
-    expect(stateRepositoryMock.fetchIdentity).to.be.calledOnceWithExactly(ownerId);
+    expect(validateIdentityExistenceMock).to.be.calledOnceWithExactly(ownerId);
     expect(identity.getPublicKeyById).to.be.calledOnceWithExactly(publicKeyId);
     expect(identityPublicKey.getType).to.be.calledOnce();
     expect(stateTransition.getSignaturePublicKeyId).to.be.calledOnce();

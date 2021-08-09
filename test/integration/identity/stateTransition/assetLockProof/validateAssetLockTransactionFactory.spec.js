@@ -11,7 +11,7 @@ const InvalidIdentityAssetLockTransactionOutputError = require('../../../../../l
 
 function getValidateAssetLockTransactionFactoryMock(TransactionClassMock) {
   return rewiremock.proxy(
-    '../../../../../lib/identity/stateTransitions/assetLockProof/validateAssetLockTransactionFactory',
+    '../../../../../lib/identity/stateTransition/assetLockProof/validateAssetLockTransactionFactory',
     {
       '../../../../../node_modules/@dashevo/dashcore-lib': {
         Transaction: TransactionClassMock,

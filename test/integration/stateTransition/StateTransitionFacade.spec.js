@@ -172,7 +172,58 @@ describe('StateTransitionFacade', () => {
       expect(validateDataSpy).to.not.be.called();
     });
 
-    it('should validate Data Contract ST structure and data', async function it() {
+    it('should return invalid result if State Transition signature is invalid', async function it() {
+      const validateDataSpy = this.sinonSandbox.spy(
+        dpp.stateTransition,
+        'validateData',
+      );
+
+      const rawStateTransition = dataContractCreateTransition.toObject();
+      delete rawStateTransition.protocolVersion;
+
+      const result = await dpp.stateTransition.validate(rawStateTransition);
+
+      expect(result).to.be.an.instanceOf(ValidationResult);
+      expect(result.isValid()).to.be.false();
+
+      expect(validateDataSpy).to.not.be.called();
+    });
+
+    it('should return invalid result if not enough balance to pay fee for State Transition', async function it() {
+      const validateDataSpy = this.sinonSandbox.spy(
+        dpp.stateTransition,
+        'validateData',
+      );
+
+      const rawStateTransition = dataContractCreateTransition.toObject();
+      delete rawStateTransition.protocolVersion;
+
+      const result = await dpp.stateTransition.validate(rawStateTransition);
+
+      expect(result).to.be.an.instanceOf(ValidationResult);
+      expect(result.isValid()).to.be.false();
+
+      expect(validateDataSpy).to.not.be.called();
+    });
+
+    it('should return invalid result if State Transition is invalid against state', async function it() {
+      const validateDataSpy = this.sinonSandbox.spy(
+        dpp.stateTransition,
+        'validateData',
+      );
+
+      const rawStateTransition = dataContractCreateTransition.toObject();
+      delete rawStateTransition.protocolVersion;
+
+      const result = await dpp.stateTransition.validate(rawStateTransition);
+
+      expect(result).to.be.an.instanceOf(ValidationResult);
+      expect(result.isValid()).to.be.false();
+
+      expect(validateDataSpy).to.not.be.called();
+    });
+
+    it('should validate DataContractCreateTransition', async function it() {
       const validateStructureSpy = this.sinonSandbox.spy(
         dpp.stateTransition,
         'validateStructure',
@@ -194,7 +245,7 @@ describe('StateTransitionFacade', () => {
       expect(validateDataSpy).to.be.calledOnceWith(dataContractCreateTransition);
     });
 
-    it('should validate Documents Batch Transition structure and data', async function it() {
+    it('should validate DocumentsBatchTransition', async function it() {
       stateRepositoryMock.fetchDocuments.resolves([]);
 
       stateRepositoryMock.fetchDataContract.resolves(dataContract);
@@ -224,7 +275,7 @@ describe('StateTransitionFacade', () => {
     });
   });
 
-  describe('validateStructure', () => {
+  describe('validateBasic', () => {
     it('should throw MissingOption if stateRepository is not set', async () => {
       dpp = new DashPlatformProtocol();
       await dpp.initialize();
@@ -251,14 +302,14 @@ describe('StateTransitionFacade', () => {
     });
   });
 
-  describe('validateData', () => {
+  describe('validateSignature', () => {
     it('should throw MissingOption if stateRepository is not set', async () => {
       dpp = new DashPlatformProtocol();
       await dpp.initialize();
 
       try {
-        await dpp.stateTransition.validateData(
-          dataContractCreateTransition,
+        await dpp.stateTransition.validateStructure(
+          dataContractCreateTransition.toObject(),
         );
 
         expect.fail('MissingOption should be thrown');
@@ -269,8 +320,8 @@ describe('StateTransitionFacade', () => {
     });
 
     it('should validate State Transition', async () => {
-      const result = await dpp.stateTransition.validateData(
-        dataContractCreateTransition,
+      const result = await dpp.stateTransition.validateStructure(
+        dataContractCreateTransition.toObject(),
       );
 
       expect(result).to.be.an.instanceOf(ValidationResult);
@@ -297,6 +348,33 @@ describe('StateTransitionFacade', () => {
 
     it('should validate State Transition', async () => {
       const result = await dpp.stateTransition.validateFee(
+        dataContractCreateTransition,
+      );
+
+      expect(result).to.be.an.instanceOf(ValidationResult);
+      expect(result.isValid()).to.be.true();
+    });
+  });
+
+  describe('validateState', () => {
+    it('should throw MissingOption if stateRepository is not set', async () => {
+      dpp = new DashPlatformProtocol();
+      await dpp.initialize();
+
+      try {
+        await dpp.stateTransition.validateData(
+          dataContractCreateTransition,
+        );
+
+        expect.fail('MissingOption should be thrown');
+      } catch (e) {
+        expect(e).to.be.an.instanceOf(MissingOptionError);
+        expect(e.getOptionName()).to.equal('stateRepository');
+      }
+    });
+
+    it('should validate State Transition', async () => {
+      const result = await dpp.stateTransition.validateData(
         dataContractCreateTransition,
       );
 

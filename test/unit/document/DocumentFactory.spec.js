@@ -69,7 +69,7 @@ describe('DocumentFactory', () => {
       '../../../lib/util/serializer': { decode: decodeMock },
       '../../../lib/util/generateEntropy': generateEntropyMock,
       '../../../lib/document/Document': Document,
-      '../../../lib/document/stateTransition/DocumentsBatchTransition': DocumentsBatchTransition,
+      '../../../lib/document/stateTransition/DocumentsBatchTransition/DocumentsBatchTransition': DocumentsBatchTransition,
     });
 
     factory = new DocumentFactory(

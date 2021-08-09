@@ -43,7 +43,7 @@ describe('DataContractFactory', () => {
     DataContractFactory = rewiremock.proxy('../../../lib/dataContract/DataContractFactory', {
       '../../../lib/util/serializer': { decode: decodeMock },
       '../../../lib/util/generateEntropy': generateEntropyMock,
-      '../../../lib/dataContract/stateTransition/DataContractCreateTransition': DataContractCreateTransition,
+      '../../../lib/dataContract/stateTransition/DataContractCreateTransition/DataContractCreateTransition': DataContractCreateTransition,
       '../../../lib/dataContract/DataContract': DataContractMock,
     });
 
