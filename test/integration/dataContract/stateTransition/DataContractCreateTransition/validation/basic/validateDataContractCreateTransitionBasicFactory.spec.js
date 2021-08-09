@@ -23,7 +23,6 @@ const ValidationResult = require('../../../../../../../lib/validation/Validation
 
 const ConsensusError = require('../../../../../../../lib/errors/ConsensusError');
 
-const InvalidIdentityPublicKeyTypeError = require('../../../../../../../lib/errors/InvalidIdentityPublicKeyTypeError');
 const InvalidDataContractIdError = require('../../../../../../../lib/errors/InvalidDataContractIdError');
 
 describe('validateDataContractCreateTransitionBasicFactory', () => {
