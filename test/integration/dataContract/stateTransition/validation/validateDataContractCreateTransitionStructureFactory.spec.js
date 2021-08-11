@@ -6,7 +6,7 @@ const createAjv = require('../../../../../lib/ajv/createAjv');
 
 const JsonSchemaValidator = require('../../../../../lib/validation/JsonSchemaValidator');
 
-const { protocolVersion } = require('../../../../../lib/protocolVersion');
+const protocolVersion = require('../../../../../lib/protocolVersion');
 
 const validateDataContractCreateTransitionStructureFactory = require('../../../../../lib/dataContract/stateTransition/validation/validateDataContractCreateTransitionStructureFactory');
 
@@ -43,7 +43,7 @@ describe('validateDataContractCreateTransitionStructureFactory', () => {
     rawDataContract = dataContract.toObject();
 
     stateTransition = new DataContractCreateTransition({
-      protocolVersion,
+      protocolVersion: protocolVersion.latestVersion,
       dataContract: rawDataContract,
       entropy: dataContract.getEntropy(),
       signature: Buffer.alloc(65),
