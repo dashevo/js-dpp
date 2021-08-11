@@ -1,6 +1,6 @@
 const getDataContractFixture = require('../../../lib/test/fixtures/getDataContractFixture');
 
-const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition');
+const DataContractCreateTransition = require('../../../lib/dataContract/stateTransition/DataContractCreateTransition/DataContractCreateTransition');
 
 const ValidationResult = require('../../../lib/validation/ValidationResult');
 
@@ -13,7 +13,7 @@ const createDPPMock = require('../../../lib/test/mocks/createDPPMock');
 const StateTransitionFactory = require('../../../lib/stateTransition/StateTransitionFactory');
 
 describe('StateTransitionFactory', () => {
-  let validateStateTransitionStructureMock;
+  let validateStateTransitionBasicMock;
   let createStateTransitionMock;
   let factory;
   let stateTransition;
@@ -32,13 +32,13 @@ describe('StateTransitionFactory', () => {
 
     decodeProtocolEntityMock = this.sinonSandbox.stub();
 
-    validateStateTransitionStructureMock = this.sinonSandbox.stub();
+    validateStateTransitionBasicMock = this.sinonSandbox.stub();
     createStateTransitionMock = this.sinonSandbox.stub().returns(stateTransition);
 
     dppMock = createDPPMock();
 
     factory = new StateTransitionFactory(
-      validateStateTransitionStructureMock,
+      validateStateTransitionBasicMock,
       createStateTransitionMock,
       dppMock,
       decodeProtocolEntityMock,
@@ -47,13 +47,13 @@ describe('StateTransitionFactory', () => {
 
   describe('createFromObject', () => {
     it('should return new State Transition with data from passed object', async () => {
-      validateStateTransitionStructureMock.returns(new ValidationResult());
+      validateStateTransitionBasicMock.returns(new ValidationResult());
 
       const result = await factory.createFromObject(rawStateTransition);
 
       expect(result).to.equal(stateTransition);
 
-      expect(validateStateTransitionStructureMock).to.have.been.calledOnceWith(rawStateTransition);
+      expect(validateStateTransitionBasicMock).to.have.been.calledOnceWith(rawStateTransition);
 
       expect(createStateTransitionMock).to.have.been.calledOnceWith(rawStateTransition);
     });
@@ -63,7 +63,7 @@ describe('StateTransitionFactory', () => {
 
       expect(result).to.equal(stateTransition);
 
-      expect(validateStateTransitionStructureMock).to.have.not.been.called();
+      expect(validateStateTransitionBasicMock).to.have.not.been.called();
 
       expect(createStateTransitionMock).to.have.been.calledOnceWith(rawStateTransition);
     });
@@ -71,7 +71,7 @@ describe('StateTransitionFactory', () => {
     it('should throw InvalidStateTransitionError if passed object is not valid', async () => {
       const validationError = new ConsensusError('test');
 
-      validateStateTransitionStructureMock.returns(new ValidationResult([validationError]));
+      validateStateTransitionBasicMock.returns(new ValidationResult([validationError]));
 
       try {
         await factory.createFromObject(rawStateTransition);
@@ -87,7 +87,7 @@ describe('StateTransitionFactory', () => {
 
         expect(consensusError).to.equal(validationError);
 
-        expect(validateStateTransitionStructureMock).to.have.been.calledOnceWith(
+        expect(validateStateTransitionBasicMock).to.have.been.calledOnceWith(
           rawStateTransition,
         );
       }
