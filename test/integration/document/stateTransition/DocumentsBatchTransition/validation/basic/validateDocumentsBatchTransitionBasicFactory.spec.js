@@ -25,7 +25,7 @@ const { expectValidationError, expectJsonSchemaError } = require('../../../../..
 const createStateRepositoryMock = require('../../../../../../../lib/test/mocks/createStateRepositoryMock');
 
 const ConsensusError = require('../../../../../../../lib/errors/consensus/ConsensusError');
-const DuplicateDocumentTransitionsError = require('../../../../../../../lib/errors/consensus/basic/document/DuplicateDocumentTransitionsError');
+const DuplicateDocumentTransitionsError = require('../../../../../../../lib/errors/consensus/basic/document/DuplicateDocumentTransitionsWithIdsError');
 const InvalidDocumentTransitionIdError = require('../../../../../../../lib/errors/consensus/basic/document/InvalidDocumentTransitionIdError');
 const DataContractNotPresentError = require('../../../../../../../lib/errors/consensus/basic/document/DataContractNotPresentError');
 const MissingDataContractIdError = require('../../../../../../../lib/errors/consensus/basic/document/MissingDataContractIdError');
