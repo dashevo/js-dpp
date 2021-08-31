@@ -205,7 +205,7 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.message).to.equal(`Invalid asset lock proof: ${instantLockError.message}`);
+      expect(error.message).to.equal(`Invalid instant lock proof: ${instantLockError.message}`);
 
       expect(stateRepositoryMock.verifyInstantLock).to.not.be.called();
       expect(instantLockMock.verify).to.not.be.called();

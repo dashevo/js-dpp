@@ -39,7 +39,8 @@ describe('validateDataContractCreateTransitionStateFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getDataContract().toObject()).to.deep.equal(dataContract.toObject());
+    expect(Buffer.isBuffer(error.getDataContractId())).to.be.true();
+    expect(error.getDataContractId()).to.deep.equal(dataContract.getId().toBuffer());
 
     expect(stateRepositoryMock.fetchDataContract).to.be.calledOnceWithExactly(dataContract.getId());
   });

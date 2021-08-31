@@ -38,10 +38,6 @@ describe('fetchAndValidateDataContractFactory', () => {
     const result = await fetchAndValidateDataContract(rawDocument);
 
     expectValidationError(result, MissingDataContractIdError);
-
-    const [error] = result.getErrors();
-
-    expect(error.getRawDocument()).to.equal(rawDocument);
   });
 
   it('should return with invalid result if Data Contract is not present', async () => {

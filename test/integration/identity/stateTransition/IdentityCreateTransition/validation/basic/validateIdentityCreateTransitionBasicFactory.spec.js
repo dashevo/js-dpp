@@ -16,9 +16,9 @@ const {
 } = require('../../../../../../../lib/test/expect/expectError');
 
 const ValidationResult = require('../../../../../../../lib/validation/ValidationResult');
-const ConsensusError = require('../../../../../../../lib/errors/consensus/ConsensusError');
 const InstantAssetLockProof = require('../../../../../../../lib/identity/stateTransition/assetLockProof/instant/InstantAssetLockProof');
 const ChainAssetLockProof = require('../../../../../../../lib/identity/stateTransition/assetLockProof/chain/ChainAssetLockProof');
+const SomeConsensusError = require('../../../../../../../lib/test/SomeConsensusError');
 
 describe('validateIdentityCreateTransitionBasicFactory', () => {
   let validateIdentityCreateTransitionBasic;
@@ -182,7 +182,7 @@ describe('validateIdentityCreateTransitionBasicFactory', () => {
     });
 
     it('should be valid', async () => {
-      const assetLockError = new ConsensusError('test');
+      const assetLockError = new SomeConsensusError('test');
       const assetLockResult = new ValidationResult([
         assetLockError,
       ]);
@@ -273,7 +273,7 @@ describe('validateIdentityCreateTransitionBasicFactory', () => {
     });
 
     it('should be valid', async () => {
-      const publicKeysError = new ConsensusError('test');
+      const publicKeysError = new SomeConsensusError('test');
       const publicKeysResult = new ValidationResult([
         publicKeysError,
       ]);

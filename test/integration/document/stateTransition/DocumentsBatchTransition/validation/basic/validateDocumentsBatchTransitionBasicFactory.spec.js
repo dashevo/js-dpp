@@ -24,8 +24,6 @@ const { expectValidationError, expectJsonSchemaError } = require('../../../../..
 
 const createStateRepositoryMock = require('../../../../../../../lib/test/mocks/createStateRepositoryMock');
 
-const ConsensusError = require('../../../../../../../lib/errors/consensus/ConsensusError');
-const DuplicateDocumentTransitionsError = require('../../../../../../../lib/errors/consensus/basic/document/DuplicateDocumentTransitionsWithIdsError');
 const InvalidDocumentTransitionIdError = require('../../../../../../../lib/errors/consensus/basic/document/InvalidDocumentTransitionIdError');
 const DataContractNotPresentError = require('../../../../../../../lib/errors/consensus/basic/document/DataContractNotPresentError');
 const MissingDataContractIdError = require('../../../../../../../lib/errors/consensus/basic/document/MissingDataContractIdError');
@@ -34,7 +32,9 @@ const InvalidDocumentTypeError = require('../../../../../../../lib/errors/consen
 const MissingDocumentTransitionActionError = require('../../../../../../../lib/errors/consensus/basic/document/MissingDocumentTransitionActionError');
 const InvalidDocumentTransitionActionError = require('../../../../../../../lib/errors/consensus/basic/document/InvalidDocumentTransitionActionError');
 const InvalidIdentifierError = require('../../../../../../../lib/errors/consensus/basic/InvalidIdentifierError');
-const IdentifierError = require('../../../../../../../lib/identifier/errors/IdentifierError');
+const DuplicateDocumentTransitionsWithIndicesError = require('../../../../../../../lib/errors/consensus/basic/document/DuplicateDocumentTransitionsWithIndicesError');
+const DuplicateDocumentTransitionsWithIdsError = require('../../../../../../../lib/errors/consensus/basic/document/DuplicateDocumentTransitionsWithIdsError');
+const SomeConsensusError = require('../../../../../../../lib/test/SomeConsensusError');
 
 describe('validateDocumentsBatchTransitionBasicFactory', () => {
   let dataContract;
@@ -401,11 +401,13 @@ describe('validateDocumentsBatchTransitionBasicFactory', () => {
 
           const result = await validateDocumentsBatchTransitionBasic(rawStateTransition);
 
-          expectValidationError(result, DuplicateDocumentTransitionsError);
+          expectValidationError(result, DuplicateDocumentTransitionsWithIdsError);
 
           const [error] = result.getErrors();
 
-          expect(error.getRawDocumentTransitions()).to.deep.equal(duplicates);
+          expect(error.getDocumentTransitionReferences()).to.deep.equal(
+            duplicates.map((d) => [d.$type, d.$id]),
+          );
 
           expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
             dataContract.getId(),
@@ -429,10 +431,6 @@ describe('validateDocumentsBatchTransitionBasicFactory', () => {
           const result = await validateDocumentsBatchTransitionBasic(rawStateTransition);
 
           expectValidationError(result, MissingDataContractIdError);
-
-          const [error] = result.getErrors();
-
-          expect(error.getRawDocument()).to.equal(firstDocumentTransition);
 
           expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
             dataContract.getId(),
@@ -460,8 +458,7 @@ describe('validateDocumentsBatchTransitionBasicFactory', () => {
           const [error] = result.getErrors();
 
           expect(error.getIdentifierName()).to.equal('$dataContractId');
-          expect(error.getIdentifierError()).to.be.instanceOf(IdentifierError);
-          expect(error.getIdentifierError().message).to.equal('Identifier expects Buffer');
+          expect(error.getErrorMessage()).to.equal('Identifier expects Buffer');
 
           expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
             dataContract.getId(),
@@ -508,10 +505,6 @@ describe('validateDocumentsBatchTransitionBasicFactory', () => {
 
           expectValidationError(result, MissingDocumentTransitionTypeError);
 
-          const [error] = result.getErrors();
-
-          expect(error.getRawDocument()).to.equal(firstDocumentTransition);
-
           expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
             dataContract.getId(),
           );
@@ -533,7 +526,9 @@ describe('validateDocumentsBatchTransitionBasicFactory', () => {
           const [error] = result.getErrors();
 
           expect(error.getType()).to.equal(firstDocumentTransition.$type);
-          expect(error.getDataContract()).to.equal(dataContract);
+
+          expect(Buffer.isBuffer(error.getDataContractId())).to.be.true();
+          expect(error.getDataContractId()).to.deep.equal(dataContract.getId().toBuffer());
 
           expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
             dataContract.getId(),
@@ -554,10 +549,6 @@ describe('validateDocumentsBatchTransitionBasicFactory', () => {
           const result = await validateDocumentsBatchTransitionBasic(rawStateTransition);
 
           expectValidationError(result, MissingDocumentTransitionActionError);
-
-          const [error] = result.getErrors();
-
-          expect(error.getRawDocumentTransition()).to.equal(firstDocumentTransition);
 
           expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
             dataContract.getId(),
@@ -596,6 +587,7 @@ describe('validateDocumentsBatchTransitionBasicFactory', () => {
           it('should be valid generated ID', async () => {
             const [firstTransition] = rawStateTransition.transitions;
 
+            const expectedId = firstTransition.$id;
             firstTransition.$id = generateRandomIdentifier();
 
             const result = await validateDocumentsBatchTransitionBasic(rawStateTransition);
@@ -604,7 +596,11 @@ describe('validateDocumentsBatchTransitionBasicFactory', () => {
 
             const [error] = result.getErrors();
 
-            expect(error.getRawDocumentTransition()).to.deep.equal(firstTransition);
+            expect(Buffer.isBuffer(error.getExpectedId())).to.be.true();
+            expect(error.getExpectedId()).to.deep.equal(expectedId);
+
+            expect(Buffer.isBuffer(error.getInvalidId())).to.be.true();
+            expect(error.getInvalidId()).to.deep.equal(firstTransition.$id);
 
             expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
               dataContract.getId(),
@@ -767,6 +763,42 @@ describe('validateDocumentsBatchTransitionBasicFactory', () => {
         });
       });
 
+      describe('delete', () => {
+        beforeEach(() => {
+          documentTransitions = getDocumentTransitionsFixture({
+            create: [],
+            replace: [],
+            delete: documents,
+          });
+
+          stateTransition = new DocumentsBatchTransition({
+            protocolVersion: protocolVersion.latestVersion,
+            ownerId,
+            contractId: dataContract.getId(),
+            transitions: documentTransitions.map((t) => t.toObject()),
+            signature: Buffer.alloc(65),
+            signaturePublicKeyId: 0,
+          }, [dataContract]);
+
+          rawStateTransition = stateTransition.toObject();
+        });
+
+        it('should return invalid result if delete transaction is not valid', async () => {
+          const [documentTransition] = rawStateTransition.transitions;
+
+          delete documentTransition.$id;
+
+          const result = await validateDocumentsBatchTransitionBasic(rawStateTransition);
+
+          expectJsonSchemaError(result);
+
+          const [error] = result.getErrors();
+
+          expect(error.params.missingProperty).to.equal('$id');
+          expect(error.keyword).to.equal('required');
+        });
+      });
+
       it('should return invalid result if there are duplicate unique index values', async () => {
         const duplicates = [documentTransitions[1].toObject()];
 
@@ -774,11 +806,13 @@ describe('validateDocumentsBatchTransitionBasicFactory', () => {
 
         const result = await validateDocumentsBatchTransitionBasic(rawStateTransition);
 
-        expectValidationError(result, DuplicateDocumentTransitionsError);
+        expectValidationError(result, DuplicateDocumentTransitionsWithIndicesError);
 
         const [error] = result.getErrors();
 
-        expect(error.getRawDocumentTransitions()).to.deep.equal(duplicates);
+        expect(error.getDocumentTransitionReferences()).to.deep.equal(
+          duplicates.map((d) => [d.$type, d.$id]),
+        );
 
         expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
           dataContract.getId(),
@@ -793,7 +827,7 @@ describe('validateDocumentsBatchTransitionBasicFactory', () => {
       });
 
       it('should return invalid result if compound index doesn\'t contain all fields', async () => {
-        const consensusError = new ConsensusError('error');
+        const consensusError = new SomeConsensusError('error');
 
         validatePartialCompoundIndicesMock.returns(
           new ValidationResult([consensusError]),

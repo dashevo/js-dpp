@@ -2,8 +2,8 @@ const validateDataContractMaxDepthFactory = require('../../../../lib/dataContrac
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
 const DataContractMaxDepthExceedError = require('../../../../lib/errors/consensus/basic/dataContract/DataContractMaxDepthExceedError');
-const JsonSchemaError = require('../../../../lib/errors/consensus/basic/JsonSchemaError');
 const generateDeepJson = require('../../../../lib/test/utils/generateDeepJson');
+const InvalidJsonSchemaRefError = require('../../../../lib/errors/consensus/basic/dataContract/InvalidJsonSchemaRefError');
 
 describe('validateDataContractMaxDepthFactory', () => {
   let refParserMock;
@@ -73,7 +73,7 @@ describe('validateDataContractMaxDepthFactory', () => {
     expectValidationError(result);
     const [error] = result.getErrors();
 
-    expect(error).to.be.an.instanceOf(JsonSchemaError);
+    expect(error).to.be.an.instanceOf(InvalidJsonSchemaRefError);
     expect(error.message).to.equal(refParserError.message);
   });
 

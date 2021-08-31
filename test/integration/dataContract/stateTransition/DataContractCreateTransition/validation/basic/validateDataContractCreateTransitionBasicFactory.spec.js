@@ -21,9 +21,8 @@ const {
 
 const ValidationResult = require('../../../../../../../lib/validation/ValidationResult');
 
-const ConsensusError = require('../../../../../../../lib/errors/consensus/ConsensusError');
-
 const InvalidDataContractIdError = require('../../../../../../../lib/errors/consensus/basic/dataContract/InvalidDataContractIdError');
+const SomeConsensusError = require('../../../../../../../lib/test/SomeConsensusError');
 
 describe('validateDataContractCreateTransitionBasicFactory', () => {
   let validateDataContractMock;
@@ -162,7 +161,7 @@ describe('validateDataContractCreateTransitionBasicFactory', () => {
     });
 
     it('should be valid', async () => {
-      const dataContractError = new ConsensusError('test');
+      const dataContractError = new SomeConsensusError('test');
       const dataContractResult = new ValidationResult([
         dataContractError,
       ]);

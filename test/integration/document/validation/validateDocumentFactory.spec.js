@@ -172,10 +172,6 @@ describe('validateDocumentFactory', () => {
           result,
           MissingDocumentTypeError,
         );
-
-        const [error] = result.getErrors();
-
-        expect(error.getRawDocument()).to.equal(rawDocument);
       });
 
       it('should be defined in Data Contract', () => {

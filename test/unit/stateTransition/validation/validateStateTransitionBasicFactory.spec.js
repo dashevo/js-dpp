@@ -14,10 +14,10 @@ const {
 
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
 
-const ConsensusError = require('../../../../lib/errors/consensus/ConsensusError');
 const MissingStateTransitionTypeError = require('../../../../lib/errors/consensus/basic/stateTransition/MissingStateTransitionTypeError');
 const InvalidStateTransitionTypeError = require('../../../../lib/errors/consensus/basic/stateTransition/InvalidStateTransitionTypeError');
 const createDPPMock = require('../../../../lib/test/mocks/createDPPMock');
+const SomeConsensusError = require('../../../../lib/test/SomeConsensusError');
 
 describe('validateStateTransitionBasicFactory', () => {
   let validateStateTransitionBasic;
@@ -83,7 +83,7 @@ describe('validateStateTransitionBasicFactory', () => {
   });
 
   it('should return invalid result if ST is invalid against validation function', async () => {
-    const extensionError = new ConsensusError('test');
+    const extensionError = new SomeConsensusError('test');
     const extensionResult = new ValidationResult([
       extensionError,
     ]);

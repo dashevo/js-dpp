@@ -32,12 +32,14 @@ describe('validatePartialCompoundIndices', () => {
 
     expectValidationError(result, InconsistentCompoundIndexDataError);
 
-    const { optionalUniqueIndexedDocument } = dataContract.getDocuments();
     const [error] = result.getErrors();
 
-    expect(error.getIndexDefinition()).to.deep.equal(
-      optionalUniqueIndexedDocument.indices[1],
+    const { optionalUniqueIndexedDocument } = dataContract.getDocuments();
+
+    expect(error.getIndexedProperties()).to.deep.equal(
+      optionalUniqueIndexedDocument.indices[1].properties.map((i) => Object.keys(i)[0]),
     );
+
     expect(error.getDocumentType()).to.equal('optionalUniqueIndexedDocument');
   });
 

@@ -13,9 +13,9 @@ const { expectValidationError, expectJsonSchemaError } = require(
 const validateChainAssetLockProofStructureFactory = require('../../../../../../lib/identity/stateTransition/assetLockProof/chain/validateChainAssetLockProofStructureFactory');
 const ValidationResult = require('../../../../../../lib/validation/ValidationResult');
 const IdentityAssetLockTransactionIsNotFoundError = require('../../../../../../lib/errors/consensus/basic/identity/IdentityAssetLockTransactionIsNotFoundError');
-const ConsensusError = require('../../../../../../lib/errors/consensus/ConsensusError');
 const InvalidAssetLockProofCoreChainHeightError = require('../../../../../../lib/errors/consensus/basic/identity/InvalidAssetLockProofCoreChainHeightError');
 const InvalidAssetLockProofTransactionHeightError = require('../../../../../../lib/errors/consensus/basic/identity/InvalidAssetLockProofTransactionHeightError');
+const SomeConsensusError = require('../../../../../../lib/test/SomeConsensusError');
 
 describe('validateChainAssetLockProofStructureFactory', () => {
   let rawProof;
@@ -26,9 +26,11 @@ describe('validateChainAssetLockProofStructureFactory', () => {
   let validateAssetLockTransactionResult;
   let publicKeyHash;
   let rawTransaction;
+  let transactionHash;
 
   beforeEach(async function beforeEach() {
     rawTransaction = '030000000137feb5676d0851337ea3c9a992496aab7a0b3eee60aeeb9774000b7f4bababa5000000006b483045022100d91557de37645c641b948c6cd03b4ae3791a63a650db3e2fee1dcf5185d1b10402200e8bd410bf516ca61715867666d31e44495428ce5c1090bf2294a829ebcfa4ef0121025c3cc7fbfc52f710c941497fd01876c189171ea227458f501afcb38a297d65b4ffffffff021027000000000000166a14152073ca2300a86b510fa2f123d3ea7da3af68dcf77cb0090a0000001976a914152073ca2300a86b510fa2f123d3ea7da3af68dc88ac00000000';
+    transactionHash = '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d';
 
     const assetLock = getChainAssetLockFixture();
 
@@ -283,24 +285,27 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectValidationError(result, IdentityAssetLockTransactionIsNotFoundError);
+
       const [error] = result.getErrors();
 
-      expect(error.getOutPoint()).to.deep.equal(rawProof.outPoint);
+      expect(error.getTransactionId()).to.deep.equal(
+        Buffer.from(transactionHash, 'hex'),
+      );
 
       expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(
-        '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
+        transactionHash,
       );
       expect(validateAssetLockTransactionMock).to.not.be.called();
       expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.be.calledOnce();
     });
 
     it('should point to valid transaction', async () => {
-      const consensusError = new ConsensusError('test');
+      const consensusError = new SomeConsensusError('test');
       validateAssetLockTransactionResult.addError(consensusError);
 
       const result = await validateChainAssetLockProofStructure(rawProof);
 
-      expectValidationError(result, ConsensusError);
+      expectValidationError(result, consensusError);
       const [error] = result.getErrors();
 
       expect(error).to.deep.equal(consensusError);
@@ -321,7 +326,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       expect(error.getTransactionHeight()).to.equal(42);
 
       expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(
-        '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
+        transactionHash,
       );
       expect(validateAssetLockTransactionMock).to.not.be.called();
       expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.be.calledOnce();
@@ -336,7 +341,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
     expect(result.getData()).to.deep.equal(publicKeyHash);
 
     expect(stateRepositoryMock.fetchTransaction).to.be.calledOnceWithExactly(
-      '6e200d059fb567ba19e92f5c2dcd3dde522fd4e0a50af223752db16158dabb1d',
+      transactionHash,
     );
     expect(validateAssetLockTransactionMock).to.be.calledOnceWithExactly(
       Buffer.from(rawTransaction, 'hex'),

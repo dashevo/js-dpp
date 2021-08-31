@@ -25,6 +25,7 @@ const UniqueIndicesLimitReachedError = require('../../../../lib/errors/consensus
 const InvalidIndexedPropertyConstraintError = require('../../../../lib/errors/consensus/basic/dataContract/InvalidIndexedPropertyConstraintError');
 const InvalidCompoundIndexError = require('../../../../lib/errors/consensus/basic/dataContract/InvalidCompoundIndexError');
 const IncompatibleRe2PatternError = require('../../../../lib/document/errors/IncompatibleRe2PatternError');
+const InvalidJsonSchemaRefError = require('../../../../lib/errors/consensus/basic/dataContract/InvalidJsonSchemaRefError');
 
 describe('validateDataContractFactory', function main() {
   this.timeout(15000);
@@ -1229,7 +1230,6 @@ describe('validateDataContractFactory', function main() {
       const [error] = result.getErrors();
 
       expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
-      expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
       expect(error.getDocumentType()).to.deep.equal('indexedDocument');
     });
 
@@ -1438,7 +1438,6 @@ describe('validateDataContractFactory', function main() {
 
         const [error] = result.getErrors();
 
-        expect(error.getRawDataContract()).to.equal(rawDataContract);
         expect(error.getDocumentType()).to.equal('indexedDocument');
       });
 
@@ -1460,7 +1459,6 @@ describe('validateDataContractFactory', function main() {
         const [error] = result.getErrors();
 
         expect(error.getPropertyName()).to.equal('$id');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
         expect(error.getDocumentType()).to.deep.equal('indexedDocument');
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
@@ -1479,7 +1477,6 @@ describe('validateDataContractFactory', function main() {
         const [error] = result.getErrors();
 
         expect(error.getPropertyName()).to.equal('missingProperty');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
         expect(error.getDocumentType()).to.deep.equal('indexedDocument');
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
@@ -1513,7 +1510,6 @@ describe('validateDataContractFactory', function main() {
 
         expect(error.getPropertyName()).to.equal('objectProperty');
         expect(error.getPropertyType()).to.equal('object');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
         expect(error.getDocumentType()).to.deep.equal('indexedDocument');
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
@@ -1550,7 +1546,6 @@ describe('validateDataContractFactory', function main() {
 
         expect(error.getPropertyName()).to.equal('arrayProperty');
         expect(error.getPropertyType()).to.equal('array');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
         expect(error.getDocumentType()).to.deep.equal('indexedDocument');
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
@@ -1584,7 +1579,6 @@ describe('validateDataContractFactory', function main() {
 
         expect(error.getPropertyName()).to.equal('arrayProperty');
         expect(error.getPropertyType()).to.equal('array');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
         expect(error.getDocumentType()).to.deep.equal('indexedDocument');
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
@@ -1622,7 +1616,6 @@ describe('validateDataContractFactory', function main() {
 
         expect(error.getPropertyName()).to.equal('arrayProperty');
         expect(error.getPropertyType()).to.equal('array');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
         expect(error.getDocumentType()).to.deep.equal('indexedDocument');
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
@@ -1776,7 +1769,7 @@ describe('validateDataContractFactory', function main() {
 
     const result = await validateDataContract(rawDataContract);
 
-    expectJsonSchemaError(result);
+    expectValidationError(result, InvalidJsonSchemaRefError);
 
     const [error] = result.getErrors();
 

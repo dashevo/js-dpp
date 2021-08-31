@@ -153,18 +153,18 @@ describe('validateDocumentsUniquenessByIndices', () => {
 
     const errors = result.getErrors();
 
-    expect(errors.map((e) => e.getDocumentTransition())).to.have.deep.members([
-      documentTransitions[3],
-      documentTransitions[3],
-      documentTransitions[4],
-      documentTransitions[4],
+    expect(errors.map((e) => e.getDocumentId())).to.have.deep.members([
+      documentTransitions[3].getId().toBuffer(),
+      documentTransitions[3].getId().toBuffer(),
+      documentTransitions[4].getId().toBuffer(),
+      documentTransitions[4].getId().toBuffer(),
     ]);
 
-    expect(errors.map((e) => e.getIndexDefinition())).to.have.deep.members([
-      indicesDefinition[0],
-      indicesDefinition[1],
-      indicesDefinition[0],
-      indicesDefinition[1],
+    expect(errors.map((e) => e.getDuplicatingProperties())).to.have.deep.members([
+      indicesDefinition[0].properties.map((i) => Object.keys(i)[0]),
+      indicesDefinition[1].properties.map((i) => Object.keys(i)[0]),
+      indicesDefinition[0].properties.map((i) => Object.keys(i)[0]),
+      indicesDefinition[1].properties.map((i) => Object.keys(i)[0]),
     ]);
   });
 

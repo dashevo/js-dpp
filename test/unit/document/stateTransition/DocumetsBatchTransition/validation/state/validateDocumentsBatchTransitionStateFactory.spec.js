@@ -21,13 +21,13 @@ const DataContractNotPresentError = require('../../../../../../../lib/errors/Dat
 const DocumentAlreadyPresentError = require('../../../../../../../lib/errors/consensus/state/document/DocumentAlreadyPresentError');
 const DocumentNotFoundError = require('../../../../../../../lib/errors/consensus/state/document/DocumentNotFoundError');
 const InvalidDocumentRevisionError = require('../../../../../../../lib/errors/consensus/state/document/InvalidDocumentRevisionError');
-const ConsensusError = require('../../../../../../../lib/errors/consensus/ConsensusError');
 const InvalidDocumentActionError = require('../../../../../../../lib/document/errors/InvalidDocumentActionError');
 const DocumentOwnerIdMismatchError = require('../../../../../../../lib/errors/consensus/state/document/DocumentOwnerIdMismatchError');
 const DocumentTimestampsMismatchError = require('../../../../../../../lib/errors/consensus/state/document/DocumentTimestampsMismatchError');
 const DocumentTimestampWindowViolationError = require('../../../../../../../lib/errors/consensus/state/document/DocumentTimestampWindowViolationError');
 
 const generateRandomIdentifier = require('../../../../../../../lib/test/utils/generateRandomIdentifier');
+const SomeConsensusError = require('../../../../../../../lib/test/SomeConsensusError');
 
 describe('validateDocumentsBatchTransitionStateFactory', () => {
   let validateDocumentsBatchTransitionState;
@@ -42,6 +42,7 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
   let documentTransitions;
   let abciHeader;
   let fakeTime;
+  let blockTime;
 
   beforeEach(function beforeEach() {
     dataContract = getDataContractFixture();
@@ -67,9 +68,11 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
       },
     });
 
+    blockTime = new Date().getTime() / 1000;
+
     abciHeader = {
       time: {
-        seconds: new Date().getTime() / 1000,
+        seconds: blockTime,
       },
     };
 
@@ -127,8 +130,8 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
-    expect(error.getFetchedDocument()).to.deep.equal(documents[0]);
+    expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
+    expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
 
     expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
@@ -160,7 +163,8 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
+    expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
+    expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
 
     expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
@@ -192,7 +196,8 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
+    expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
+    expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
 
     expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
@@ -230,8 +235,9 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
-    expect(error.getFetchedDocument()).to.deep.equal(documents[0]);
+    expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
+    expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
+    expect(error.getCurrentRevision()).to.deep.equal(documents[0].getRevision());
 
     expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
@@ -250,7 +256,7 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
     replaceDocument.setRevision(1);
 
     const fetchedDocument = new Document(documents[0].toObject(), dataContract);
-    fetchedDocument.ownerId = generateRandomIdentifier().toBuffer();
+    fetchedDocument.ownerId = generateRandomIdentifier();
 
     documentTransitions = getDocumentTransitionsFixture({
       create: [],
@@ -271,8 +277,18 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
-    expect(error.getFetchedDocument()).to.deep.equal(fetchedDocument);
+    expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
+    expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
+
+    expect(Buffer.isBuffer(error.getDocumentOwnerId())).to.be.true();
+    expect(error.getDocumentOwnerId()).to.deep.equal(
+      replaceDocument.getOwnerId().toBuffer(),
+    );
+
+    expect(Buffer.isBuffer(error.getExistingDocumentOwnerId())).to.be.true();
+    expect(error.getExistingDocumentOwnerId()).to.deep.equal(
+      fetchedDocument.getOwnerId().toBuffer(),
+    );
 
     expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
       dataContract.getId(),
@@ -321,7 +337,7 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
   });
 
   it('should return invalid result if there are duplicate document transitions according to unique indices', async () => {
-    const duplicateDocumentsError = new ConsensusError('error');
+    const duplicateDocumentsError = new SomeConsensusError('error');
 
     validateDocumentsUniquenessByIndicesMock.resolves(
       new ValidationResult([duplicateDocumentsError]),
@@ -427,6 +443,21 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
   });
 
   describe('Timestamps', () => {
+    let timeWindowStart;
+    let timeWindowEnd;
+
+    beforeEach(() => {
+      timeWindowStart = new Date(blockTime * 1000);
+      timeWindowStart.setMinutes(
+        timeWindowStart.getMinutes() - 5,
+      );
+
+      timeWindowEnd = new Date(blockTime * 1000);
+      timeWindowEnd.setMinutes(
+        timeWindowEnd.getMinutes() + 5,
+      );
+    });
+
     describe('CREATE transition', () => {
       it('should return invalid result if timestamps mismatch', async () => {
         documentTransitions = getDocumentTransitionsFixture({
@@ -452,7 +483,8 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
 
         documentTransitions[0].updatedAt = new Date();
 
-        expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
+        expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
+        expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
       });
 
       it('should return invalid result if "$createdAt" have violated time window', async () => {
@@ -484,8 +516,12 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
         );
         documentTransitions[0].updatedAt = undefined;
 
-        expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
+        expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
+        expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
         expect(error.getTimestampName()).to.equal('createdAt');
+        expect(error.getTimestamp()).to.deep.equal(documentTransitions[0].createdAt);
+        expect(error.getTimeWindowStart()).to.deep.equal(timeWindowStart);
+        expect(error.getTimeWindowEnd()).to.deep.equal(timeWindowEnd);
       });
 
       it('should return invalid result if "$updatedAt" have violated time window', async () => {
@@ -517,8 +553,12 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
         );
         documentTransitions[0].createdAt = undefined;
 
-        expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
+        expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
+        expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
         expect(error.getTimestampName()).to.equal('updatedAt');
+        expect(error.getTimestamp()).to.deep.equal(documentTransitions[0].updatedAt);
+        expect(error.getTimeWindowStart()).to.deep.equal(timeWindowStart);
+        expect(error.getTimeWindowEnd()).to.deep.equal(timeWindowEnd);
       });
     });
 
@@ -556,9 +596,12 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
           documentTransitions[0].updatedAt.getMinutes() - 6,
         );
 
-        expect(error.getDocumentTransition()).to.deep.equal(documentTransitions[0]);
-        expect(error.getFetchedDocument()).to.deep.equal(documents[1]);
+        expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
+        expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
         expect(error.getTimestampName()).to.equal('updatedAt');
+        expect(error.getTimestamp()).to.deep.equal(documentTransitions[0].updatedAt);
+        expect(error.getTimeWindowStart()).to.deep.equal(timeWindowStart);
+        expect(error.getTimeWindowEnd()).to.deep.equal(timeWindowEnd);
       });
     });
   });

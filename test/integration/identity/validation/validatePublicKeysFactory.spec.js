@@ -226,7 +226,7 @@ describe('validatePublicKeysFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getRawPublicKeys()).to.equal(rawPublicKeys);
+    expect(error.getDuplicatedIds()).to.deep.equal([rawPublicKeys[1].id]);
   });
 
   it('should return invalid result if there are duplicate keys', () => {
@@ -238,7 +238,7 @@ describe('validatePublicKeysFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getRawPublicKeys()).to.equal(rawPublicKeys);
+    expect(error.getDuplicatedPublicKeysIds()).to.deep.equal([rawPublicKeys[1].id]);
   });
 
   it('should return invalid result if key data is not a valid DER', () => {
@@ -250,8 +250,8 @@ describe('validatePublicKeysFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getPublicKey()).to.deep.equal(rawPublicKeys[1]);
-    expect(error.getValidationError()).to.be.an.instanceOf(TypeError);
+    expect(error.getPublicKeyId()).to.deep.equal(rawPublicKeys[1].id);
+    expect(error.getValidationError()).to.equal('Invalid DER format public key');
   });
 
   it('should pass valid public keys', () => {

@@ -17,9 +17,9 @@ const {
 
 const ValidationResult = require('../../../../../../../lib/validation/ValidationResult');
 
-const ConsensusError = require('../../../../../../../lib/errors/consensus/ConsensusError');
 const ChainAssetLockProof = require('../../../../../../../lib/identity/stateTransition/assetLockProof/chain/ChainAssetLockProof');
 const InstantAssetLockProof = require('../../../../../../../lib/identity/stateTransition/assetLockProof/instant/InstantAssetLockProof');
+const SomeConsensusError = require('../../../../../../../lib/test/SomeConsensusError');
 
 describe('validateIdentityTopUpTransitionBasicFactory', () => {
   let rawStateTransition;
@@ -174,7 +174,7 @@ describe('validateIdentityTopUpTransitionBasicFactory', () => {
     });
 
     it('should be valid', async () => {
-      const assetLockError = new ConsensusError('test');
+      const assetLockError = new SomeConsensusError('test');
       const assetLockResult = new ValidationResult([
         assetLockError,
       ]);
