@@ -1578,10 +1578,11 @@ describe('validateDataContractFactory', function main() {
         const result = await validateDataContract(rawDataContract);
         expectValidationError(result, InvalidIndexPropertyTypeError);
 
-        const [error] = result.getErrors();
+        const error = result.getFirstError();
+
+        expect(error.getCode()).to.equal(1013);
         expect(error.getPropertyName()).to.equal('mentions');
         expect(error.getPropertyType()).to.equal('array');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
         expect(error.getDocumentType()).to.deep.equal('indexedArray');
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
@@ -1603,10 +1604,11 @@ describe('validateDataContractFactory', function main() {
         const result = await validateDataContract(rawDataContract);
         expectValidationError(result, InvalidIndexPropertyTypeError);
 
-        const [error] = result.getErrors();
+        const error = result.getFirstError();
+
+        expect(error.getCode()).to.equal(1013);
         expect(error.getPropertyName()).to.equal('mentions');
         expect(error.getPropertyType()).to.equal('array');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
         expect(error.getDocumentType()).to.deep.equal('indexedArray');
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
@@ -1631,10 +1633,11 @@ describe('validateDataContractFactory', function main() {
         const result = await validateDataContract(rawDataContract);
         expectValidationError(result, InvalidIndexPropertyTypeError);
 
-        const [error] = result.getErrors();
+        const error = result.getFirstError();
+
+        expect(error.getCode()).to.equal(1013);
         expect(error.getPropertyName()).to.equal('mentions');
         expect(error.getPropertyType()).to.equal('array');
-        expect(error.getRawDataContract()).to.deep.equal(rawDataContract);
         expect(error.getDocumentType()).to.deep.equal('indexedArray');
         expect(error.getIndexDefinition()).to.deep.equal(indexDefinition);
       });
