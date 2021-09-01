@@ -9,7 +9,7 @@ const createStateRepositoryMock = require('../../../../../../../lib/test/mocks/c
 
 const ValidationResult = require('../../../../../../../lib/validation/ValidationResult');
 
-const DuplicateDocumentError = require('../../../../../../../lib/errors/consensus/state/document/DuplicateDocumentError');
+const DuplicateUniqueIndexError = require('../../../../../../../lib/errors/consensus/state/document/DuplicateUniqueIndexError');
 
 describe('validateDocumentsUniquenessByIndices', () => {
   let stateRepositoryMock;
@@ -149,7 +149,7 @@ describe('validateDocumentsUniquenessByIndices', () => {
       ownerId, documentTransitions, dataContract,
     );
 
-    expectValidationError(result, DuplicateDocumentError, 4);
+    expectValidationError(result, DuplicateUniqueIndexError, 4);
 
     const errors = result.getErrors();
 

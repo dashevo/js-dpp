@@ -65,7 +65,7 @@ describe('validateAssetLockTransactionFactory', () => {
 
     const [error] = result.getErrors();
 
-    expect(error.getErrorMessage()).to.equal('The value of "offset" is out of range. It must be >= 0 and <= 9. Received 37');
+    expect(error.getValidationError()).to.be.instanceOf(Error);
 
     expect(result.getData()).to.be.undefined();
     expect(stateRepositoryMock.isAssetLockTransactionOutPointAlreadyUsed).to.not.be.called();

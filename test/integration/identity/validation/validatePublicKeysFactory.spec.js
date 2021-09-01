@@ -251,7 +251,8 @@ describe('validatePublicKeysFactory', () => {
     const [error] = result.getErrors();
 
     expect(error.getPublicKeyId()).to.deep.equal(rawPublicKeys[1].id);
-    expect(error.getValidationError()).to.equal('Invalid DER format public key');
+    expect(error.getValidationError()).to.be.instanceOf(TypeError);
+    expect(error.getValidationError().message).to.equal('Invalid DER format public key');
   });
 
   it('should pass valid public keys', () => {

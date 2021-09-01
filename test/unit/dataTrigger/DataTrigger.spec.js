@@ -104,10 +104,8 @@ describe('DataTrigger', () => {
       const [error] = result.getErrors();
 
       expect(error).to.be.an.instanceOf(DataTriggerExecutionError);
-      expect(error.getError()).to.deep.equal({
-        message: triggerError.message,
-        stack: triggerError.stack,
-      });
+
+      expect(error.getExecutionError()).to.equal(triggerError);
     });
 
     it('should return a result with invalid result error if trigger function have not returned any result', async () => {

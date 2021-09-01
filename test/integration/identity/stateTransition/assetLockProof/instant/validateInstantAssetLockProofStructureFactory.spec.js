@@ -10,7 +10,7 @@ const getInstantAssetLockFixture = require('../../../../../../lib/test/fixtures/
 const JsonSchemaValidator = require('../../../../../../lib/validation/JsonSchemaValidator');
 const createStateRepositoryMock = require('../../../../../../lib/test/mocks/createStateRepositoryMock');
 const InvalidIdentityAssetLockProofError = require('../../../../../../lib/errors/consensus/basic/identity/InvalidInstantAssetLockProofError');
-const IdentityAssetLockProofMismatchError = require('../../../../../../lib/errors/consensus/basic/identity/IdentityAssetLockProofLockedTransactionMismatchError');
+const IdentityAssetLockProofLockedTransactionMismatchError = require('../../../../../../lib/errors/consensus/basic/identity/IdentityAssetLockProofLockedTransactionMismatchError');
 const InvalidIdentityAssetLockProofSignatureError = require('../../../../../../lib/errors/consensus/basic/identity/InvalidInstantAssetLockProofSignatureError');
 
 const { expectValidationError, expectJsonSchemaError } = require(
@@ -213,11 +213,11 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
     });
 
     it('should lock the same transaction', async () => {
-      instantLockMock.txid = '123';
+      instantLockMock.txid = Buffer.alloc(10).toString('hex');
 
       const result = await validateInstantAssetLockProofStructure(rawProof);
 
-      expectValidationError(result, IdentityAssetLockProofMismatchError);
+      expectValidationError(result, IdentityAssetLockProofLockedTransactionMismatchError);
 
       expect(stateRepositoryMock.verifyInstantLock).to.be.calledOnce();
       expect(instantLockMock.verify).to.not.be.called();
@@ -309,7 +309,13 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
     });
 
     it('should should be valid', async () => {
-      validateAssetLockTransactionResult.addError(new InvalidIdentityAssetLockTransactionError('Unknown special transaction type'));
+      const validationError = new Error('parsing failed');
+
+      const consensusError = new InvalidIdentityAssetLockTransactionError(validationError.message);
+
+      consensusError.setValidationError(validationError);
+
+      validateAssetLockTransactionResult.addError(consensusError);
       validateAssetLockTransactionMock.resolves(validateAssetLockTransactionResult);
 
       const result = await validateInstantAssetLockProofStructure(rawProof);
@@ -318,7 +324,9 @@ describe('validateInstantAssetLockProofStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.message).to.equal('Invalid asset lock transaction: Unknown special transaction type');
+      expect(error).to.equal(consensusError);
+
+      expect(error.getValidationError()).to.equal(validationError);
 
       expect(stateRepositoryMock.verifyInstantLock).to.be.calledOnce();
       expect(instantLockMock.verify).to.not.be.called();

@@ -458,7 +458,9 @@ describe('validateDocumentsBatchTransitionBasicFactory', () => {
           const [error] = result.getErrors();
 
           expect(error.getIdentifierName()).to.equal('$dataContractId');
-          expect(error.getErrorMessage()).to.equal('Identifier expects Buffer');
+
+          expect(error.getIdentifierError()).to.be.instanceOf(Error);
+          expect(error.getIdentifierError().message).to.equal('Identifier expects Buffer');
 
           expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
             dataContract.getId(),

@@ -301,11 +301,13 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
     it('should point to valid transaction', async () => {
       const consensusError = new SomeConsensusError('test');
+
       validateAssetLockTransactionResult.addError(consensusError);
 
       const result = await validateChainAssetLockProofStructure(rawProof);
 
-      expectValidationError(result, consensusError);
+      expectValidationError(result, SomeConsensusError);
+
       const [error] = result.getErrors();
 
       expect(error).to.deep.equal(consensusError);

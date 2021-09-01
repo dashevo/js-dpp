@@ -26,6 +26,7 @@ const InvalidIndexedPropertyConstraintError = require('../../../../lib/errors/co
 const InvalidCompoundIndexError = require('../../../../lib/errors/consensus/basic/dataContract/InvalidCompoundIndexError');
 const IncompatibleRe2PatternError = require('../../../../lib/document/errors/IncompatibleRe2PatternError');
 const InvalidJsonSchemaRefError = require('../../../../lib/errors/consensus/basic/dataContract/InvalidJsonSchemaRefError');
+const JsonSchemaCompilationError = require('../../../../lib/errors/consensus/basic/JsonSchemaCompilationError');
 
 describe('validateDataContractFactory', function main() {
   this.timeout(15000);
@@ -962,9 +963,11 @@ describe('validateDataContractFactory', function main() {
 
         const result = await validateDataContract(rawDataContract);
 
-        expectJsonSchemaError(result);
+        expectValidationError(result, JsonSchemaCompilationError);
 
         const [error] = result.getErrors();
+
+        expect(error.getCode()).to.equal(1004);
 
         expect(error.message).to.be.a('string').and.satisfy((msg) => (
           msg.startsWith('unknown format "lalala" ignored in schema')
@@ -1138,10 +1141,11 @@ describe('validateDataContractFactory', function main() {
 
           const result = await validateDataContract(rawDataContract);
 
-          expectJsonSchemaError(result, 1);
+          expectValidationError(result, JsonSchemaCompilationError);
 
           const [error] = result.getErrors();
 
+          expect(error.getCode()).to.equal(1004);
           expect(error.message).to.equal("'byteArray' should not be used with 'items'");
         });
       });
