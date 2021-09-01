@@ -153,6 +153,10 @@ describe('validateDocumentsUniquenessByIndices', () => {
 
     const errors = result.getErrors();
 
+    const [error] = result.getErrors();
+
+    expect(error.getCode()).to.equal(4009);
+
     expect(errors.map((e) => e.getDocumentId())).to.have.deep.members([
       documentTransitions[3].getId().toBuffer(),
       documentTransitions[3].getId().toBuffer(),

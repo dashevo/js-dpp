@@ -30,7 +30,9 @@ describe('validateDataContractMaxDepthFactory', () => {
     expectValidationError(result);
 
     const [error] = result.getErrors();
+
     expect(error).to.be.an.instanceOf(DataContractMaxDepthExceedError);
+    expect(error.getCode()).to.equal(1007);
   });
 
   it('should return valid result if depth = MAX_DEPTH', async () => {
@@ -60,7 +62,9 @@ describe('validateDataContractMaxDepthFactory', () => {
     expectValidationError(result);
 
     const [error] = result.getErrors();
+
     expect(error).to.be.an.instanceOf(DataContractMaxDepthExceedError);
+    expect(error.getCode()).to.equal(1007);
   });
 
   it('should return error if refParser throws an error', async () => {
@@ -71,10 +75,11 @@ describe('validateDataContractMaxDepthFactory', () => {
     const result = await validateDataContractMaxDepth(dataContractFixture);
 
     expectValidationError(result);
+
     const [error] = result.getErrors();
 
     expect(error).to.be.an.instanceOf(InvalidJsonSchemaRefError);
-    expect(error.message).to.equal(refParserError.message);
+    expect(error.message).to.equal(`Invalid JSON Schema $ref: ${refParserError.message}`);
   });
 
   it('should return valid result', async () => {

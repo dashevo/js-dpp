@@ -65,6 +65,7 @@ describe('validateAssetLockTransactionFactory', () => {
 
     const [error] = result.getErrors();
 
+    expect(error.getCode()).to.equal(1038);
     expect(error.getValidationError()).to.be.instanceOf(Error);
 
     expect(result.getData()).to.be.undefined();
@@ -79,6 +80,7 @@ describe('validateAssetLockTransactionFactory', () => {
 
     const [error] = result.getErrors();
 
+    expect(error.getCode()).to.equal(1034);
     expect(error.getOutputIndex()).to.equal(outputIndex);
 
     expect(result.getData()).to.be.undefined();
@@ -107,6 +109,7 @@ describe('validateAssetLockTransactionFactory', () => {
 
     const [error] = result.getErrors();
 
+    expect(error.getCode()).to.equal(1039);
     expect(error.getOutputIndex()).to.equal(outputIndex);
   });
 
@@ -134,6 +137,7 @@ describe('validateAssetLockTransactionFactory', () => {
 
     const [error] = result.getErrors();
 
+    expect(error.getCode()).to.equal(1037);
     expect(error.getOutputIndex()).to.equal(outputIndex);
   });
 
@@ -145,6 +149,8 @@ describe('validateAssetLockTransactionFactory', () => {
     expectValidationError(result, IdentityAssetLockTransactionOutPointAlreadyExistsError);
 
     const [error] = result.getErrors();
+
+    expect(error.getCode()).to.equal(1033);
 
     const transaction = new Transaction(rawTransaction);
 

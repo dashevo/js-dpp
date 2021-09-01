@@ -130,6 +130,7 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
 
     const [error] = result.getErrors();
 
+    expect(error.getCode()).to.equal(4004);
     expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
     expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
 
@@ -163,6 +164,7 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
 
     const [error] = result.getErrors();
 
+    expect(error.getCode()).to.equal(4005);
     expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
     expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
 
@@ -196,6 +198,7 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
 
     const [error] = result.getErrors();
 
+    expect(error.getCode()).to.equal(4005);
     expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
     expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
 
@@ -235,6 +238,7 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
 
     const [error] = result.getErrors();
 
+    expect(error.getCode()).to.equal(4010);
     expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
     expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
     expect(error.getCurrentRevision()).to.deep.equal(documents[0].getRevision());
@@ -277,6 +281,7 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
 
     const [error] = result.getErrors();
 
+    expect(error.getCode()).to.equal(4006);
     expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
     expect(error.getDocumentId()).to.deep.equal(documentTransitions[0].getId().toBuffer());
 
@@ -401,6 +406,7 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
 
     const [error] = result.getErrors();
 
+    expect(error.getCode()).to.equal(4002);
     expect(error).to.equal(dataTriggerExecutionError);
 
     expect(stateRepositoryMock.fetchDataContract).to.have.been.calledOnceWithExactly(
@@ -481,6 +487,8 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
 
         const [error] = result.getErrors();
 
+        expect(error.getCode()).to.equal(4007);
+
         documentTransitions[0].updatedAt = new Date();
 
         expect(Buffer.isBuffer(error.getDocumentId())).to.be.true();
@@ -510,6 +518,8 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
         expectValidationError(result, DocumentTimestampWindowViolationError);
 
         const [error] = result.getErrors();
+
+        expect(error.getCode()).to.equal(4008);
 
         documentTransitions[0].createdAt.setMinutes(
           documentTransitions[0].createdAt.getMinutes() - 6,
@@ -547,6 +557,8 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
         expectValidationError(result, DocumentTimestampWindowViolationError);
 
         const [error] = result.getErrors();
+
+        expect(error.getCode()).to.equal(4008);
 
         documentTransitions[0].updatedAt.setMinutes(
           documentTransitions[0].updatedAt.getMinutes() - 6,
@@ -591,6 +603,8 @@ describe('validateDocumentsBatchTransitionStateFactory', () => {
         expectValidationError(result, DocumentTimestampWindowViolationError);
 
         const [error] = result.getErrors();
+
+        expect(error.getCode()).to.equal(4008);
 
         documentTransitions[0].updatedAt.setMinutes(
           documentTransitions[0].updatedAt.getMinutes() - 6,

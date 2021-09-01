@@ -34,6 +34,8 @@ describe('validatePartialCompoundIndices', () => {
 
     const [error] = result.getErrors();
 
+    expect(error.getCode()).to.equal(1021);
+
     const { optionalUniqueIndexedDocument } = dataContract.getDocuments();
 
     expect(error.getIndexedProperties()).to.deep.equal(

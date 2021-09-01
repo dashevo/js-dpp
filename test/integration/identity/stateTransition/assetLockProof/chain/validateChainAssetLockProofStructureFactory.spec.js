@@ -79,9 +79,9 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.instancePath).to.equal('');
-      expect(error.keyword).to.equal('required');
-      expect(error.params.missingProperty).to.equal('type');
+      expect(error.getInstancePath()).to.equal('');
+      expect(error.getKeyword()).to.equal('required');
+      expect(error.getParams().missingProperty).to.equal('type');
 
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
       expect(validateAssetLockTransactionMock).to.not.be.called();
@@ -97,8 +97,8 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.instancePath).to.equal('/type');
-      expect(error.keyword).to.equal('const');
+      expect(error.getInstancePath()).to.equal('/type');
+      expect(error.getKeyword()).to.equal('const');
 
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
       expect(stateRepositoryMock.fetchLatestPlatformBlockHeader).to.not.be.called();
@@ -115,9 +115,9 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.instancePath).to.equal('');
-      expect(error.keyword).to.equal('required');
-      expect(error.params.missingProperty).to.equal('coreChainLockedHeight');
+      expect(error.getInstancePath()).to.equal('');
+      expect(error.getKeyword()).to.equal('required');
+      expect(error.getParams().missingProperty).to.equal('coreChainLockedHeight');
 
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
       expect(validateAssetLockTransactionMock).to.not.be.called();
@@ -133,8 +133,8 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.instancePath).to.equal('/coreChainLockedHeight');
-      expect(error.keyword).to.equal('type');
+      expect(error.getInstancePath()).to.equal('/coreChainLockedHeight');
+      expect(error.getKeyword()).to.equal('type');
 
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
       expect(validateAssetLockTransactionMock).to.not.be.called();
@@ -150,8 +150,8 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.instancePath).to.equal('/coreChainLockedHeight');
-      expect(error.keyword).to.equal('type');
+      expect(error.getInstancePath()).to.equal('/coreChainLockedHeight');
+      expect(error.getKeyword()).to.equal('type');
 
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
       expect(validateAssetLockTransactionMock).to.not.be.called();
@@ -167,8 +167,8 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
       const [error] = result.getErrors();
 
-      expect(error.instancePath).to.equal('/coreChainLockedHeight');
-      expect(error.keyword).to.equal('minimum');
+      expect(error.getInstancePath()).to.equal('/coreChainLockedHeight');
+      expect(error.getKeyword()).to.equal('minimum');
 
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
       expect(validateAssetLockTransactionMock).to.not.be.called();
@@ -185,7 +185,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.instancePath).to.equal('/coreChainLockedHeight');
-      expect(error.keyword).to.equal('maximum');
+      expect(error.getKeyword()).to.equal('maximum');
 
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
       expect(validateAssetLockTransactionMock).to.not.be.called();
@@ -200,8 +200,10 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectValidationError(result, InvalidAssetLockProofCoreChainHeightError);
+
       const [error] = result.getErrors();
 
+      expect(error.getCode()).to.equal(1035);
       expect(error.getProofCoreChainLockedHeight()).to.equal(42);
       expect(error.getCurrentCoreChainLockedHeight()).to.equal(41);
     });
@@ -218,8 +220,8 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.instancePath).to.equal('');
-      expect(error.keyword).to.equal('required');
-      expect(error.params.missingProperty).to.equal('outPoint');
+      expect(error.getKeyword()).to.equal('required');
+      expect(error.getParams().missingProperty).to.equal('outPoint');
 
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
       expect(validateAssetLockTransactionMock).to.not.be.called();
@@ -236,9 +238,9 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       const [error, byteArrayError] = result.getErrors();
 
       expect(error.instancePath).to.equal('/outPoint/0');
-      expect(error.keyword).to.equal('type');
+      expect(error.getKeyword()).to.equal('type');
 
-      expect(byteArrayError.keyword).to.equal('byteArray');
+      expect(byteArrayError.getKeyword()).to.equal('byteArray');
 
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
       expect(validateAssetLockTransactionMock).to.not.be.called();
@@ -255,7 +257,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.instancePath).to.equal('/outPoint');
-      expect(error.keyword).to.equal('minItems');
+      expect(error.getKeyword()).to.equal('minItems');
 
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
       expect(validateAssetLockTransactionMock).to.not.be.called();
@@ -272,7 +274,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       const [error] = result.getErrors();
 
       expect(error.instancePath).to.equal('/outPoint');
-      expect(error.keyword).to.equal('maxItems');
+      expect(error.getKeyword()).to.equal('maxItems');
 
       expect(stateRepositoryMock.fetchTransaction).to.not.be.called();
       expect(validateAssetLockTransactionMock).to.not.be.called();
@@ -288,6 +290,7 @@ describe('validateChainAssetLockProofStructureFactory', () => {
 
       const [error] = result.getErrors();
 
+      expect(error.getCode()).to.equal(1032);
       expect(error.getTransactionId()).to.deep.equal(
         Buffer.from(transactionHash, 'hex'),
       );
@@ -322,8 +325,10 @@ describe('validateChainAssetLockProofStructureFactory', () => {
       const result = await validateChainAssetLockProofStructure(rawProof);
 
       expectValidationError(result, InvalidAssetLockProofTransactionHeightError);
+
       const [error] = result.getErrors();
 
+      expect(error.getCode()).to.equal(1036);
       expect(error.getProofCoreChainLockedHeight()).to.equal(41);
       expect(error.getTransactionHeight()).to.equal(42);
 

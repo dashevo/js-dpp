@@ -116,6 +116,10 @@ describe('validateStateTransitionBasicFactory', () => {
     );
 
     expectValidationError(result, StateTransitionMaxSizeExceededError);
+
+    const [error] = result.getErrors();
+
+    expect(error.getCode()).to.equal(1045);
   });
 
   it('should return valid result', async () => {
