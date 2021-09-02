@@ -27,7 +27,7 @@ const DocumentTimestampsMismatchError = require('../../../../../../../lib/errors
 const DocumentTimestampWindowViolationError = require('../../../../../../../lib/errors/consensus/state/document/DocumentTimestampWindowViolationError');
 
 const generateRandomIdentifier = require('../../../../../../../lib/test/utils/generateRandomIdentifier');
-const SomeConsensusError = require('../../../../../../../lib/test/SomeConsensusError');
+const SomeConsensusError = require('../../../../../../../lib/test/mocks/SomeConsensusError');
 
 describe('validateDocumentsBatchTransitionStateFactory', () => {
   let validateDocumentsBatchTransitionState;

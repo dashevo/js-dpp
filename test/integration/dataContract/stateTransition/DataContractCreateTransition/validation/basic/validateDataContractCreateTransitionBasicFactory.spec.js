@@ -22,7 +22,7 @@ const {
 const ValidationResult = require('../../../../../../../lib/validation/ValidationResult');
 
 const InvalidDataContractIdError = require('../../../../../../../lib/errors/consensus/basic/dataContract/InvalidDataContractIdError');
-const SomeConsensusError = require('../../../../../../../lib/test/SomeConsensusError');
+const SomeConsensusError = require('../../../../../../../lib/test/mocks/SomeConsensusError');
 
 describe('validateDataContractCreateTransitionBasicFactory', () => {
   let validateDataContractMock;

@@ -7,7 +7,7 @@ const MissingPublicKeyError = require('../../../../lib/errors/consensus/signatur
 const generateRandomIdentifier = require('../../../../lib/test/utils/generateRandomIdentifier');
 
 const { expectValidationError } = require('../../../../lib/test/expect/expectError');
-const SomeConsensusError = require('../../../../lib/test/SomeConsensusError');
+const SomeConsensusError = require('../../../../lib/test/mocks/SomeConsensusError');
 
 describe('validateStateTransitionIdentitySignatureFactory', () => {
   let validateStateTransitionIdentitySignature;

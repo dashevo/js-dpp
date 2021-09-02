@@ -19,7 +19,7 @@ const IdentityPublicKey = require('../../../lib/identity/IdentityPublicKey');
 
 const MissingOptionError = require('../../../lib/errors/MissingOptionError');
 const createDPPMock = require('../../../lib/test/mocks/createDPPMock');
-const SomeConsensusError = require('../../../lib/test/SomeConsensusError');
+const SomeConsensusError = require('../../../lib/test/mocks/SomeConsensusError');
 
 describe('StateTransitionFacade', () => {
   let dpp;

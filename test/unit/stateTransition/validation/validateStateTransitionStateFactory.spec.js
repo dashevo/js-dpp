@@ -12,7 +12,7 @@ const DataContractFactory = require('../../../../lib/dataContract/DataContractFa
 
 const InvalidStateTransitionTypeError = require('../../../../lib/stateTransition/errors/InvalidStateTransitionTypeError');
 const createDPPMock = require('../../../../lib/test/mocks/createDPPMock');
-const SomeConsensusError = require('../../../../lib/test/SomeConsensusError');
+const SomeConsensusError = require('../../../../lib/test/mocks/SomeConsensusError');
 
 describe('validateStateTransitionStateFactory', () => {
   let validateDataContractSTDataMock;

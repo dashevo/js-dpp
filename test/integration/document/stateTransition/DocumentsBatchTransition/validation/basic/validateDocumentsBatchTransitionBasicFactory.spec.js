@@ -34,7 +34,7 @@ const InvalidDocumentTransitionActionError = require('../../../../../../../lib/e
 const InvalidIdentifierError = require('../../../../../../../lib/errors/consensus/basic/InvalidIdentifierError');
 const DuplicateDocumentTransitionsWithIndicesError = require('../../../../../../../lib/errors/consensus/basic/document/DuplicateDocumentTransitionsWithIndicesError');
 const DuplicateDocumentTransitionsWithIdsError = require('../../../../../../../lib/errors/consensus/basic/document/DuplicateDocumentTransitionsWithIdsError');
-const SomeConsensusError = require('../../../../../../../lib/test/SomeConsensusError');
+const SomeConsensusError = require('../../../../../../../lib/test/mocks/SomeConsensusError');
 
 describe('validateDocumentsBatchTransitionBasicFactory', () => {
   let dataContract;

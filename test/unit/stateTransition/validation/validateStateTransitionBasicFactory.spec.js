@@ -17,7 +17,7 @@ const ValidationResult = require('../../../../lib/validation/ValidationResult');
 const MissingStateTransitionTypeError = require('../../../../lib/errors/consensus/basic/stateTransition/MissingStateTransitionTypeError');
 const InvalidStateTransitionTypeError = require('../../../../lib/errors/consensus/basic/stateTransition/InvalidStateTransitionTypeError');
 const createDPPMock = require('../../../../lib/test/mocks/createDPPMock');
-const SomeConsensusError = require('../../../../lib/test/SomeConsensusError');
+const SomeConsensusError = require('../../../../lib/test/mocks/SomeConsensusError');
 
 describe('validateStateTransitionBasicFactory', () => {
   let validateStateTransitionBasic;

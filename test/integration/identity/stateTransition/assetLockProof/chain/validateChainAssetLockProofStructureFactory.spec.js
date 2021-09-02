@@ -15,7 +15,7 @@ const ValidationResult = require('../../../../../../lib/validation/ValidationRes
 const IdentityAssetLockTransactionIsNotFoundError = require('../../../../../../lib/errors/consensus/basic/identity/IdentityAssetLockTransactionIsNotFoundError');
 const InvalidAssetLockProofCoreChainHeightError = require('../../../../../../lib/errors/consensus/basic/identity/InvalidAssetLockProofCoreChainHeightError');
 const InvalidAssetLockProofTransactionHeightError = require('../../../../../../lib/errors/consensus/basic/identity/InvalidAssetLockProofTransactionHeightError');
-const SomeConsensusError = require('../../../../../../lib/test/SomeConsensusError');
+const SomeConsensusError = require('../../../../../../lib/test/mocks/SomeConsensusError');
 
 describe('validateChainAssetLockProofStructureFactory', () => {
   let rawProof;

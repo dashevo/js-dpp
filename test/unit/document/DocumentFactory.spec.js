@@ -24,7 +24,7 @@ const SerializedObjectParsingError = require('../../../lib/errors/consensus/basi
 
 const generateRandomIdentifier = require('../../../lib/test/utils/generateRandomIdentifier');
 const createDPPMock = require('../../../lib/test/mocks/createDPPMock');
-const SomeConsensusError = require('../../../lib/test/SomeConsensusError');
+const SomeConsensusError = require('../../../lib/test/mocks/SomeConsensusError');
 
 describe('DocumentFactory', () => {
   let decodeProtocolEntityMock;

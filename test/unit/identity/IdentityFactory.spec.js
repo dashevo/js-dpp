@@ -18,7 +18,7 @@ const getInstantAssetLockProofFixture = require('../../../lib/test/fixtures/getI
 const InstantAssetLockProof = require('../../../lib/identity/stateTransition/assetLockProof/instant/InstantAssetLockProof');
 const getChainAssetLockProofFixture = require('../../../lib/test/fixtures/getChainAssetLockProofFixture');
 const createDPPMock = require('../../../lib/test/mocks/createDPPMock');
-const SomeConsensusError = require('../../../lib/test/SomeConsensusError');
+const SomeConsensusError = require('../../../lib/test/mocks/SomeConsensusError');
 
 describe('IdentityFactory', () => {
   let factory;

@@ -18,7 +18,7 @@ const {
 const ValidationResult = require('../../../../../../../lib/validation/ValidationResult');
 const InstantAssetLockProof = require('../../../../../../../lib/identity/stateTransition/assetLockProof/instant/InstantAssetLockProof');
 const ChainAssetLockProof = require('../../../../../../../lib/identity/stateTransition/assetLockProof/chain/ChainAssetLockProof');
-const SomeConsensusError = require('../../../../../../../lib/test/SomeConsensusError');
+const SomeConsensusError = require('../../../../../../../lib/test/mocks/SomeConsensusError');
 
 describe('validateIdentityCreateTransitionBasicFactory', () => {
   let validateIdentityCreateTransitionBasic;

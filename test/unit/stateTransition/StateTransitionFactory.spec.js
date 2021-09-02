@@ -10,7 +10,7 @@ const SerializedObjectParsingError = require('../../../lib/errors/consensus/basi
 
 const createDPPMock = require('../../../lib/test/mocks/createDPPMock');
 const StateTransitionFactory = require('../../../lib/stateTransition/StateTransitionFactory');
-const SomeConsensusError = require('../../../lib/test/SomeConsensusError');
+const SomeConsensusError = require('../../../lib/test/mocks/SomeConsensusError');
 
 describe('StateTransitionFactory', () => {
   let validateStateTransitionBasicMock;

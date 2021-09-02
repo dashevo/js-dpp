@@ -12,7 +12,7 @@ const ValidationResult = require('../../../lib/validation/ValidationResult');
 const InvalidDataContractError = require('../../../lib/dataContract/errors/InvalidDataContractError');
 const SerializedObjectParsingError = require('../../../lib/errors/consensus/basic/decode/SerializedObjectParsingError');
 const createDPPMock = require('../../../lib/test/mocks/createDPPMock');
-const SomeConsensusError = require('../../../lib/test/SomeConsensusError');
+const SomeConsensusError = require('../../../lib/test/mocks/SomeConsensusError');
 
 describe('DataContractFactory', () => {
   let DataContractFactory;
