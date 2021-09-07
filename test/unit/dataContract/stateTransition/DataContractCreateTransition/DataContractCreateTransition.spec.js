@@ -34,7 +34,7 @@ describe('DataContractCreateTransition', () => {
     it('should return the current protocol version', () => {
       const result = stateTransition.getProtocolVersion();
 
-      expect(result).to.equal(0);
+      expect(result).to.equal(protocolVersion.latestVersion);
     });
   });
 
