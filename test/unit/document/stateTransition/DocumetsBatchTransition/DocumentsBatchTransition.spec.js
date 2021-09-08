@@ -4,7 +4,7 @@ const getDataContractFixture = require('../../../../../lib/test/fixtures/getData
 const getDocumentsFixture = require('../../../../../lib/test/fixtures/getDocumentsFixture');
 const stateTransitionTypes = require('../../../../../lib/stateTransition/stateTransitionTypes');
 const createDPPMock = require('../../../../../lib/test/mocks/createDPPMock');
-const protocolVersion = require('../../../../../lib/protocolVersion');
+const protocolVersion = require('../../../../../lib/version/protocolVersion');
 
 describe('DocumentsBatchTransition', () => {
   let stateTransition;

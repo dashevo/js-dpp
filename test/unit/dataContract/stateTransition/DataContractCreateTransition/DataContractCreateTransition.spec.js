@@ -4,7 +4,7 @@ const getDataContractFixture = require('../../../../../lib/test/fixtures/getData
 const stateTransitionTypes = require('../../../../../lib/stateTransition/stateTransitionTypes');
 
 const Identifier = require('../../../../../lib/identifier/Identifier');
-const protocolVersion = require('../../../../../lib/protocolVersion');
+const protocolVersion = require('../../../../../lib/version/protocolVersion');
 
 describe('DataContractCreateTransition', () => {
   let stateTransition;

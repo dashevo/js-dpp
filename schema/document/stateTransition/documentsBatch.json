@@ -4,8 +4,6 @@
   "properties": {
     "protocolVersion": {
       "type": "integer",
-      "minimum": 1,
-      "maximum": 1,
       "$comment": "Maximum is the latest protocol version"
     },
     "type": {

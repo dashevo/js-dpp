@@ -6,7 +6,7 @@ const Identifier = require('../../../../../lib/identifier/Identifier');
 
 const getIdentityTopUpTransitionFixture = require('../../../../../lib/test/fixtures/getIdentityTopUpTransitionFixture');
 
-const protocolVersion = require('../../../../../lib/protocolVersion');
+const protocolVersion = require('../../../../../lib/version/protocolVersion');
 
 describe('IdentityTopUpTransition', () => {
   let rawStateTransition;
