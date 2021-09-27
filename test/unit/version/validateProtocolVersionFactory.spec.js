@@ -33,7 +33,7 @@ describe('validateProtocolVersionFactory', () => {
   });
 
   it('should throw UnsupportedProtocolVersionError if protocolVersion is higher than latestVersion', () => {
-    protocolVersion = 3;
+    protocolVersion = latestVersion + 1;
 
     const result = validateProtocolVersion(protocolVersion);
 
