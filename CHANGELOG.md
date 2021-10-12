@@ -3,19 +3,23 @@
 
 ### Features
 
-* introduce temporary protocol version 2 ([#349](https://github.com/dashevo/js-dpp/issues/349))
 * introduce consensus error codes ([#341](https://github.com/dashevo/js-dpp/issues/341), [#342](https://github.com/dashevo/js-dpp/issues/342))
+* split validation logic into basic, signature, fee and state ([#331](https://github.com/dashevo/js-dpp/issues/331))
+* protocol versioning updates ([#324](https://github.com/dashevo/js-dpp/issues/324), [#325](https://github.com/dashevo/js-dpp/issues/325), [#326](https://github.com/dashevo/js-dpp/issues/326), [#329](https://github.com/dashevo/js-dpp/issues/329), [#330](https://github.com/dashevo/js-dpp/issues/330), [#336](https://github.com/dashevo/js-dpp/issues/336), [#337](https://github.com/dashevo/js-dpp/issues/337), [#344](https://github.com/dashevo/js-dpp/issues/344), [#346](https://github.com/dashevo/js-dpp/issues/346), [#349](https://github.com/dashevo/js-dpp/issues/349), [#351](https://github.com/dashevo/js-dpp/issues/351))
 
 
 ### Bug Fixes
 
-* validation of a protocol version ([#344](https://github.com/dashevo/js-dpp/issues/344), [#351](https://github.com/dashevo/js-dpp/issues/351))
 * building indices on arrays using `prefixItems` ([#343](https://github.com/dashevo/js-dpp/issues/343))
 
 
 ### BREAKING CHANGES
 
+* `stateTransition.validateStructure` renamed to `stateTransition.validateBasic` and doesn't perfom signature validation
+* `stateTransition.validateData` renamed to `stateTransition.validateState`
 * validation errors are changed
+* removed old data triggers
+* old serialized data is not compatible
 
 
 
