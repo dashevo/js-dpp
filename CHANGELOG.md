@@ -1,3 +1,24 @@
+# [0.21.0](https://github.com/dashevo/js-dpp/compare/v0.20.0...v0.21.0) (2021-10-12)
+
+
+### Features
+
+* introduce temporary protocol version 2 ([#349](https://github.com/dashevo/js-dpp/issues/349))
+* introduce consensus error codes ([#341](https://github.com/dashevo/js-dpp/issues/341), [#342](https://github.com/dashevo/js-dpp/issues/342))
+
+
+### Bug Fixes
+
+* validation of a protocol version ([#344](https://github.com/dashevo/js-dpp/issues/344), [#351](https://github.com/dashevo/js-dpp/issues/351))
+* building indices on arrays using `prefixItems` ([#343](https://github.com/dashevo/js-dpp/issues/343))
+
+
+### BREAKING CHANGES
+
+* validation errors are changed
+
+
+
 # [0.20.0](https://github.com/dashevo/js-dpp/compare/v0.19.2...v0.20.0) (2021-07-08)
 
 
