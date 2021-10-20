@@ -30,7 +30,9 @@ describe('DataContract', () => {
     getBinaryPropertiesFromSchemaMock = this.sinonSandbox.stub();
 
     DataContract = rewiremock.proxy('../../../lib/dataContract/DataContract', {
-      '../../../lib/util/hash': hashMock,
+      '../../../lib/util/hash': {
+        blake3: hashMock,
+      },
       '../../../lib/util/serializer': serializerMock,
       '../../../lib/dataContract/getBinaryPropertiesFromSchema': getBinaryPropertiesFromSchemaMock,
     });
