@@ -7,7 +7,7 @@ const { expectValidationError } = require('../../../../lib/test/expect/expectErr
 
 const ValidationResult = require('../../../../lib/validation/ValidationResult');
 
-const hash = require('../../../../lib/util/hash');
+const { hash } = require('../../../../lib/util/hash');
 
 describe('validateStateTransitionKeySignatureFactory', () => {
   let publicKeyHash;
