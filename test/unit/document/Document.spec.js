@@ -38,9 +38,7 @@ describe('Document', () => {
       '../../../node_modules/lodash.get': lodashGetMock,
       '../../../node_modules/lodash.set': lodashSetMock,
       '../../../node_modules/lodash.clonedeep': lodashCloneDeepMock,
-      '../../../lib/util/hash': {
-        blake3: hashMock,
-      },
+      '../../../lib/util/hash': hashMock,
       '../../../lib/util/serializer': serializerMock,
     });
 

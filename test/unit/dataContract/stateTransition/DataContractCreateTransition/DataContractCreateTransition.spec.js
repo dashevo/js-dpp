@@ -18,9 +18,7 @@ describe('DataContractCreateTransition', () => {
     encodeMock = serializerMock.encode;
 
     const DataContractCreateTransition = rewiremock.proxy('../../../../../lib/dataContract/stateTransition/DataContractCreateTransition/DataContractCreateTransition', {
-      '../../../../../lib/util/hash': {
-        blake3: hashMock,
-      },
+      '../../../../../lib/util/hash': hashMock,
       '../../../../../lib/util/serializer': serializerMock,
     });
 
