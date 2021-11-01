@@ -1,4 +1,4 @@
-const generateEntropy = require('../../../lib/util/generateEntropy');
+const { generate: generateEntropy } = require('../../../lib/util/generateEntropy');
 
 describe('generateEntropy', () => {
   it('should generate a byte array of length 32', () => {
