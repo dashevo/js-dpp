@@ -23,7 +23,7 @@ const SerializedObjectParsingError = require('../../../lib/errors/consensus/basi
 const generateRandomIdentifier = require('../../../lib/test/utils/generateRandomIdentifier');
 const createDPPMock = require('../../../lib/test/mocks/createDPPMock');
 const SomeConsensusError = require('../../../lib/test/mocks/SomeConsensusError');
-const generateEntropy = require('../../../lib/util/generateEntropy');
+const entropyGenerator = require('../../../lib/util/entropyGenerator');
 const DocumentFactory = require('../../../lib/document/DocumentFactory');
 
 describe('DocumentFactory', () => {
@@ -51,7 +51,7 @@ describe('DocumentFactory', () => {
     rawDocument = document.toObject();
 
     decodeProtocolEntityMock = this.sinonSandbox.stub();
-    generateEntropyMock = this.sinonSandbox.stub(generateEntropy, 'generate');
+    generateEntropyMock = this.sinonSandbox.stub(entropyGenerator, 'generate');
     validateDocumentMock = this.sinonSandbox.stub();
 
     validateDocumentMock.returns(new ValidationResult());

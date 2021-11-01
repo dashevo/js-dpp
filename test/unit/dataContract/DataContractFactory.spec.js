@@ -12,7 +12,7 @@ const createDPPMock = require('../../../lib/test/mocks/createDPPMock');
 const SomeConsensusError = require('../../../lib/test/mocks/SomeConsensusError');
 
 const DataContractFactory = require('../../../lib/dataContract/DataContractFactory');
-const generateEntropy = require('../../../lib/util/generateEntropy');
+const entropyGenerator = require('../../../lib/util/entropyGenerator');
 
 describe('DataContractFactory', () => {
   let decodeProtocolEntityMock;
@@ -31,7 +31,7 @@ describe('DataContractFactory', () => {
 
     decodeProtocolEntityMock = this.sinonSandbox.stub();
     validateDataContractMock = this.sinonSandbox.stub();
-    generateEntropyMock = this.sinonSandbox.stub(generateEntropy, 'generate');
+    generateEntropyMock = this.sinonSandbox.stub(entropyGenerator, 'generate');
 
     factory = new DataContractFactory(
       dppMock,
