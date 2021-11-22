@@ -1,3 +1,16 @@
+# [0.21.1](https://github.com/dashevo/js-dpp/compare/v0.21.0...v0.21.1) (2021-11-22)
+
+
+### Features
+
+* update dashcore-lib to 0.19.27 ([#360](https://github.com/dashevo/js-dpp/issues/360))
+
+### BREAKING CHANGES
+
+* new InstantLock format support. Will not work with DashCore < 0.18.0
+
+
+
 # [0.21.0](https://github.com/dashevo/js-dpp/compare/v0.20.1...v0.21.0) (2021-10-12)
 
 
@@ -16,7 +29,7 @@
 
 ### BREAKING CHANGES
 
-* `stateTransition.validateStructure` renamed to `stateTransition.validateBasic` and doesn't perfom signature validation
+* `stateTransition.validateStructure` renamed to `stateTransition.validateBasic` and doesn't perform signature validation
 * `stateTransition.validateData` renamed to `stateTransition.validateState`
 * validation errors are changed
 * removed old data triggers
